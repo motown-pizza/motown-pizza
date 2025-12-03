@@ -59,26 +59,50 @@ export const getAppTheme = (params?: AppThemeProps) => {
   const baseTheme: MantineThemeOverride = {
     colors: {
       pri: [
-        '#e1f8ff',
-        '#cbedff',
-        '#9ad7ff',
-        '#64c1ff',
-        '#3aaefe',
-        '#20a2fe',
-        '#099cff',
-        '#0088e4',
-        '#0079cd',
-        '#0068b6',
+        '#ffe7e8',
+        '#ffcece',
+        '#ff9b9b',
+        '#ff6464',
+        '#fe3736',
+        '#fe1b19',
+        '#fe0000', // src
+        '#e40000',
+        '#cb0000',
+        '#b20000',
+      ],
+      sec: [
+        '#ffffe1',
+        '#ffffcc',
+        '#ffff9a',
+        '#ffff64',
+        '#ffff38',
+        '#ffff1d',
+        '#ffff00', // src
+        '#e3e300',
+        '#c9ca00',
+        '#adae00',
+      ],
+      ter: [
+        '#ebfbf3',
+        '#dcf3e7',
+        '#b8e5cd',
+        '#90d7b1',
+        '#70ca9a',
+        '#5bc38b',
+        '#4fbf83',
+        '#3fa870',
+        '#339461', // src
+        '#238252',
       ],
     },
 
     primaryColor: 'pri',
-    defaultRadius: 'sm',
+    defaultRadius: 'lg',
     primaryShade: { light: 6, dark: 6 },
     cursorType: 'pointer',
 
     headings: {
-      fontFamily: 'var(--font-geist-sans)',
+      fontFamily: 'var(--font-montserrat)',
     },
 
     components: {

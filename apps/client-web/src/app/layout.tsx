@@ -9,12 +9,13 @@
 import '@mantine/core/styles.css';
 import '@mantine/carousel/styles.css';
 import '@mantine/notifications/styles.css';
+import '@mantine/dates/styles.css';
 
 // custom styles
 import '../styles/globals.scss';
 
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Montserrat, Geist_Mono } from 'next/font/google';
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
 import ProviderMantine from '@repo/components/provider/mantine';
 import ProviderStore from '@/components/provider/store';
@@ -22,8 +23,8 @@ import { appName } from '@repo/constants/app';
 import { mantine } from '@/assets/styles';
 import { DEFAULT_COLOR_SCHEME } from '@repo/constants/other';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const montserrat = Montserrat({
+  variable: '--font-montserrat',
   subsets: ['latin'],
 });
 
@@ -55,7 +56,7 @@ export default async function RootLayout({
         <ColorSchemeScript defaultColorScheme={DEFAULT_COLOR_SCHEME} />
       </head>
 
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${montserrat.variable} ${geistMono.variable}`}>
         <ProviderMantine
           options={{ withNotifications: true }}
           appThemeProps={{ styleSheets: { ...mantine } }}

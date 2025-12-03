@@ -16,7 +16,14 @@ import {
 import { useStoreSession } from '@/libraries/zustand/stores/session';
 import { useStoreSyncStatus } from '@/libraries/zustand/stores/sync-status';
 import { handleSync, syncToServerAfterDelay } from '@/utilities/sync';
-import { useSyncCategories, useSyncPosts } from '@/hooks/sync';
+import {
+  useSyncCart,
+  useSyncCategories,
+  useSyncOrders,
+  useSyncPosts,
+  useSyncProducts,
+  useSyncVariants,
+} from '@/hooks/sync';
 import { SyncParams } from '@repo/types/sync';
 
 export default function Sync({ children }: { children: React.ReactNode }) {
@@ -38,6 +45,7 @@ export default function Sync({ children }: { children: React.ReactNode }) {
     networkStatus,
     syncStatus,
     debounceSyncToServer,
+    clientOnly: true,
   };
 
   const { syncPosts } = useSyncPosts({
@@ -50,12 +58,44 @@ export default function Sync({ children }: { children: React.ReactNode }) {
     online: networkStatus.online,
   });
 
+  const { syncProducts } = useSyncProducts({
+    syncFunction: (i: SyncParams) => debounceSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  const { syncVariants } = useSyncVariants({
+    syncFunction: (i: SyncParams) => debounceSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  const { syncCart } = useSyncCart({
+    syncFunction: (i: SyncParams) => debounceSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  const { syncOrders } = useSyncOrders({
+    syncFunction: (i: SyncParams) => debounceSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
   useEffect(() => {
     if (!networkStatus.online) return;
 
     syncPosts();
     syncCategories();
-  }, [networkStatus.online, syncPosts, syncCategories]);
+    syncProducts();
+    syncVariants();
+    syncCart();
+    syncOrders();
+  }, [
+    networkStatus.online,
+    syncPosts,
+    syncCategories,
+    syncProducts,
+    syncVariants,
+    syncCart,
+    syncOrders,
+  ]);
 
   return <div>{children}</div>;
 }

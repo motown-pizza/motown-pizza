@@ -25,13 +25,28 @@ export type NavLink = Link & { subLinks: Link[] | null };
 
 export const links: NavLink[] = [
   {
-    link: '/',
-    label: 'Home',
+    link: '/about',
+    label: 'About Us',
     subLinks: null,
   },
   {
-    link: '/about',
-    label: 'About',
+    link: '/menu',
+    label: 'Menu',
+    subLinks: null,
+  },
+  {
+    link: '/menu?menuTab=sides',
+    label: 'Sides',
+    subLinks: null,
+  },
+  {
+    link: '/menu?menuTab=drinks',
+    label: 'Drinks',
+    subLinks: null,
+  },
+  {
+    link: '/loyalty-program',
+    label: 'Loyalty Program',
     subLinks: null,
   },
 ];

@@ -40,6 +40,12 @@ import {
 } from '@/libraries/zustand/stores/shell';
 import { samplePosts } from '@/data/sample/posts';
 import { postsGet } from '@repo/handlers/requests/database/posts';
+import { products } from '@/data/menu';
+import { useStoreProduct } from '@/libraries/zustand/stores/product';
+import { useStoreCart } from '@/libraries/zustand/stores/cart';
+import { useStoreVariant } from '@/libraries/zustand/stores/variant';
+import { useStoreOrder } from '@/libraries/zustand/stores/order';
+import { variants } from '@/data/variants';
 
 export const useSessionStore = (params?: {
   options?: { clientOnly?: boolean };
@@ -187,6 +193,10 @@ export const useStoreData = (params?: {
 
   const { session } = useStoreSession();
   const { setPosts } = useStorePost();
+  const { setProducts } = useStoreProduct();
+  const { setVariants } = useStoreVariant();
+  const { setCart } = useStoreCart();
+  const { setOrders } = useStoreOrder();
 
   useEffect(() => {
     if (prevItemsRef.current.length) return;
@@ -211,4 +221,114 @@ export const useStoreData = (params?: {
 
     loadPosts();
   }, [setPosts, session, clientOnly]);
+
+  useEffect(() => {
+    if (prevItemsRef.current.length) return;
+
+    const loadProducts = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.PRODUCTS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: products,
+            };
+          } else {
+            // return await productsGet();
+            return {
+              items: products,
+            };
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setProducts(stateUpdateItems),
+      });
+    };
+
+    loadProducts();
+  }, [setProducts, session, clientOnly]);
+
+  useEffect(() => {
+    if (prevItemsRef.current.length) return;
+
+    const loadVariants = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.VARIANTS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: variants,
+            };
+          } else {
+            // return await variantsGet();
+            return {
+              items: variants,
+            };
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setVariants(stateUpdateItems),
+      });
+    };
+
+    loadVariants();
+  }, [setVariants, session, clientOnly]);
+
+  useEffect(() => {
+    if (prevItemsRef.current.length) return;
+
+    const loadCart = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.CART,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            // return await cartGet();
+            return {
+              items: [],
+            };
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) => setCart(stateUpdateItems),
+      });
+    };
+
+    loadCart();
+  }, [setCart, session, clientOnly]);
+
+  useEffect(() => {
+    if (prevItemsRef.current.length) return;
+
+    const loadOrders = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.ORDERS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            // return await ordersGet();
+            return {
+              items: [],
+            };
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) => setOrders(stateUpdateItems),
+      });
+    };
+
+    loadOrders();
+  }, [setOrders, session, clientOnly]);
 };

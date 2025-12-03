@@ -9,6 +9,7 @@
 
 import React from 'react';
 import { useSessionStore, useStoreData } from '@/hooks/store';
+import ProviderSync from './sync';
 
 export default function Store({ children }: { children: React.ReactNode }) {
   // initialize stores
@@ -16,7 +17,11 @@ export default function Store({ children }: { children: React.ReactNode }) {
   useSessionStore({ options: { clientOnly: true } });
   // useUserRoleStore();
   // useAppshellStore();
-  useStoreData();
+  useStoreData({ options: { clientOnly: true } });
 
-  return <div>{children}</div>;
+  return (
+    <div>
+      <ProviderSync>{children}</ProviderSync>
+    </div>
+  );
 }

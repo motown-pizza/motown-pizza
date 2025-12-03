@@ -1,4 +1,5 @@
 import { CategoryRelations } from '@repo/types/models/category';
+import { Status, SyncStatus } from '@repo/types/models/enums';
 
 export const sampleCategories: CategoryRelations[] = [
   {
@@ -6,7 +7,8 @@ export const sampleCategories: CategoryRelations[] = [
     title: 'Technology and Innovation',
     created_at: new Date('2025-11-10T09:35:35.462005'),
     updated_at: new Date('2025-11-10T09:35:35.462005'),
-    status: 'ACTIVE',
+    status: Status.ACTIVE,
+    sync_status: SyncStatus.SYNCED,
     posts: [],
     _count: { posts: 1 },
   },
@@ -15,7 +17,8 @@ export const sampleCategories: CategoryRelations[] = [
     title: 'Health and Wellness',
     created_at: new Date('2025-11-10T09:35:35.462043'),
     updated_at: new Date('2025-11-10T09:35:35.462043'),
-    status: 'ACTIVE',
+    status: Status.ACTIVE,
+    sync_status: SyncStatus.SYNCED,
     posts: [],
     _count: { posts: 1 },
   },
@@ -24,7 +27,8 @@ export const sampleCategories: CategoryRelations[] = [
     title: 'Travel and Adventure',
     created_at: new Date('2025-11-10T09:35:35.462057'),
     updated_at: new Date('2025-11-10T09:35:35.462057'),
-    status: 'ACTIVE',
+    status: Status.ACTIVE,
+    sync_status: SyncStatus.SYNCED,
     posts: [],
     _count: { posts: 1 },
   },
@@ -33,7 +37,8 @@ export const sampleCategories: CategoryRelations[] = [
     title: 'Finance and Economics',
     created_at: new Date('2025-11-10T09:35:35.462071'),
     updated_at: new Date('2025-11-10T09:35:35.462071'),
-    status: 'ACTIVE',
+    status: Status.ACTIVE,
+    sync_status: SyncStatus.SYNCED,
     posts: [],
     _count: { posts: 1 },
   },
@@ -42,7 +47,8 @@ export const sampleCategories: CategoryRelations[] = [
     title: 'Science and Environment',
     created_at: new Date('2025-11-10T09:35:35.462085'),
     updated_at: new Date('2025-11-10T09:35:35.462085'),
-    status: 'ACTIVE',
+    status: Status.ACTIVE,
+    sync_status: SyncStatus.SYNCED,
     posts: [],
     _count: { posts: 1 },
   },

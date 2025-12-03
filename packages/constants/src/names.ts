@@ -23,6 +23,9 @@ export const LOCAL_STORAGE_NAME = {
 
 export const PARAM_NAME = {
   REDIRECT: 'redirect',
+  MENU_TAB: 'menuTab',
+  ORDER_TYPE: 'orderType',
+  ORDER_CONFIRMED: 'confirmedOrder',
 };
 
 export const BUCKET_NAME = {
@@ -39,4 +42,8 @@ export const STORE_NAME = {
   SETTINGS: 'settings',
   POSTS: 'posts',
   CATEGORIES: 'categories',
+  PRODUCTS: 'products',
+  VARIANTS: 'variants',
+  CART: 'cart',
+  ORDERS: 'orders',
 };

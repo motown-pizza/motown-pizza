@@ -1,0 +1,8 @@
+.link {
+  transition: 0.25s all ease;
+  color: var(--mantine-color-text);
+
+  @include mantine.hover {
+    color: var(--mantine-color-sec-6) !important;
+  }
+}

@@ -12,16 +12,22 @@ import { handleInquiry } from '@repo/handlers/requests/email/inquiry';
 import { contactAdd } from '@repo/handlers/requests/contact';
 import { formValuesInitialInquiry, FormValuesInquiry } from '@repo/types/form';
 import { useFormBase } from '../form';
+import { useEffect } from 'react';
+import { useStoreOrderDetails } from '@/libraries/zustand/stores/order-details';
+import { defaultOrderDetails } from '@/data/orders';
 
 type UseFormEmailInquiryOptions = {
   saveEmailContact?: boolean;
   close?: () => void;
+  order?: boolean;
 };
 
 export const useFormEmailInquiry = (
   initialValues?: Partial<FormValuesInquiry>,
   options?: UseFormEmailInquiryOptions
 ) => {
+  const { orderDetails, setOrderDetails } = useStoreOrderDetails();
+
   const { form, submitted, handleSubmit, reset, validate } =
     useFormBase<FormValuesInquiry>(
       {
@@ -75,6 +81,15 @@ export const useFormEmailInquiry = (
         },
       }
     );
+
+  useEffect(() => {
+    setOrderDetails({
+      ...(orderDetails || defaultOrderDetails),
+      name: form.values.name,
+      email: form.values.email,
+      phone: form.values.phone,
+    });
+  }, [form.values.name, form.values.email, form.values.phone]);
 
   return {
     form,
