@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import {
+  Flex,
   Group,
   Stack,
   Tabs,
@@ -44,12 +45,16 @@ export default function Order() {
           padding: 'var(--mantine-spacing-lg) var(--mantine-spacing-xl)',
         },
         tabLabel: { fontSize: 'var(--mantine-font-size-lg)' },
-        panel: { padding: 'var(--mantine-spacing-lg)' },
+        panel: { padding: 'var(--mantine-spacing-lg) 0' },
       }}
     >
       <TabsList>
-        <TabsTab value="delivery">
-          <Group gap={'xs'}>
+        <TabsTab value="delivery" w={{ base: '50%', xs: 'inherit' }}>
+          <Flex
+            direction={{ base: 'column', xs: 'row' }}
+            align={'center'}
+            gap={'xs'}
+          >
             <IconMoped size={ICON_SIZE * 1.75} stroke={ICON_STROKE_WIDTH} />
             <Stack gap={0}>
               <Text component={'span'} fz={'xs'}>
@@ -59,11 +64,15 @@ export default function Order() {
                 Delivery
               </Text>
             </Stack>
-          </Group>
+          </Flex>
         </TabsTab>
 
-        <TabsTab value="collection">
-          <Group gap={'xs'}>
+        <TabsTab value="collection" w={{ base: '50%', xs: 'inherit' }}>
+          <Flex
+            direction={{ base: 'column', xs: 'row' }}
+            align={'center'}
+            gap={'xs'}
+          >
             <IconBuildingStore
               size={ICON_SIZE * 1.75}
               stroke={ICON_STROKE_WIDTH}
@@ -76,7 +85,7 @@ export default function Order() {
                 Collection
               </Text>
             </Stack>
-          </Group>
+          </Flex>
         </TabsTab>
       </TabsList>
 

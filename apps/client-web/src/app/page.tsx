@@ -37,7 +37,12 @@ export default function Home() {
         <Group grow preventGrowOverflow={false}>
           <Divider color="ter" />
 
-          <Text ta={'center'} fz={24} w={'fit-coontent'}>
+          <Text
+            ta={'center'}
+            fz={24}
+            w={'fit-coontent'}
+            lh={{ base: 2, xs: 1 }}
+          >
             Is your order for{' '}
             <NextLink
               href={`/order/select-store?orderType=${OrderType.DELIVERY.toLowerCase()}`}
@@ -47,8 +52,8 @@ export default function Home() {
                 component="span"
                 inherit
                 tt={'uppercase'}
+                fz={{ base: 16, lg: 24 }}
                 style={{
-                  fontSize: 24,
                   fontWeight: 'bold',
                   backgroundColor: 'var(--mantine-color-sec-6)',
                   color: 'var(--mantine-color-red-7)',
@@ -69,8 +74,8 @@ export default function Home() {
                 component="span"
                 inherit
                 tt={'uppercase'}
+                fz={{ base: 16, lg: 24 }}
                 style={{
-                  fontSize: 24,
                   fontWeight: 'bold',
                   backgroundColor: 'var(--mantine-color-blue-6)',
                   color: 'var(--mantine-color-white)',
@@ -109,7 +114,7 @@ export default function Home() {
                       Motown Deal
                     </Title>
 
-                    <Text fz={'md'} fw={500}>
+                    <Text fz={'md'} fw={500} ta={'center'}>
                       Any large Pizza + 6 Pcs Wings + 1.25L Drink
                     </Text>
 

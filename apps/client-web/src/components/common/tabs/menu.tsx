@@ -42,15 +42,21 @@ export default function Menu({
           padding: 'var(--mantine-spacing-lg) var(--mantine-spacing-xl)',
         },
         tabLabel: { fontSize: 'var(--mantine-font-size-lg)' },
-        panel: { padding: 'var(--mantine-spacing-lg)' },
+        panel: { padding: 'var(--mantine-spacing-lg) 0' },
       }}
     >
       <TabsList>
-        <TabsTab value="pizzas">Pizzas</TabsTab>
+        <TabsTab value="pizzas" w={{ base: '33%', xs: 'inherit' }}>
+          Pizzas
+        </TabsTab>
 
-        <TabsTab value="sides">Sides</TabsTab>
+        <TabsTab value="sides" w={{ base: '33%', xs: 'inherit' }}>
+          Sides
+        </TabsTab>
 
-        <TabsTab value="drinks">Drinks</TabsTab>
+        <TabsTab value="drinks" w={{ base: '33%', xs: 'inherit' }}>
+          Drinks
+        </TabsTab>
       </TabsList>
 
       <TabsPanel value="pizzas">

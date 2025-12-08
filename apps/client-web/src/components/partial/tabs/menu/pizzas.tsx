@@ -14,7 +14,10 @@ export default function Pizzas({
   return (
     <Grid>
       {pizzas.map((p, i) => (
-        <GridCol key={i} span={{ base: 12, md: options?.withAside ? 4 : 3 }}>
+        <GridCol
+          key={i}
+          span={{ base: 12, xs: 6, sm: 4, md: options?.withAside ? 4 : 3 }}
+        >
           <CardMenuMain props={p} />
         </GridCol>
       ))}

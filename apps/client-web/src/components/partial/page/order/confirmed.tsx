@@ -79,25 +79,32 @@ export default function Confirmed() {
 
         {order && (
           <Stack gap={'xl'} mt={SECTION_SPACING}>
-            <Card bg={'var(--mantine-color-dark-8)'} padding={'xl'}>
+            <Card
+              bg={'var(--mantine-color-dark-8)'}
+              p={{ base: 'md', md: 'xl' }}
+            >
               <Stack gap={'xs'}>
                 <Group justify="space-between">
                   <Title order={3} fz={'sm'} fw={'normal'}>
-                    Order Id
+                    Order ID
                   </Title>
 
                   <Group>
-                    <Text ta={'end'} fw={500} fz={'sm'}>
+                    <Text ta={'end'} fw={500} fz={'sm'} visibleFrom="xs">
                       {order?.id}
                     </Text>
 
-                    <Tooltip label={clipboard.copied ? 'Coppied' : 'Copy Id'}>
+                    <Tooltip
+                      label={clipboard.copied ? 'Coppied' : 'Copy Id'}
+                      visibleFrom="xs"
+                    >
                       <ActionIcon
                         size={ICON_WRAPPER_SIZE - 4}
                         color={clipboard.copied ? 'green' : 'dark'}
                         onClick={() => {
                           clipboard.copy(order.id);
                         }}
+                        visibleFrom="xs"
                       >
                         <IconCopy
                           size={ICON_SIZE - 4}
@@ -105,6 +112,23 @@ export default function Confirmed() {
                         />
                       </ActionIcon>
                     </Tooltip>
+
+                    <Button
+                      size="xs"
+                      color={clipboard.copied ? 'green' : 'dark'}
+                      onClick={() => {
+                        clipboard.copy(order.id);
+                      }}
+                      hiddenFrom="xs"
+                      leftSection={
+                        <IconCopy
+                          size={ICON_SIZE - 4}
+                          stroke={ICON_STROKE_WIDTH}
+                        />
+                      }
+                    >
+                      {clipboard.copied ? 'Coppied' : 'Copy ID'}
+                    </Button>
                   </Group>
                 </Group>
 

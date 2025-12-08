@@ -12,6 +12,7 @@ import {
   GridCol,
   Group,
   NumberFormatter,
+  ScrollArea,
   Stack,
   Text,
   Title,
@@ -68,15 +69,19 @@ export default function CheckoutReview() {
                 <Title order={3}>Review and Modify Your Items</Title>
               </CardSection>
 
-              <Stack mt={'md'}>
-                {(orderDetails || defaultOrderDetails).products.map((pi, i) => (
-                  <Stack gap={5} key={i}>
-                    {i > 0 && <Divider mb={'xs'} />}
+              <ScrollArea w={'100%'} scrollbars={'x'} type="auto">
+                <Stack mt={'md'} miw={900} pb={'lg'}>
+                  {(orderDetails || defaultOrderDetails).products.map(
+                    (pi, i) => (
+                      <Stack gap={5} key={i}>
+                        {i > 0 && <Divider mb={'xs'} />}
 
-                    <CardMenuSummary props={pi} />
-                  </Stack>
-                ))}
-              </Stack>
+                        <CardMenuSummary props={pi} />
+                      </Stack>
+                    )
+                  )}
+                </Stack>
+              </ScrollArea>
             </Card>
 
             <Card bg={'var(--mantine-color-dark-7)'}>

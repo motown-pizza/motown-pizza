@@ -27,6 +27,7 @@ export default function Nav({
                 tt={'uppercase'}
                 underline="never"
                 className={classes.link}
+                onClick={close}
               >
                 {li.label}
               </NextLink>
@@ -39,6 +40,7 @@ export default function Nav({
             tt={'uppercase'}
             underline="never"
             className={classes.link}
+            onClick={close}
           >
             Contact
           </NextLink>

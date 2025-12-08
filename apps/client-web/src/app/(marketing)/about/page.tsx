@@ -215,7 +215,7 @@ export default function About() {
                 src={item.image}
                 radius="sm"
                 h={'100%'}
-                p={{ sm: 'xl' }}
+                p={{ base: 'xl' }}
                 pos={'relative'}
                 c={'white'}
                 mih={240}
