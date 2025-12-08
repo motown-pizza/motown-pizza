@@ -7,14 +7,14 @@ import { appName } from '@repo/constants/app';
 
 export default function Main() {
   return (
-    <LayoutSection id={'error-404'}>
+    <LayoutSection id={'loading-404'}>
       <Center mih={'100vh'}>
         <Stack align="center">
           <ImageDefault
-            src={images.brand.logo.light}
+            src={images.brand.logo.potrait.meta}
             alt={appName}
-            height={56}
-            width={104}
+            height={240}
+            width={240}
             fit="contain"
             mode="grid"
           />

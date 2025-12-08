@@ -2,13 +2,15 @@
 
 import React from 'react';
 import LayoutSection from '@repo/components/layout/section';
-import { Card, Divider, Group, Stack, Text } from '@mantine/core';
+import { Group, Stack, Text } from '@mantine/core';
 import { IconMoped, IconPizza } from '@tabler/icons-react';
-import { phones } from '@repo/constants/app';
+import { appName, phones } from '@repo/constants/app';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import NextLink from '@repo/components/common/anchor/next-link';
 import classes from './main.module.scss';
 import { useMediaQuery } from '@mantine/hooks';
+import ImageDefault from '@repo/components/common/images/default';
+import { images } from '@/assets/images';
 
 export default function Main() {
   const tablet = useMediaQuery('(min-width: 48em)');
@@ -17,24 +19,13 @@ export default function Main() {
     <LayoutSection id={'header-main'} padded={'xs'}>
       <Group justify={tablet ? 'space-between' : 'center'}>
         <NextLink href="/" underline="never">
-          <Card
-            py={5}
-            px={'xs'}
-            withBorder
-            ta={'center'}
-            fw={'bold'}
-            tt={'uppercase'}
-          >
-            <Text inherit c={'pri'}>
-              Motown
-            </Text>
-
-            <Divider color="ter" mb={2} />
-
-            <Text inherit c={'sec'} fz={'xl'} lts={2}>
-              Pizza
-            </Text>
-          </Card>
+          <ImageDefault
+            src={images.brand.logo.landscape.meta}
+            alt={appName}
+            height={80}
+            width={160}
+            mode="grid"
+          />
         </NextLink>
 
         <Group gap={'xl'} visibleFrom="sm">
