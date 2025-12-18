@@ -25,6 +25,7 @@ export default function Main() {
             height={80}
             width={160}
             mode="grid"
+            style={{ transform: 'scale(1.3)' }}
           />
         </NextLink>
 

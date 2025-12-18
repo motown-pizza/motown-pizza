@@ -123,14 +123,17 @@ const linkGroups = [
     links: [
       { label: 'About', link: '/about' },
       { label: 'Contact', link: '/contact' },
-      // { label: "FAQ's", link: '/faqs' },
+      {
+        label: "Loyalty FAQ's",
+        link: '/loyalty-program#page-loyalty-program-faq',
+      },
     ],
   },
   {
     title: 'Legal',
     links: [
       { label: 'Privacy Policy', link: '/privacy-policy' },
-      { label: 'Terms of Service', link: '/terms-of-service' },
+      { label: 'Terms of Service', link: '/terms-conditions' },
     ],
   },
 ];

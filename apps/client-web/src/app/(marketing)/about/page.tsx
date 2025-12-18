@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import LayoutPage from '@repo/components/layout/page';
 import LayoutSection from '@repo/components/layout/section';
 import {
+  Anchor,
   BackgroundImage,
   Button,
   Card,
@@ -16,12 +17,9 @@ import {
   Title,
 } from '@mantine/core';
 import { IconMoped, IconPizza } from '@tabler/icons-react';
-import {
-  ICON_SIZE,
-  ICON_STROKE_WIDTH,
-  SECTION_SPACING,
-} from '@repo/constants/sizes';
+import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import ImageDefault from '@repo/components/common/images/default';
+import ModalFeedback from '@/components/common/modal/feedback';
 
 export const metadata: Metadata = { title: 'About' };
 
@@ -96,7 +94,11 @@ export default function About() {
               : We believe in continuous improvement, and your feedback is
               invaluable. Whether it’s a suggestion or a compliment, we’re
               always here to listen. Your input helps us grow and serve you
-              better.
+              better. You can share your feedback{' '}
+              <ModalFeedback>
+                <Anchor inherit>here</Anchor>
+              </ModalFeedback>
+              .
             </Text>
           </GridCol>
         </Grid>
@@ -124,6 +126,16 @@ export default function About() {
 
             <Group justify="center">
               <Button
+                color="ter.6"
+                size="md"
+                leftSection={
+                  <IconMoped size={ICON_SIZE + 4} stroke={ICON_STROKE_WIDTH} />
+                }
+              >
+                Order Online
+              </Button>
+
+              <Button
                 color="blue"
                 size="md"
                 leftSection={
@@ -131,16 +143,6 @@ export default function About() {
                 }
               >
                 View Our Stores
-              </Button>
-
-              <Button
-                color="green"
-                size="md"
-                leftSection={
-                  <IconMoped size={ICON_SIZE + 4} stroke={ICON_STROKE_WIDTH} />
-                }
-              >
-                Call and Order In
               </Button>
             </Group>
 
@@ -170,27 +172,14 @@ export default function About() {
 
             <Text>
               Our existence is driven by one purpose: To serve high-quality
-              pizza thatis delicious,madewith fresh ingredients every day,
-              preparedwith care and traceability fromresponsible sources.
+              pizza that is delicious,madewith fresh ingredients every day,
+              prepared with care and traceability fromresponsible sources.
             </Text>
           </Stack>
 
           <Stack>
             <Title order={2} fz={'xl'} c={'blue'}>
               Our People
-            </Title>
-
-            <Text>
-              Our people make it happen by ensuring that they do the right
-              thing, the right way. We ensure that our staff are treated well,
-              get fair wages, and ensure they share our commitment to quality
-              and service.
-            </Text>
-          </Stack>
-
-          <Stack>
-            <Title order={2} fz={'xl'} c={'blue'}>
-              Our Brand
             </Title>
 
             <Text>
@@ -208,7 +197,11 @@ export default function About() {
         margined
         containerized={'md'}
       >
-        <Grid mt={'md'}>
+        <Title order={2} fz={'xl'} c={'blue'} ta={'center'}>
+          Our Brand
+        </Title>
+
+        <Grid mt={'xl'}>
           {brandItems.map((item) => (
             <GridCol span={{ base: 12, sm: 6 }} key={item.title}>
               <BackgroundImage
@@ -258,8 +251,6 @@ export default function About() {
               </Text>
               : We believe in customer satisfaction. We listen to feedback,
               address concerns promptly, and constantly strive to improve.
-              Sustainability: As part of our sustainability, we source local and
-              organic ingredients.
             </Text>
 
             <Text>
