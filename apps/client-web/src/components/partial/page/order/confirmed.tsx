@@ -65,7 +65,7 @@ export default function Confirmed() {
     >
       <Stack>
         <Group justify="center">
-          <ThemeIcon size={ICON_WRAPPER_SIZE * 2} color="green" radius={999}>
+          <ThemeIcon size={ICON_WRAPPER_SIZE * 2} color="ter.6" radius={999}>
             <IconCheck size={ICON_SIZE * 2} stroke={ICON_STROKE_WIDTH} />
           </ThemeIcon>
         </Group>
@@ -100,7 +100,7 @@ export default function Confirmed() {
                     >
                       <ActionIcon
                         size={ICON_WRAPPER_SIZE - 4}
-                        color={clipboard.copied ? 'green' : 'dark'}
+                        color={clipboard.copied ? 'ter.6' : 'dark'}
                         onClick={() => {
                           clipboard.copy(order.id);
                         }}
@@ -115,7 +115,7 @@ export default function Confirmed() {
 
                     <Button
                       size="xs"
-                      color={clipboard.copied ? 'green' : 'dark'}
+                      color={clipboard.copied ? 'ter.6' : 'dark'}
                       onClick={() => {
                         clipboard.copy(order.id);
                       }}

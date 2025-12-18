@@ -139,7 +139,7 @@ export default function OrderTracker() {
             <Group justify="center">
               <ThemeIcon
                 size={ICON_WRAPPER_SIZE * 2}
-                color="green"
+                color="ter.6"
                 radius={999}
               >
                 <IconCheck size={ICON_SIZE * 2} stroke={ICON_STROKE_WIDTH} />

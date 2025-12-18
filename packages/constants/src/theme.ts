@@ -83,16 +83,16 @@ export const getAppTheme = (params?: AppThemeProps) => {
         '#adae00',
       ],
       ter: [
-        '#ebfbf3',
-        '#dcf3e7',
-        '#b8e5cd',
-        '#90d7b1',
-        '#70ca9a',
-        '#5bc38b',
-        '#4fbf83',
-        '#3fa870',
-        '#339461', // src
-        '#238252',
+        '#e9ffe4',
+        '#d5ffcd',
+        '#aaff9b',
+        '#7dff64',
+        '#57ff37',
+        '#3fff1c',
+        '#36ff10', // src
+        '#20e300',
+        '#12ca00',
+        '#00ae00',
       ],
     },
 
