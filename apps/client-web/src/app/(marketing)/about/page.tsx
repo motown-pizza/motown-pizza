@@ -20,6 +20,7 @@ import { IconMoped, IconPizza } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import ImageDefault from '@repo/components/common/images/default';
 import ModalFeedback from '@/components/common/modal/feedback';
+import NextLink from '@repo/components/common/anchor/next-link';
 
 export const metadata: Metadata = { title: 'About' };
 
@@ -125,25 +126,35 @@ export default function About() {
             </Text>
 
             <Group justify="center">
-              <Button
-                color="ter.6"
-                size="md"
-                leftSection={
-                  <IconMoped size={ICON_SIZE + 4} stroke={ICON_STROKE_WIDTH} />
-                }
-              >
-                Order Online
-              </Button>
+              <NextLink href="/order/select-store?orderType=delivery">
+                <Button
+                  color="ter.6"
+                  size="md"
+                  leftSection={
+                    <IconMoped
+                      size={ICON_SIZE + 4}
+                      stroke={ICON_STROKE_WIDTH}
+                    />
+                  }
+                >
+                  Order Online
+                </Button>
+              </NextLink>
 
-              <Button
-                color="blue"
-                size="md"
-                leftSection={
-                  <IconPizza size={ICON_SIZE + 4} stroke={ICON_STROKE_WIDTH} />
-                }
-              >
-                View Our Stores
-              </Button>
+              <NextLink href="/order/select-store?orderType=collection">
+                <Button
+                  color="blue"
+                  size="md"
+                  leftSection={
+                    <IconPizza
+                      size={ICON_SIZE + 4}
+                      stroke={ICON_STROKE_WIDTH}
+                    />
+                  }
+                >
+                  View Our Stores
+                </Button>
+              </NextLink>
             </Group>
 
             <Divider w={'100%'} color="sec" />

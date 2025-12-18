@@ -42,12 +42,6 @@ export default function CheckoutReview() {
     return sum;
   };
 
-  const getVat = () => {
-    let sum = getSum();
-    sum = (30 / 100) * sum;
-    return sum;
-  };
-
   return (
     <LayoutSection id="page-checkout-review-content" padded>
       <IntroSection
@@ -130,36 +124,12 @@ export default function CheckoutReview() {
             >
               <Stack>
                 <Group justify="space-between">
-                  <Text>Food & Drink:</Text>
-
-                  <Text fz={'sm'}>
-                    Kes.{' '}
-                    <Text component="span" inherit fz={'md'} fw={'bold'}>
-                      <NumberFormatter value={getSum()} />
-                    </Text>
-                  </Text>
-                </Group>
-
-                <Group justify="space-between">
-                  <Text>Taxes (VAT):</Text>
-
-                  <Text fz={'sm'}>
-                    Kes.{' '}
-                    <Text component="span" inherit fz={'md'} fw={'bold'}>
-                      <NumberFormatter value={getVat()} />
-                    </Text>
-                  </Text>
-                </Group>
-
-                <Divider />
-
-                <Group justify="space-between">
                   <Text>Total:</Text>
 
                   <Text fz={'sm'}>
                     Kes.{' '}
                     <Text component="span" inherit fz={'md'} fw={'bold'}>
-                      <NumberFormatter value={getSum() + getVat()} />
+                      <NumberFormatter value={getSum()} />
                     </Text>
                   </Text>
                 </Group>

@@ -30,6 +30,7 @@ export default function Order() {
   const { orderDetails, setOrderDetails } = useStoreOrderDetails();
   const pathname = usePathname();
 
+  const isStoreSelection = pathname.includes('/order/select-store');
   const isReviewCheckout = pathname.includes('/order/checkout-review');
   const isReadyForCheckout =
     pathname.includes('/order/select-menu') || isReviewCheckout;
@@ -66,16 +67,15 @@ export default function Order() {
                 My Store
               </Title>
 
-              <NextLink
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                }}
-                fz={'sm'}
-                c={'blue'}
-              >
-                Change Store
-              </NextLink>
+              {!isStoreSelection && (
+                <NextLink
+                  href="/order/select-store?orderType=delivery"
+                  fz={'sm'}
+                  c={'blue'}
+                >
+                  Change Store
+                </NextLink>
+              )}
             </Group>
 
             {store && <CardStoreAside props={store} />}
