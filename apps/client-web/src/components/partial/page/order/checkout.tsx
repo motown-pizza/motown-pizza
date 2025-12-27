@@ -30,7 +30,7 @@ import {
 import { useStoreVariant } from '@/libraries/zustand/stores/variant';
 import { stores } from '@/data/stores';
 import FormContact from '@/components/form/contact';
-import { appName } from '@repo/constants/app';
+import { APP_NAME } from '@/data/constants';
 import ImageDefault from '@repo/components/common/images/default';
 import { images } from '@/assets/images';
 import NextLink from '@repo/components/common/anchor/next-link';
@@ -133,7 +133,7 @@ export default function Checkout() {
               </Title>
 
               <Text>
-                Sign In to your {appName}&apos;s Profile for faster checkout or
+                Sign In to your {APP_NAME}&apos;s Profile for faster checkout or
                 continue below as guest.
               </Text>
             </div>

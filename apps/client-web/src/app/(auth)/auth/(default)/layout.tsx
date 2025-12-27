@@ -11,7 +11,7 @@ import LayoutSection from '@repo/components/layout/section';
 import ImageDefault from '@repo/components/common/images/default';
 import { Stack, Card, Group } from '@mantine/core';
 import { images } from '@/assets/images';
-import { appName } from '@repo/constants/app';
+import { APP_NAME } from '@/data/constants';
 import { SECTION_SPACING } from '@repo/constants/sizes';
 import { Metadata } from 'next';
 import AnchorNextLink from '@repo/components/common/anchor/next-link';
@@ -19,7 +19,7 @@ import AnchorNextLink from '@repo/components/common/anchor/next-link';
 export const metadata: Metadata = {
   title: {
     default: 'Authentication',
-    template: `%s - Authentication - ${appName}`,
+    template: `%s - Authentication - ${APP_NAME}`,
   },
 };
 
@@ -48,7 +48,7 @@ export default function LayoutDefault({
                 <AnchorNextLink href={'/'}>
                   <ImageDefault
                     src={images.brand.logo.landscape.meta}
-                    alt={appName}
+                    alt={APP_NAME}
                     height={120}
                     width={240}
                     mode="grid"

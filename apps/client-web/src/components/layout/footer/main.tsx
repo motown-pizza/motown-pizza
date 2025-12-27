@@ -20,7 +20,8 @@ import {
   ICON_WRAPPER_SIZE,
   SECTION_SPACING,
 } from '@repo/constants/sizes';
-import { appName, socials } from '@repo/constants/app';
+import { socials } from '@repo/constants/app';
+import { APP_NAME } from '@/data/constants';
 import {
   IconBrandFacebook,
   IconBrandInstagram,
@@ -101,7 +102,7 @@ export default function Main() {
       <LayoutSection id={'footer-main-fine'}>
         <Group justify="center" fz={'sm'} c={'white'}>
           <Text inherit>
-            © {new Date().getFullYear()} {appName}. All rights reserved.
+            © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
           </Text>
         </Group>
       </LayoutSection>

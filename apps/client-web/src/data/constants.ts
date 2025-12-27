@@ -1,5 +1,7 @@
 import { getUrlPrefix, HOSTNAME_CLIENT_WEB } from '@repo/constants/paths';
 
+export const APP_NAME = 'MoTown Pizza';
+
 export const BASE_URL_CLIENT = `${getUrlPrefix(HOSTNAME_CLIENT_WEB)}${HOSTNAME_CLIENT_WEB}`;
 
 export const AUTH_URLS = {
