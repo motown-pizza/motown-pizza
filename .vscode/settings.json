@@ -5,6 +5,9 @@
     { "mode": "auto" },
 
     { "directory": "packages/client-web", "changeProcessCWD": true },
+    { "directory": "packages/server", "changeProcessCWD": true },
+    { "directory": "packages/client-admin", "changeProcessCWD": true },
+    { "directory": "packages/client-pos", "changeProcessCWD": true },
 
     { "directory": "packages/components", "changeProcessCWD": true },
     { "directory": "packages/constants", "changeProcessCWD": true },
