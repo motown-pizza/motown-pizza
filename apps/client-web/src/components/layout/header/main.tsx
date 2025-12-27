@@ -4,7 +4,8 @@ import React from 'react';
 import LayoutSection from '@repo/components/layout/section';
 import { Group, Stack, Text } from '@mantine/core';
 import { IconMoped, IconPizza } from '@tabler/icons-react';
-import { appName, phones } from '@repo/constants/app';
+import { phones } from '@repo/constants/app';
+import { APP_NAME } from '@/data/constants';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import NextLink from '@repo/components/common/anchor/next-link';
 import classes from './main.module.scss';
@@ -21,7 +22,7 @@ export default function Main() {
         <NextLink href="/" underline="never">
           <ImageDefault
             src={images.brand.logo.landscape.meta}
-            alt={appName}
+            alt={APP_NAME}
             height={80}
             width={160}
             mode="grid"

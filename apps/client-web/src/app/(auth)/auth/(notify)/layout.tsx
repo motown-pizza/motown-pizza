@@ -12,14 +12,14 @@ import LayoutSection from '@repo/components/layout/section';
 import ImageDefault from '@repo/components/common/images/default';
 import { images } from '@/assets/images';
 import { SECTION_SPACING } from '@repo/constants/sizes';
-import { appName } from '@repo/constants/app';
+import { APP_NAME } from '@/data/constants';
 import { Metadata } from 'next';
 import AnchorNextLink from '@repo/components/common/anchor/next-link';
 
 export const metadata: Metadata = {
   title: {
     default: 'Notify',
-    template: `%s - Authentication - ${appName}`,
+    template: `%s - Authentication - ${APP_NAME}`,
   },
 };
 
@@ -46,7 +46,7 @@ export default function LayoutNotify({
               <AnchorNextLink href={'/'}>
                 <ImageDefault
                   src={images.brand.logo.potrait.meta}
-                  alt={appName}
+                  alt={APP_NAME}
                   height={240}
                   width={240}
                   mode="grid"

@@ -11,12 +11,16 @@ import React from 'react';
 import Error500 from '@repo/components/partial/errors/500';
 import ProviderMantine from '@repo/components/provider/mantine';
 import { mantine } from '@/assets/styles';
+import { APP_NAME } from '@/data/constants';
 
 export default function GlobalError({ reset }: { reset: () => void }) {
   return (
     <html>
       <body>
-        <ProviderMantine appThemeProps={{ styleSheets: { ...mantine } }}>
+        <ProviderMantine
+          appThemeProps={{ styleSheets: { ...mantine } }}
+          appName={APP_NAME}
+        >
           <Error500 reset={reset} />
         </ProviderMantine>
       </body>

@@ -5,8 +5,7 @@
  * Do not modify unless you intend to backport changes to the template.
  */
 
-export const companyName = 'Motown Pizza';
-export const appName = 'Motown Pizza';
+export const companyName = 'MoTown Pizza';
 
 export const phones = {
   main: '(254) 707 000 014',
