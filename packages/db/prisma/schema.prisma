@@ -24,9 +24,10 @@ datasource db {
 // enums
 
 enum Role {
-  USER
-  ADMIN
   DEV
+  ADMIN
+  USER
+  EMPLOYEE
 }
 
 enum Status {
@@ -50,38 +51,76 @@ enum ProductType {
   DRINK
 }
 
-enum PizzaSize {
+enum Size {
+  SMALL
   MEDIUM
   LARGE
   EXTRALARGE
 }
 
-enum PizzaType {
+enum ProductDietaryType {
   MEATY
   VEGGIE
+  VEGAN
 }
 
-enum OrderType {
-  DELIVERY
+enum OrderSource {
+  WEBSITE
+  POS
+}
+
+enum OrderStatus {
+  DRAFT // order created but not finalized
+  PROCESSING // awaiting order payment confirmation
+  FINALIZED // order confirmed, stock will be deducted
+  PREPARING // kitchen has started production
+  READY // kitchen finished, waiting for pickup/delivery
+  OUT_FOR_DELIVERY // driver en route (delivery only)
+  COMPLETED // order delivered/picked up successfully
+  CANCELLED // order cancelled before or after finalization
+}
+
+enum OrderFulfilmentType {
   COLLECTION
+  DELIVERY
 }
 
-enum OrderTime {
-  NOW
-  LATER
+enum OrderPaymentStatus {
+  PENDING
+  AUTHORIZED
+  CONFIRMED
+  FAILED
+  CANCELLED
+  REFUNDED
 }
 
-enum OrderPaymentOption {
-  CASH_STORE
-  CASH_ON_DELIVERY
-  E_CASH
+// enum OrderTime {
+//   NOW
+//   LATER
+// }
+
+// enum OrderPaymentOption {
+//   CASH_STORE
+//   CASH_ON_DELIVERY
+//   E_CASH
+// }
+
+// enum OrderStage {
+//   STORE
+//   ITEMS
+//   CHECKOUT_REVIEW
+//   CHECKOUT
+// }
+
+enum TransportVehicleType {
+  MOPED
+  CAR
 }
 
-enum OrderStage {
-  STORE
-  ITEMS
-  CHECKOUT_REVIEW
-  CHECKOUT
+enum StockMovementType {
+  PURCHASE
+  CONSUMPTION
+  ADJUSTMENT
 }
 
 // models
@@ -131,88 +170,6 @@ model Post {
   @@map(name: "posts")
 }
 
-model Product {
-  id                  String       @id @default(uuid())
-  title               String
-  image               String
-  ingredients         String?
-  type                ProductType?
-  pizza_type          PizzaType?
-  quantity            Int?
-  selected_variant_id String?
-
-  variants Variant[]
-  orders   Order[]
-
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
-
-  @@unique([title])
-  @@map(name: "products")
-}
-
-model Variant {
-  id          String  @id @default(uuid())
-  size        String
-  measurement String?
-  price       Int?
-
-  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
-  product_id String
-
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
-
-  @@unique([size, product_id])
-  @@map(name: "variants")
-}
-
-model Store {
-  id       String @id @default(uuid())
-  title    String
-  iframe   String
-  city     String
-  location String
-  phone    String
-
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
-
-  orders Order[]
-
-  @@unique([title])
-  @@map(name: "stores")
-}
-
-model Order {
-  id             String             @id @default(uuid())
-  type           OrderType
-  time           OrderTime
-  stage          OrderStage
-  payment_option OrderPaymentOption
-  name           String
-  email          String
-  phone          String
-
-  store    Store  @relation(fields: [store_id], references: [id], onDelete: Cascade)
-  store_id String
-
-  products Product[]
-
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
-
-  @@map(name: "orders")
-}
-
 model Category {
   id    String @id @default(uuid())
   title String
@@ -246,4 +203,177 @@ model Comment {
 
   @@unique([name, content, post_id, profile_id])
   @@map(name: "comments")
+}
+
+model Product {
+  id            String              @id @default(uuid())
+  image         String
+  title         String
+  description   String
+  type          ProductType
+  dietary_class ProductDietaryType?
+
+  product_variants ProductVariant[]
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@unique([title])
+  @@map(name: "products")
+}
+
+model ProductVariant {
+  id          String  @id @default(uuid())
+  size        Size
+  price       Float
+  measurement String?
+
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  product_id String
+
+  recipie_items RecipieItem[]
+  order_items   OrderItem[]
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@unique([size, product_id])
+  @@map(name: "product_variants")
+}
+
+model Ingredient {
+  id             String @id @default(uuid())
+  name           String
+  unit           String
+  stock_quantity Float  @default(0)
+
+  recipie_items   RecipieItem[]
+  stock_movements StockMovement[]
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@unique([name])
+  @@map(name: "ingredients")
+}
+
+model RecipieItem {
+  id              String @id @default(uuid())
+  quantity_needed Float
+
+  product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
+  product_variant_id String
+  ingredient         Ingredient     @relation(fields: [ingredient_id], references: [id], onDelete: Cascade)
+  ingredient_id      String
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@map(name: "recipie_items")
+}
+
+model Order {
+  id                   String              @id @default(uuid())
+  source               OrderSource
+  order_status         OrderStatus
+  order_payment_status OrderPaymentStatus
+  fulfillment_type     OrderFulfilmentType
+  eta_estimate         String?
+  customer_name        String
+  customer_phone       String?
+
+  transporter    Transporter? @relation(fields: [transporter_id], references: [id], onDelete: Cascade)
+  transporter_id String?
+  store          Store?       @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  store_id       String?
+
+  order_items     OrderItem[]
+  stock_movements StockMovement[]
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@map(name: "orders")
+}
+
+model OrderItem {
+  id            String @id @default(uuid())
+  quantity      Int
+  price_at_sale Int
+
+  order              Order          @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  order_id           String
+  product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
+  product_variant_id String
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@map(name: "order_items")
+}
+
+model StockMovement {
+  id       String            @id @default(uuid())
+  type     StockMovementType
+  quantity Int
+
+  order         Order      @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  order_id      String
+  ingredient    Ingredient @relation(fields: [ingredient_id], references: [id], onDelete: Cascade)
+  ingredient_id String
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@map(name: "stock_movements")
+}
+
+model Transporter {
+  id           String               @id @default(uuid())
+  name         String
+  vehicle_type TransportVehicleType
+  vehicle_id   String
+
+  orders Order[]
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@unique([name])
+  @@map(name: "transporters")
+}
+
+model Store {
+  id       String @id @default(uuid())
+  title    String
+  iframe   String
+  city     String
+  location String
+  phone    String
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  orders Order[]
+
+  @@unique([title])
+  @@map(name: "stores")
 }
