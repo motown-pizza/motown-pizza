@@ -20,10 +20,53 @@ export const config: DBConfig = {
     {
       name: STORE_NAME.POSTS,
       keyPath: 'id',
-      indexes: [{ name: 'by_categoryId', keyPath: 'category_id' }],
     },
     {
       name: STORE_NAME.CATEGORIES,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.PRODUCTS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.CART_ITEMS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.WISHLIST_ITEMS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.PRODUCT_VARIANTS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.INGREDIENTS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.RECIPIE_ITEMS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.ORDERS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.ORDER_ITEMS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.STOCK_MOVEMENTS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.TRANSPORTERS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.STORES,
       keyPath: 'id',
     },
   ],
