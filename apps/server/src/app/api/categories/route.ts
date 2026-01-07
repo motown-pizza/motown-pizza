@@ -7,7 +7,7 @@
 
 import prisma from '@/libraries/prisma';
 import { NextRequest, NextResponse } from 'next/server';
-import { CategoryRelations } from '@repo/types/models/category';
+import { CategoryGet } from '@repo/types/models/category';
 import { SyncStatus } from '@repo/types/models/enums';
 
 export const dynamic = 'force-dynamic';
@@ -38,7 +38,7 @@ export async function PUT(request: NextRequest) {
       categories,
       deletedIds,
     }: {
-      categories: CategoryRelations[];
+      categories: CategoryGet[];
       deletedIds?: string[];
     } = await request.json();
 
@@ -54,14 +54,11 @@ export async function PUT(request: NextRequest) {
       prisma.category.upsert({
         where: { id: category.id },
         update: {
-          title: category.title,
-          status: category.status,
+          ...category,
           updated_at: new Date(category.updated_at),
         },
         create: {
-          id: category.id,
-          title: category.title,
-          status: category.status,
+          ...category,
           created_at: new Date(category.created_at),
           updated_at: new Date(category.updated_at),
           sync_status: category.sync_status || SyncStatus.SYNCED,
