@@ -8,3 +8,10 @@ export type StoreUpdate = Prisma.StoreUpdateInput;
 
 // Type for default item (with id and no relations)
 export type StoreGet = Store;
+
+// Type for fetched item with relations
+export type StoreRelations = Prisma.StoreGetPayload<{
+  include: {
+    _count: { select: { orders: true } };
+  };
+}>;
