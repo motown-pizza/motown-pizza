@@ -40,6 +40,7 @@ export const STORE_NAME = {
   COLOR_SCHEME: 'color-scheme',
   SESSION: 'session',
   SETTINGS: 'settings',
+  PROFILES: 'profiles',
   POSTS: 'posts',
   CATEGORIES: 'categories',
   PRODUCTS: 'products',

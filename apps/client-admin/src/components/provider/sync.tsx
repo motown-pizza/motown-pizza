@@ -12,7 +12,19 @@ import { useDebouncedCallback, useNetwork } from '@mantine/hooks';
 import { useStoreSession } from '@/libraries/zustand/stores/session';
 import { useStoreSyncStatus } from '@/libraries/zustand/stores/sync-status';
 import { handleSync, syncToServerAfterDelay } from '@/utilities/sync';
-import { useSyncCategories, useSyncPosts } from '@/hooks/sync';
+import {
+  useSyncCategories,
+  useSyncIngredients,
+  useSyncOrderItems,
+  useSyncOrders,
+  useSyncPosts,
+  useSyncProducts,
+  useSyncProductVariants,
+  useSyncProfiles,
+  useSyncRecipieItems,
+  useSyncStockMovements,
+  useSyncTransporters,
+} from '@/hooks/sync';
 import { SyncParams } from '@repo/types/sync';
 import { useSyncQueue } from '@repo/utilities/sync';
 
@@ -38,6 +50,11 @@ export default function Sync({ children }: { children: React.ReactNode }) {
     clientOnly: true,
   };
 
+  const { syncProfiles } = useSyncProfiles({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
   const { syncPosts } = useSyncPosts({
     syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
@@ -48,12 +65,74 @@ export default function Sync({ children }: { children: React.ReactNode }) {
     online: networkStatus.online,
   });
 
+  const { syncProducts } = useSyncProducts({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  const { syncProductVariants } = useSyncProductVariants({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  const { syncIngredients } = useSyncIngredients({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  const { syncRecipieItems } = useSyncRecipieItems({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  const { syncOrders } = useSyncOrders({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  const { syncOrderItems } = useSyncOrderItems({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  const { syncStockMovements } = useSyncStockMovements({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  const { syncTransporters } = useSyncTransporters({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
   useEffect(() => {
     if (!networkStatus.online) return;
 
+    syncProfiles();
     syncPosts();
     syncCategories();
-  }, [networkStatus.online, syncPosts, syncCategories]);
+    syncProducts();
+    syncProductVariants();
+    syncIngredients();
+    syncRecipieItems();
+    syncOrders();
+    syncOrderItems();
+    syncStockMovements();
+    syncTransporters();
+  }, [
+    networkStatus.online,
+    syncProfiles,
+    syncPosts,
+    syncCategories,
+    syncProducts,
+    syncProductVariants,
+    syncIngredients,
+    syncRecipieItems,
+    syncOrders,
+    syncOrderItems,
+    syncStockMovements,
+    syncTransporters,
+  ]);
 
   return <div>{children}</div>;
 }

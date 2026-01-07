@@ -31,7 +31,10 @@ import {
 import { Role } from '@repo/types/models/enums';
 import { WEEK } from '@repo/constants/sizes';
 import { ProfileGet } from '@repo/types/models/profile';
-import { profileGet } from '@repo/handlers/requests/database/profiles';
+import {
+  profileGet,
+  profilesGet,
+} from '@repo/handlers/requests/database/profiles';
 import { RoleValue, useStoreRole } from '@/libraries/zustand/stores/role';
 import { useMediaQuery } from '@mantine/hooks';
 import {
@@ -43,6 +46,25 @@ import { postsGet } from '@repo/handlers/requests/database/posts';
 import { ThemeValue, useStoreTheme } from '@/libraries/zustand/stores/theme';
 import { ColorScheme } from '@repo/types/enums';
 import { DEFAULT_COLOR_SCHEME } from '@repo/constants/other';
+import { useStoreProfile } from '@/libraries/zustand/stores/profile';
+import { useStoreCategory } from '@/libraries/zustand/stores/category';
+import { categoriesGet } from '@repo/handlers/requests/database/category';
+import { useStoreProduct } from '@/libraries/zustand/stores/product';
+import { productsGet } from '@repo/handlers/requests/database/products';
+import { productVariantsGet } from '@repo/handlers/requests/database/product-variants';
+import { ingredientsGet } from '@repo/handlers/requests/database/ingredients';
+import { recipieItemsGet } from '@repo/handlers/requests/database/recipie-items';
+import { ordersGet } from '@repo/handlers/requests/database/orders';
+import { orderItemsGet } from '@repo/handlers/requests/database/order-items';
+import { stockMovementsGet } from '@repo/handlers/requests/database/stock-movements';
+import { transportersGet } from '@repo/handlers/requests/database/transporters';
+import { useStoreProductVariant } from '@/libraries/zustand/stores/product-variant';
+import { useStoreIngredient } from '@/libraries/zustand/stores/ingredient';
+import { useStoreRecipieItem } from '@/libraries/zustand/stores/recipie-item';
+import { useStoreOrder } from '@/libraries/zustand/stores/order';
+import { useStoreOrderItem } from '@/libraries/zustand/stores/order-item';
+import { useStoreStockMovement } from '@/libraries/zustand/stores/stock-movement';
+import { useStoreTransporter } from '@/libraries/zustand/stores/transporter';
 
 export const useSessionStore = (params?: {
   options?: { clientOnly?: boolean };
@@ -221,7 +243,42 @@ export const useStoreData = (params?: {
   const prevItemsRef = useRef<any[]>([]);
 
   const { session } = useStoreSession();
+  const { setProfiles } = useStoreProfile();
   const { setPosts } = useStorePost();
+  const { setCategories } = useStoreCategory();
+  const { setProducts } = useStoreProduct();
+  const { setProductVariants } = useStoreProductVariant();
+  const { setIngredients } = useStoreIngredient();
+  const { setRecipieItems } = useStoreRecipieItem();
+  const { setOrders } = useStoreOrder();
+  const { setOrderItems } = useStoreOrderItem();
+  const { setStockMovements } = useStoreStockMovement();
+  const { setTransporters } = useStoreTransporter();
+
+  useEffect(() => {
+    if (prevItemsRef.current.length) return;
+
+    const loadProfiles = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.PROFILES,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await profilesGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setProfiles(stateUpdateItems),
+      });
+    };
+
+    loadProfiles();
+  }, [setProfiles, session, clientOnly]);
 
   useEffect(() => {
     if (prevItemsRef.current.length) return;
@@ -246,4 +303,228 @@ export const useStoreData = (params?: {
 
     loadPosts();
   }, [setPosts, session, clientOnly]);
+
+  useEffect(() => {
+    if (prevItemsRef.current.length) return;
+
+    const loadCategories = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.CATEGORIES,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await categoriesGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setCategories(stateUpdateItems),
+      });
+    };
+
+    loadCategories();
+  }, [setCategories, session, clientOnly]);
+
+  useEffect(() => {
+    if (prevItemsRef.current.length) return;
+
+    const loadProducts = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.PRODUCTS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await productsGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setProducts(stateUpdateItems),
+      });
+    };
+
+    loadProducts();
+  }, [setProducts, session, clientOnly]);
+
+  useEffect(() => {
+    if (prevItemsRef.current.length) return;
+
+    const loadProductVariants = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.PRODUCT_VARIANTS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await productVariantsGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setProductVariants(stateUpdateItems),
+      });
+    };
+
+    loadProductVariants();
+  }, [setProductVariants, session, clientOnly]);
+
+  useEffect(() => {
+    if (prevItemsRef.current.length) return;
+
+    const loadIngredients = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.INGREDIENTS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await ingredientsGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setIngredients(stateUpdateItems),
+      });
+    };
+
+    loadIngredients();
+  }, [setIngredients, session, clientOnly]);
+
+  useEffect(() => {
+    if (prevItemsRef.current.length) return;
+
+    const loadRecipieItems = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.RECIPIE_ITEMS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await recipieItemsGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setRecipieItems(stateUpdateItems),
+      });
+    };
+
+    loadRecipieItems();
+  }, [setRecipieItems, session, clientOnly]);
+
+  useEffect(() => {
+    if (prevItemsRef.current.length) return;
+
+    const loadOrders = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.ORDERS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await ordersGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) => setOrders(stateUpdateItems),
+      });
+    };
+
+    loadOrders();
+  }, [setOrders, session, clientOnly]);
+
+  useEffect(() => {
+    if (prevItemsRef.current.length) return;
+
+    const loadOrderItems = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.ORDER_ITEMS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await orderItemsGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setOrderItems(stateUpdateItems),
+      });
+    };
+
+    loadOrderItems();
+  }, [setOrderItems, session, clientOnly]);
+
+  useEffect(() => {
+    if (prevItemsRef.current.length) return;
+
+    const loadStockMovements = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.STOCK_MOVEMENTS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await stockMovementsGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setStockMovements(stateUpdateItems),
+      });
+    };
+
+    loadStockMovements();
+  }, [setStockMovements, session, clientOnly]);
+
+  useEffect(() => {
+    if (prevItemsRef.current.length) return;
+
+    const loadTransporters = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.TRANSPORTERS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await transportersGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setTransporters(stateUpdateItems),
+      });
+    };
+
+    loadTransporters();
+  }, [setTransporters, session, clientOnly]);
 };
