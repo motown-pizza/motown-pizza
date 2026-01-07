@@ -12,7 +12,6 @@ export type OrderGet = Order;
 // Type for fetched item with relations
 export type OrderRelations = Prisma.OrderGetPayload<{
   include: {
-    _count: { select: { products: true } };
-    products: true;
+    _count: { select: { order_items: true; stock_movements: true } };
   };
 }>;

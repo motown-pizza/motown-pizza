@@ -12,6 +12,6 @@ export type ProductGet = Product;
 // Type for fetched item with relations
 export type ProductRelations = Prisma.ProductGetPayload<{
   include: {
-    _count: { select: { orders: true; variants: true } };
+    _count: { select: { product_variants: true } };
   };
 }>;
