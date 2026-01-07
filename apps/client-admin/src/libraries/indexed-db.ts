@@ -18,6 +18,10 @@ export const config: DBConfig = {
       keyPath: 'id',
     },
     {
+      name: STORE_NAME.PROFILES,
+      keyPath: 'id',
+    },
+    {
       name: STORE_NAME.POSTS,
       keyPath: 'id',
     },

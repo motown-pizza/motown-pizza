@@ -130,6 +130,7 @@ model Profile {
   user_name  String?
   first_name String?
   last_name  String?
+  email      String?
   bio        String?
   avatar     String?
   phone      String?
@@ -138,9 +139,11 @@ model Profile {
   posts    Post[]
   comments Comment[]
 
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status      Status     @default(ACTIVE)
   sync_status SyncStatus @default(SYNCED)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("profiles")
 }
