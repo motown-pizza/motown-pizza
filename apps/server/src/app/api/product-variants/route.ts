@@ -6,32 +6,24 @@
  */
 
 import prisma from '@/libraries/prisma';
+import { ProductVariantGet } from '@repo/types/models/product-variant';
 import { NextRequest, NextResponse } from 'next/server';
-import { PostGet } from '@repo/types/models/post';
-import { SyncStatus } from '@repo/types/models/enums';
 
 export const dynamic = 'force-dynamic';
 // export const revalidate = 3600;
 
 export async function GET() {
   try {
-    const postRecords = await prisma.post.findMany({
-      include: {
-        _count: { select: { comments: true } },
-
-        category: true,
-        profile: true,
-      },
-
+    const productVariantRecords = await prisma.productVariant.findMany({
       orderBy: { created_at: 'desc' },
     });
 
     return NextResponse.json(
-      { items: postRecords },
-      { status: 200, statusText: 'Posts Retrieved' }
+      { items: productVariantRecords },
+      { status: 200, statusText: 'Product Variants Retrieved' }
     );
   } catch (error) {
-    console.error('---> route handler error (get posts):', error);
+    console.error('---> route handler error (get product variants):', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -42,45 +34,43 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     const {
-      posts,
+      productVariants,
       deletedIds,
-    }: {
-      posts: PostGet[];
-      deletedIds?: string[];
-    } = await request.json();
+    }: { productVariants: ProductVariantGet[]; deletedIds?: string[] } =
+      await request.json();
 
     // First handle explicit deletions if any exist
     if (deletedIds?.length) {
-      await prisma.post.deleteMany({
+      await prisma.productVariant.deleteMany({
         where: { id: { in: deletedIds } },
       });
     }
 
     // Prepare upsert operations
-    const operations = posts.map((post) =>
-      prisma.post.upsert({
-        where: { id: post.id },
+    const operations = productVariants.map((productVariant) =>
+      prisma.productVariant.upsert({
+        where: { id: productVariant.id },
         update: {
-          ...post,
-          updated_at: new Date(post.updated_at),
+          ...productVariant,
+          updated_at: new Date(productVariant.updated_at),
         },
         create: {
-          ...post,
-          created_at: new Date(post.created_at),
-          updated_at: new Date(post.updated_at),
+          ...productVariant,
+          created_at: new Date(productVariant.created_at),
+          updated_at: new Date(productVariant.updated_at),
         },
       })
     );
 
     // Run all operations in one transaction
-    const updatePosts = await prisma.$transaction(operations);
+    const updateProductVariants = await prisma.$transaction(operations);
 
     return NextResponse.json(
-      { items: updatePosts },
-      { status: 200, statusText: 'Posts Updated' }
+      { items: updateProductVariants },
+      { status: 200, statusText: 'Product Variants Updated' }
     );
   } catch (error) {
-    console.error('---> route handler error (update posts):', error);
+    console.error('---> route handler error (update product variants):', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
