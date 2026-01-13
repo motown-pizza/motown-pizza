@@ -27,7 +27,7 @@
     "@repo/types": "workspace:*",
     "@repo/utilities": "workspace:*",
     "@supabase/ssr": "^0.8.0",
-    "@supabase/supabase-js": "^2.89.0",
+    "@supabase/supabase-js": "^2.90.1",
     "@tabler/icons-react": "^3.35.0",
     "embla-carousel-autoplay": "8.5.2",
     "embla-carousel-fade": "8.5.2",
