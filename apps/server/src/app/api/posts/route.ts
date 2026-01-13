@@ -8,7 +8,6 @@
 import prisma from '@/libraries/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { PostGet } from '@repo/types/models/post';
-import { SyncStatus } from '@repo/types/models/enums';
 
 export const dynamic = 'force-dynamic';
 // export const revalidate = 3600;
