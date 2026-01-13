@@ -2,14 +2,14 @@ import React from 'react';
 import { Box, Button, Card, Group, Stack, Text } from '@mantine/core';
 import { IconBuildingStore, IconMapPin, IconPhone } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
-import { useStoreOrderDetails } from '@/libraries/zustand/stores/order-details';
+import { useStoreOrderPlacement } from '@/libraries/zustand/stores/order-placement';
 import { defaultOrderDetails } from '@/data/orders';
 import { useRouter } from 'next/navigation';
 import { StoreGet } from '@repo/types/models/store';
 
 export default function Main({ props }: { props: StoreGet }) {
   const router = useRouter();
-  const { orderDetails, setOrderDetails } = useStoreOrderDetails();
+  const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
 
   return (
     <Card bg={'var(--mantine-color-dark-6)'}>

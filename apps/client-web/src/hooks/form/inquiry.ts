@@ -6,14 +6,13 @@
  */
 
 import { capitalizeWords } from '@repo/utilities/string';
-import { validators } from '@repo/utilities/validation';
 import { hasLength } from '@mantine/form';
 import { handleInquiry } from '@repo/handlers/requests/email/inquiry';
 import { contactAdd } from '@repo/handlers/requests/contact';
 import { formValuesInitialInquiry, FormValuesInquiry } from '@repo/types/form';
 import { useFormBase } from '../form';
 import { useEffect } from 'react';
-import { useStoreOrderDetails } from '@/libraries/zustand/stores/order-details';
+import { useStoreOrderPlacement } from '@/libraries/zustand/stores/order-placement';
 import { defaultOrderDetails } from '@/data/orders';
 
 type UseFormEmailInquiryOptions = {
@@ -26,7 +25,7 @@ export const useFormEmailInquiry = (
   initialValues?: Partial<FormValuesInquiry>,
   options?: UseFormEmailInquiryOptions
 ) => {
-  const { orderDetails, setOrderDetails } = useStoreOrderDetails();
+  const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
 
   const { form, submitted, handleSubmit, reset, validate } =
     useFormBase<FormValuesInquiry>(
@@ -36,7 +35,6 @@ export const useFormEmailInquiry = (
       },
       {
         name: hasLength({ min: 2, max: 24 }, 'Between 2 and 24 characters'),
-        email: (value) => validators.email(value.trim()),
         subject: hasLength(
           { min: 2, max: 255 },
           'Between 2 and 255 characters'
@@ -85,9 +83,8 @@ export const useFormEmailInquiry = (
   useEffect(() => {
     setOrderDetails({
       ...(orderDetails || defaultOrderDetails),
-      name: form.values.name,
-      email: form.values.email,
-      phone: form.values.phone,
+      customer_name: form.values.name,
+      customer_phone: form.values.phone,
     });
   }, [form.values.name, form.values.email, form.values.phone]);
 

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import { OrderRelations } from '@repo/types/models/order';
+import { OrderGet } from '@repo/types/models/order';
 
-export type OrderDetailsValue = OrderRelations | null | undefined;
+export type OrderDetailsValue = OrderGet | null | undefined;
 
 interface OrderDetailsState {
   orderDetails: OrderDetailsValue;
@@ -9,7 +9,7 @@ interface OrderDetailsState {
   clearOrderDetails: () => void;
 }
 
-export const useStoreOrderDetails = create<OrderDetailsState>((set) => ({
+export const useStoreOrderPlacement = create<OrderDetailsState>((set) => ({
   orderDetails: undefined,
 
   setOrderDetails: (data) => {

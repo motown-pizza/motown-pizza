@@ -25,7 +25,7 @@ import HeaderMain from '@/components/layout/header/main';
 import NavbarMain from '@/components/layout/navbar/main';
 import FooterMain from '@/components/layout/footer/main';
 import NextLink from '@repo/components/common/anchor/next-link';
-import { OrderType } from '@repo/types/models/enums';
+import { OrderFulfilmentType } from '@repo/types/models/enums';
 import ImageDefault from '@repo/components/common/images/default';
 import { images } from '@/assets/images';
 import { SECTION_SPACING } from '@repo/constants/sizes';
@@ -45,7 +45,7 @@ export default function Home() {
           >
             Is your order for{' '}
             <NextLink
-              href={`/order/select-store?orderType=${OrderType.DELIVERY.toLowerCase()}`}
+              href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
               underline="never"
             >
               <Text
@@ -67,7 +67,7 @@ export default function Home() {
             </NextLink>{' '}
             or{' '}
             <NextLink
-              href={`/order/select-store?orderType=${OrderType.COLLECTION.toLowerCase()}`}
+              href={`/order/select-store?orderType=${OrderFulfilmentType.COLLECTION.toLowerCase()}`}
               underline="never"
             >
               <Text
@@ -97,7 +97,7 @@ export default function Home() {
         <Grid>
           <GridCol span={{ base: 12, md: 9 }}>
             <NextLink
-              href={`/order/select-store?orderType=${OrderType.DELIVERY.toLowerCase()}`}
+              href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
               underline="never"
             >
               <BackgroundImage
@@ -130,7 +130,7 @@ export default function Home() {
           <GridCol span={{ base: 12, md: 3 }}>
             <Stack gap={'sm'} h={'100%'} justify="space-between">
               <NextLink
-                href={`/order/select-store?orderType=${OrderType.DELIVERY.toLowerCase()}`}
+                href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
                 underline="never"
               >
                 <ImageDefault
@@ -143,7 +143,7 @@ export default function Home() {
               </NextLink>
 
               <NextLink
-                href={`/order/select-store?orderType=${OrderType.DELIVERY.toLowerCase()}`}
+                href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
                 underline="never"
               >
                 <ImageDefault

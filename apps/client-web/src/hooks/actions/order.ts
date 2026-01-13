@@ -1,13 +1,15 @@
 import { useStoreOrder } from '@/libraries/zustand/stores/order';
 import { useStoreSession } from '@/libraries/zustand/stores/session';
-import { OrderRelations } from '@repo/types/models/order';
+import { OrderGet } from '@repo/types/models/order';
 import {
-  OrderPaymentOption,
-  OrderStage,
+  OrderPaymentMethod,
+  OrderStatus,
   OrderTime,
-  OrderType,
+  OrderFulfilmentType,
   Status,
   SyncStatus,
+  OrderPaymentStatus,
+  OrderSource,
 } from '@repo/types/models/enums';
 import { generateUUID } from '@repo/utilities/generators';
 
@@ -15,39 +17,41 @@ export const useOrderActions = () => {
   const { session } = useStoreSession();
   const { addOrder, updateOrder, deleteOrder } = useStoreOrder();
 
-  const orderCreate = (params: Partial<OrderRelations>) => {
+  const orderCreate = (params: Partial<OrderGet>) => {
     if (!session) return;
 
     const id = generateUUID();
     const now = new Date();
 
-    const newOrder: OrderRelations = {
+    const newOrder: OrderGet = {
       id: params.id || id,
-      type: params.type || OrderType.DELIVERY,
-      time: params.time || OrderTime.NOW,
-      stage: params.stage || OrderStage.CHECKOUT,
-      payment_option: params.payment_option || OrderPaymentOption.E_CASH,
-      name: params.name || '',
-      email: params.email || '',
-      phone: params.phone || '',
+      customer_name: params.customer_name || '',
+      customer_phone: params.customer_phone || '',
+      eta_estimate: params.eta_estimate || '',
+      fulfillment_type: params.fulfillment_type || OrderFulfilmentType.DELIVERY,
+      order_payment_status:
+        params.order_payment_status || OrderPaymentStatus.PENDING,
+      order_status: params.order_status || OrderStatus.PROCESSING,
+      order_time: params.order_time || OrderTime.NOW,
+      payment_method: params.payment_method || OrderPaymentMethod.ONLINE,
+      source: params.source || OrderSource.POS,
       store_id: params.store_id || '',
-      products: params.products || [],
+      transporter_id: params.transporter_id || '',
       status: params.status || Status.ACTIVE,
       sync_status: SyncStatus.PENDING,
       created_at: now.toISOString() as any,
       updated_at: now.toISOString() as any,
-      _count: { products: params.products?.length || 0 },
     };
 
     addOrder(newOrder);
   };
 
-  const orderUpdate = (params: OrderRelations) => {
+  const orderUpdate = (params: OrderGet) => {
     if (!session) return;
 
     const now = new Date();
 
-    const newOrder: OrderRelations = {
+    const newOrder: OrderGet = {
       ...params,
       sync_status: SyncStatus.PENDING,
       updated_at: now.toISOString() as any,
@@ -56,7 +60,7 @@ export const useOrderActions = () => {
     updateOrder(newOrder);
   };
 
-  const orderDelete = (params: OrderRelations) => {
+  const orderDelete = (params: OrderGet) => {
     if (!session) return;
 
     const now = new Date();

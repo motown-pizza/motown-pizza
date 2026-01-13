@@ -18,38 +18,31 @@ import {
   Title,
 } from '@mantine/core';
 import IntroSection from '@repo/components/layout/intros/section';
-import { useStoreOrderDetails } from '@/libraries/zustand/stores/order-details';
+import { useStoreOrderPlacement } from '@/libraries/zustand/stores/order-placement';
 import CardMenuSummary from '@/components/common/cards/menu/summary';
 import { defaultOrderDetails } from '@/data/orders';
-import {
-  OrderPaymentOption,
-  OrderStage,
-  OrderType,
-  SyncStatus,
-} from '@repo/types/models/enums';
-import { useStoreVariant } from '@/libraries/zustand/stores/variant';
+import { SyncStatus } from '@repo/types/models/enums';
 import { stores } from '@/data/stores';
 import FormContact from '@/components/form/contact';
 import { APP_NAME } from '@/data/constants';
 import ImageDefault from '@repo/components/common/images/default';
 import { images } from '@/assets/images';
 import NextLink from '@repo/components/common/anchor/next-link';
-import { useOrderActions } from '@/hooks/actions/category';
+import { useOrderActions } from '@/hooks/actions/order';
 import { generateUUID } from '@repo/utilities/generators';
 
 export default function Checkout() {
   const orderIdRef = useRef(generateUUID());
-  const { orderDetails, setOrderDetails } = useStoreOrderDetails();
-  const { variants } = useStoreVariant();
+  const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
   const { orderCreate } = useOrderActions();
 
   const getSum = () => {
     let sum = 0;
 
-    orderDetails?.products.map((p) => {
-      const variant = variants?.find((v) => v.id == p.selected_variant_id);
-      if (variant?.price) sum += variant.price;
-    });
+    // orderDetails?.products.map((p) => {
+    //   const variant = variants?.find((v) => v.id == p.selected_variant_id);
+    //   if (variant?.price) sum += variant.price;
+    // });
 
     return sum;
   };
@@ -63,11 +56,10 @@ export default function Checkout() {
   const store = stores.find((s) => s.id == orderDetails?.store_id);
 
   const formIsValid =
-    !!orderDetails?.name.length &&
-    !!orderDetails?.email.length &&
-    !!orderDetails?.phone.length;
+    !!orderDetails?.customer_name.length &&
+    !!orderDetails?.customer_phone?.length;
 
-  const isReadyForConfirmation = formIsValid && !!orderDetails.products.length;
+  // const isReadyForConfirmation = formIsValid && !!orderDetails.products.length;
 
   return (
     <LayoutSection
@@ -107,7 +99,7 @@ export default function Checkout() {
           </CardSection>
 
           <ScrollArea w={'100%'} scrollbars={'x'} type="auto">
-            <Stack mt={'md'} miw={900} pb={'lg'}>
+            {/* <Stack mt={'md'} miw={900} pb={'lg'}>
               {(orderDetails || defaultOrderDetails).products.map((pi, i) => (
                 <Stack gap={5} key={i}>
                   {i > 0 && <Divider mb={'xs'} />}
@@ -115,7 +107,7 @@ export default function Checkout() {
                   <CardMenuSummary props={pi} />
                 </Stack>
               ))}
-            </Stack>
+            </Stack> */}
           </ScrollArea>
         </Card>
 
@@ -169,30 +161,30 @@ export default function Checkout() {
               name="payment-option"
               label="Payment Option"
               withAsterisk
-              value={(orderDetails || defaultOrderDetails).payment_option}
+              // value={(orderDetails || defaultOrderDetails).payment_option}
               onChange={(v) => {
                 setOrderDetails({
                   ...(orderDetails || defaultOrderDetails),
-                  payment_option: v as OrderPaymentOption,
+                  // payment_option: v as OrderPaymentOption,
                 });
               }}
             >
               <Stack mt="xs">
-                {(orderDetails || defaultOrderDetails).type ==
+                {/* {(orderDetails || defaultOrderDetails).type ==
                   OrderType.COLLECTION && (
                   <Radio
                     value={OrderPaymentOption.CASH_STORE}
                     label={'Pay in Store'}
                   />
-                )}
+                )} */}
 
-                <Radio
+                {/* <Radio
                   value={OrderPaymentOption.CASH_ON_DELIVERY}
                   label={'Pay on Delivery (Cash)'}
-                />
+                /> */}
 
                 <Radio
-                  value={OrderPaymentOption.E_CASH}
+                  // value={OrderPaymentOption.E_CASH}
                   label={
                     <Stack gap={5}>
                       <Text inherit>Pay now with mobile money</Text>
@@ -218,20 +210,24 @@ export default function Checkout() {
           <NextLink
             href={`/order/confirmed?confirmedOrder=${orderIdRef.current}`}
             onClick={(e) => {
-              if (!isReadyForConfirmation) {
-                e.preventDefault();
-                return;
-              }
+              // if (!isReadyForConfirmation) {
+              //   e.preventDefault();
+              //   return;
+              // }
 
               orderCreate({
                 ...orderDetails,
                 id: orderIdRef.current,
-                stage: OrderStage.CHECKOUT,
+                // stage: OrderStage.CHECKOUT,
                 sync_status: SyncStatus.PENDING,
               });
             }}
           >
-            <Button color="pri" size="md" disabled={!isReadyForConfirmation}>
+            <Button
+              color="pri"
+              size="md"
+              // disabled={!isReadyForConfirmation}
+            >
               Continue
             </Button>
           </NextLink>

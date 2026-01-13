@@ -97,23 +97,15 @@ enum OrderPaymentStatus {
   REFUNDED
 }
 
-// enum OrderTime {
-//   NOW
-//   LATER
-// }
+enum OrderTime {
+  NOW
+  LATER
+}
 
-// enum OrderPaymentOption {
-//   CASH_STORE
-//   CASH_ON_DELIVERY
-//   E_CASH
-// }
-
-// enum OrderStage {
-//   STORE
-//   ITEMS
-//   CHECKOUT_REVIEW
-//   CHECKOUT
-// }
+enum OrderPaymentMethod {
+  ONLINE
+  CASH
+}
 
 enum TransportVehicleType {
   MOPED
@@ -246,6 +238,8 @@ model ProductVariant {
 
   recipie_items RecipieItem[]
   order_items   OrderItem[]
+  cart_items    CartItem[]
+  wihlist_items WishlistItem[]
 
   status      Status     @default(DRAFT)
   sync_status SyncStatus @default(SYNCED)
@@ -297,6 +291,8 @@ model Order {
   order_status         OrderStatus
   order_payment_status OrderPaymentStatus
   fulfillment_type     OrderFulfilmentType
+  order_time           OrderTime
+  payment_method       OrderPaymentMethod
   eta_estimate         String?
   customer_name        String
   customer_phone       String?
@@ -385,4 +381,34 @@ model Store {
   orders Order[]
 
   @@map(name: "stores")
+}
+
+model CartItem {
+  id       String @id @default(uuid())
+  quantity Int    @default(1)
+
+  product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
+  product_variant_id String
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@map(name: "cart_items")
+}
+
+model WishlistItem {
+  id       String @id @default(uuid())
+  quantity Int    @default(1)
+
+  product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
+  product_variant_id String
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@map(name: "wishlist_items")
 }

@@ -19,30 +19,36 @@ import {
   ICON_STROKE_WIDTH,
   ICON_WRAPPER_SIZE,
 } from '@repo/constants/sizes';
-import { useStoreCart } from '@/libraries/zustand/stores/cart';
 import { SyncStatus } from '@repo/types/models/enums';
-import { useStoreVariant } from '@/libraries/zustand/stores/variant';
+import { useStoreProductVariant } from '@/libraries/zustand/stores/product-variant';
 import { capitalizeWords } from '@repo/utilities/string';
+import { ProductVariantGet } from '@repo/types/models/product-variant';
+import { useStoreCartItems } from '@/libraries/zustand/stores/cart';
 
-export default function Cart({ props }: { props: ProductGet }) {
-  const { cart, setCart, deleted, setDeletedCart } = useStoreCart();
+export default function Cart({
+  props,
+}: {
+  props: { product: ProductGet; productVariant: ProductVariantGet };
+}) {
+  const { cartItems, setCartItems, deleted, setDeletedCartItems } =
+    useStoreCartItems();
 
-  const { variants } = useStoreVariant();
+  const { productVariants } = useStoreProductVariant();
 
-  const variant = (variants || []).find(
-    (v) => v.id == props.selected_variant_id
+  const variant = (productVariants || []).find(
+    (v) => v.id == props.productVariant.id
   );
 
-  const external = props.image.includes('https');
-  const drink = props.image.includes('drink');
+  const external = props.product.image.includes('https');
+  const drink = props.product.image.includes('drink');
 
   return (
     <Card bg={'transparent'}>
       <Grid>
         <GridCol span={3}>
           <ImageDefault
-            src={props.image}
-            alt={props.title}
+            src={props.product.image}
+            alt={props.product.title}
             height={{ base: external || drink ? 80 : 60 }}
             fit={external || drink ? undefined : 'contain'}
             radius={'lg'}
@@ -54,25 +60,28 @@ export default function Cart({ props }: { props: ProductGet }) {
             <div>
               <Group justify="space-between">
                 <Title order={3} fz={'md'} fw={500} c={'sec.6'}>
-                  {props.title}
+                  {props.product.title}
                 </Title>
 
                 <ActionIcon
                   size={ICON_WRAPPER_SIZE}
                   color="gray.9"
                   onClick={() => {
-                    setCart(
-                      (cart || []).filter(
+                    setCartItems(
+                      (cartItems || []).filter(
                         (ci) =>
-                          `${ci.id}-${ci.selected_variant_id}` !=
-                          `${props.id}-${props.selected_variant_id}`
+                          `${ci.id}-${props.productVariant.id}` !=
+                          `${props.product.id}-${props.productVariant.id}`
                       )
                     );
 
-                    setDeletedCart([
-                      ...deleted,
-                      { ...props, sync_status: SyncStatus.DELETED },
-                    ]);
+                    // setDeletedCartItems([
+                    //   ...deleted,
+                    //   {
+                    //     ...props.productVariant,
+                    //     sync_status: SyncStatus.DELETED,
+                    //   },
+                    // ]);
                   }}
                 >
                   <IconX size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />

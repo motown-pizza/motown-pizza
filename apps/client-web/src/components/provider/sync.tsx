@@ -17,12 +17,12 @@ import { useStoreSession } from '@/libraries/zustand/stores/session';
 import { useStoreSyncStatus } from '@/libraries/zustand/stores/sync-status';
 import { handleSync, syncToServerAfterDelay } from '@/utilities/sync';
 import {
-  useSyncCart,
+  useSyncCartItems,
   useSyncCategories,
   useSyncOrders,
   useSyncPosts,
   useSyncProducts,
-  useSyncVariants,
+  useSyncProductVariants,
 } from '@/hooks/sync';
 import { SyncParams } from '@repo/types/sync';
 
@@ -63,12 +63,12 @@ export default function Sync({ children }: { children: React.ReactNode }) {
     online: networkStatus.online,
   });
 
-  const { syncVariants } = useSyncVariants({
+  const { syncProductVariants } = useSyncProductVariants({
     syncFunction: (i: SyncParams) => debounceSync({ ...i, ...restProps }),
     online: networkStatus.online,
   });
 
-  const { syncCart } = useSyncCart({
+  const { syncCartItems } = useSyncCartItems({
     syncFunction: (i: SyncParams) => debounceSync({ ...i, ...restProps }),
     online: networkStatus.online,
   });
@@ -84,16 +84,16 @@ export default function Sync({ children }: { children: React.ReactNode }) {
     syncPosts();
     syncCategories();
     syncProducts();
-    syncVariants();
-    syncCart();
+    syncProductVariants();
+    syncCartItems();
     syncOrders();
   }, [
     networkStatus.online,
     syncPosts,
     syncCategories,
     syncProducts,
-    syncVariants,
-    syncCart,
+    syncProductVariants,
+    syncCartItems,
     syncOrders,
   ]);
 

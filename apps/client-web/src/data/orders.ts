@@ -1,28 +1,32 @@
-import { OrderRelations } from '@repo/types/models/order';
+import { OrderGet } from '@repo/types/models/order';
 import { stores } from './stores';
 import {
-  OrderPaymentOption,
-  OrderStage,
+  OrderFulfilmentType,
+  OrderPaymentMethod,
+  OrderPaymentStatus,
+  OrderSource,
+  OrderStatus,
   OrderTime,
-  OrderType,
   Status,
   SyncStatus,
 } from '@repo/types/models/enums';
+import { generateUUID } from '@repo/utilities/generators';
 
 const now = new Date();
 
-export const defaultOrderDetails: OrderRelations = {
-  _count: { products: 0 },
-  id: '1',
-  type: OrderType.DELIVERY,
-  time: OrderTime.NOW,
-  stage: OrderStage.STORE,
-  name: '',
-  phone: '',
-  email: '',
+export const defaultOrderDetails: OrderGet = {
+  id: generateUUID(),
+  customer_name: '',
+  customer_phone: '',
+  eta_estimate: '',
+  fulfillment_type: OrderFulfilmentType.DELIVERY,
+  order_payment_status: OrderPaymentStatus.PENDING,
+  order_status: OrderStatus.PROCESSING,
+  order_time: OrderTime.NOW,
+  payment_method: OrderPaymentMethod.ONLINE,
+  source: OrderSource.WEBSITE,
   store_id: stores[0].id,
-  payment_option: OrderPaymentOption.E_CASH,
-  products: [],
+  transporter_id: '',
   status: Status.ACTIVE,
   sync_status: SyncStatus.SYNCED,
   created_at: now,

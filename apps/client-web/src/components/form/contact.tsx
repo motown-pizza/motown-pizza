@@ -57,17 +57,6 @@ export default function Contact({
                 {...form.getInputProps('phone')}
               />
             </GridCol>
-
-            <GridCol span={12}>
-              <TextInput
-                required
-                label={options?.modal ? undefined : 'Email'}
-                aria-label={options?.modal ? 'Email' : undefined}
-                placeholder={`Your Email${options?.modal ? ' *' : ''}`}
-                {...form.getInputProps('email')}
-                rightSection={<TooltipInputInfo />}
-              />
-            </GridCol>
           </Grid>
         </GridCol>
 

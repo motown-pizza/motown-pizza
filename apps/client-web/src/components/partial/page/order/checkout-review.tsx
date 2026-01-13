@@ -19,25 +19,24 @@ import {
 } from '@mantine/core';
 import IntroSection from '@repo/components/layout/intros/section';
 import NextLink from '@repo/components/common/anchor/next-link';
-import { useStoreOrderDetails } from '@/libraries/zustand/stores/order-details';
+import { useStoreOrderPlacement } from '@/libraries/zustand/stores/order-placement';
 import CardMenuSummary from '@/components/common/cards/menu/summary';
 import { defaultOrderDetails } from '@/data/orders';
 import CardMenuMain from '@/components/common/cards/menu/main';
-import { products } from '@/data/menu';
 import { ProductType } from '@repo/types/models/enums';
-import { useStoreVariant } from '@/libraries/zustand/stores/variant';
+import { useStoreProduct } from '@/libraries/zustand/stores/product';
 
 export default function CheckoutReview() {
-  const { orderDetails } = useStoreOrderDetails();
-  const { variants } = useStoreVariant();
+  const { products } = useStoreProduct();
+  const { orderDetails } = useStoreOrderPlacement();
 
   const getSum = () => {
     let sum = 0;
 
-    orderDetails?.products.map((p) => {
-      const variant = variants?.find((v) => v.id == p.selected_variant_id);
-      if (variant?.price) sum += variant.price;
-    });
+    // orderDetails?.products.map((p) => {
+    //   const variant = variants?.find((v) => v.id == p.selected_variant_id);
+    //   if (variant?.price) sum += variant.price;
+    // });
 
     return sum;
   };
@@ -64,7 +63,7 @@ export default function CheckoutReview() {
               </CardSection>
 
               <ScrollArea w={'100%'} scrollbars={'x'} type="auto">
-                <Stack mt={'md'} miw={900} pb={'lg'}>
+                {/* <Stack mt={'md'} miw={900} pb={'lg'}>
                   {(orderDetails || defaultOrderDetails).products.map(
                     (pi, i) => (
                       <Stack gap={5} key={i}>
@@ -74,7 +73,7 @@ export default function CheckoutReview() {
                       </Stack>
                     )
                   )}
-                </Stack>
+                </Stack> */}
               </ScrollArea>
             </Card>
 
@@ -85,7 +84,7 @@ export default function CheckoutReview() {
 
               <Grid mt={'md'}>
                 {products
-                  .filter((p) => p.type == ProductType.SIDE)
+                  ?.filter((p) => p.type == ProductType.SIDE)
                   .map(
                     (pi, i) =>
                       i < 3 && (
@@ -104,7 +103,7 @@ export default function CheckoutReview() {
 
               <Grid mt={'md'}>
                 {products
-                  .filter((p) => p.type == ProductType.DRINK)
+                  ?.filter((p) => p.type == ProductType.DRINK)
                   .map(
                     (pi, i) =>
                       i < 3 && (
