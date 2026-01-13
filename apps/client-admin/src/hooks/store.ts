@@ -65,6 +65,7 @@ import { useStoreOrder } from '@/libraries/zustand/stores/order';
 import { useStoreOrderItem } from '@/libraries/zustand/stores/order-item';
 import { useStoreStockMovement } from '@/libraries/zustand/stores/stock-movement';
 import { useStoreTransporter } from '@/libraries/zustand/stores/transporter';
+import { User } from '@supabase/supabase-js';
 
 export const useSessionStore = (params?: {
   options?: { clientOnly?: boolean };
@@ -79,9 +80,22 @@ export const useSessionStore = (params?: {
     const getUserSession = async () => {
       const { data: userSession } = await supabase.auth.getUser();
 
-      const { user: session } = userSession;
-
       const localId = getFromLocalStorage(LOCAL_STORAGE_NAME.TEMPID);
+
+      // const { user: session } = userSession;
+      const { user: session }: { user: Partial<User> } = {
+        user: {
+          id: localId,
+          email: 'jane.smith@acme.inc',
+          role: Role.ADMIN,
+          user_metadata: {
+            name: 'Jane Smith',
+            avatar:
+              'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-6.png',
+            phone: '0712345678',
+          },
+        },
+      };
 
       if (!session) {
         if (!clientOnly) {

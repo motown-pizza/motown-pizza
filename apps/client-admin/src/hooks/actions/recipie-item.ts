@@ -1,7 +1,11 @@
 import { useStoreRecipieItem } from '@/libraries/zustand/stores/recipie-item';
 import { useStoreSession } from '@/libraries/zustand/stores/session';
 import { RecipieItemGet } from '@repo/types/models/recipie-item';
-import { Status, SyncStatus } from '@repo/types/models/enums';
+import {
+  MeasurementUnitType,
+  Status,
+  SyncStatus,
+} from '@repo/types/models/enums';
 import { generateUUID } from '@repo/utilities/generators';
 
 export const useRecipieItemActions = () => {
@@ -20,6 +24,7 @@ export const useRecipieItemActions = () => {
       ingredient_id: params.ingredient_id || '',
       product_variant_id: params.product_variant_id || '',
       quantity_needed: params.quantity_needed || 0,
+      unit: params.unit || MeasurementUnitType.GRAMS,
       status: params.status || Status.ACTIVE,
       sync_status: SyncStatus.PENDING,
       created_at: now.toISOString() as any,
