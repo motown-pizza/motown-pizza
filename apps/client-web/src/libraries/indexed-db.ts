@@ -8,9 +8,10 @@
 import { APP_NAME } from '@/data/constants';
 import { STORE_NAME } from '@repo/constants/names';
 import { DBConfig } from '@repo/types/indexed-db';
+import { linkify } from '@repo/utilities/url';
 
 export const config: DBConfig = {
-  name: APP_NAME.toLowerCase(),
+  name: linkify(APP_NAME),
   version: 1,
   stores: [
     {
@@ -31,11 +32,15 @@ export const config: DBConfig = {
       keyPath: 'id',
     },
     {
-      name: STORE_NAME.VARIANTS,
+      name: STORE_NAME.PRODUCT_VARIANTS,
       keyPath: 'id',
     },
     {
-      name: STORE_NAME.CART,
+      name: STORE_NAME.WISHLIST_ITEMS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.CART_ITEMS,
       keyPath: 'id',
     },
     {

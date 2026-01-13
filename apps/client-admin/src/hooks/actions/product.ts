@@ -8,10 +8,13 @@ import {
   SyncStatus,
 } from '@repo/types/models/enums';
 import { generateUUID } from '@repo/utilities/generators';
+import { useNotification } from '@repo/hooks/notification';
+import { Variant } from '@repo/types/enums';
 
 export const useProductActions = () => {
   const { session } = useStoreSession();
   const { addProduct, updateProduct, deleteProduct } = useStoreProduct();
+  const { showNotification } = useNotification();
 
   const productCreate = (params: Partial<ProductGet>) => {
     if (!session) return;
@@ -33,6 +36,11 @@ export const useProductActions = () => {
     };
 
     addProduct(newProduct);
+    showNotification({
+      variant: Variant.SUCCESS,
+      title: 'Product Added',
+      desc: `'${newProduct.title}' has been added`,
+    });
   };
 
   const productUpdate = (params: ProductGet) => {
@@ -47,6 +55,11 @@ export const useProductActions = () => {
     };
 
     updateProduct(newProduct);
+    showNotification({
+      variant: Variant.SUCCESS,
+      title: 'Product Updated',
+      desc: `'${newProduct.title}' has been updated`,
+    });
   };
 
   const productDelete = (params: ProductGet) => {
