@@ -1,6 +1,6 @@
 import { getUrlPrefix, HOSTNAME_CLIENT_WEB } from '@repo/constants/paths';
 
-export const APP_NAME = 'MoTown Admin';
+export const APP_NAME = 'MoTown Back Office';
 
 export const BASE_URL_CLIENT = `${getUrlPrefix(HOSTNAME_CLIENT_WEB)}${HOSTNAME_CLIENT_WEB}`;
 

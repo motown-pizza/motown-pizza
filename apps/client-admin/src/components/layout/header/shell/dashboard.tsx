@@ -34,10 +34,9 @@ export default function Dashboard() {
         </Box>
 
         <ImageDefault
-          src={images.brand.logo.dark}
-          height={32}
-          width={200}
-          fit="contain"
+          src={images.brand.logo.landscape.meta}
+          height={40}
+          width={120}
           alt={APP_NAME}
         />
       </Group>

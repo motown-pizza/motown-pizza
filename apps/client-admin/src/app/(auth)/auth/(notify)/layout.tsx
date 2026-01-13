@@ -45,10 +45,10 @@ export default function LayoutNotify({
             <Center h={'100vh'} px={{ xs: 32 }}>
               <AnchorNextLink href={'/'}>
                 <ImageDefault
-                  src={images.brand.logo.light}
+                  src={images.brand.logo.landscape.default}
                   alt={APP_NAME}
-                  height={48}
-                  width={160}
+                  height={100}
+                  width={200}
                   mode="grid"
                 />
               </AnchorNextLink>
