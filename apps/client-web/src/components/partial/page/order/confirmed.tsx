@@ -28,7 +28,7 @@ import {
 import { IconCheck, IconCopy } from '@tabler/icons-react';
 import { capitalizeWords } from '@repo/utilities/string';
 import { useClipboard } from '@mantine/hooks';
-import { OrderRelations } from '@repo/types/models/order';
+import { OrderGet } from '@repo/types/models/order';
 import { stores } from '@/data/stores';
 import { StoreGet } from '@repo/types/models/store';
 import NextLink from '@repo/components/common/anchor/next-link';
@@ -37,7 +37,7 @@ export default function Confirmed() {
   const clipboard = useClipboard({ timeout: 500 });
   const { orders } = useStoreOrder();
 
-  const [order, setOrder] = useState<OrderRelations | null>(null);
+  const [order, setOrder] = useState<OrderGet | null>(null);
   const [store, setStore] = useState<StoreGet | null>(null);
 
   useEffect(() => {
@@ -46,7 +46,6 @@ export default function Confirmed() {
 
     const orderConfirmedId = getUrlParam(PARAM_NAME.ORDER_CONFIRMED);
     const orderItem = orders?.find((o) => o.id == orderConfirmedId);
-    console.log('orderItem', orderItem);
 
     if (orderItem) {
       setOrder(orderItem);
@@ -136,10 +135,10 @@ export default function Confirmed() {
 
                 <Group justify="space-between">
                   <Title order={3} fz={'sm'} fw={'normal'}>
-                    Type
+                    Fulfilment Type
                   </Title>
                   <Text ta={'end'} fw={500} fz={'sm'}>
-                    {capitalizeWords(order?.type || '')}
+                    {capitalizeWords(order?.fulfillment_type || '')}
                   </Text>
                 </Group>
 
@@ -150,7 +149,7 @@ export default function Confirmed() {
                     Payment Option
                   </Title>
                   <Badge ta={'end'} fw={500} color="dark">
-                    {order?.payment_option}
+                    {order?.payment_method}
                   </Badge>
                 </Group>
 
@@ -162,19 +161,7 @@ export default function Confirmed() {
                   </Title>
 
                   <Text ta={'end'} fw={500} fz={'sm'}>
-                    {capitalizeWords(order?.name || '')}
-                  </Text>
-                </Group>
-
-                <Divider variant="dashed" />
-
-                <Group justify="space-between">
-                  <Title order={3} fz={'sm'} fw={'normal'}>
-                    Email
-                  </Title>
-
-                  <Text ta={'end'} fw={500} fz={'sm'}>
-                    {order?.email}
+                    {capitalizeWords(order?.customer_name || '')}
                   </Text>
                 </Group>
 
@@ -186,7 +173,7 @@ export default function Confirmed() {
                   </Title>
 
                   <Text ta={'end'} fw={500} fz={'sm'}>
-                    {order?.phone}
+                    {order?.customer_phone}
                   </Text>
                 </Group>
 

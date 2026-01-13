@@ -22,12 +22,12 @@ import {
 } from '@repo/constants/sizes';
 import { IconShoppingCart } from '@tabler/icons-react';
 import { capitalizeWords } from '@repo/utilities/string';
-import { useStoreCart } from '@/libraries/zustand/stores/cart';
 import { SyncStatus } from '@repo/types/models/enums';
 import { usePathname } from 'next/navigation';
-import { useStoreOrderDetails } from '@/libraries/zustand/stores/order-details';
+import { useStoreOrderPlacement } from '@/libraries/zustand/stores/order-placement';
 import { defaultOrderDetails } from '@/data/orders';
-import { useStoreVariant } from '@/libraries/zustand/stores/variant';
+import { useStoreProductVariant } from '@/libraries/zustand/stores/product-variant';
+import { useStoreCartItems } from '@/libraries/zustand/stores/cart';
 
 export default function Main({
   props,
@@ -39,86 +39,87 @@ export default function Main({
   const [variant, setVariant] = useState('');
   const [price, setPrice] = useState(0);
   const pathname = usePathname();
-  const { orderDetails, setOrderDetails } = useStoreOrderDetails();
+  const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
 
-  const { cart, setCart } = useStoreCart();
+  const { cartItems, setCartItems } = useStoreCartItems();
 
-  const { variants } = useStoreVariant();
-  const productVariants = (variants || []).filter(
+  const { productVariants } = useStoreProductVariant();
+
+  const productVariantsCurrent = (productVariants || []).filter(
     (v) => v.product_id == props.id
   );
 
   useEffect(() => {
-    if (!variant && productVariants.length) {
-      const variant = productVariants[0];
+    if (!variant && productVariantsCurrent.length) {
+      const variant = productVariantsCurrent[0];
 
       setVariant(variant.id);
       if (variant.price) setPrice(variant.price);
     }
-  }, [variants, productVariants]);
+  }, [productVariants, productVariants]);
 
-  const inCart = cart?.find((ci) => ci.id == `${props.id}-${variant}`);
-  const isInOrder = orderDetails?.products.find(
-    (p) => p.id == `${props.id}-${variant}`
-  );
+  const inCart = cartItems?.find((ci) => ci.id == `${props.id}-${variant}`);
+  // const isInOrder = orderDetails?.products.find(
+  //   (p) => p.id == `${props.id}-${variant}`
+  // );
 
-  const handleAddCart = () => {
-    if (inCart) {
-      setCart(
-        (cart || []).map((ci) => {
-          if (ci.id != `${props.id}-${variant}`) return ci;
+  // const handleAddCart = () => {
+  //   if (inCart) {
+  //     setCartItems(
+  //       (cart || []).map((ci) => {
+  //         if (ci.id != `${props.id}-${variant}`) return ci;
 
-          return {
-            ...ci,
-            selected_variant_id: variant,
-            quantity: (ci.quantity || 0) + 1,
-            sync_status: SyncStatus.PENDING,
-          };
-        })
-      );
-    } else {
-      setCart([
-        ...(cart || []),
-        {
-          ...props,
-          id: `${props.id}-${variant}`,
-          selected_variant_id: variant,
-          quantity: 1,
-          sync_status: SyncStatus.PENDING,
-        },
-      ]);
-    }
-  };
+  //         return {
+  //           ...ci,
+  //           selected_variant_id: variant,
+  //           quantity: (ci.quantity || 0) + 1,
+  //           sync_status: SyncStatus.PENDING,
+  //         };
+  //       })
+  //     );
+  //   } else {
+  //     setCartItems([
+  //       ...(cart || []),
+  //       {
+  //         ...props,
+  //         id: `${props.id}-${variant}`,
+  //         selected_variant_id: variant,
+  //         quantity: 1,
+  //         sync_status: SyncStatus.PENDING,
+  //       },
+  //     ]);
+  //   }
+  // };
 
-  const handleAddOrder = () => {
-    if (isInOrder) {
-      setOrderDetails({
-        ...(orderDetails || defaultOrderDetails),
-        products: (orderDetails || defaultOrderDetails).products.map((ci) => {
-          if (ci.id != `${props.id}-${variant}`) return ci;
+  // const handleAddOrder = () => {
+  //   if (isInOrder) {
+  //     setOrderDetails({
+  //       ...(orderDetails || defaultOrderDetails),
+  //       products: (orderDetails || defaultOrderDetails).products.map((ci) => {
+  //         if (ci.id != `${props.id}-${variant}`) return ci;
 
-          return {
-            ...ci,
-            selected_variant_id: variant,
-            quantity: (ci.quantity || 0) + 1,
-          };
-        }),
-      });
-    } else {
-      setOrderDetails({
-        ...(orderDetails || defaultOrderDetails),
-        products: [
-          ...(orderDetails || defaultOrderDetails).products,
-          {
-            ...props,
-            id: `${props.id}-${variant}`,
-            selected_variant_id: variant,
-            quantity: 1,
-          },
-        ],
-      });
-    }
-  };
+  //         return {
+  //           ...ci,
+  //           selected_variant_id: variant,
+  //           quantity: (ci.quantity || 0) + 1,
+  //         };
+  //       }),
+  //     });
+  //   } else {
+  //     setOrderDetails({
+  //       ...(orderDetails || defaultOrderDetails),
+  //       products: [
+  //         ...(orderDetails || defaultOrderDetails).products,
+  //         {
+  //           ...props,
+  //           id: `${props.id}-${variant}`,
+  //           selected_variant_id: variant,
+  //           quantity: 1,
+  //         },
+  //       ],
+  //     });
+  //   }
+  // };
 
   const external = props.image.includes('https');
   const drink = props.image.includes('drink');
@@ -159,7 +160,7 @@ export default function Main({
               {props.title}
             </Title>
 
-            {props.ingredients && <Text fz={'sm'}>{props.ingredients}</Text>}
+            {/* {props.ingredients && <Text fz={'sm'}>{props.ingredients}</Text>} */}
           </Stack>
         </div>
 
@@ -214,7 +215,7 @@ export default function Main({
                     size={ICON_WRAPPER_SIZE}
                     variant={inCart ? 'filled' : 'subtle'}
                     color="ter.6"
-                    onClick={handleAddCart}
+                    // onClick={handleAddCart}
                   >
                     <IconShoppingCart
                       size={ICON_SIZE}
@@ -229,25 +230,25 @@ export default function Main({
               <Group>
                 <Button
                   fullWidth
-                  color={isInOrder ? 'ter' : 'pri'}
-                  onClick={handleAddOrder}
-                  rightSection={
-                    !isInOrder ? undefined : !orderDetails ? undefined : (
-                      <Text component="span" inherit fz={'normal'}>
-                        (
-                        <NumberFormatter
-                          value={
-                            orderDetails.products.find(
-                              (p) => p.id == `${props.id}-${variant}`
-                            )?.quantity || 0
-                          }
-                        />
-                        )
-                      </Text>
-                    )
-                  }
+                  // color={isInOrder ? 'ter' : 'pri'}
+                  // onClick={handleAddOrder}
+                  // rightSection={
+                  //   !isInOrder ? undefined : !orderDetails ? undefined : (
+                  //     <Text component="span" inherit fz={'normal'}>
+                  //       (
+                  //       <NumberFormatter
+                  //         value={
+                  //           orderDetails.products.find(
+                  //             (p) => p.id == `${props.id}-${variant}`
+                  //           )?.quantity || 0
+                  //         }
+                  //       />
+                  //       )
+                  //     </Text>
+                  //   )
+                  // }
                 >
-                  {isInOrder ? 'Added' : 'Add'} to Order
+                  {/* {isInOrder ? 'Added' : 'Add'} to Order */}
                 </Button>
               </Group>
             )}

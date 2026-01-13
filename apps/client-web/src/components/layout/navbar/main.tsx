@@ -8,7 +8,6 @@ import {
   Group,
   Indicator,
   NumberFormatter,
-  Text,
 } from '@mantine/core';
 import { links } from '@/data/links';
 import NextLink from '@repo/components/common/anchor/next-link';
@@ -19,11 +18,11 @@ import DrawerNav from '@/components/common/drawer/nav';
 import { useMediaQuery } from '@mantine/hooks';
 import ModalSignIn from '@/components/common/modal/sign-in';
 import DrawerCart from '@/components/common/drawer/cart';
-import { useStoreCart } from '@/libraries/zustand/stores/cart';
+import { useStoreCartItems } from '@/libraries/zustand/stores/cart';
 
 export default function Main() {
   const tablet = useMediaQuery('(min-width: 62em)');
-  const { cart } = useStoreCart();
+  const { cartItems } = useStoreCartItems();
 
   return (
     <LayoutSection
@@ -73,11 +72,11 @@ export default function Main() {
               <Indicator
                 color="sec"
                 label={
-                  cart === undefined ? undefined : (
-                    <NumberFormatter value={cart?.length} />
+                  cartItems === undefined ? undefined : (
+                    <NumberFormatter value={cartItems?.length} />
                   )
                 }
-                processing={cart === undefined}
+                processing={cartItems === undefined}
                 size={16}
                 styles={{ indicator: { color: 'var(--mantine-color-body)' } }}
               >

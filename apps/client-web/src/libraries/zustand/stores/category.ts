@@ -1,18 +1,18 @@
 import { create } from 'zustand';
-import type { CategoryRelations } from '@repo/types/models/category';
+import type { CategoryGet } from '@repo/types/models/category';
 
-export type CategoriesValue = CategoryRelations[] | null | undefined;
+export type CategoriesValue = CategoryGet[] | null | undefined;
 
 interface CategoryState {
   categories: CategoriesValue;
-  deleted: CategoryRelations[];
+  deleted: CategoryGet[];
   setCategories: (data: CategoriesValue) => void;
   setDeletedCategories: (data: CategoriesValue) => void;
   clearCategories: () => void;
   clearDeletedCategories: () => void;
-  addCategory: (data: CategoryRelations) => void;
-  updateCategory: (data: CategoryRelations) => void;
-  deleteCategory: (data: CategoryRelations) => void;
+  addCategory: (data: CategoryGet) => void;
+  updateCategory: (data: CategoryGet) => void;
+  deleteCategory: (data: CategoryGet) => void;
 }
 
 export const useStoreCategory = create<CategoryState>((set) => ({

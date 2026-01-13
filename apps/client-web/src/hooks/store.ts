@@ -40,12 +40,14 @@ import {
 } from '@/libraries/zustand/stores/shell';
 import { samplePosts } from '@/data/sample/posts';
 import { postsGet } from '@repo/handlers/requests/database/posts';
-import { products } from '@/data/menu';
 import { useStoreProduct } from '@/libraries/zustand/stores/product';
-import { useStoreCart } from '@/libraries/zustand/stores/cart';
-import { useStoreVariant } from '@/libraries/zustand/stores/variant';
 import { useStoreOrder } from '@/libraries/zustand/stores/order';
-import { variants } from '@/data/variants';
+import { useStoreCartItems } from '@/libraries/zustand/stores/cart';
+import { useStoreProductVariant } from '@/libraries/zustand/stores/product-variant';
+import { productsGet } from '@repo/handlers/requests/database/products';
+import { productVariantsGet } from '@repo/handlers/requests/database/product-variants';
+import { cartItemsGet } from '@repo/handlers/requests/database/cart-items';
+import { ordersGet } from '@repo/handlers/requests/database/orders';
 
 export const useSessionStore = (params?: {
   options?: { clientOnly?: boolean };
@@ -194,8 +196,8 @@ export const useStoreData = (params?: {
   const { session } = useStoreSession();
   const { setPosts } = useStorePost();
   const { setProducts } = useStoreProduct();
-  const { setVariants } = useStoreVariant();
-  const { setCart } = useStoreCart();
+  const { setProductVariants } = useStoreProductVariant();
+  const { setCartItems } = useStoreCartItems();
   const { setOrders } = useStoreOrder();
 
   useEffect(() => {
@@ -233,13 +235,13 @@ export const useStoreData = (params?: {
         dataFetchFunction: async () => {
           if (clientOnly) {
             return {
-              items: products,
+              items: [],
             };
           } else {
-            // return await productsGet();
-            return {
-              items: products,
-            };
+            return await productsGet();
+            // return {
+            //   items: products,
+            // };
           }
         },
         stateUpdateFunction: (stateUpdateItems) =>
@@ -253,30 +255,30 @@ export const useStoreData = (params?: {
   useEffect(() => {
     if (prevItemsRef.current.length) return;
 
-    const loadVariants = async () => {
+    const loadProductVariants = async () => {
       await loadInitialData({
         prevItemsRef,
-        dataStore: STORE_NAME.VARIANTS,
+        dataStore: STORE_NAME.PRODUCT_VARIANTS,
         session,
         dataFetchFunction: async () => {
           if (clientOnly) {
             return {
-              items: variants,
+              items: [],
             };
           } else {
-            // return await variantsGet();
-            return {
-              items: variants,
-            };
+            return await productVariantsGet();
+            // return {
+            //   items: variants,
+            // };
           }
         },
         stateUpdateFunction: (stateUpdateItems) =>
-          setVariants(stateUpdateItems),
+          setProductVariants(stateUpdateItems),
       });
     };
 
-    loadVariants();
-  }, [setVariants, session, clientOnly]);
+    loadProductVariants();
+  }, [setProductVariants, session, clientOnly]);
 
   useEffect(() => {
     if (prevItemsRef.current.length) return;
@@ -284,7 +286,7 @@ export const useStoreData = (params?: {
     const loadCart = async () => {
       await loadInitialData({
         prevItemsRef,
-        dataStore: STORE_NAME.CART,
+        dataStore: STORE_NAME.CART_ITEMS,
         session,
         dataFetchFunction: async () => {
           if (clientOnly) {
@@ -292,18 +294,19 @@ export const useStoreData = (params?: {
               items: [],
             };
           } else {
-            // return await cartGet();
-            return {
-              items: [],
-            };
+            return await cartItemsGet();
+            // return {
+            //   items: [],
+            // };
           }
         },
-        stateUpdateFunction: (stateUpdateItems) => setCart(stateUpdateItems),
+        stateUpdateFunction: (stateUpdateItems) =>
+          setCartItems(stateUpdateItems),
       });
     };
 
     loadCart();
-  }, [setCart, session, clientOnly]);
+  }, [setCartItems, session, clientOnly]);
 
   useEffect(() => {
     if (prevItemsRef.current.length) return;
@@ -319,10 +322,10 @@ export const useStoreData = (params?: {
               items: [],
             };
           } else {
-            // return await ordersGet();
-            return {
-              items: [],
-            };
+            return await ordersGet();
+            // return {
+            //   items: [],
+            // };
           }
         },
         stateUpdateFunction: (stateUpdateItems) => setOrders(stateUpdateItems),

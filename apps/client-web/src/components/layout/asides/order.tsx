@@ -15,26 +15,26 @@ import {
 } from '@mantine/core';
 import CardStoreAside from '@/components/common/cards/store/aside';
 import NextLink from '@repo/components/common/anchor/next-link';
-import { useStoreOrderDetails } from '@/libraries/zustand/stores/order-details';
+import { useStoreOrderPlacement } from '@/libraries/zustand/stores/order-placement';
 import { defaultOrderDetails } from '@/data/orders';
 import { capitalizeWords } from '@repo/utilities/string';
 import { SECTION_SPACING } from '@repo/constants/sizes';
 import { usePathname } from 'next/navigation';
 import { stores } from '@/data/stores';
-import { OrderTime, OrderType } from '@repo/types/models/enums';
+import { OrderTime, OrderFulfilmentType } from '@repo/types/models/enums';
 import { getUrlParam } from '@repo/utilities/url';
 import { PARAM_NAME } from '@repo/constants/names';
 import { DateTimePicker } from '@mantine/dates';
 
 export default function Order() {
-  const { orderDetails, setOrderDetails } = useStoreOrderDetails();
+  const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
   const pathname = usePathname();
 
   const isStoreSelection = pathname.includes('/order/select-store');
   const isReviewCheckout = pathname.includes('/order/checkout-review');
   const isReadyForCheckout =
     pathname.includes('/order/select-menu') || isReviewCheckout;
-  const productsSelected = !!orderDetails?.products.length;
+  // const productsSelected = !!orderDetails?.products.length;
 
   const store = stores.find(
     (s) => s.id == (orderDetails || defaultOrderDetails).store_id
@@ -47,7 +47,7 @@ export default function Order() {
     if (isStorePage && orderType)
       setOrderDetails({
         ...(orderDetails || defaultOrderDetails),
-        type: (orderType as string).toUpperCase() as OrderType,
+        // type: (orderType as string).toUpperCase() as OrderFulfilmentType,
       });
   }, []);
 
@@ -91,24 +91,24 @@ export default function Order() {
             <RadioGroup
               name="order-type"
               aria-label="Order type"
-              value={(orderDetails || defaultOrderDetails).type}
-              onChange={(v) => {
-                setOrderDetails({
-                  ...(orderDetails || defaultOrderDetails),
-                  type: v as OrderType,
-                });
-              }}
+              // value={(orderDetails || defaultOrderDetails).type}
+              // onChange={(v) => {
+              //   setOrderDetails({
+              //     ...(orderDetails || defaultOrderDetails),
+              //     type: v as OrderFulfilmentType,
+              //   });
+              // }}
             >
               <Stack mt="xs">
                 <Radio
                   size="xs"
-                  value={OrderType.COLLECTION}
-                  label={capitalizeWords(OrderType.COLLECTION)}
+                  value={OrderFulfilmentType.COLLECTION}
+                  label={capitalizeWords(OrderFulfilmentType.COLLECTION)}
                 />
                 <Radio
                   size="xs"
-                  value={OrderType.DELIVERY}
-                  label={capitalizeWords(OrderType.DELIVERY)}
+                  value={OrderFulfilmentType.DELIVERY}
+                  label={capitalizeWords(OrderFulfilmentType.DELIVERY)}
                 />
               </Stack>
             </RadioGroup>
@@ -124,13 +124,13 @@ export default function Order() {
             <RadioGroup
               name="order-time"
               aria-label="Order time"
-              value={(orderDetails || defaultOrderDetails).time}
-              onChange={(v) => {
-                setOrderDetails({
-                  ...(orderDetails || defaultOrderDetails),
-                  time: v as OrderTime,
-                });
-              }}
+              // value={(orderDetails || defaultOrderDetails).time}
+              // onChange={(v) => {
+              //   setOrderDetails({
+              //     ...(orderDetails || defaultOrderDetails),
+              //     time: v as OrderTime,
+              //   });
+              // }}
             >
               <Stack mt="xs">
                 <Radio
@@ -146,7 +146,7 @@ export default function Order() {
               </Stack>
             </RadioGroup>
 
-            {orderDetails?.time == OrderTime.LATER && (
+            {/* {orderDetails?.time == OrderTime.LATER && (
               <DateTimePicker
                 aria-label="Pick date and time"
                 placeholder="Pick date and time"
@@ -156,30 +156,32 @@ export default function Order() {
                   new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7 * 3)
                 }
               />
-            )}
+            )} */}
           </Stack>
         </Stack>
       </Card>
 
       {isReadyForCheckout && (
         <Group mt={'md'}>
-          <NextLink
+          {/* <NextLink
             href={
               isReviewCheckout ? '/order/checkout' : '/order/checkout-review'
             }
-            onClick={(e) => {
-              if (!productsSelected) e.preventDefault();
-            }}
+            // onClick={(e) => {
+            //   if (!productsSelected) e.preventDefault();
+            // }}
             w={'100%'}
           >
-            <Button fullWidth disabled={!productsSelected}>
+            <Button fullWidth
+            // disabled={!productsSelected}
+            >
               {productsSelected
                 ? isReviewCheckout
                   ? 'Continue Checkout'
                   : 'Checkout'
                 : 'Select item(s) to checkout'}
             </Button>
-          </NextLink>
+          </NextLink> */}
         </Group>
       )}
     </Box>

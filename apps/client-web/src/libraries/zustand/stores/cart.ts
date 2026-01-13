@@ -1,59 +1,59 @@
-import { ProductGet } from '@repo/types/models/product';
+import { CartItemGet } from '@repo/types/models/cart-item';
 import { create } from 'zustand';
-// import type { CartRelations } from '@repo/types/models/cart';
+// import type { CartItemsRelations } from '@repo/types/models/cart';
 
-export type CartValue = ProductGet[] | null | undefined;
+export type CartItemsValue = CartItemGet[] | null | undefined;
 
-interface CartState {
-  cart: CartValue;
-  deleted: ProductGet[];
-  setCart: (data: CartValue) => void;
-  setDeletedCart: (data: CartValue) => void;
-  clearCart: () => void;
-  clearDeletedCart: () => void;
-  addCart: (data: ProductGet) => void;
-  updateCart: (data: ProductGet) => void;
-  deleteCart: (data: ProductGet) => void;
+interface CartItemsState {
+  cartItems: CartItemsValue;
+  deleted: CartItemGet[];
+  setCartItems: (data: CartItemsValue) => void;
+  setDeletedCartItems: (data: CartItemsValue) => void;
+  clearCartItems: () => void;
+  clearDeletedCartItems: () => void;
+  addCartItems: (data: CartItemGet) => void;
+  updateCartItems: (data: CartItemGet) => void;
+  deleteCartItems: (data: CartItemGet) => void;
 }
 
-export const useStoreCart = create<CartState>((set) => ({
-  cart: undefined,
+export const useStoreCartItems = create<CartItemsState>((set) => ({
+  cartItems: undefined,
   deleted: [],
 
-  setCart: (data) => {
-    set({ cart: data });
+  setCartItems: (data) => {
+    set({ cartItems: data });
   },
 
-  setDeletedCart: (data) => {
+  setDeletedCartItems: (data) => {
     set({ deleted: data || [] });
   },
 
-  clearCart: () => {
-    set({ cart: [] });
+  clearCartItems: () => {
+    set({ cartItems: [] });
   },
 
-  clearDeletedCart: () => {
+  clearDeletedCartItems: () => {
     set({ deleted: [] });
   },
 
-  addCart: (data) => {
+  addCartItems: (data) => {
     set((state) => ({
-      cart: [...(state.cart ?? []), data],
+      cartItems: [...(state.cartItems ?? []), data],
     }));
   },
 
-  updateCart: (data) => {
+  updateCartItems: (data) => {
     set((state) => ({
-      cart:
-        state.cart?.map((i) => (i.id === data.id ? { ...data } : i)) ??
+      cartItems:
+        state.cartItems?.map((i) => (i.id === data.id ? { ...data } : i)) ??
         undefined,
     }));
   },
 
-  deleteCart: (data) => {
+  deleteCartItems: (data) => {
     set((state) => ({
       deleted: [...state.deleted, data],
-      cart: state.cart?.filter((i) => i.id !== data.id) ?? undefined,
+      cartItems: state.cartItems?.filter((i) => i.id !== data.id) ?? undefined,
     }));
   },
 }));

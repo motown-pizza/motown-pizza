@@ -1,19 +1,19 @@
-import { OrderRelations } from '@repo/types/models/order';
+import { OrderGet } from '@repo/types/models/order';
 import { create } from 'zustand';
-// import type { OrderRelations } from '@repo/types/models/order';
+// import type { OrderGet } from '@repo/types/models/order';
 
-export type OrdersValue = OrderRelations[] | null | undefined;
+export type OrdersValue = OrderGet[] | null | undefined;
 
 interface OrderState {
   orders: OrdersValue;
-  deleted: OrderRelations[];
+  deleted: OrderGet[];
   setOrders: (data: OrdersValue) => void;
   setDeletedOrders: (data: OrdersValue) => void;
   clearOrders: () => void;
   clearDeletedOrders: () => void;
-  addOrder: (data: OrderRelations) => void;
-  updateOrder: (data: OrderRelations) => void;
-  deleteOrder: (data: OrderRelations) => void;
+  addOrder: (data: OrderGet) => void;
+  updateOrder: (data: OrderGet) => void;
+  deleteOrder: (data: OrderGet) => void;
 }
 
 export const useStoreOrder = create<OrderState>((set) => ({

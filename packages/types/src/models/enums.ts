@@ -72,23 +72,15 @@ export enum OrderPaymentStatus {
   REFUNDED = 'REFUNDED',
 }
 
-// export enum OrderTime {
-//   NOW='NOW',
-//   LATER='LATER',
-// }
+export enum OrderTime {
+  NOW = 'NOW',
+  LATER = 'LATER',
+}
 
-// export enum OrderPaymentOption {
-//   CASH_STORE = 'CASH_STORE',
-//   CASH_ON_DELIVERY = 'CASH_ON_DELIVERY',
-//   E_CASH = 'E_CASH',
-// }
-
-// export enum OrderStage {
-//   STORE = 'STORE',
-//   ITEMS = 'ITEMS',
-//   CHECKOUT_REVIEW = 'CHECKOUT_REVIEW',
-//   CHECKOUT = 'CHECKOUT',
-// }
+export enum OrderPaymentMethod {
+  ONLINE = 'ONLINE',
+  CASH = 'CASH',
+}
 
 export enum TransportVehicleType {
   MOPED = 'MOPED',

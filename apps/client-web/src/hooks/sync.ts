@@ -9,13 +9,17 @@ import { useCallback, useEffect } from 'react';
 import { STORE_NAME } from '@repo/constants/names';
 import { postsUpdate } from '@repo/handlers/requests/database/posts';
 import { categoriesUpdate } from '@repo/handlers/requests/database/category';
+import { productsUpdate } from '@repo/handlers/requests/database/products';
+import { productVariantsUpdate } from '@repo/handlers/requests/database/product-variants';
+import { cartItemsUpdate } from '@repo/handlers/requests/database/cart-items';
+import { ordersUpdate } from '@repo/handlers/requests/database/orders';
 import { useStorePost } from '@/libraries/zustand/stores/post';
 import { useStoreCategory } from '@/libraries/zustand/stores/category';
 import { SyncParams } from '@repo/types/sync';
 import { useStoreProduct } from '@/libraries/zustand/stores/product';
-import { useStoreCart } from '@/libraries/zustand/stores/cart';
-import { useStoreVariant } from '@/libraries/zustand/stores/variant';
 import { useStoreOrder } from '@/libraries/zustand/stores/order';
+import { useStoreProductVariant } from '@/libraries/zustand/stores/product-variant';
+import { useStoreCartItems } from '@/libraries/zustand/stores/cart';
 
 export const useSyncPosts = (params: {
   syncFunction: (input: SyncParams) => void;
@@ -98,7 +102,7 @@ export const useSyncProducts = (params: {
       stateUpdateFunctionDeleted: () => clearDeletedProducts(),
       stateUpdateFunction: (i) => setProducts(i),
       serverUpdateFunction: async (i, di) => {
-        // await productsUpdate(i, di);
+        await productsUpdate(i, di);
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -109,68 +113,76 @@ export const useSyncProducts = (params: {
   return { syncProducts };
 };
 
-export const useSyncVariants = (params: {
+export const useSyncProductVariants = (params: {
   syncFunction: (input: SyncParams) => void;
   online: boolean;
 }) => {
   const { syncFunction, online } = params;
 
   const {
-    variants,
-    deleted: deletedVariants,
-    setVariants,
-    clearDeletedVariants,
-  } = useStoreVariant();
+    productVariants,
+    deleted: deletedProductVariants,
+    setProductVariants,
+    clearDeletedProductVariants,
+  } = useStoreProductVariant();
 
-  const syncVariants = useCallback(() => {
+  const syncProductVariants = useCallback(() => {
     syncFunction({
-      items: variants || [],
-      deletedItems: deletedVariants,
-      dataStore: STORE_NAME.VARIANTS,
-      stateUpdateFunctionDeleted: () => clearDeletedVariants(),
-      stateUpdateFunction: (i) => setVariants(i),
+      items: productVariants || [],
+      deletedItems: deletedProductVariants,
+      dataStore: STORE_NAME.PRODUCT_VARIANTS,
+      stateUpdateFunctionDeleted: () => clearDeletedProductVariants(),
+      stateUpdateFunction: (i) => setProductVariants(i),
       serverUpdateFunction: async (i, di) => {
-        // await variantsUpdate(i, di);
+        await productVariantsUpdate(i, di);
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [variants, deletedVariants, setVariants, clearDeletedVariants]);
+  }, [
+    productVariants,
+    deletedProductVariants,
+    setProductVariants,
+    clearDeletedProductVariants,
+  ]);
 
-  useEffect(() => syncVariants(), [variants, syncVariants, online]);
+  useEffect(
+    () => syncProductVariants(),
+    [productVariants, syncProductVariants, online]
+  );
 
-  return { syncVariants };
+  return { syncProductVariants };
 };
 
-export const useSyncCart = (params: {
+export const useSyncCartItems = (params: {
   syncFunction: (input: SyncParams) => void;
   online: boolean;
 }) => {
   const { syncFunction, online } = params;
 
   const {
-    cart,
-    deleted: deletedCart,
-    setCart,
-    clearDeletedCart,
-  } = useStoreCart();
+    cartItems,
+    deleted: deletedCartItems,
+    setCartItems,
+    clearDeletedCartItems,
+  } = useStoreCartItems();
 
-  const syncCart = useCallback(() => {
+  const syncCartItems = useCallback(() => {
     syncFunction({
-      items: cart || [],
-      deletedItems: deletedCart,
-      dataStore: STORE_NAME.CART,
-      stateUpdateFunctionDeleted: () => clearDeletedCart(),
-      stateUpdateFunction: (i) => setCart(i),
+      items: cartItems || [],
+      deletedItems: deletedCartItems,
+      dataStore: STORE_NAME.CART_ITEMS,
+      stateUpdateFunctionDeleted: () => clearDeletedCartItems(),
+      stateUpdateFunction: (i) => setCartItems(i),
       serverUpdateFunction: async (i, di) => {
-        // await cartUpdate(i, di);
+        await cartItemsUpdate(i, di);
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cart, deletedCart, setCart, clearDeletedCart]);
+  }, [cartItems, deletedCartItems, setCartItems, clearDeletedCartItems]);
 
-  useEffect(() => syncCart(), [cart, syncCart, online]);
+  useEffect(() => syncCartItems(), [cartItems, syncCartItems, online]);
 
-  return { syncCart };
+  return { syncCartItems };
 };
 
 export const useSyncOrders = (params: {
@@ -194,7 +206,7 @@ export const useSyncOrders = (params: {
       stateUpdateFunctionDeleted: () => clearDeletedOrders(),
       stateUpdateFunction: (i) => setOrders(i),
       serverUpdateFunction: async (i, di) => {
-        // await ordersUpdate(i, di);
+        await ordersUpdate(i, di);
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

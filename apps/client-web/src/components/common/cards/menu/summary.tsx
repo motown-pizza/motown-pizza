@@ -13,14 +13,13 @@ import {
   Title,
 } from '@mantine/core';
 import ImageDefault from '@repo/components/common/images/default';
-import { useStoreVariant } from '@/libraries/zustand/stores/variant';
 import { capitalizeWords } from '@repo/utilities/string';
 import {
   ICON_SIZE,
   ICON_STROKE_WIDTH,
   ICON_WRAPPER_SIZE,
 } from '@repo/constants/sizes';
-import { useStoreOrderDetails } from '@/libraries/zustand/stores/order-details';
+import { useStoreOrderPlacement } from '@/libraries/zustand/stores/order-placement';
 import { defaultOrderDetails } from '@/data/orders';
 import { IconX } from '@tabler/icons-react';
 
@@ -28,12 +27,7 @@ export default function Summary({ props }: { props: ProductGet }) {
   const external = props.image.includes('https');
   const drink = props.image.includes('drink');
 
-  const { variants } = useStoreVariant();
-  const { orderDetails, setOrderDetails } = useStoreOrderDetails();
-
-  const productVariant = (variants || []).find(
-    (v) => v.id == props.selected_variant_id
-  );
+  const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
 
   return (
     <Card bg={'transparent'} padding={0} pr={'md'}>
@@ -58,7 +52,7 @@ export default function Summary({ props }: { props: ProductGet }) {
                 {props.title}
               </Title>
 
-              {productVariant && (
+              {/* {productVariant && (
                 <>
                   <Text fz={'sm'}>
                     Size:{' '}
@@ -67,44 +61,44 @@ export default function Summary({ props }: { props: ProductGet }) {
                     </Text>
                   </Text>
                 </>
-              )}
+              )} */}
 
-              {props.ingredients && <Text fz={'sm'}>{props.ingredients}</Text>}
+              {/* {props.ingredients && <Text fz={'sm'}>{props.ingredients}</Text>} */}
             </div>
           </Stack>
         </GridCol>
 
         <GridCol span={3}>
           <Group justify="space-between">
-            {props.quantity && (
+            {/* {props.quantity && (
               <Text fz={'sm'}>
                 Qty:{' '}
                 <Text component="span" inherit fz={'md'} fw={'bold'}>
                   <NumberFormatter value={props.quantity} />
                 </Text>
               </Text>
-            )}
+            )} */}
 
-            {productVariant && (
+            {/* {productVariant && (
               <Text fz={'sm'} ta={'end'}>
                 Kshs.{' '}
                 <Text component="span" inherit fz={'md'} fw={'bold'}>
                   <NumberFormatter value={productVariant.price || 0} />
                 </Text>
               </Text>
-            )}
+            )} */}
 
             <ActionIcon
               size={ICON_WRAPPER_SIZE}
               color="gray.9"
-              onClick={() => {
-                setOrderDetails({
-                  ...(orderDetails || defaultOrderDetails),
-                  products: (
-                    orderDetails || defaultOrderDetails
-                  ).products.filter((ci) => ci.id != props.id),
-                });
-              }}
+              // onClick={() => {
+              //   setOrderDetails({
+              //     ...(orderDetails || defaultOrderDetails),
+              //     products: (
+              //       orderDetails || defaultOrderDetails
+              //     ).products.filter((ci) => ci.id != props.id),
+              //   });
+              // }}
             >
               <IconX size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
             </ActionIcon>
