@@ -3,11 +3,14 @@ import { useStoreSession } from '@/libraries/zustand/stores/session';
 import { IngredientGet } from '@repo/types/models/ingredient';
 import { Status, SyncStatus } from '@repo/types/models/enums';
 import { generateUUID } from '@repo/utilities/generators';
+import { useNotification } from '@repo/hooks/notification';
+import { Variant } from '@repo/types/enums';
 
 export const useIngredientActions = () => {
   const { session } = useStoreSession();
   const { addIngredient, updateIngredient, deleteIngredient } =
     useStoreIngredient();
+  const { showNotification } = useNotification();
 
   const ingredientCreate = (params: Partial<IngredientGet>) => {
     if (!session) return;
@@ -19,6 +22,7 @@ export const useIngredientActions = () => {
       id: params.id || id,
       name: params.name || '',
       stock_quantity: params.stock_quantity || 0,
+      stockout_margin: params.stockout_margin || 0,
       unit: params.unit || '',
       status: params.status || Status.ACTIVE,
       sync_status: SyncStatus.PENDING,
@@ -27,6 +31,11 @@ export const useIngredientActions = () => {
     };
 
     addIngredient(newIngredient);
+    showNotification({
+      variant: Variant.SUCCESS,
+      title: 'Ingredient Added',
+      desc: `'${newIngredient.name}' has been added`,
+    });
   };
 
   const ingredientUpdate = (params: IngredientGet) => {
@@ -41,6 +50,11 @@ export const useIngredientActions = () => {
     };
 
     updateIngredient(newIngredient);
+    showNotification({
+      variant: Variant.SUCCESS,
+      title: 'Ingredient Updated',
+      desc: `'${newIngredient.name}' has been updated`,
+    });
   };
 
   const ingredientDelete = (params: IngredientGet) => {
