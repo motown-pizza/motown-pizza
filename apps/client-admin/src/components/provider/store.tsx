@@ -22,7 +22,7 @@ export default function Store({ children }: { children: React.ReactNode }) {
   // useUserRoleStore();
   useThemeStore();
   useAppshellStore();
-  useStoreData({ options: { clientOnly: true } });
+  useStoreData({ options: { clientOnly: false } });
 
   return <div>{children}</div>;
 }
