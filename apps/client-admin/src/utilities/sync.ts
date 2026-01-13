@@ -14,19 +14,15 @@ export const syncToServerAfterDelay = async (
     networkStatus: UserNetworkReturnValue;
   }
 ) => {
-  const { setSyncStatus, session, networkStatus, ...syncParams } = params;
+  const { setSyncStatus, networkStatus, ...syncParams } = params;
 
   try {
     const db = await openDatabase(config);
     const clientDbItems: any[] | undefined = await db.get(syncParams.dataStore);
 
-    const clientDbItemsWithSessionId = clientDbItems?.map((cdi) => {
-      return { ...cdi, profile_id: session?.id };
-    });
-
     const serverItems = await syncToServerDB({
       ...syncParams,
-      items: clientDbItemsWithSessionId || [],
+      items: clientDbItems || [],
     });
 
     if (!clientDbItems) return;
@@ -63,7 +59,7 @@ export const syncToServerAfterDelay = async (
             clientDbItems.find((cdi) => cdi.id === ui.id) || ui;
           return {
             ...clientDbItem,
-            sync_status: ui.sync_status,
+            sync_status: SyncStatus.SYNCED,
           };
         }),
         options: { fromServer: true },
@@ -97,31 +93,43 @@ export const handleSync = async (
   } = params;
 
   try {
+    if (syncStatus == SyncStatus.PENDING) return;
+
     const isOnline = networkStatus.online;
 
-    const triggerClient = triggerClientSync({
-      items: syncParams.items,
-      deletedItems: syncParams.deletedItems || [],
-      syncStatus,
-      online: networkStatus.online,
-    });
+    const { hasPendingItems, hasDeletedItems, hasSavedItems, hasErrorItems } =
+      triggerClientSync({
+        items: syncParams.items,
+        deletedItems: syncParams.deletedItems || [],
+        syncStatus,
+        online: isOnline,
+      });
 
-    if (!triggerClient) return;
+    if (hasPendingItems || hasDeletedItems) {
+      setSyncStatus(SyncStatus.PENDING);
 
-    setSyncStatus(SyncStatus.PENDING);
+      // update the client DB with pending items
+      await syncToClientDB({ ...syncParams, online: isOnline, sameDate: true });
 
-    // update the client DB with pending items
-    await syncToClientDB({ ...syncParams, online: isOnline, sameDate: true });
-
-    // sync to the server if online and signed in and not client only
-    if (isOnline && session && !clientOnly) {
-      // Start/restart debounce timer
-      debounceSyncToServer(params);
-    } else {
       setSyncStatus(SyncStatus.SAVED);
     }
 
-    syncParams.stateUpdateFunctionDeleted();
+    // sync to the server if online and signed in and not client only
+    if (isOnline && session && !clientOnly) {
+      if (
+        hasPendingItems ||
+        hasDeletedItems ||
+        hasSavedItems ||
+        hasErrorItems
+      ) {
+        // Start/restart debounce timer
+        debounceSyncToServer(params);
+      }
+    }
+
+    if (hasDeletedItems) {
+      syncParams.stateUpdateFunctionDeleted();
+    }
   } catch (error) {
     setSyncStatus(SyncStatus.ERROR);
     console.error('Sync Error:', (error as Error).message);
@@ -134,17 +142,23 @@ export const triggerClientSync = (params: {
   syncStatus: SyncStatus;
   online: boolean;
 }) => {
-  const hasDeletedTasks = params.deletedItems.length > 0;
+  const hasDeletedItems = params.deletedItems.length > 0;
 
-  let hasPendingTasks: boolean = false;
+  let hasPendingItems: boolean = false;
 
-  hasPendingTasks = params.items.some(
-    (i) => i.sync_status === SyncStatus.PENDING
+  hasPendingItems = params.items.some(
+    (i) => i.sync_status == SyncStatus.PENDING
   );
 
-  if (hasPendingTasks || hasDeletedTasks) return true;
+  let hasSavedItems: boolean = false;
+  let hasErrorItems: boolean = false;
 
-  return false;
+  if (params.online) {
+    hasSavedItems = params.items.some((i) => i.sync_status == SyncStatus.SAVED);
+    hasErrorItems = params.items.some((i) => i.sync_status == SyncStatus.ERROR);
+  }
+
+  return { hasPendingItems, hasSavedItems, hasDeletedItems, hasErrorItems };
 };
 
 export const syncToServerDB = async (

@@ -30,7 +30,7 @@ export const useNotification = () => {
 
       notifications.show({
         id: linkify(
-          `${variant}-${response?.status || '500'}-${notificationMessage}`
+          `${variant}-${response?.status || '500'}-${notificationTitle}-${notificationMessage}`
         ),
         icon: icon,
         title: notificationTitle,
