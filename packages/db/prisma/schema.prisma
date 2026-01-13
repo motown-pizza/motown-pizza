@@ -28,6 +28,8 @@ enum Role {
   ADMIN
   USER
   EMPLOYEE
+  SUPERVISOR
+  TRANSPORTER
 }
 
 enum Status {
@@ -62,6 +64,7 @@ enum ProductDietaryType {
   MEATY
   VEGGIE
   VEGAN
+  NEUTRAL
 }
 
 enum OrderSource {
@@ -123,6 +126,14 @@ enum StockMovementType {
   ADJUSTMENT
 }
 
+enum MeasurementUnitType {
+  GRAMS
+  KILOGRAMS
+  LITRES
+  MILLILITRES
+  PIECES
+}
+
 // models
 
 model Profile {
@@ -169,7 +180,6 @@ model Post {
   created_at  DateTime   @default(now())
   updated_at  DateTime   @updatedAt
 
-  @@unique([profile_id, title])
   @@map(name: "posts")
 }
 
@@ -184,7 +194,6 @@ model Category {
   created_at  DateTime   @default(now())
   updated_at  DateTime   @updatedAt
 
-  @@unique([title])
   @@map(name: "categories")
 }
 
@@ -204,7 +213,6 @@ model Comment {
   created_at  DateTime   @default(now())
   updated_at  DateTime   @updatedAt
 
-  @@unique([name, content, post_id, profile_id])
   @@map(name: "comments")
 }
 
@@ -223,12 +231,12 @@ model Product {
   created_at  DateTime   @default(now())
   updated_at  DateTime   @updatedAt
 
-  @@unique([title])
   @@map(name: "products")
 }
 
 model ProductVariant {
   id          String  @id @default(uuid())
+  title       String?
   size        Size
   price       Float
   measurement String?
@@ -244,15 +252,15 @@ model ProductVariant {
   created_at  DateTime   @default(now())
   updated_at  DateTime   @updatedAt
 
-  @@unique([size, product_id])
   @@map(name: "product_variants")
 }
 
 model Ingredient {
-  id             String @id @default(uuid())
-  name           String
-  unit           String
-  stock_quantity Float  @default(0)
+  id              String              @id @default(uuid())
+  name            String
+  unit            MeasurementUnitType
+  stock_quantity  Float               @default(0)
+  stockout_margin Float               @default(0)
 
   recipie_items   RecipieItem[]
   stock_movements StockMovement[]
@@ -262,13 +270,13 @@ model Ingredient {
   created_at  DateTime   @default(now())
   updated_at  DateTime   @updatedAt
 
-  @@unique([name])
   @@map(name: "ingredients")
 }
 
 model RecipieItem {
-  id              String @id @default(uuid())
+  id              String              @id @default(uuid())
   quantity_needed Float
+  unit            MeasurementUnitType
 
   product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
   product_variant_id String
@@ -358,7 +366,6 @@ model Transporter {
   created_at  DateTime   @default(now())
   updated_at  DateTime   @updatedAt
 
-  @@unique([name])
   @@map(name: "transporters")
 }
 
@@ -377,6 +384,5 @@ model Store {
 
   orders Order[]
 
-  @@unique([title])
   @@map(name: "stores")
 }

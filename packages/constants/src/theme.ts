@@ -11,11 +11,18 @@ import {
   Anchor,
   Container,
   createTheme,
+  Divider,
+  Drawer,
   Loader,
   MantineThemeOverride,
+  Menu,
+  Modal,
   Notification,
+  ScrollArea,
+  Tooltip,
 } from '@mantine/core';
 import cx from 'clsx';
+import { ICON_STROKE_WIDTH } from './sizes';
 
 export type AppThemeProps = {
   theme?: MantineThemeOverride;
@@ -118,10 +125,68 @@ export const getAppTheme = (params?: AppThemeProps) => {
         }),
       }),
 
+      Anchor: Anchor.extend({
+        defaultProps: { underline: 'never' },
+      }),
+
+      Divider: Divider.extend({
+        defaultProps: { color: 'var(--mantine-color-default-border)' },
+      }),
+
+      Menu: Menu.extend({
+        defaultProps: {
+          transitionProps: {
+            duration: 100,
+          },
+        },
+        styles: {
+          dropdown: {
+            backgroundColor: 'var(--mantine-color-body)',
+            borderColor: 'var(--mantine-color-default-border)',
+            padding: 'var(--mantine-spacing-xs)',
+          },
+        },
+      }),
+
+      Tooltip: Tooltip.extend({
+        defaultProps: { withArrow: true, openDelay: 500 },
+      }),
+
+      ScrollArea: ScrollArea.extend({
+        defaultProps: { scrollbarSize: ICON_STROKE_WIDTH * 4, type: 'auto' },
+        styles: { scrollbar: { zIndex: 100 } },
+      }),
+
       Loader: Loader.extend({
         defaultProps: {
           type: 'bars',
           size: 'sm',
+        },
+      }),
+
+      Modal: Modal.extend({
+        defaultProps: {
+          centered: true,
+          transitionProps: {
+            duration: 100,
+            transition: 'fade',
+          },
+          overlayProps: {
+            backgroundOpacity: 0.55,
+            blur: 3,
+          },
+        },
+      }),
+
+      Drawer: Drawer.extend({
+        defaultProps: {
+          transitionProps: {
+            duration: 100,
+          },
+          overlayProps: {
+            backgroundOpacity: 0.55,
+            blur: 3,
+          },
         },
       }),
 

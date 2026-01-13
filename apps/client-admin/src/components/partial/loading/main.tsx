@@ -11,11 +11,11 @@ export default function Main() {
       <Center mih={'100vh'}>
         <Stack align="center">
           <ImageDefault
-            src={images.brand.logo.light}
+            src={images.brand.logo.potrait.default}
             alt={APP_NAME}
-            height={56}
-            width={104}
-            fit="contain"
+            height={200}
+            width={150}
+            // fit="contain"
             mode="grid"
           />
 

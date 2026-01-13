@@ -2,6 +2,9 @@ export enum Role {
   USER = 'USER',
   ADMIN = 'ADMIN',
   DEV = 'DEV',
+  EMPLOYEE = 'EMPLOYEE',
+  SUPERVISOR = 'SUPERVISOR',
+  TRANSPORTER = 'TRANSPORTER',
 }
 
 export enum Status {
@@ -36,6 +39,7 @@ export enum ProductDietaryType {
   MEATY = 'MEATY',
   VEGGIE = 'VEGGIE',
   VEGAN = 'VEGAN',
+  NEUTRAL = 'NEUTRAL',
 }
 
 export enum OrderSource {
@@ -95,4 +99,12 @@ export enum StockMovementType {
   PURCHASE = 'PURCHASE',
   CONSUMPTION = 'CONSUMPTION',
   ADJUSTMENT = 'ADJUSTMENT',
+}
+
+export enum MeasurementUnitType {
+  GRAMS = 'GRAMS',
+  KILOGRAMS = 'KILOGRAMS',
+  LITRES = 'LITRES',
+  MILLILITRES = 'MILLILITRES',
+  PIECES = 'PIECES',
 }

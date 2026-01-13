@@ -32,23 +32,13 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
       </AppShellHeader>
 
       <AppShellNavbar>
-        <ScrollArea
-          h={`calc(100vh - ${60}px)`}
-          type="auto"
-          scrollbars={'y'}
-          scrollbarSize={8}
-        >
+        <ScrollArea h={`calc(100vh - ${60}px)`} type="auto" scrollbars={'y'}>
           <NavbarShellDashboard />
         </ScrollArea>
       </AppShellNavbar>
 
       <AppShellMain>
-        <ScrollArea
-          h={`calc(100vh - ${60}px)`}
-          type="auto"
-          scrollbars={'y'}
-          scrollbarSize={8}
-        >
+        <ScrollArea h={`calc(100vh - ${60}px)`} type="auto" scrollbars={'y'}>
           {children}
         </ScrollArea>
       </AppShellMain>
