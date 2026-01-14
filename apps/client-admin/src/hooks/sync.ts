@@ -5,31 +5,33 @@
  * Do not modify unless you intend to backport changes to the template.
  */
 
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { STORE_NAME } from '@repo/constants/names';
 import { postsUpdate } from '@repo/handlers/requests/database/posts';
 import { categoriesUpdate } from '@repo/handlers/requests/database/category';
-import { useStorePost } from '@/libraries/zustand/stores/post';
-import { useStoreCategory } from '@/libraries/zustand/stores/category';
+import { useStorePost } from '@repo/libraries/zustand/stores/post';
+import { useStoreCategory } from '@repo/libraries/zustand/stores/category';
 import { SyncParams } from '@repo/types/sync';
-import { useStoreProfile } from '@/libraries/zustand/stores/profile';
+import { useStoreProfile } from '@repo/libraries/zustand/stores/profile';
 import { profilesUpdate } from '@repo/handlers/requests/database/profiles';
-import { useStoreProduct } from '@/libraries/zustand/stores/product';
+import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
 import { productsUpdate } from '@repo/handlers/requests/database/products';
-import { useStoreProductVariant } from '@/libraries/zustand/stores/product-variant';
+import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
 import { productVariantsUpdate } from '@repo/handlers/requests/database/product-variants';
-import { useStoreIngredient } from '@/libraries/zustand/stores/ingredient';
+import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
 import { ingredientsUpdate } from '@repo/handlers/requests/database/ingredients';
-import { useStoreRecipieItem } from '@/libraries/zustand/stores/recipie-item';
+import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
 import { recipieItemsUpdate } from '@repo/handlers/requests/database/recipie-items';
-import { useStoreOrder } from '@/libraries/zustand/stores/order';
+import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
 import { ordersUpdate } from '@repo/handlers/requests/database/orders';
-import { useStoreOrderItem } from '@/libraries/zustand/stores/order-item';
+import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
 import { orderItemsUpdate } from '@repo/handlers/requests/database/order-items';
-import { useStoreStockMovement } from '@/libraries/zustand/stores/stock-movement';
+import { useStoreStockMovement } from '@repo/libraries/zustand/stores/stock-movement';
 import { stockMovementsUpdate } from '@repo/handlers/requests/database/stock-movements';
-import { useStoreTransporter } from '@/libraries/zustand/stores/transporter';
+import { useStoreTransporter } from '@repo/libraries/zustand/stores/transporter';
 import { transportersUpdate } from '@repo/handlers/requests/database/transporters';
+import { useDebouncedCallback } from '@mantine/hooks';
+import { DEBOUNCE_VALUE } from '@repo/constants/sizes';
 
 export const useSyncProfiles = (params: {
   syncFunction: (input: SyncParams) => void;
@@ -44,7 +46,7 @@ export const useSyncProfiles = (params: {
     clearDeletedProfiles,
   } = useStoreProfile();
 
-  const syncProfiles = useCallback(() => {
+  const handleSyncProfiles = useDebouncedCallback(() => {
     syncFunction({
       items: profiles || [],
       deletedItems: deletedProfiles,
@@ -53,12 +55,21 @@ export const useSyncProfiles = (params: {
       stateUpdateFunction: (i) => setProfiles(i),
       serverUpdateFunction: async (i, di) => await profilesUpdate(i, di),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profiles, deletedProfiles, setProfiles, clearDeletedProfiles]);
+  }, DEBOUNCE_VALUE);
 
-  useEffect(() => syncProfiles(), [profiles, syncProfiles, online]);
+  const debounceSyncProfiles = useDebouncedCallback(
+    handleSyncProfiles,
+    DEBOUNCE_VALUE
+  );
 
-  return { syncProfiles };
+  useEffect(() => {
+    if (profiles === undefined && deletedProfiles === undefined) return;
+    if (!profiles?.length && !deletedProfiles?.length) return;
+
+    debounceSyncProfiles();
+  }, [profiles, deletedProfiles, debounceSyncProfiles, online]);
+
+  return { syncProfiles: debounceSyncProfiles };
 };
 
 export const useSyncPosts = (params: {
@@ -74,7 +85,7 @@ export const useSyncPosts = (params: {
     clearDeletedPosts,
   } = useStorePost();
 
-  const syncPosts = useCallback(() => {
+  const handleSyncPosts = useDebouncedCallback(() => {
     syncFunction({
       items: posts || [],
       deletedItems: deletedPosts,
@@ -83,12 +94,21 @@ export const useSyncPosts = (params: {
       stateUpdateFunction: (i) => setPosts(i),
       serverUpdateFunction: async (i, di) => await postsUpdate(i, di),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [posts, deletedPosts, setPosts, clearDeletedPosts]);
+  }, DEBOUNCE_VALUE);
 
-  useEffect(() => syncPosts(), [posts, syncPosts, online]);
+  const debounceSyncPosts = useDebouncedCallback(
+    handleSyncPosts,
+    DEBOUNCE_VALUE
+  );
 
-  return { syncPosts };
+  useEffect(() => {
+    if (posts === undefined && deletedPosts === undefined) return;
+    if (!posts?.length && !deletedPosts?.length) return;
+
+    debounceSyncPosts();
+  }, [posts, deletedPosts, debounceSyncPosts, online]);
+
+  return { syncPosts: debounceSyncPosts };
 };
 
 export const useSyncCategories = (params: {
@@ -104,7 +124,7 @@ export const useSyncCategories = (params: {
     clearDeletedCategories,
   } = useStoreCategory();
 
-  const syncCategories = useCallback(() => {
+  const handleSyncCategories = useDebouncedCallback(() => {
     syncFunction({
       items: categories || [],
       deletedItems: deletedCategories,
@@ -113,12 +133,21 @@ export const useSyncCategories = (params: {
       stateUpdateFunction: (i) => setCategories(i),
       serverUpdateFunction: async (i, di) => await categoriesUpdate(i, di),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categories, deletedCategories, setCategories, clearDeletedCategories]);
+  }, DEBOUNCE_VALUE);
 
-  useEffect(() => syncCategories(), [categories, syncCategories, online]);
+  const debounceSyncCategories = useDebouncedCallback(
+    handleSyncCategories,
+    DEBOUNCE_VALUE
+  );
 
-  return { syncCategories };
+  useEffect(() => {
+    if (categories === undefined && deletedCategories === undefined) return;
+    if (!categories?.length && !deletedCategories?.length) return;
+
+    debounceSyncCategories();
+  }, [categories, deletedCategories, debounceSyncCategories, online]);
+
+  return { syncCategories: debounceSyncCategories };
 };
 
 export const useSyncProducts = (params: {
@@ -134,7 +163,7 @@ export const useSyncProducts = (params: {
     clearDeletedProducts,
   } = useStoreProduct();
 
-  const syncProducts = useCallback(() => {
+  const handleSyncProducts = useDebouncedCallback(() => {
     syncFunction({
       items: products || [],
       deletedItems: deletedProducts,
@@ -143,12 +172,21 @@ export const useSyncProducts = (params: {
       stateUpdateFunction: (i) => setProducts(i),
       serverUpdateFunction: async (i, di) => await productsUpdate(i, di),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [products, deletedProducts, setProducts, clearDeletedProducts]);
+  }, DEBOUNCE_VALUE);
 
-  useEffect(() => syncProducts(), [products, syncProducts, online]);
+  const debounceSyncProducts = useDebouncedCallback(
+    handleSyncProducts,
+    DEBOUNCE_VALUE
+  );
 
-  return { syncProducts };
+  useEffect(() => {
+    if (products === undefined && deletedProducts === undefined) return;
+    if (!products?.length && !deletedProducts?.length) return;
+
+    debounceSyncProducts();
+  }, [products, deletedProducts, debounceSyncProducts, online]);
+
+  return { syncProducts: debounceSyncProducts };
 };
 
 export const useSyncProductVariants = (params: {
@@ -164,7 +202,7 @@ export const useSyncProductVariants = (params: {
     clearDeletedProductVariants,
   } = useStoreProductVariant();
 
-  const syncProductVariants = useCallback(() => {
+  const handleSyncProductVariants = useDebouncedCallback(() => {
     syncFunction({
       items: productVariants || [],
       deletedItems: deletedProductVariants,
@@ -173,20 +211,27 @@ export const useSyncProductVariants = (params: {
       stateUpdateFunction: (i) => setProductVariants(i),
       serverUpdateFunction: async (i, di) => await productVariantsUpdate(i, di),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, DEBOUNCE_VALUE);
+
+  const debounceSyncProductVariants = useDebouncedCallback(
+    handleSyncProductVariants,
+    DEBOUNCE_VALUE
+  );
+
+  useEffect(() => {
+    if (productVariants === undefined && deletedProductVariants === undefined)
+      return;
+    if (!productVariants?.length && !deletedProductVariants?.length) return;
+
+    debounceSyncProductVariants();
   }, [
     productVariants,
     deletedProductVariants,
-    setProductVariants,
-    clearDeletedProductVariants,
+    debounceSyncProductVariants,
+    online,
   ]);
 
-  useEffect(
-    () => syncProductVariants(),
-    [productVariants, syncProductVariants, online]
-  );
-
-  return { syncProductVariants };
+  return { syncProductVariants: debounceSyncProductVariants };
 };
 
 export const useSyncIngredients = (params: {
@@ -202,7 +247,7 @@ export const useSyncIngredients = (params: {
     clearDeletedIngredients,
   } = useStoreIngredient();
 
-  const syncIngredients = useCallback(() => {
+  const handleSyncIngredients = useDebouncedCallback(() => {
     syncFunction({
       items: ingredients || [],
       deletedItems: deletedIngredients,
@@ -211,17 +256,21 @@ export const useSyncIngredients = (params: {
       stateUpdateFunction: (i) => setIngredients(i),
       serverUpdateFunction: async (i, di) => await ingredientsUpdate(i, di),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    ingredients,
-    deletedIngredients,
-    setIngredients,
-    clearDeletedIngredients,
-  ]);
+  }, DEBOUNCE_VALUE);
 
-  useEffect(() => syncIngredients(), [ingredients, syncIngredients, online]);
+  const debounceSyncIngredients = useDebouncedCallback(
+    handleSyncIngredients,
+    DEBOUNCE_VALUE
+  );
 
-  return { syncIngredients };
+  useEffect(() => {
+    if (ingredients === undefined && deletedIngredients === undefined) return;
+    if (!ingredients?.length && !deletedIngredients?.length) return;
+
+    debounceSyncIngredients();
+  }, [ingredients, deletedIngredients, debounceSyncIngredients, online]);
+
+  return { syncIngredients: debounceSyncIngredients };
 };
 
 export const useSyncRecipieItems = (params: {
@@ -237,7 +286,7 @@ export const useSyncRecipieItems = (params: {
     clearDeletedRecipieItems,
   } = useStoreRecipieItem();
 
-  const syncRecipieItems = useCallback(() => {
+  const handleSyncRecipieItems = useDebouncedCallback(() => {
     syncFunction({
       items: recipieItems || [],
       deletedItems: deletedRecipieItems,
@@ -246,17 +295,21 @@ export const useSyncRecipieItems = (params: {
       stateUpdateFunction: (i) => setRecipieItems(i),
       serverUpdateFunction: async (i, di) => await recipieItemsUpdate(i, di),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    recipieItems,
-    deletedRecipieItems,
-    setRecipieItems,
-    clearDeletedRecipieItems,
-  ]);
+  }, DEBOUNCE_VALUE);
 
-  useEffect(() => syncRecipieItems(), [recipieItems, syncRecipieItems, online]);
+  const debounceSyncRecipieItems = useDebouncedCallback(
+    handleSyncRecipieItems,
+    DEBOUNCE_VALUE
+  );
 
-  return { syncRecipieItems };
+  useEffect(() => {
+    if (recipieItems === undefined && deletedRecipieItems === undefined) return;
+    if (!recipieItems?.length && !deletedRecipieItems?.length) return;
+
+    debounceSyncRecipieItems();
+  }, [recipieItems, deletedRecipieItems, debounceSyncRecipieItems, online]);
+
+  return { syncRecipieItems: debounceSyncRecipieItems };
 };
 
 export const useSyncOrders = (params: {
@@ -272,7 +325,7 @@ export const useSyncOrders = (params: {
     clearDeletedOrders,
   } = useStoreOrder();
 
-  const syncOrders = useCallback(() => {
+  const handleSyncOrders = useDebouncedCallback(() => {
     syncFunction({
       items: orders || [],
       deletedItems: deletedOrders,
@@ -281,12 +334,21 @@ export const useSyncOrders = (params: {
       stateUpdateFunction: (i) => setOrders(i),
       serverUpdateFunction: async (i, di) => await ordersUpdate(i, di),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orders, deletedOrders, setOrders, clearDeletedOrders]);
+  }, DEBOUNCE_VALUE);
 
-  useEffect(() => syncOrders(), [orders, syncOrders, online]);
+  const debounceSyncOrders = useDebouncedCallback(
+    handleSyncOrders,
+    DEBOUNCE_VALUE
+  );
 
-  return { syncOrders };
+  useEffect(() => {
+    if (orders === undefined && deletedOrders === undefined) return;
+    if (!orders?.length && !deletedOrders?.length) return;
+
+    debounceSyncOrders();
+  }, [orders, deletedOrders, debounceSyncOrders, online]);
+
+  return { syncOrders: debounceSyncOrders };
 };
 
 export const useSyncOrderItems = (params: {
@@ -302,7 +364,7 @@ export const useSyncOrderItems = (params: {
     clearDeletedOrderItems,
   } = useStoreOrderItem();
 
-  const syncOrderItems = useCallback(() => {
+  const handleSyncOrderItems = useDebouncedCallback(() => {
     syncFunction({
       items: orderItems || [],
       deletedItems: deletedOrderItems,
@@ -311,12 +373,21 @@ export const useSyncOrderItems = (params: {
       stateUpdateFunction: (i) => setOrderItems(i),
       serverUpdateFunction: async (i, di) => await orderItemsUpdate(i, di),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderItems, deletedOrderItems, setOrderItems, clearDeletedOrderItems]);
+  }, DEBOUNCE_VALUE);
 
-  useEffect(() => syncOrderItems(), [orderItems, syncOrderItems, online]);
+  const debounceSyncOrderItems = useDebouncedCallback(
+    handleSyncOrderItems,
+    DEBOUNCE_VALUE
+  );
 
-  return { syncOrderItems };
+  useEffect(() => {
+    if (orderItems === undefined && deletedOrderItems === undefined) return;
+    if (!orderItems?.length && !deletedOrderItems?.length) return;
+
+    debounceSyncOrderItems();
+  }, [orderItems, deletedOrderItems, debounceSyncOrderItems, online]);
+
+  return { syncOrderItems: debounceSyncOrderItems };
 };
 
 export const useSyncStockMovements = (params: {
@@ -332,7 +403,7 @@ export const useSyncStockMovements = (params: {
     clearDeletedStockMovements,
   } = useStoreStockMovement();
 
-  const syncStockMovements = useCallback(() => {
+  const handleSyncStockMovements = useDebouncedCallback(() => {
     syncFunction({
       items: stockMovements || [],
       deletedItems: deletedStockMovements,
@@ -341,20 +412,27 @@ export const useSyncStockMovements = (params: {
       stateUpdateFunction: (i) => setStockMovements(i),
       serverUpdateFunction: async (i, di) => await stockMovementsUpdate(i, di),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, DEBOUNCE_VALUE);
+
+  const debounceSyncStockMovements = useDebouncedCallback(
+    handleSyncStockMovements,
+    DEBOUNCE_VALUE
+  );
+
+  useEffect(() => {
+    if (stockMovements === undefined && deletedStockMovements === undefined)
+      return;
+    if (!stockMovements?.length && !deletedStockMovements?.length) return;
+
+    debounceSyncStockMovements();
   }, [
     stockMovements,
     deletedStockMovements,
-    setStockMovements,
-    clearDeletedStockMovements,
+    debounceSyncStockMovements,
+    online,
   ]);
 
-  useEffect(
-    () => syncStockMovements(),
-    [stockMovements, syncStockMovements, online]
-  );
-
-  return { syncStockMovements };
+  return { syncStockMovements: debounceSyncStockMovements };
 };
 
 export const useSyncTransporters = (params: {
@@ -370,7 +448,7 @@ export const useSyncTransporters = (params: {
     clearDeletedTransporters,
   } = useStoreTransporter();
 
-  const syncTransporters = useCallback(() => {
+  const handleSyncTransporters = useDebouncedCallback(() => {
     syncFunction({
       items: transporters || [],
       deletedItems: deletedTransporters,
@@ -379,15 +457,19 @@ export const useSyncTransporters = (params: {
       stateUpdateFunction: (i) => setTransporters(i),
       serverUpdateFunction: async (i, di) => await transportersUpdate(i, di),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    transporters,
-    deletedTransporters,
-    setTransporters,
-    clearDeletedTransporters,
-  ]);
+  }, DEBOUNCE_VALUE);
 
-  useEffect(() => syncTransporters(), [transporters, syncTransporters, online]);
+  const debounceSyncTransporters = useDebouncedCallback(
+    handleSyncTransporters,
+    DEBOUNCE_VALUE
+  );
 
-  return { syncTransporters };
+  useEffect(() => {
+    if (transporters === undefined && deletedTransporters === undefined) return;
+    if (!transporters?.length && !deletedTransporters?.length) return;
+
+    debounceSyncTransporters();
+  }, [transporters, deletedTransporters, debounceSyncTransporters, online]);
+
+  return { syncTransporters: debounceSyncTransporters };
 };

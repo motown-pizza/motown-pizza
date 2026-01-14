@@ -14,13 +14,13 @@ import {
   PARAM_NAME,
   STORE_NAME,
 } from '@repo/constants/names';
-import { useStorePost } from '@/libraries/zustand/stores/post';
+import { useStorePost } from '@repo/libraries/zustand/stores/post';
 import { loadInitialData } from '@/utilities/store';
 import {
   getFromLocalStorage,
   saveToLocalStorage,
 } from '@repo/utilities/storage';
-import { useStoreSession } from '@/libraries/zustand/stores/session';
+import { useStoreSession } from '@repo/libraries/zustand/stores/session';
 import { generateUUID } from '@repo/utilities/generators';
 import { createClient } from '@/libraries/supabase/client';
 import { usePathname, useRouter } from 'next/navigation';
@@ -32,22 +32,28 @@ import { Role } from '@repo/types/models/enums';
 import { WEEK } from '@repo/constants/sizes';
 import { ProfileGet } from '@repo/types/models/profile';
 import { profileGet } from '@repo/handlers/requests/database/profiles';
-import { RoleValue, useStoreRole } from '@/libraries/zustand/stores/role';
+import { RoleValue, useStoreRole } from '@repo/libraries/zustand/stores/role';
 import { useMediaQuery } from '@mantine/hooks';
 import {
   AppShellValue,
   useStoreAppShell,
-} from '@/libraries/zustand/stores/shell';
+} from '@repo/libraries/zustand/stores/shell';
 import { samplePosts } from '@/data/sample/posts';
 import { postsGet } from '@repo/handlers/requests/database/posts';
-import { useStoreProduct } from '@/libraries/zustand/stores/product';
-import { useStoreOrder } from '@/libraries/zustand/stores/order';
-import { useStoreCartItems } from '@/libraries/zustand/stores/cart';
-import { useStoreProductVariant } from '@/libraries/zustand/stores/product-variant';
+import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
+import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
+import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
+import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
 import { productsGet } from '@repo/handlers/requests/database/products';
 import { productVariantsGet } from '@repo/handlers/requests/database/product-variants';
+import { ingredientsGet } from '@repo/handlers/requests/database/ingredients';
+import { recipieItemsGet } from '@repo/handlers/requests/database/recipie-items';
 import { cartItemsGet } from '@repo/handlers/requests/database/cart-items';
 import { ordersGet } from '@repo/handlers/requests/database/orders';
+import { orderItemsGet } from '@repo/handlers/requests/database/order-items';
+import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
+import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
+import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
 
 export const useSessionStore = (params?: {
   options?: { clientOnly?: boolean };
@@ -72,7 +78,8 @@ export const useSessionStore = (params?: {
         }
 
         if (!localId) {
-          const tempId = generateUUID();
+          // const tempId = generateUUID();
+          const tempId = '02f5bae4-a33b-4264-a0e2-6418ca6ce44e';
           saveToLocalStorage(LOCAL_STORAGE_NAME.TEMPID, tempId);
 
           if (clientOnly) {
@@ -197,10 +204,14 @@ export const useStoreData = (params?: {
   const { setPosts } = useStorePost();
   const { setProducts } = useStoreProduct();
   const { setProductVariants } = useStoreProductVariant();
-  const { setCartItems } = useStoreCartItems();
+  const { setIngredients } = useStoreIngredient();
+  const { setRecipieItems } = useStoreRecipieItem();
+  const { setCartItems } = useStoreCartItem();
   const { setOrders } = useStoreOrder();
+  const { setOrderItems } = useStoreOrderItem();
 
   useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadPosts = async () => {
@@ -222,9 +233,10 @@ export const useStoreData = (params?: {
     };
 
     loadPosts();
-  }, [setPosts, session, clientOnly]);
+  }, [session]);
 
   useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadProducts = async () => {
@@ -250,9 +262,10 @@ export const useStoreData = (params?: {
     };
 
     loadProducts();
-  }, [setProducts, session, clientOnly]);
+  }, [session]);
 
   useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadProductVariants = async () => {
@@ -278,9 +291,62 @@ export const useStoreData = (params?: {
     };
 
     loadProductVariants();
-  }, [setProductVariants, session, clientOnly]);
+  }, [session]);
 
   useEffect(() => {
+    if (!session) return;
+    if (prevItemsRef.current.length) return;
+
+    const loadIngredients = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.INGREDIENTS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await ingredientsGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setIngredients(stateUpdateItems),
+      });
+    };
+
+    loadIngredients();
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    if (prevItemsRef.current.length) return;
+
+    const loadRecipieItems = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.RECIPIE_ITEMS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await recipieItemsGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setRecipieItems(stateUpdateItems),
+      });
+    };
+
+    loadRecipieItems();
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadCart = async () => {
@@ -294,10 +360,9 @@ export const useStoreData = (params?: {
               items: [],
             };
           } else {
-            return await cartItemsGet();
-            // return {
-            //   items: [],
-            // };
+            return !session
+              ? { items: [] }
+              : await cartItemsGet({ profileId: session.id });
           }
         },
         stateUpdateFunction: (stateUpdateItems) =>
@@ -306,9 +371,10 @@ export const useStoreData = (params?: {
     };
 
     loadCart();
-  }, [setCartItems, session, clientOnly]);
+  }, [session]);
 
   useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadOrders = async () => {
@@ -322,10 +388,9 @@ export const useStoreData = (params?: {
               items: [],
             };
           } else {
-            return await ordersGet();
-            // return {
-            //   items: [],
-            // };
+            return !session
+              ? { items: [] }
+              : await ordersGet({ profileId: session.id });
           }
         },
         stateUpdateFunction: (stateUpdateItems) => setOrders(stateUpdateItems),
@@ -333,5 +398,33 @@ export const useStoreData = (params?: {
     };
 
     loadOrders();
-  }, [setOrders, session, clientOnly]);
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    if (prevItemsRef.current.length) return;
+
+    const loadOrderItems = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.ORDER_ITEMS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return !session
+              ? { items: [] }
+              : await orderItemsGet({ profileId: session.id });
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setOrderItems(stateUpdateItems),
+      });
+    };
+
+    loadOrderItems();
+  }, [session]);
 };
