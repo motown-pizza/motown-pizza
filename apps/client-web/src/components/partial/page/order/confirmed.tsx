@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import LayoutSection from '@repo/components/layout/section';
 import IntroSection from '@repo/components/layout/intros/section';
-import { useStoreOrder } from '@/libraries/zustand/stores/order';
+import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
 import { getUrlParam } from '@repo/utilities/url';
 import { PARAM_NAME } from '@repo/constants/names';
 import {
@@ -34,7 +34,7 @@ import { StoreGet } from '@repo/types/models/store';
 import NextLink from '@repo/components/common/anchor/next-link';
 
 export default function Confirmed() {
-  const clipboard = useClipboard({ timeout: 500 });
+  const clipboard = useClipboard({ timeout: 1000 });
   const { orders } = useStoreOrder();
 
   const [order, setOrder] = useState<OrderGet | null>(null);

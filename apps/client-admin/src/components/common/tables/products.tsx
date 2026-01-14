@@ -24,7 +24,7 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { useStoreProduct } from '@/libraries/zustand/stores/product';
+import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
 import { getRegionalDate } from '@repo/utilities/date-time';
 import {
   ICON_SIZE,
@@ -52,10 +52,10 @@ import ModalCrudProduct from '../modals/crud/product';
 import { sortArray } from '@repo/utilities/array';
 import { Order } from '@repo/types/enums';
 import ModalConfirm from '@repo/components/common/modals/confirm';
-import { useProductActions } from '@/hooks/actions/product';
-import { useStoreProductVariant } from '@/libraries/zustand/stores/product-variant';
-import { useStoreRecipieItem } from '@/libraries/zustand/stores/recipie-item';
-import { useStoreIngredient } from '@/libraries/zustand/stores/ingredient';
+import { useProductActions } from '@repo/hooks/actions/product';
+import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
+import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
+import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
 
 export default function Products({
   props,

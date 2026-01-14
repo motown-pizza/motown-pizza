@@ -23,7 +23,7 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { useStoreRecipieItem } from '@/libraries/zustand/stores/recipie-item';
+import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
 import { getRegionalDate } from '@repo/utilities/date-time';
 import {
   ICON_SIZE,
@@ -46,10 +46,10 @@ import ModalCrudRecipieItem from '../modals/crud/recipie-item';
 import { sortArray } from '@repo/utilities/array';
 import { Order } from '@repo/types/enums';
 import ModalConfirm from '@repo/components/common/modals/confirm';
-import { useRecipieItemActions } from '@/hooks/actions/recipie-item';
+import { useRecipieItemActions } from '@repo/hooks/actions/recipie-item';
 import { capitalizeWords } from '@repo/utilities/string';
-import { useStoreIngredient } from '@/libraries/zustand/stores/ingredient';
-import { useStoreProductVariant } from '@/libraries/zustand/stores/product-variant';
+import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
+import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
 
 export default function RecipieItems({
   props,

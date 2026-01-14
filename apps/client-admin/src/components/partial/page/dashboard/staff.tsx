@@ -9,7 +9,7 @@ import ModalCrudProfile from '@/components/common/modals/crud/profile';
 import TableProfiles from '@/components/common/tables/profiles';
 import { usePathname } from 'next/navigation';
 import { crumbify } from '@repo/utilities/url';
-import { useStoreProfile } from '@/libraries/zustand/stores/profile';
+import { useStoreProfile } from '@repo/libraries/zustand/stores/profile';
 import { Role } from '@repo/types/models/enums';
 
 export default function Staff() {

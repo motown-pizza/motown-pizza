@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Box, Burger, Group, Skeleton } from '@mantine/core';
-import { useStoreAppShell } from '@/libraries/zustand/stores/shell';
+import { useStoreAppShell } from '@repo/libraries/zustand/stores/shell';
 import ImageDefault from '@repo/components/common/images/default';
 import { images } from '@/assets/images';
 import { APP_NAME } from '@/data/constants';

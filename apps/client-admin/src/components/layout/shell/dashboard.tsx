@@ -8,7 +8,7 @@ import {
   AppShellNavbar,
   ScrollArea,
 } from '@mantine/core';
-import { useStoreAppShell } from '@/libraries/zustand/stores/shell';
+import { useStoreAppShell } from '@repo/libraries/zustand/stores/shell';
 import HeaderShellDashboard from '../header/shell/dashboard';
 import NavbarShellDashboard from '../navbar/shell/dashboard';
 

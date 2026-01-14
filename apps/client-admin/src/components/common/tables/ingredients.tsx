@@ -24,7 +24,7 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { useStoreIngredient } from '@/libraries/zustand/stores/ingredient';
+import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
 import { getRegionalDate } from '@repo/utilities/date-time';
 import {
   ICON_SIZE,
@@ -47,7 +47,7 @@ import ModalCrudIngredient from '../modals/crud/ingredient';
 import { sortArray } from '@repo/utilities/array';
 import { Order } from '@repo/types/enums';
 import ModalConfirm from '@repo/components/common/modals/confirm';
-import { useIngredientActions } from '@/hooks/actions/ingredient';
+import { useIngredientActions } from '@repo/hooks/actions/ingredient';
 import { capitalizeWords } from '@repo/utilities/string';
 
 export default function Ingredients({

@@ -3,8 +3,8 @@ import { openDatabase } from '@repo/libraries/indexed-db/actions';
 import { SyncStatus } from '@repo/types/models/enums';
 import { SyncItem, SyncParams } from '@repo/types/sync';
 import { DatabaseError } from '@repo/libraries/indexed-db/transactions';
-import { SyncStatusValue } from '@/libraries/zustand/stores/sync-status';
-import { SessionValue } from '@/libraries/zustand/stores/session';
+import { SyncStatusValue } from '@repo/libraries/zustand/stores/sync-status';
+import { SessionValue } from '@repo/libraries/zustand/stores/session';
 import { UserNetworkReturnValue } from '@mantine/hooks';
 
 export const syncToServerAfterDelay = async (
@@ -12,6 +12,7 @@ export const syncToServerAfterDelay = async (
     setSyncStatus: (data: SyncStatusValue) => void;
     session: SessionValue;
     networkStatus: UserNetworkReturnValue;
+    syncStatus: SyncStatusValue;
   }
 ) => {
   const { setSyncStatus, networkStatus, ...syncParams } = params;
@@ -59,7 +60,7 @@ export const syncToServerAfterDelay = async (
             clientDbItems.find((cdi) => cdi.id === ui.id) || ui;
           return {
             ...clientDbItem,
-            sync_status: SyncStatus.SYNCED,
+            sync_status: ui.sync_status,
           };
         }),
         options: { fromServer: true },
@@ -82,36 +83,35 @@ export const handleSync = async (
     clientOnly?: boolean;
   }
 ) => {
+  if (params.syncStatus == SyncStatus.PENDING) return;
+
   const {
     setSyncStatus,
     session,
     networkStatus,
-    syncStatus,
     debounceSyncToServer,
     clientOnly,
     ...syncParams
   } = params;
 
   try {
-    if (syncStatus == SyncStatus.PENDING) return;
-
     const isOnline = networkStatus.online;
 
     const { hasPendingItems, hasDeletedItems, hasSavedItems, hasErrorItems } =
       triggerClientSync({
         items: syncParams.items,
         deletedItems: syncParams.deletedItems || [],
-        syncStatus,
+        syncStatus: params.syncStatus,
         online: isOnline,
       });
 
     if (hasPendingItems || hasDeletedItems) {
-      setSyncStatus(SyncStatus.PENDING);
+      // setSyncStatus(SyncStatus.PENDING);
 
       // update the client DB with pending items
       await syncToClientDB({ ...syncParams, online: isOnline, sameDate: true });
 
-      setSyncStatus(SyncStatus.SAVED);
+      // setSyncStatus(SyncStatus.SAVED);
     }
 
     // sync to the server if online and signed in and not client only
@@ -125,10 +125,6 @@ export const handleSync = async (
         // Start/restart debounce timer
         debounceSyncToServer(params);
       }
-    }
-
-    if (hasDeletedItems) {
-      syncParams.stateUpdateFunctionDeleted();
     }
   } catch (error) {
     setSyncStatus(SyncStatus.ERROR);
@@ -215,13 +211,18 @@ export const syncToClientDB = async (
     options?: { fromServer?: boolean };
   }
 ) => {
+  if (params.options?.fromServer) {
+    params.items = dedupeBy(params.items, (i) => i.id);
+    params.deletedItems = dedupeBy(params.deletedItems || [], (i) => i.id);
+  }
+
   const syncedItems = params.items.filter(
     (p) => p.sync_status == SyncStatus.SYNCED
   );
 
   const unsyncedItems = [
     ...params.items,
-    ...(params.deletedItems || []),
+    ...(params.options?.fromServer ? [] : params.deletedItems || []),
   ].filter((p) => p.sync_status != SyncStatus.SYNCED);
 
   try {
@@ -250,34 +251,44 @@ export const syncToClientDB = async (
 
     if (!savedItems.length) return;
 
-    const deletedItems = savedItems.filter(
-      (i) => i.sync_status == SyncStatus.DELETED
-    );
+    if (params.cleanup) {
+      const deletedItems = savedItems.filter(
+        (i) => i.sync_status == SyncStatus.DELETED
+      );
 
-    if (params.cleanup && deletedItems.length) {
-      // remove items with sync status DELETE from client
-      await db.delete(params.dataStore, deletedItems);
+      if (deletedItems.length) {
+        // remove items with sync status DELETE from client
+        await db.delete(params.dataStore, deletedItems);
+      }
     }
 
     const savedItemsNotDeleted: any[] = savedItems.filter(
       (i) => i.sync_status != SyncStatus.DELETED
     );
 
-    const newItems = params.cleanup ? savedItemsNotDeleted : savedItems;
+    const clientDbItems = params.cleanup ? savedItemsNotDeleted : savedItems;
 
-    const finalItems = params.options?.fromServer
-      ? newItems
-      : [...newItems, ...syncedItems];
+    const finalClientDbItems = params.options?.fromServer
+      ? clientDbItems
+      : [...clientDbItems, ...syncedItems];
 
-    await db.put(params.dataStore, finalItems);
+    await db.put(params.dataStore, finalClientDbItems);
 
-    const finalStateItems = finalItems.filter(
-      (i) => i.sync_status != SyncStatus.DELETED
-    );
+    const stateItems = params.options?.fromServer
+      ? syncedItems
+      : finalClientDbItems.filter((i) => i.sync_status != SyncStatus.DELETED);
 
-    params.stateUpdateFunction(finalStateItems);
+    if (params.deletedItems?.length) {
+      params.stateUpdateFunctionDeleted();
+    }
+
+    params.stateUpdateFunction(stateItems);
   } catch (error) {
     console.error('Client DB Sync Error:', (error as DatabaseError).message);
     throw error;
   }
 };
+
+function dedupeBy<T, K>(arr: T[], key: (item: T) => K): T[] {
+  return Array.from(new Map(arr.map((i) => [key(i), i])).values());
+}

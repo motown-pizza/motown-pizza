@@ -12,7 +12,7 @@ import { contactAdd } from '@repo/handlers/requests/contact';
 import { formValuesInitialInquiry, FormValuesInquiry } from '@repo/types/form';
 import { useFormBase } from '../form';
 import { useEffect } from 'react';
-import { useStoreOrderPlacement } from '@/libraries/zustand/stores/order-placement';
+import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-placement';
 import { defaultOrderDetails } from '@/data/orders';
 
 type UseFormEmailInquiryOptions = {

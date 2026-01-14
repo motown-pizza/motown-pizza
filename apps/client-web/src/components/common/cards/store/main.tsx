@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Button, Card, Group, Stack, Text } from '@mantine/core';
 import { IconBuildingStore, IconMapPin, IconPhone } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
-import { useStoreOrderPlacement } from '@/libraries/zustand/stores/order-placement';
+import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-placement';
 import { defaultOrderDetails } from '@/data/orders';
 import { useRouter } from 'next/navigation';
 import { StoreGet } from '@repo/types/models/store';

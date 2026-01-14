@@ -29,7 +29,7 @@ import { ProductGet } from '@repo/types/models/product';
 import { useMediaQuery } from '@mantine/hooks';
 import { ProductDietaryType, ProductType } from '@repo/types/models/enums';
 import { capitalizeWords } from '@repo/utilities/string';
-import { useStoreProductVariant } from '@/libraries/zustand/stores/product-variant';
+import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
 import ModalCrudProductVariant from '../common/modals/crud/product-variant';
 import CardProductVariant from '../common/cards/product-variant';
 import { sortArray } from '@repo/utilities/array';

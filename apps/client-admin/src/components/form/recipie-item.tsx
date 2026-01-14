@@ -21,9 +21,9 @@ import {
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import { RecipieItemGet } from '@repo/types/models/recipie-item';
 import { useMediaQuery } from '@mantine/hooks';
-import { useStoreIngredient } from '@/libraries/zustand/stores/ingredient';
-import { useStoreProductVariant } from '@/libraries/zustand/stores/product-variant';
-import { useStoreProduct } from '@/libraries/zustand/stores/product';
+import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
+import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
+import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
 import { MeasurementUnitType, ProductType } from '@repo/types/models/enums';
 import { capitalizeWords } from '@repo/utilities/string';
 

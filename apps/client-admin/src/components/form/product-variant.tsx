@@ -27,10 +27,10 @@ import { ProductVariantGet } from '@repo/types/models/product-variant';
 import { useMediaQuery } from '@mantine/hooks';
 import { Size } from '@repo/types/models/enums';
 import { capitalizeWords } from '@repo/utilities/string';
-import { useStoreProduct } from '@/libraries/zustand/stores/product';
+import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
 import { sortArray } from '@repo/utilities/array';
 import { Order } from '@repo/types/enums';
-import { useStoreRecipieItem } from '@/libraries/zustand/stores/recipie-item';
+import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
 import ModalCrudRecipieItem from '../common/modals/crud/recipie-item';
 import CardRecipieItem from '../common/cards/recipie-item';
 

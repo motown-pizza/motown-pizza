@@ -18,11 +18,11 @@ import DrawerNav from '@/components/common/drawer/nav';
 import { useMediaQuery } from '@mantine/hooks';
 import ModalSignIn from '@/components/common/modal/sign-in';
 import DrawerCart from '@/components/common/drawer/cart';
-import { useStoreCartItems } from '@/libraries/zustand/stores/cart';
+import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
 
 export default function Main() {
   const tablet = useMediaQuery('(min-width: 62em)');
-  const { cartItems } = useStoreCartItems();
+  const { cartItems } = useStoreCartItem();
 
   return (
     <LayoutSection

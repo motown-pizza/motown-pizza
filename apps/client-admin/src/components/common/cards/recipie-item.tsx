@@ -25,8 +25,8 @@ import {
   IconTrash,
 } from '@tabler/icons-react';
 import ModalConfirm from '@repo/components/common/modals/confirm';
-import { useRecipieItemActions } from '@/hooks/actions/recipie-item';
-import { useStoreIngredient } from '@/libraries/zustand/stores/ingredient';
+import { useRecipieItemActions } from '@repo/hooks/actions/recipie-item';
+import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
 import { capitalizeWords } from '@repo/utilities/string';
 import { Status } from '@repo/types/models/enums';
 
