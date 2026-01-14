@@ -6,8 +6,8 @@
  */
 
 import prisma from '@/libraries/prisma';
-import { OrderItemGet } from '@repo/types/models/order-item';
 import { NextRequest, NextResponse } from 'next/server';
+import { CartItemGet } from '@repo/types/models/cart-item';
 
 export const dynamic = 'force-dynamic';
 // export const revalidate = 3600;
@@ -18,12 +18,12 @@ export async function GET(request: NextRequest) {
     const profileId = searchParams.get('profileId');
 
     if (!profileId) {
-      console.log('---> route handler info (get order items):', {
+      console.log('---> route handler info (get cart items):', {
         info: 'profile id not provided',
       });
     }
 
-    const orderItemRecords = await prisma.orderItem.findMany({
+    const cartItemRecords = await prisma.cartItem.findMany({
       where: {
         profile_id: profileId || undefined,
       },
@@ -32,11 +32,11 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json(
-      { items: orderItemRecords },
-      { status: 200, statusText: 'Order Items Retrieved' }
+      { items: cartItemRecords },
+      { status: 200, statusText: 'CartItems Retrieved' }
     );
   } catch (error) {
-    console.error('---> route handler error (get order items):', error);
+    console.error('---> route handler error (get cartItems):', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -47,43 +47,45 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const {
-      orderItems,
+      cartItems,
       deletedIds,
-    }: { orderItems: OrderItemGet[]; deletedIds?: string[] } =
-      await request.json();
+    }: {
+      cartItems: CartItemGet[];
+      deletedIds?: string[];
+    } = await request.json();
 
     // First handle explicit deletions if any exist
     if (deletedIds?.length) {
-      await prisma.orderItem.deleteMany({
+      await prisma.cartItem.deleteMany({
         where: { id: { in: deletedIds } },
       });
     }
 
     // Prepare upsert operations
-    const operations = orderItems.map((orderItem) =>
-      prisma.orderItem.upsert({
-        where: { id: orderItem.id },
+    const operations = cartItems.map((cartItem) =>
+      prisma.cartItem.upsert({
+        where: { id: cartItem.id },
         update: {
-          ...orderItem,
-          updated_at: new Date(orderItem.updated_at),
+          ...cartItem,
+          updated_at: new Date(cartItem.updated_at),
         },
         create: {
-          ...orderItem,
-          created_at: new Date(orderItem.created_at),
-          updated_at: new Date(orderItem.updated_at),
+          ...cartItem,
+          created_at: new Date(cartItem.created_at),
+          updated_at: new Date(cartItem.updated_at),
         },
       })
     );
 
     // Run all operations in one transaction
-    const updateOrderItems = await prisma.$transaction(operations);
+    const updateCartItems = await prisma.$transaction(operations);
 
     return NextResponse.json(
-      { items: updateOrderItems },
-      { status: 200, statusText: 'Order Items Updated' }
+      { items: updateCartItems },
+      { status: 200, statusText: 'CartItems Updated' }
     );
   } catch (error) {
-    console.error('---> route handler error (update order items):', error);
+    console.error('---> route handler error (update cartItems):', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
