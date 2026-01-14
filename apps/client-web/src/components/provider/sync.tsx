@@ -7,24 +7,24 @@
  * Do not modify unless you intend to backport changes to the template.
  */
 
-import React, { useEffect } from 'react';
-import {
-  useDebouncedCallback,
-  useNetwork,
-  useThrottledCallback,
-} from '@mantine/hooks';
-import { useStoreSession } from '@/libraries/zustand/stores/session';
-import { useStoreSyncStatus } from '@/libraries/zustand/stores/sync-status';
+import React from 'react';
+import { useDebouncedCallback, useNetwork } from '@mantine/hooks';
+import { useStoreSession } from '@repo/libraries/zustand/stores/session';
+import { useStoreSyncStatus } from '@repo/libraries/zustand/stores/sync-status';
 import { handleSync, syncToServerAfterDelay } from '@/utilities/sync';
 import {
   useSyncCartItems,
   useSyncCategories,
+  useSyncIngredients,
+  useSyncOrderItems,
   useSyncOrders,
   useSyncPosts,
   useSyncProducts,
   useSyncProductVariants,
+  useSyncRecipieItems,
 } from '@/hooks/sync';
 import { SyncParams } from '@repo/types/sync';
+import { useSyncQueue } from '@repo/utilities/sync';
 
 export default function Sync({ children }: { children: React.ReactNode }) {
   const networkStatus = useNetwork();
@@ -32,7 +32,7 @@ export default function Sync({ children }: { children: React.ReactNode }) {
   const { session } = useStoreSession();
   const { syncStatus, setSyncStatus } = useStoreSyncStatus();
 
-  const debounceSync = useThrottledCallback(handleSync, 1000);
+  const enqueueSync = useSyncQueue({ syncFunction: handleSync });
 
   const debounceSyncToServer = useDebouncedCallback(
     syncToServerAfterDelay,
@@ -45,57 +45,53 @@ export default function Sync({ children }: { children: React.ReactNode }) {
     networkStatus,
     syncStatus,
     debounceSyncToServer,
-    clientOnly: true,
+    clientOnly: false,
   };
 
-  const { syncPosts } = useSyncPosts({
-    syncFunction: (i: SyncParams) => debounceSync({ ...i, ...restProps }),
+  useSyncPosts({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
   });
 
-  const { syncCategories } = useSyncCategories({
-    syncFunction: (i: SyncParams) => debounceSync({ ...i, ...restProps }),
+  useSyncCategories({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
   });
 
-  const { syncProducts } = useSyncProducts({
-    syncFunction: (i: SyncParams) => debounceSync({ ...i, ...restProps }),
+  useSyncProducts({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
   });
 
-  const { syncProductVariants } = useSyncProductVariants({
-    syncFunction: (i: SyncParams) => debounceSync({ ...i, ...restProps }),
+  useSyncProductVariants({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
   });
 
-  const { syncCartItems } = useSyncCartItems({
-    syncFunction: (i: SyncParams) => debounceSync({ ...i, ...restProps }),
+  useSyncIngredients({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
   });
 
-  const { syncOrders } = useSyncOrders({
-    syncFunction: (i: SyncParams) => debounceSync({ ...i, ...restProps }),
+  useSyncRecipieItems({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
   });
 
-  useEffect(() => {
-    if (!networkStatus.online) return;
+  useSyncCartItems({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
 
-    syncPosts();
-    syncCategories();
-    syncProducts();
-    syncProductVariants();
-    syncCartItems();
-    syncOrders();
-  }, [
-    networkStatus.online,
-    syncPosts,
-    syncCategories,
-    syncProducts,
-    syncProductVariants,
-    syncCartItems,
-    syncOrders,
-  ]);
+  useSyncOrders({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  useSyncOrderItems({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
 
   return <div>{children}</div>;
 }

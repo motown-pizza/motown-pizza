@@ -5,13 +5,15 @@
  * Do not modify unless you intend to backport changes to the template.
  */
 
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { STORE_NAME } from '@repo/constants/names';
 import { postsUpdate } from '@repo/handlers/requests/database/posts';
 import { categoriesUpdate } from '@repo/handlers/requests/database/category';
-import { useStorePost } from '@/libraries/zustand/stores/post';
-import { useStoreCategory } from '@/libraries/zustand/stores/category';
+import { useStorePost } from '@repo/libraries/zustand/stores/post';
+import { useStoreCategory } from '@repo/libraries/zustand/stores/category';
 import { SyncParams } from '@repo/types/sync';
+import { useDebouncedCallback } from '@mantine/hooks';
+import { DEBOUNCE_VALUE } from '@repo/constants/sizes';
 
 export const useSyncPosts = (params: {
   syncFunction: (input: SyncParams) => void;
@@ -26,7 +28,7 @@ export const useSyncPosts = (params: {
     clearDeletedPosts,
   } = useStorePost();
 
-  const syncPosts = useCallback(() => {
+  const handleSyncPosts = useDebouncedCallback(() => {
     syncFunction({
       items: posts || [],
       deletedItems: deletedPosts,
@@ -35,12 +37,21 @@ export const useSyncPosts = (params: {
       stateUpdateFunction: (i) => setPosts(i),
       serverUpdateFunction: async (i, di) => await postsUpdate(i, di),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [posts, deletedPosts, setPosts, clearDeletedPosts]);
+  }, DEBOUNCE_VALUE);
 
-  useEffect(() => syncPosts(), [posts, syncPosts, online]);
+  const debounceSyncPosts = useDebouncedCallback(
+    handleSyncPosts,
+    DEBOUNCE_VALUE
+  );
 
-  return { syncPosts };
+  useEffect(() => {
+    if (posts === undefined && deletedPosts === undefined) return;
+    if (!posts?.length && !deletedPosts?.length) return;
+
+    debounceSyncPosts();
+  }, [posts, deletedPosts, debounceSyncPosts, online]);
+
+  return { syncPosts: debounceSyncPosts };
 };
 
 export const useSyncCategories = (params: {
@@ -56,7 +67,7 @@ export const useSyncCategories = (params: {
     clearDeletedCategories,
   } = useStoreCategory();
 
-  const syncCategories = useCallback(() => {
+  const handleSyncCategories = useDebouncedCallback(() => {
     syncFunction({
       items: categories || [],
       deletedItems: deletedCategories,
@@ -65,10 +76,19 @@ export const useSyncCategories = (params: {
       stateUpdateFunction: (i) => setCategories(i),
       serverUpdateFunction: async (i, di) => await categoriesUpdate(i, di),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categories, deletedCategories, setCategories, clearDeletedCategories]);
+  }, DEBOUNCE_VALUE);
 
-  useEffect(() => syncCategories(), [categories, syncCategories, online]);
+  const debounceSyncCategories = useDebouncedCallback(
+    handleSyncCategories,
+    DEBOUNCE_VALUE
+  );
 
-  return { syncCategories };
+  useEffect(() => {
+    if (categories === undefined && deletedCategories === undefined) return;
+    if (!categories?.length && !deletedCategories?.length) return;
+
+    debounceSyncCategories();
+  }, [categories, deletedCategories, debounceSyncCategories, online]);
+
+  return { syncCategories: debounceSyncCategories };
 };

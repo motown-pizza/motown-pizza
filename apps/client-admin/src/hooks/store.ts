@@ -14,13 +14,13 @@ import {
   PARAM_NAME,
   STORE_NAME,
 } from '@repo/constants/names';
-import { useStorePost } from '@/libraries/zustand/stores/post';
+import { useStorePost } from '@repo/libraries/zustand/stores/post';
 import { loadInitialData } from '@/utilities/store';
 import {
   getFromLocalStorage,
   saveToLocalStorage,
 } from '@repo/utilities/storage';
-import { useStoreSession } from '@/libraries/zustand/stores/session';
+import { useStoreSession } from '@repo/libraries/zustand/stores/session';
 import { generateUUID } from '@repo/utilities/generators';
 import { createClient } from '@/libraries/supabase/client';
 import { usePathname, useRouter } from 'next/navigation';
@@ -35,21 +35,23 @@ import {
   profileGet,
   profilesGet,
 } from '@repo/handlers/requests/database/profiles';
-import { RoleValue, useStoreRole } from '@/libraries/zustand/stores/role';
-import { useMediaQuery } from '@mantine/hooks';
+import { RoleValue, useStoreRole } from '@repo/libraries/zustand/stores/role';
 import {
   AppShellValue,
   useStoreAppShell,
-} from '@/libraries/zustand/stores/shell';
+} from '@repo/libraries/zustand/stores/shell';
 import { samplePosts } from '@/data/sample/posts';
 import { postsGet } from '@repo/handlers/requests/database/posts';
-import { ThemeValue, useStoreTheme } from '@/libraries/zustand/stores/theme';
+import {
+  ThemeValue,
+  useStoreTheme,
+} from '@repo/libraries/zustand/stores/theme';
 import { ColorScheme } from '@repo/types/enums';
 import { DEFAULT_COLOR_SCHEME } from '@repo/constants/other';
-import { useStoreProfile } from '@/libraries/zustand/stores/profile';
-import { useStoreCategory } from '@/libraries/zustand/stores/category';
+import { useStoreProfile } from '@repo/libraries/zustand/stores/profile';
+import { useStoreCategory } from '@repo/libraries/zustand/stores/category';
 import { categoriesGet } from '@repo/handlers/requests/database/category';
-import { useStoreProduct } from '@/libraries/zustand/stores/product';
+import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
 import { productsGet } from '@repo/handlers/requests/database/products';
 import { productVariantsGet } from '@repo/handlers/requests/database/product-variants';
 import { ingredientsGet } from '@repo/handlers/requests/database/ingredients';
@@ -58,13 +60,13 @@ import { ordersGet } from '@repo/handlers/requests/database/orders';
 import { orderItemsGet } from '@repo/handlers/requests/database/order-items';
 import { stockMovementsGet } from '@repo/handlers/requests/database/stock-movements';
 import { transportersGet } from '@repo/handlers/requests/database/transporters';
-import { useStoreProductVariant } from '@/libraries/zustand/stores/product-variant';
-import { useStoreIngredient } from '@/libraries/zustand/stores/ingredient';
-import { useStoreRecipieItem } from '@/libraries/zustand/stores/recipie-item';
-import { useStoreOrder } from '@/libraries/zustand/stores/order';
-import { useStoreOrderItem } from '@/libraries/zustand/stores/order-item';
-import { useStoreStockMovement } from '@/libraries/zustand/stores/stock-movement';
-import { useStoreTransporter } from '@/libraries/zustand/stores/transporter';
+import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
+import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
+import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
+import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
+import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
+import { useStoreStockMovement } from '@repo/libraries/zustand/stores/stock-movement';
+import { useStoreTransporter } from '@repo/libraries/zustand/stores/transporter';
 import { User } from '@supabase/supabase-js';
 
 export const useSessionStore = (params?: {
@@ -103,7 +105,8 @@ export const useSessionStore = (params?: {
         }
 
         if (!localId) {
-          const tempId = generateUUID();
+          // const tempId = generateUUID();
+          const tempId = '02f5bae4-a33b-4264-a0e2-6418ca6ce44e';
           saveToLocalStorage(LOCAL_STORAGE_NAME.TEMPID, tempId);
 
           if (clientOnly) {
@@ -115,7 +118,7 @@ export const useSessionStore = (params?: {
           }
         }
       } else {
-        setSession(session);
+        setSession(session as any);
 
         if (!localId || localId !== session.id) {
           saveToLocalStorage(LOCAL_STORAGE_NAME.TEMPID, session.id);
@@ -270,6 +273,7 @@ export const useStoreData = (params?: {
   const { setTransporters } = useStoreTransporter();
 
   useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadProfiles = async () => {
@@ -292,9 +296,10 @@ export const useStoreData = (params?: {
     };
 
     loadProfiles();
-  }, [setProfiles, session, clientOnly]);
+  }, [session]);
 
   useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadPosts = async () => {
@@ -316,9 +321,10 @@ export const useStoreData = (params?: {
     };
 
     loadPosts();
-  }, [setPosts, session, clientOnly]);
+  }, [session]);
 
   useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadCategories = async () => {
@@ -341,9 +347,10 @@ export const useStoreData = (params?: {
     };
 
     loadCategories();
-  }, [setCategories, session, clientOnly]);
+  }, [session]);
 
   useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadProducts = async () => {
@@ -366,9 +373,10 @@ export const useStoreData = (params?: {
     };
 
     loadProducts();
-  }, [setProducts, session, clientOnly]);
+  }, [session]);
 
   useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadProductVariants = async () => {
@@ -391,9 +399,10 @@ export const useStoreData = (params?: {
     };
 
     loadProductVariants();
-  }, [setProductVariants, session, clientOnly]);
+  }, [session]);
 
   useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadIngredients = async () => {
@@ -416,9 +425,10 @@ export const useStoreData = (params?: {
     };
 
     loadIngredients();
-  }, [setIngredients, session, clientOnly]);
+  }, [session]);
 
   useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadRecipieItems = async () => {
@@ -441,9 +451,10 @@ export const useStoreData = (params?: {
     };
 
     loadRecipieItems();
-  }, [setRecipieItems, session, clientOnly]);
+  }, [session]);
 
   useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadOrders = async () => {
@@ -465,9 +476,10 @@ export const useStoreData = (params?: {
     };
 
     loadOrders();
-  }, [setOrders, session, clientOnly]);
+  }, [session]);
 
   useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadOrderItems = async () => {
@@ -490,9 +502,10 @@ export const useStoreData = (params?: {
     };
 
     loadOrderItems();
-  }, [setOrderItems, session, clientOnly]);
+  }, [session]);
 
   useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadStockMovements = async () => {
@@ -515,9 +528,10 @@ export const useStoreData = (params?: {
     };
 
     loadStockMovements();
-  }, [setStockMovements, session, clientOnly]);
+  }, [session]);
 
   useEffect(() => {
+    if (!session) return;
     if (prevItemsRef.current.length) return;
 
     const loadTransporters = async () => {
@@ -540,5 +554,5 @@ export const useStoreData = (params?: {
     };
 
     loadTransporters();
-  }, [setTransporters, session, clientOnly]);
+  }, [session]);
 };

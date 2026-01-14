@@ -7,10 +7,10 @@
  * Do not modify unless you intend to backport changes to the template.
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDebouncedCallback, useNetwork } from '@mantine/hooks';
-import { useStoreSession } from '@/libraries/zustand/stores/session';
-import { useStoreSyncStatus } from '@/libraries/zustand/stores/sync-status';
+import { useStoreSession } from '@repo/libraries/zustand/stores/session';
+import { useStoreSyncStatus } from '@repo/libraries/zustand/stores/sync-status';
 import { handleSync, syncToServerAfterDelay } from '@/utilities/sync';
 import { useSyncCategories, useSyncPosts } from '@/hooks/sync';
 import { SyncParams } from '@repo/types/sync';
@@ -38,22 +38,15 @@ export default function Sync({ children }: { children: React.ReactNode }) {
     clientOnly: true,
   };
 
-  const { syncPosts } = useSyncPosts({
+  useSyncPosts({
     syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
   });
 
-  const { syncCategories } = useSyncCategories({
+  useSyncCategories({
     syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
   });
-
-  useEffect(() => {
-    if (!networkStatus.online) return;
-
-    syncPosts();
-    syncCategories();
-  }, [networkStatus.online, syncPosts, syncCategories]);
 
   return <div>{children}</div>;
 }
