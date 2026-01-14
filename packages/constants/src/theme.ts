@@ -18,6 +18,7 @@ import {
   Menu,
   Modal,
   Notification,
+  NumberFormatter,
   ScrollArea,
   Tooltip,
 } from '@mantine/core';
@@ -150,6 +151,10 @@ export const getAppTheme = (params?: AppThemeProps) => {
 
       Tooltip: Tooltip.extend({
         defaultProps: { withArrow: true, openDelay: 500 },
+      }),
+
+      NumberFormatter: NumberFormatter.extend({
+        defaultProps: { thousandSeparator: true },
       }),
 
       ScrollArea: ScrollArea.extend({

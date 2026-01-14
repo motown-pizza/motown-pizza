@@ -8,14 +8,16 @@ import {
   CardSection,
   Divider,
   Group,
+  NumberFormatter,
   Radio,
   RadioGroup,
   Stack,
+  Text,
   Title,
 } from '@mantine/core';
 import CardStoreAside from '@/components/common/cards/store/aside';
 import NextLink from '@repo/components/common/anchor/next-link';
-import { useStoreOrderPlacement } from '@/libraries/zustand/stores/order-placement';
+import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-placement';
 import { defaultOrderDetails } from '@/data/orders';
 import { capitalizeWords } from '@repo/utilities/string';
 import { SECTION_SPACING } from '@repo/constants/sizes';
@@ -25,16 +27,22 @@ import { OrderTime, OrderFulfilmentType } from '@repo/types/models/enums';
 import { getUrlParam } from '@repo/utilities/url';
 import { PARAM_NAME } from '@repo/constants/names';
 import { DateTimePicker } from '@mantine/dates';
+import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
+import { useGetSum } from '@/hooks/order';
 
 export default function Order() {
-  const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
   const pathname = usePathname();
+
+  const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
+  const { cartItems } = useStoreCartItem();
+
+  const { getSum } = useGetSum();
 
   const isStoreSelection = pathname.includes('/order/select-store');
   const isReviewCheckout = pathname.includes('/order/checkout-review');
   const isReadyForCheckout =
     pathname.includes('/order/select-menu') || isReviewCheckout;
-  // const productsSelected = !!orderDetails?.products.length;
+  const productsSelected = !!cartItems?.length;
 
   const store = stores.find(
     (s) => s.id == (orderDetails || defaultOrderDetails).store_id
@@ -47,7 +55,9 @@ export default function Order() {
     if (isStorePage && orderType)
       setOrderDetails({
         ...(orderDetails || defaultOrderDetails),
-        // type: (orderType as string).toUpperCase() as OrderFulfilmentType,
+        fulfillment_type: (
+          orderType as string
+        ).toUpperCase() as OrderFulfilmentType,
       });
   }, []);
 
@@ -55,8 +65,8 @@ export default function Order() {
     <Box pos={'sticky'} top={SECTION_SPACING}>
       <Card bg={'var(--mantine-color-dark-8)'}>
         <CardSection p={'md'} bg={'var(--mantine-color-sec-6)'}>
-          <Title order={2} fz={'lg'} fw={500} c={'blue.7'}>
-            Order Settings
+          <Title order={2} fz={'lg'} fw={'bold'} c={'blue.7'}>
+            Order Details
           </Title>
         </CardSection>
 
@@ -91,13 +101,13 @@ export default function Order() {
             <RadioGroup
               name="order-type"
               aria-label="Order type"
-              // value={(orderDetails || defaultOrderDetails).type}
-              // onChange={(v) => {
-              //   setOrderDetails({
-              //     ...(orderDetails || defaultOrderDetails),
-              //     type: v as OrderFulfilmentType,
-              //   });
-              // }}
+              value={(orderDetails || defaultOrderDetails).fulfillment_type}
+              onChange={(v) => {
+                setOrderDetails({
+                  ...(orderDetails || defaultOrderDetails),
+                  fulfillment_type: v as OrderFulfilmentType,
+                });
+              }}
             >
               <Stack mt="xs">
                 <Radio
@@ -124,13 +134,13 @@ export default function Order() {
             <RadioGroup
               name="order-time"
               aria-label="Order time"
-              // value={(orderDetails || defaultOrderDetails).time}
-              // onChange={(v) => {
-              //   setOrderDetails({
-              //     ...(orderDetails || defaultOrderDetails),
-              //     time: v as OrderTime,
-              //   });
-              // }}
+              value={(orderDetails || defaultOrderDetails).order_time}
+              onChange={(v) => {
+                setOrderDetails({
+                  ...(orderDetails || defaultOrderDetails),
+                  order_time: v as OrderTime,
+                });
+              }}
             >
               <Stack mt="xs">
                 <Radio
@@ -146,7 +156,7 @@ export default function Order() {
               </Stack>
             </RadioGroup>
 
-            {/* {orderDetails?.time == OrderTime.LATER && (
+            {orderDetails?.order_time == OrderTime.LATER && (
               <DateTimePicker
                 aria-label="Pick date and time"
                 placeholder="Pick date and time"
@@ -156,32 +166,45 @@ export default function Order() {
                   new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7 * 3)
                 }
               />
-            )} */}
+            )}
           </Stack>
         </Stack>
+
+        {!isStoreSelection && (
+          <CardSection p={'md'} mt={'md'} bg={'var(--mantine-color-dark-6)'}>
+            <Group justify="space-between">
+              <Text>Total:</Text>
+
+              <Text fz={'sm'}>
+                Kshs.{' '}
+                <Text component="span" inherit fz={'md'} fw={500} c={'sec'}>
+                  <NumberFormatter value={getSum()} />
+                </Text>
+              </Text>
+            </Group>
+          </CardSection>
+        )}
       </Card>
 
       {isReadyForCheckout && (
         <Group mt={'md'}>
-          {/* <NextLink
+          <NextLink
             href={
               isReviewCheckout ? '/order/checkout' : '/order/checkout-review'
             }
-            // onClick={(e) => {
-            //   if (!productsSelected) e.preventDefault();
-            // }}
+            onClick={(e) => {
+              if (!productsSelected) e.preventDefault();
+            }}
             w={'100%'}
           >
-            <Button fullWidth
-            // disabled={!productsSelected}
-            >
+            <Button fullWidth disabled={!productsSelected}>
               {productsSelected
                 ? isReviewCheckout
-                  ? 'Continue Checkout'
-                  : 'Checkout'
+                  ? 'Checkout'
+                  : 'Review Checkout'
                 : 'Select item(s) to checkout'}
             </Button>
-          </NextLink> */}
+          </NextLink>
         </Group>
       )}
     </Box>

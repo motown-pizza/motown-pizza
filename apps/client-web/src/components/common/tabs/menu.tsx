@@ -43,6 +43,7 @@ export default function Menu({
         },
         tabLabel: { fontSize: 'var(--mantine-font-size-lg)' },
         panel: { padding: 'var(--mantine-spacing-lg) 0' },
+        root: { minHeight: 500 },
       }}
     >
       <TabsList>
