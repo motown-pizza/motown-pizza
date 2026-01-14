@@ -1,5 +1,5 @@
 import { hasLength } from '@mantine/form';
-import { useProductActions } from '../actions/product';
+import { useProductActions } from '@repo/hooks/actions/product';
 import { useFormBase } from '../form';
 import { ProductGet } from '@repo/types/models/product';
 import {

@@ -27,7 +27,7 @@ import {
   IconTrash,
 } from '@tabler/icons-react';
 import ModalConfirm from '@repo/components/common/modals/confirm';
-import { useProductVariantActions } from '@/hooks/actions/product-variant';
+import { useProductVariantActions } from '@repo/hooks/actions/product-variant';
 import { Status } from '@repo/types/models/enums';
 
 export default function ProductVariant({

@@ -24,7 +24,7 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { useStoreProfile } from '@/libraries/zustand/stores/profile';
+import { useStoreProfile } from '@repo/libraries/zustand/stores/profile';
 import { initialize } from '@repo/utilities/string';
 import { getRegionalDate } from '@repo/utilities/date-time';
 import {
@@ -47,7 +47,7 @@ import ModalCrudProfile from '../modals/crud/profile';
 import { sortArray } from '@repo/utilities/array';
 import { Order } from '@repo/types/enums';
 import ModalConfirm from '@repo/components/common/modals/confirm';
-import { useProfileActions } from '@/hooks/actions/profile';
+import { useProfileActions } from '@repo/hooks/actions/profile';
 
 export default function Profiles({
   props,

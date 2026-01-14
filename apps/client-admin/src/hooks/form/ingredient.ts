@@ -1,5 +1,5 @@
 import { hasLength } from '@mantine/form';
-import { useIngredientActions } from '../actions/ingredient';
+import { useIngredientActions } from '@repo/hooks/actions/ingredient';
 import { useFormBase } from '../form';
 import { IngredientGet } from '@repo/types/models/ingredient';
 import { Status } from '@repo/types/models/enums';

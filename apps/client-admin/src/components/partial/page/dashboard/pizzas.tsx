@@ -10,7 +10,7 @@ import TableProducts from '@/components/common/tables/products';
 import { usePathname } from 'next/navigation';
 import { crumbify } from '@repo/utilities/url';
 import { ProductType } from '@repo/types/models/enums';
-import { useStoreProduct } from '@/libraries/zustand/stores/product';
+import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
 
 export default function Pizzas() {
   const pathname = usePathname();

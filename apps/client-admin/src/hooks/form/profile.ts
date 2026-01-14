@@ -1,5 +1,5 @@
 import { hasLength } from '@mantine/form';
-import { useProfileActions } from '../actions/profile';
+import { useProfileActions } from '@repo/hooks/actions/profile';
 import { useFormBase } from '../form';
 import { ProfileGet } from '@repo/types/models/profile';
 import { Role, Status } from '@repo/types/models/enums';

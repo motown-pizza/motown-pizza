@@ -16,7 +16,7 @@ import { getUrlParam } from '@repo/utilities/url';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { signOut } from '@repo/handlers/requests/auth';
-import { useStoreSession } from '@/libraries/zustand/stores/session';
+import { useStoreSession } from '@repo/libraries/zustand/stores/session';
 
 export type ConfirmStatus = {
   state: 'loading' | 'error' | 'success' | null;

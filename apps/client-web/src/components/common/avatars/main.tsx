@@ -8,7 +8,7 @@ import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import { IconUser } from '@tabler/icons-react';
 import { Auth as WrapperAuth } from '@/components/wrapper/auth';
 import { AuthAction } from '@repo/types/enums';
-import { useStoreSession } from '@/libraries/zustand/stores/session';
+import { useStoreSession } from '@repo/libraries/zustand/stores/session';
 
 export default function Main({ size }: { size?: number }) {
   const [mounted, setMounted] = useState(false);
