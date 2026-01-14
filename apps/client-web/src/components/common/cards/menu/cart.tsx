@@ -1,109 +1,169 @@
 import React from 'react';
-import { ProductGet } from '@repo/types/models/product';
 import {
   ActionIcon,
-  Button,
   Card,
   Grid,
   GridCol,
   Group,
   NumberFormatter,
-  Stack,
   Text,
   Title,
+  Tooltip,
 } from '@mantine/core';
 import ImageDefault from '@repo/components/common/images/default';
-import { IconX } from '@tabler/icons-react';
+import { IconMinus, IconPlus, IconTrash } from '@tabler/icons-react';
 import {
   ICON_SIZE,
   ICON_STROKE_WIDTH,
   ICON_WRAPPER_SIZE,
 } from '@repo/constants/sizes';
-import { SyncStatus } from '@repo/types/models/enums';
-import { useStoreProductVariant } from '@/libraries/zustand/stores/product-variant';
+import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
 import { capitalizeWords } from '@repo/utilities/string';
-import { ProductVariantGet } from '@repo/types/models/product-variant';
-import { useStoreCartItems } from '@/libraries/zustand/stores/cart';
+import { CartItemGet } from '@repo/types/models/cart-item';
+import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
+import { images } from '@/assets/images';
+import { useCartItemActions } from '@repo/hooks/actions/cart-item';
+import { useNotification } from '@repo/hooks/notification';
+import { Variant } from '@repo/types/enums';
 
 export default function Cart({
   props,
+  options,
 }: {
-  props: { product: ProductGet; productVariant: ProductVariantGet };
+  props: CartItemGet;
+  options?: { checkout?: boolean };
 }) {
-  const { cartItems, setCartItems, deleted, setDeletedCartItems } =
-    useStoreCartItems();
-
+  const { products } = useStoreProduct();
   const { productVariants } = useStoreProductVariant();
 
-  const variant = (productVariants || []).find(
-    (v) => v.id == props.productVariant.id
-  );
+  const { cartItemUpdate, cartItemDelete } = useCartItemActions();
 
-  const external = props.product.image.includes('https');
-  const drink = props.product.image.includes('drink');
+  const { showNotification } = useNotification();
+
+  const variant = (productVariants || []).find(
+    (pv) => pv.id == props.product_variant_id
+  );
+  const product = (products || []).find((p) => p.id == variant?.product_id);
+  const external = product?.image.includes('https');
+  const drink = product?.image.includes('drink');
 
   return (
-    <Card bg={'transparent'}>
-      <Grid>
-        <GridCol span={3}>
+    <Card bg={'transparent'} padding={'xs'}>
+      <Grid gutter={0}>
+        <GridCol span={options?.checkout ? 1.5 : 3}>
           <ImageDefault
-            src={props.product.image}
-            alt={props.product.title}
-            height={{ base: external || drink ? 80 : 60 }}
+            // src={product?.image||''}
+            src={images.products.pizzas.product1}
+            alt={product?.title || ''}
+            height={{ base: external || drink ? 80 : '100%' }}
             fit={external || drink ? undefined : 'contain'}
             radius={'lg'}
           />
         </GridCol>
 
-        <GridCol span={9}>
-          <Stack justify="space-between" h={'100%'}>
-            <div>
-              <Group justify="space-between">
-                <Title order={3} fz={'md'} fw={500} c={'sec.6'}>
-                  {props.product.title}
-                </Title>
+        <GridCol span={options?.checkout ? 10.5 : 9} pl={'xs'}>
+          <Group justify="space-between">
+            <Title order={3} fz={'md'} fw={500} c={'blue.6'} lineClamp={1}>
+              {product?.title}
+            </Title>
 
-                <ActionIcon
-                  size={ICON_WRAPPER_SIZE}
-                  color="gray.9"
-                  onClick={() => {
-                    setCartItems(
-                      (cartItems || []).filter(
-                        (ci) =>
-                          `${ci.id}-${props.productVariant.id}` !=
-                          `${props.product.id}-${props.productVariant.id}`
-                      )
-                    );
+            <Tooltip
+              label={`Remove item (${product?.title}) from cart`}
+              multiline
+              w={240}
+            >
+              <ActionIcon
+                size={ICON_WRAPPER_SIZE}
+                color="pri.6"
+                onClick={() => {
+                  cartItemDelete(props);
+                  showNotification({
+                    title: 'Item removed',
+                    desc: `Item (${product?.title}) removed from cart`,
+                    variant: Variant.SUCCESS,
+                  });
+                }}
+              >
+                <IconTrash size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+              </ActionIcon>
+            </Tooltip>
+          </Group>
 
-                    // setDeletedCartItems([
-                    //   ...deleted,
-                    //   {
-                    //     ...props.productVariant,
-                    //     sync_status: SyncStatus.DELETED,
-                    //   },
-                    // ]);
-                  }}
-                >
-                  <IconX size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-                </ActionIcon>
-              </Group>
+          {variant && (
+            <>
+              <Text inherit fz={'sm'}>
+                {capitalizeWords(variant.size)}
+              </Text>
 
-              {variant && (
-                <Stack gap={'xs'}>
-                  <Text inherit fz={'sm'}>
-                    {capitalizeWords(variant.size)}
-                  </Text>
-
-                  <Text fz={'sm'}>
-                    Kshs.{' '}
-                    <Text component="span" inherit fz={'md'} fw={'bold'}>
-                      <NumberFormatter value={variant.price || 0} />
+              <Group justify="space-between" mt={'xs'}>
+                <Group>
+                  <Text inherit fz={'xs'} c={'dimmed'}>
+                    Qty:{' '}
+                    <Text component={'span'} inherit fw={500} c={'ter'}>
+                      <NumberFormatter value={props.quantity} />
                     </Text>
                   </Text>
-                </Stack>
-              )}
-            </div>
-          </Stack>
+
+                  <Group gap={'xs'}>
+                    <Tooltip
+                      label={
+                        props.quantity <= 1
+                          ? 'Currently at minimum'
+                          : 'Remove -1'
+                      }
+                    >
+                      <ActionIcon
+                        size={ICON_WRAPPER_SIZE - 6}
+                        disabled={props.quantity <= 1}
+                        onClick={() => {
+                          cartItemUpdate({
+                            ...props,
+                            quantity: props.quantity - 1,
+                          });
+                        }}
+                      >
+                        <IconMinus
+                          size={ICON_SIZE - 6}
+                          stroke={ICON_STROKE_WIDTH}
+                        />
+                      </ActionIcon>
+                    </Tooltip>
+
+                    <Tooltip
+                      label={
+                        props.quantity >= 10 ? 'Currently at maximum' : 'Add +1'
+                      }
+                    >
+                      <ActionIcon
+                        size={ICON_WRAPPER_SIZE - 6}
+                        disabled={props.quantity >= 10}
+                        onClick={() => {
+                          cartItemUpdate({
+                            ...props,
+                            quantity: props.quantity + 1,
+                          });
+                        }}
+                      >
+                        <IconPlus
+                          size={ICON_SIZE - 4}
+                          stroke={ICON_STROKE_WIDTH}
+                        />
+                      </ActionIcon>
+                    </Tooltip>
+                  </Group>
+                </Group>
+
+                <Text inherit fz={'sm'}>
+                  Kshs.{' '}
+                  <Text component="span" inherit fz={'md'} fw={500} c={'sec'}>
+                    <NumberFormatter
+                      value={(variant.price || 0) * props.quantity}
+                    />
+                  </Text>
+                </Text>
+              </Group>
+            </>
+          )}
         </GridCol>
       </Grid>
     </Card>

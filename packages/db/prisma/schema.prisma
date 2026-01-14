@@ -139,8 +139,12 @@ model Profile {
   phone      String?
   role       Role    @default(USER)
 
-  posts    Post[]
-  comments Comment[]
+  posts          Post[]
+  comments       Comment[]
+  orders         Order[]
+  order_items    OrderItem[]
+  cart_items     CartItem[]
+  wishlist_items WishlistItem[]
 
   status      Status     @default(ACTIVE)
   sync_status SyncStatus @default(SYNCED)
@@ -297,6 +301,8 @@ model Order {
   customer_name        String
   customer_phone       String?
 
+  profile        Profile      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id     String
   transporter    Transporter? @relation(fields: [transporter_id], references: [id], onDelete: Cascade)
   transporter_id String?
   store          Store?       @relation(fields: [store_id], references: [id], onDelete: Cascade)
@@ -318,6 +324,8 @@ model OrderItem {
   quantity      Int
   price_at_sale Int
 
+  profile            Profile        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id         String
   order              Order          @relation(fields: [order_id], references: [id], onDelete: Cascade)
   order_id           String
   product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
@@ -329,6 +337,40 @@ model OrderItem {
   updated_at  DateTime   @updatedAt
 
   @@map(name: "order_items")
+}
+
+model CartItem {
+  id       String @id @default(uuid())
+  quantity Int    @default(1)
+
+  profile            Profile        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id         String
+  product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
+  product_variant_id String
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@map(name: "cart_items")
+}
+
+model WishlistItem {
+  id       String @id @default(uuid())
+  quantity Int    @default(1)
+
+  profile            Profile        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id         String
+  product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
+  product_variant_id String
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@map(name: "wishlist_items")
 }
 
 model StockMovement {
@@ -381,34 +423,4 @@ model Store {
   orders Order[]
 
   @@map(name: "stores")
-}
-
-model CartItem {
-  id       String @id @default(uuid())
-  quantity Int    @default(1)
-
-  product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
-  product_variant_id String
-
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
-
-  @@map(name: "cart_items")
-}
-
-model WishlistItem {
-  id       String @id @default(uuid())
-  quantity Int    @default(1)
-
-  product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
-  product_variant_id String
-
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
-
-  @@map(name: "wishlist_items")
 }

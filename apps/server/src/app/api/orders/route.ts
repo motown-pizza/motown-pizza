@@ -12,9 +12,22 @@ import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 // export const revalidate = 3600;
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const profileId = searchParams.get('profileId');
+
+    if (!profileId) {
+      console.log('---> route handler info (get orders):', {
+        info: 'profile id not provided',
+      });
+    }
+
     const orderRecords = await prisma.order.findMany({
+      where: {
+        profile_id: profileId || undefined,
+      },
+
       orderBy: { created_at: 'desc' },
     });
 

@@ -15,10 +15,6 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const storeRecords = await prisma.store.findMany({
-      include: {
-        _count: { select: { orders: true } },
-      },
-
       orderBy: { created_at: 'desc' },
     });
 

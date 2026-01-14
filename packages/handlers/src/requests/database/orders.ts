@@ -15,12 +15,16 @@ import {
 
 const baseRequestUrl = `${API_URL}/orders`;
 
-export const ordersGet = async () => {
+export const ordersGet = async (options?: { profileId?: string }) => {
   try {
-    const request = new Request(baseRequestUrl, {
-      method: 'GET',
-      headers: HEADERS.WITHOUT_BODY,
-    });
+    const request = new Request(
+      baseRequestUrl +
+        `${!options?.profileId ? '' : `?profileId=${options.profileId}`}`,
+      {
+        method: 'GET',
+        headers: HEADERS.WITHOUT_BODY,
+      }
+    );
 
     const response = await fetch(request);
 
