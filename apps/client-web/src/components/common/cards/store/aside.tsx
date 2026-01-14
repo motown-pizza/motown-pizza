@@ -18,7 +18,11 @@ export default function Aside({ props }: { props: StoreGet }) {
         // referrerpolicy="no-referrer-when-downgrade"
       ></Box> */}
 
-      <Stack gap={5} fz={'sm'} mt={'md'}>
+      <Stack
+        gap={5}
+        fz={'sm'}
+        // mt={'md'}
+      >
         <Group gap={5}>
           <IconBuildingStore size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
           <Text inherit>{props.title}</Text>

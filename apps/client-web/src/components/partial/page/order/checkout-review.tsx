@@ -7,11 +7,12 @@ import {
   Button,
   Card,
   CardSection,
+  Center,
   Divider,
   Grid,
   GridCol,
   Group,
-  NumberFormatter,
+  Loader,
   ScrollArea,
   Stack,
   Text,
@@ -19,27 +20,21 @@ import {
 } from '@mantine/core';
 import IntroSection from '@repo/components/layout/intros/section';
 import NextLink from '@repo/components/common/anchor/next-link';
-import { useStoreOrderPlacement } from '@/libraries/zustand/stores/order-placement';
-import CardMenuSummary from '@/components/common/cards/menu/summary';
-import { defaultOrderDetails } from '@/data/orders';
 import CardMenuMain from '@/components/common/cards/menu/main';
 import { ProductType } from '@repo/types/models/enums';
-import { useStoreProduct } from '@/libraries/zustand/stores/product';
+import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
+import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
+import CardMenuCart from '@/components/common/cards/menu/cart';
+import { IconArrowLeft } from '@tabler/icons-react';
+import {
+  ICON_SIZE,
+  ICON_STROKE_WIDTH,
+  SECTION_SPACING,
+} from '@repo/constants/sizes';
 
 export default function CheckoutReview() {
   const { products } = useStoreProduct();
-  const { orderDetails } = useStoreOrderPlacement();
-
-  const getSum = () => {
-    let sum = 0;
-
-    // orderDetails?.products.map((p) => {
-    //   const variant = variants?.find((v) => v.id == p.selected_variant_id);
-    //   if (variant?.price) sum += variant.price;
-    // });
-
-    return sum;
-  };
+  const { cartItems } = useStoreCartItem();
 
   return (
     <LayoutSection id="page-checkout-review-content" padded>
@@ -51,30 +46,61 @@ export default function CheckoutReview() {
       <Grid gutter={'xl'} mt={'xl'}>
         <GridCol span={{ base: 12, md: 8.5 }}>
           <Stack gap={'xl'}>
-            <Group justify="end">
-              <NextLink href="/order/select-menu">
-                <Button>Add more items</Button>
-              </NextLink>
-            </Group>
-
-            <Card bg={'var(--mantine-color-dark-7)'}>
+            <Card bg={'var(--mantine-color-dark-7)'} padding={0}>
               <CardSection p={'md'} bg={'var(--mantine-color-dark-6)'}>
-                <Title order={3}>Review and Modify Your Items</Title>
+                <Group justify="space-between">
+                  <Title order={3}>Review and Modify Your Items</Title>
+
+                  <NextLink href="/order/select-menu">
+                    <Button
+                      leftSection={
+                        <IconArrowLeft
+                          size={ICON_SIZE}
+                          stroke={ICON_STROKE_WIDTH}
+                        />
+                      }
+                    >
+                      Add more items
+                    </Button>
+                  </NextLink>
+                </Group>
               </CardSection>
 
-              <ScrollArea w={'100%'} scrollbars={'x'} type="auto">
-                {/* <Stack mt={'md'} miw={900} pb={'lg'}>
-                  {(orderDetails || defaultOrderDetails).products.map(
-                    (pi, i) => (
-                      <Stack gap={5} key={i}>
-                        {i > 0 && <Divider mb={'xs'} />}
+              <ScrollArea scrollbars={'y'} h={400}>
+                {cartItems === undefined ? (
+                  <Center py={SECTION_SPACING * 2}>
+                    <Loader />
+                  </Center>
+                ) : !cartItems?.length ? (
+                  <Stack align="center" py={SECTION_SPACING * 2}>
+                    <Text>No order items selected.</Text>
 
-                        <CardMenuSummary props={pi} />
-                      </Stack>
-                    )
-                  )}
-                </Stack> */}
+                    <NextLink href="/order/select-menu?menuTab=pizzas">
+                      <Group justify="center">
+                        <Button>Select items to order</Button>
+                      </Group>
+                    </NextLink>
+                  </Stack>
+                ) : (
+                  cartItems?.map((ci, i) => (
+                    <Stack gap={5} key={i} pr={'xs'}>
+                      {i > 0 && <Divider mb={'xs'} />}
+
+                      <CardMenuCart props={ci} options={{ checkout: true }} />
+                    </Stack>
+                  ))
+                )}
               </ScrollArea>
+
+              {/* <Stack mt={'md'}>
+                {cartItems?.map((ci, i) => (
+                  <Stack gap={5} key={i}>
+                    {i > 0 && <Divider mb={'xs'} />}
+
+                    <CardMenuCart props={ci} options={{ checkout: true }} />
+                  </Stack>
+                ))}
+              </Stack> */}
             </Card>
 
             <Card bg={'var(--mantine-color-dark-7)'}>
@@ -115,26 +141,6 @@ export default function CheckoutReview() {
               </Grid>
             </Card>
           </Stack>
-
-          <Group justify="end" mt={'xl'}>
-            <Card
-              bg={'var(--mantine-color-dark-7)'}
-              w={{ base: '100%', md: '40%' }}
-            >
-              <Stack>
-                <Group justify="space-between">
-                  <Text>Total:</Text>
-
-                  <Text fz={'sm'}>
-                    Kes.{' '}
-                    <Text component="span" inherit fz={'md'} fw={'bold'}>
-                      <NumberFormatter value={getSum()} />
-                    </Text>
-                  </Text>
-                </Group>
-              </Stack>
-            </Card>
-          </Group>
         </GridCol>
 
         <GridCol span={{ base: 12, md: 3.5 }}>

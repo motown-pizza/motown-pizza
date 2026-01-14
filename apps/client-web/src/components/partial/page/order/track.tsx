@@ -13,7 +13,7 @@ export default function Track() {
       <IntroSection
         props={{
           title: 'Track Order',
-          desc: 'Keep track of how your Order situation is developing',
+          desc: 'Keep track of how your order sequence is developing',
         }}
       />
 

@@ -36,6 +36,14 @@ export const config: DBConfig = {
       keyPath: 'id',
     },
     {
+      name: STORE_NAME.INGREDIENTS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.RECIPIE_ITEMS,
+      keyPath: 'id',
+    },
+    {
       name: STORE_NAME.WISHLIST_ITEMS,
       keyPath: 'id',
     },
@@ -45,6 +53,10 @@ export const config: DBConfig = {
     },
     {
       name: STORE_NAME.ORDERS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.ORDER_ITEMS,
       keyPath: 'id',
     },
   ],

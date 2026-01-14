@@ -1,3 +1,5 @@
+import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
+import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
 import { useEffect, useMemo, useState } from 'react';
 
 type TimeParts = {
@@ -51,3 +53,23 @@ export function useCountdown(
     };
   }, [target, durationMinutes, now]);
 }
+
+export const useGetSum = () => {
+  const { cartItems } = useStoreCartItem();
+  const { productVariants } = useStoreProductVariant();
+
+  const getSum = () => {
+    let sum = 0;
+
+    cartItems?.map((ci) => {
+      const variant = productVariants?.find(
+        (pv) => pv.id == ci.product_variant_id
+      );
+      if (variant?.price) sum += variant.price * ci.quantity;
+    });
+
+    return sum;
+  };
+
+  return { getSum };
+};

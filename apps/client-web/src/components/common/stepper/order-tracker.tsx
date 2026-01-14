@@ -28,20 +28,20 @@ export default function OrderTracker() {
   const [active, setActive] = useState(1);
   const nextStep = () =>
     setActive((current) => (current < 4 ? current + 1 : current));
-  const prevStep = () =>
-    setActive((current) => (current > 1 ? current - 1 : current));
+  // const prevStep = () =>
+  //   setActive((current) => (current > 1 ? current - 1 : current));
 
   const [targetDate, setTargetDate] = useState<Date>(
-    new Date(now.getTime() + 1000 * 60 * 0.2)
+    new Date(now.getTime() + 1000 * 60 * 2)
   );
 
-  const { percentElapsed } = useCountdown(targetDate, 0.2);
+  const { percentElapsed } = useCountdown(targetDate, 2);
 
   useEffect(() => {
     if (percentElapsed == 100) {
       if (active < 4) {
         nextStep();
-        setTargetDate(new Date(new Date().getTime() + 1000 * 60 * 0.2));
+        setTargetDate(new Date(new Date().getTime() + 1000 * 60 * 2));
       }
     }
   }, [percentElapsed]);
@@ -50,7 +50,7 @@ export default function OrderTracker() {
     <>
       <Stepper
         active={active}
-        onStepClick={setActive}
+        // onStepClick={setActive}
         styles={{
           stepDescription: {
             textTransform: 'uppercase',

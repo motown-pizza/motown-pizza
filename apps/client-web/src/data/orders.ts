@@ -24,6 +24,7 @@ export const defaultOrderDetails: OrderGet = {
   order_status: OrderStatus.PROCESSING,
   order_time: OrderTime.NOW,
   payment_method: OrderPaymentMethod.ONLINE,
+  profile_id: '',
   source: OrderSource.WEBSITE,
   store_id: stores[0].id,
   transporter_id: '',

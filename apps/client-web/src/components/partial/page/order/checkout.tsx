@@ -7,8 +7,10 @@ import {
   Button,
   Card,
   CardSection,
+  Center,
   Divider,
   Group,
+  Loader,
   NumberFormatter,
   Radio,
   RadioGroup,
@@ -18,40 +20,37 @@ import {
   Title,
 } from '@mantine/core';
 import IntroSection from '@repo/components/layout/intros/section';
-import { useStoreOrderPlacement } from '@/libraries/zustand/stores/order-placement';
-import CardMenuSummary from '@/components/common/cards/menu/summary';
+import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-placement';
 import { defaultOrderDetails } from '@/data/orders';
-import { SyncStatus } from '@repo/types/models/enums';
+import {
+  OrderFulfilmentType,
+  OrderPaymentMethod,
+  OrderTime,
+  SyncStatus,
+} from '@repo/types/models/enums';
 import { stores } from '@/data/stores';
 import FormContact from '@/components/form/contact';
 import { APP_NAME } from '@/data/constants';
 import ImageDefault from '@repo/components/common/images/default';
 import { images } from '@/assets/images';
 import NextLink from '@repo/components/common/anchor/next-link';
-import { useOrderActions } from '@/hooks/actions/order';
+import { useOrderActions } from '@repo/hooks/actions/order';
 import { generateUUID } from '@repo/utilities/generators';
+import { useGetSum } from '@/hooks/order';
+import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
+import CardMenuCart from '@/components/common/cards/menu/cart';
+import { SECTION_SPACING } from '@repo/constants/sizes';
+import { getRegionalDate } from '@repo/utilities/date-time';
+import { useNotification } from '@repo/hooks/notification';
+import { Variant } from '@repo/types/enums';
 
 export default function Checkout() {
   const orderIdRef = useRef(generateUUID());
   const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
+  const { cartItems } = useStoreCartItem();
   const { orderCreate } = useOrderActions();
-
-  const getSum = () => {
-    let sum = 0;
-
-    // orderDetails?.products.map((p) => {
-    //   const variant = variants?.find((v) => v.id == p.selected_variant_id);
-    //   if (variant?.price) sum += variant.price;
-    // });
-
-    return sum;
-  };
-
-  const getVat = () => {
-    let sum = getSum();
-    sum = (30 / 100) * sum;
-    return sum;
-  };
+  const { getSum } = useGetSum();
+  const { showNotification } = useNotification();
 
   const store = stores.find((s) => s.id == orderDetails?.store_id);
 
@@ -59,7 +58,12 @@ export default function Checkout() {
     !!orderDetails?.customer_name.length &&
     !!orderDetails?.customer_phone?.length;
 
-  // const isReadyForConfirmation = formIsValid && !!orderDetails.products.length;
+  const isReadyForConfirmation = formIsValid && !!cartItems?.length;
+
+  const readyDate = getRegionalDate(new Date(), {
+    locale: 'en-GB',
+    format: 'numeric',
+  });
 
   return (
     <LayoutSection
@@ -74,40 +78,77 @@ export default function Checkout() {
 
       <Stack mt={'xl'}>
         <div>
-          <Text>
-            Carryout from {store?.title}, {store?.location}.
-          </Text>
-          <Text>Your order will be ready on: 04/12/25 12:00.</Text>
+          {store && (
+            <Text c={'dimmed'}>
+              Carryout from:{' '}
+              <Text component="span" inherit c={'var(--mantine-color-text)'}>
+                {store.title}, {store.location}
+              </Text>
+              .
+            </Text>
+          )}
+
+          {orderDetails?.order_time == OrderTime.NOW && (
+            <Text c={'dimmed'}>
+              Your order will be ready on:{' '}
+              <Text component="span" inherit c={'var(--mantine-color-text)'}>
+                {readyDate.date}, {readyDate.time.toUpperCase()}
+              </Text>
+              .
+            </Text>
+          )}
         </div>
 
         <Badge size="xl" color="var(--mantine-color-dark-7)" tt={'capitalize'}>
-          <Text inherit>
+          <Text inherit c={'dimmed'} fz={'sm'}>
             Total:{' '}
-            <Text component="span" inherit>
-              <NumberFormatter value={getSum() + getVat()} /> KES
+            <Text
+              component="span"
+              inherit
+              fz={'md'}
+              c={'var(--mantine-color-text)'}
+            >
+              Kshs.{' '}
+              <Text component="span" inherit c={'sec'} fz={'lg'}>
+                <NumberFormatter value={getSum()} />
+              </Text>
             </Text>
           </Text>
         </Badge>
       </Stack>
 
       <Stack gap={'xl'} mt={'xl'}>
-        <Card bg={'var(--mantine-color-dark-7)'}>
+        <Card bg={'var(--mantine-color-dark-7)'} padding={0}>
           <CardSection p={'md'} bg={'var(--mantine-color-dark-6)'}>
             <Title order={3} c={'blue'}>
               Order Items Summary
             </Title>
           </CardSection>
 
-          <ScrollArea w={'100%'} scrollbars={'x'} type="auto">
-            {/* <Stack mt={'md'} miw={900} pb={'lg'}>
-              {(orderDetails || defaultOrderDetails).products.map((pi, i) => (
-                <Stack gap={5} key={i}>
+          <ScrollArea scrollbars={'y'} h={400}>
+            {cartItems === undefined ? (
+              <Center py={SECTION_SPACING * 2}>
+                <Loader />
+              </Center>
+            ) : !cartItems?.length ? (
+              <Stack align="center" py={SECTION_SPACING * 2}>
+                <Text>No order items selected.</Text>
+
+                <NextLink href="/order/select-menu?menuTab=pizzas">
+                  <Group justify="center">
+                    <Button>Select items to order</Button>
+                  </Group>
+                </NextLink>
+              </Stack>
+            ) : (
+              cartItems?.map((ci, i) => (
+                <Stack gap={5} key={i} pr={'xs'}>
                   {i > 0 && <Divider mb={'xs'} />}
 
-                  <CardMenuSummary props={pi} />
+                  <CardMenuCart props={ci} options={{ checkout: true }} />
                 </Stack>
-              ))}
-            </Stack> */}
+              ))
+            )}
           </ScrollArea>
         </Card>
 
@@ -152,7 +193,7 @@ export default function Checkout() {
               <Text c={'sec'}>
                 Balance Due:{' '}
                 <Text component="span" inherit fw={500}>
-                  <NumberFormatter value={getSum() + getVat()} /> KES
+                  <NumberFormatter value={getSum()} /> KES
                 </Text>
               </Text>
             </div>
@@ -161,33 +202,30 @@ export default function Checkout() {
               name="payment-option"
               label="Payment Option"
               withAsterisk
-              // value={(orderDetails || defaultOrderDetails).payment_option}
+              value={(orderDetails || defaultOrderDetails).payment_method}
               onChange={(v) => {
                 setOrderDetails({
                   ...(orderDetails || defaultOrderDetails),
-                  // payment_option: v as OrderPaymentOption,
+                  payment_method: v as OrderPaymentMethod,
                 });
               }}
             >
               <Stack mt="xs">
-                {/* {(orderDetails || defaultOrderDetails).type ==
-                  OrderType.COLLECTION && (
-                  <Radio
-                    value={OrderPaymentOption.CASH_STORE}
-                    label={'Pay in Store'}
-                  />
-                )} */}
-
-                {/* <Radio
-                  value={OrderPaymentOption.CASH_ON_DELIVERY}
-                  label={'Pay on Delivery (Cash)'}
-                /> */}
+                <Radio
+                  value={OrderPaymentMethod.CASH}
+                  label={
+                    (orderDetails || defaultOrderDetails).fulfillment_type ==
+                    OrderFulfilmentType.COLLECTION
+                      ? 'Pay in store upon collection (Cash)'
+                      : 'Pay on delivery (Cash)'
+                  }
+                />
 
                 <Radio
-                  // value={OrderPaymentOption.E_CASH}
+                  value={OrderPaymentMethod.ONLINE}
                   label={
                     <Stack gap={5}>
-                      <Text inherit>Pay now with mobile money</Text>
+                      <Text inherit>Pay with cash, card, or mobile money</Text>
 
                       <Group>
                         <ImageDefault
@@ -210,24 +248,26 @@ export default function Checkout() {
           <NextLink
             href={`/order/confirmed?confirmedOrder=${orderIdRef.current}`}
             onClick={(e) => {
-              // if (!isReadyForConfirmation) {
-              //   e.preventDefault();
-              //   return;
-              // }
+              if (!isReadyForConfirmation) {
+                e.preventDefault();
+
+                showNotification({
+                  title: 'Not Ready For Checkout',
+                  desc: `Verify form details and order items`,
+                  variant: Variant.WARNING,
+                });
+
+                return;
+              }
 
               orderCreate({
                 ...orderDetails,
                 id: orderIdRef.current,
-                // stage: OrderStage.CHECKOUT,
                 sync_status: SyncStatus.PENDING,
               });
             }}
           >
-            <Button
-              color="pri"
-              size="md"
-              // disabled={!isReadyForConfirmation}
-            >
+            <Button color="pri" size="md" disabled={!isReadyForConfirmation}>
               Continue
             </Button>
           </NextLink>
