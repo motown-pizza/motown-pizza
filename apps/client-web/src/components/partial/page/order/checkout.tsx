@@ -247,7 +247,7 @@ export default function Checkout() {
         <Group justify="end">
           <NextLink
             href={`/order/confirmed?confirmedOrder=${orderIdRef.current}`}
-            onClick={(e) => {
+            onClick={async (e) => {
               if (!isReadyForConfirmation) {
                 e.preventDefault();
 
@@ -260,11 +260,14 @@ export default function Checkout() {
                 return;
               }
 
-              orderCreate({
-                ...orderDetails,
-                id: orderIdRef.current,
-                sync_status: SyncStatus.PENDING,
-              });
+              await orderCreate(
+                {
+                  ...orderDetails,
+                  id: orderIdRef.current,
+                  sync_status: SyncStatus.PENDING,
+                },
+                { stores }
+              );
             }}
           >
             <Button color="pri" size="md" disabled={!isReadyForConfirmation}>

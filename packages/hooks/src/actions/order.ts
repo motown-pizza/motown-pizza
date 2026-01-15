@@ -16,6 +16,8 @@ import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
 import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
 import { OrderItemGet } from '@repo/types/models/order-item';
 import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
+import { generateTrackingCode } from '@repo/services/logic/generators/order-code';
+import { StoreGet } from '@repo/types/models/store';
 
 export const useOrderActions = () => {
   const { session } = useStoreSession();
@@ -25,7 +27,10 @@ export const useOrderActions = () => {
   const { productVariants } = useStoreProductVariant();
   const { cartItems, deleteCartItems } = useStoreCartItem();
 
-  const orderCreate = (params: Partial<OrderGet>) => {
+  const orderCreate = async (
+    params: Partial<OrderGet>,
+    options: { stores: StoreGet[] }
+  ) => {
     if (!session) return;
 
     const id = generateUUID();
@@ -45,14 +50,22 @@ export const useOrderActions = () => {
       profile_id: session.id || '',
       source: params.source || OrderSource.POS,
       store_id: params.store_id || '',
-      transporter_id: params.transporter_id || '',
+      tracking_code: params.tracking_code || '',
       status: params.status || Status.ACTIVE,
       sync_status: SyncStatus.PENDING,
       created_at: now.toISOString() as any,
       updated_at: now.toISOString() as any,
     };
 
-    addOrder(newOrder);
+    const trackingCode = await generateTrackingCode({
+      date: newOrder.created_at,
+      deliveryType: newOrder.fulfillment_type,
+      hashInput: newOrder.id,
+      storeTitle:
+        options.stores.find((s) => s.id == newOrder.store_id)?.title || 'GEN',
+    });
+
+    addOrder({ ...newOrder, tracking_code: trackingCode });
 
     const cartToOrderItems: OrderItemGet[] = (cartItems || []).map((ci) => {
       const productVariant = productVariants?.find(
