@@ -23,7 +23,6 @@ import {
   useSyncProfiles,
   useSyncRecipieItems,
   useSyncStockMovements,
-  useSyncTransporters,
 } from '@/hooks/sync';
 import { SyncParams } from '@repo/types/sync';
 import { useSyncQueue } from '@repo/utilities/sync';
@@ -96,11 +95,6 @@ export default function Sync({ children }: { children: React.ReactNode }) {
   });
 
   useSyncStockMovements({
-    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
-    online: networkStatus.online,
-  });
-
-  useSyncTransporters({
     syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
   });

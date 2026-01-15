@@ -59,14 +59,12 @@ import { recipieItemsGet } from '@repo/handlers/requests/database/recipie-items'
 import { ordersGet } from '@repo/handlers/requests/database/orders';
 import { orderItemsGet } from '@repo/handlers/requests/database/order-items';
 import { stockMovementsGet } from '@repo/handlers/requests/database/stock-movements';
-import { transportersGet } from '@repo/handlers/requests/database/transporters';
 import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
 import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
 import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
 import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
 import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
 import { useStoreStockMovement } from '@repo/libraries/zustand/stores/stock-movement';
-import { useStoreTransporter } from '@repo/libraries/zustand/stores/transporter';
 import { User } from '@supabase/supabase-js';
 
 export const useSessionStore = (params?: {
@@ -270,7 +268,6 @@ export const useStoreData = (params?: {
   const { setOrders } = useStoreOrder();
   const { setOrderItems } = useStoreOrderItem();
   const { setStockMovements } = useStoreStockMovement();
-  const { setTransporters } = useStoreTransporter();
 
   useEffect(() => {
     if (!session) return;
@@ -528,31 +525,5 @@ export const useStoreData = (params?: {
     };
 
     loadStockMovements();
-  }, [session]);
-
-  useEffect(() => {
-    if (!session) return;
-    if (prevItemsRef.current.length) return;
-
-    const loadTransporters = async () => {
-      await loadInitialData({
-        prevItemsRef,
-        dataStore: STORE_NAME.TRANSPORTERS,
-        session,
-        dataFetchFunction: async () => {
-          if (clientOnly) {
-            return {
-              items: [],
-            };
-          } else {
-            return await transportersGet();
-          }
-        },
-        stateUpdateFunction: (stateUpdateItems) =>
-          setTransporters(stateUpdateItems),
-      });
-    };
-
-    loadTransporters();
   }, [session]);
 };
