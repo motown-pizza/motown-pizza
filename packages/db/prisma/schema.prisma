@@ -391,22 +391,6 @@ model StockMovement {
   @@map(name: "stock_movements")
 }
 
-model Transporter {
-  id           String               @id @default(uuid())
-  name         String
-  vehicle_type TransportVehicleType
-  vehicle_id   String
-
-  orders Order[]
-
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
-
-  @@map(name: "transporters")
-}
-
 model Store {
   id       String @id @default(uuid())
   title    String

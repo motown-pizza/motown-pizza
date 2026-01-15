@@ -28,8 +28,6 @@ import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
 import { orderItemsUpdate } from '@repo/handlers/requests/database/order-items';
 import { useStoreStockMovement } from '@repo/libraries/zustand/stores/stock-movement';
 import { stockMovementsUpdate } from '@repo/handlers/requests/database/stock-movements';
-import { useStoreTransporter } from '@repo/libraries/zustand/stores/transporter';
-import { transportersUpdate } from '@repo/handlers/requests/database/transporters';
 import { useDebouncedCallback } from '@mantine/hooks';
 import { DEBOUNCE_VALUE } from '@repo/constants/sizes';
 
@@ -433,43 +431,4 @@ export const useSyncStockMovements = (params: {
   ]);
 
   return { syncStockMovements: debounceSyncStockMovements };
-};
-
-export const useSyncTransporters = (params: {
-  syncFunction: (input: SyncParams) => void;
-  online: boolean;
-}) => {
-  const { syncFunction, online } = params;
-
-  const {
-    transporters,
-    deleted: deletedTransporters,
-    setTransporters,
-    clearDeletedTransporters,
-  } = useStoreTransporter();
-
-  const handleSyncTransporters = useDebouncedCallback(() => {
-    syncFunction({
-      items: transporters || [],
-      deletedItems: deletedTransporters,
-      dataStore: STORE_NAME.TRANSPORTERS,
-      stateUpdateFunctionDeleted: () => clearDeletedTransporters(),
-      stateUpdateFunction: (i) => setTransporters(i),
-      serverUpdateFunction: async (i, di) => await transportersUpdate(i, di),
-    });
-  }, DEBOUNCE_VALUE);
-
-  const debounceSyncTransporters = useDebouncedCallback(
-    handleSyncTransporters,
-    DEBOUNCE_VALUE
-  );
-
-  useEffect(() => {
-    if (transporters === undefined && deletedTransporters === undefined) return;
-    if (!transporters?.length && !deletedTransporters?.length) return;
-
-    debounceSyncTransporters();
-  }, [transporters, deletedTransporters, debounceSyncTransporters, online]);
-
-  return { syncTransporters: debounceSyncTransporters };
 };
