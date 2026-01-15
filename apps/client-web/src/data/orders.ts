@@ -27,7 +27,7 @@ export const defaultOrderDetails: OrderGet = {
   profile_id: '',
   source: OrderSource.WEBSITE,
   store_id: stores[0].id,
-  transporter_id: '',
+  tracking_code: '',
   status: Status.ACTIVE,
   sync_status: SyncStatus.SYNCED,
   created_at: now,

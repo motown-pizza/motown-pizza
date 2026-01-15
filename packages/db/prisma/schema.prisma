@@ -300,13 +300,12 @@ model Order {
   eta_estimate         String?
   customer_name        String
   customer_phone       String?
+  tracking_code        String? // (eg. NYC240115DK7QX9M2)
 
-  profile        Profile      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id     String
-  transporter    Transporter? @relation(fields: [transporter_id], references: [id], onDelete: Cascade)
-  transporter_id String?
-  store          Store?       @relation(fields: [store_id], references: [id], onDelete: Cascade)
-  store_id       String?
+  profile    Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id String
+  store      Store?  @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  store_id   String?
 
   order_items     OrderItem[]
   stock_movements StockMovement[]
