@@ -17,7 +17,7 @@ import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
 import { OrderItemGet } from '@repo/types/models/order-item';
 import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
 import { generateTrackingCode } from '@repo/services/logic/generators/order-code';
-import { StoreGet } from '@repo/types/models/store';
+import { StoreGet } from '@repo/constants/stores';
 import { useDeliveryActions } from './delivery';
 
 export const useOrderActions = () => {

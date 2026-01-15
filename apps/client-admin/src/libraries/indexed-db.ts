@@ -68,10 +68,6 @@ export const config: DBConfig = {
       keyPath: 'id',
     },
     {
-      name: STORE_NAME.STORES,
-      keyPath: 'id',
-    },
-    {
       name: STORE_NAME.DELIVERIES,
       keyPath: 'id',
     },

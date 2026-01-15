@@ -27,7 +27,7 @@ import {
   OrderPaymentMethod,
   OrderTime,
 } from '@repo/types/models/enums';
-import { stores } from '@/data/stores';
+import { stores } from '@repo/constants/stores';
 import FormContact from '@/components/form/contact';
 import { APP_NAME } from '@/data/constants';
 import ImageDefault from '@repo/components/common/images/default';

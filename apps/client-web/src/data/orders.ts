@@ -1,5 +1,5 @@
 import { OrderGet } from '@repo/types/models/order';
-import { stores } from './stores';
+import { stores } from '@repo/constants/stores';
 import {
   OrderFulfilmentType,
   OrderPaymentMethod,

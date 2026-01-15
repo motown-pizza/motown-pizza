@@ -22,7 +22,7 @@ import { defaultOrderDetails } from '@/data/orders';
 import { capitalizeWords } from '@repo/utilities/string';
 import { SECTION_SPACING } from '@repo/constants/sizes';
 import { usePathname } from 'next/navigation';
-import { stores } from '@/data/stores';
+import { stores } from '@repo/constants/stores';
 import { OrderTime, OrderFulfilmentType } from '@repo/types/models/enums';
 import { getUrlParam } from '@repo/utilities/url';
 import { PARAM_NAME } from '@repo/constants/names';

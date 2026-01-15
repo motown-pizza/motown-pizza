@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Group, Stack, Text } from '@mantine/core';
 import { IconBuildingStore, IconMapPin, IconPhone } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
-import { StoreGet } from '@repo/types/models/store';
+import { StoreGet } from '@repo/constants/stores';
 
 export default function Aside({ props }: { props: StoreGet }) {
   return (

@@ -5,11 +5,11 @@ import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-placement';
 import { defaultOrderDetails } from '@/data/orders';
 import { useRouter } from 'next/navigation';
-import { StoreGet } from '@repo/types/models/store';
+import { StoreGet } from '@repo/constants/stores';
 import { useOrderActions } from '@repo/hooks/actions/order';
 import { generateUUID } from '@repo/utilities/generators';
 import { SyncStatus } from '@repo/types/models/enums';
-import { stores } from '@/data/stores';
+import { stores } from '@repo/constants/stores';
 
 export default function Main({ props }: { props: StoreGet }) {
   const orderIdRef = useRef(generateUUID());

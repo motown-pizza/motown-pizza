@@ -1,5 +1,5 @@
 import React from 'react';
-import { stores } from '@/data/stores';
+import { stores } from '@repo/constants/stores';
 import { Grid, GridCol } from '@mantine/core';
 import CardStoreMain from '@/components/common/cards/store/main';
 

@@ -1,5 +1,17 @@
 import { Status, SyncStatus } from '@repo/types/models/enums';
-import { StoreGet } from '@repo/types/models/store';
+
+export type StoreGet = {
+  id: string;
+  title: string;
+  iframe: string;
+  city: string;
+  location: string;
+  phone: string;
+  status: Status;
+  sync_status: SyncStatus;
+  created_at: Date;
+  updated_at: Date;
+};
 
 const now = new Date();
 
