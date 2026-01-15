@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import LayoutPage from '@repo/components/layout/page';
 import PartialPageAdminDashboardTransporters from '@/components/partial/page/dashboard/transporters';
 
-export const metadata: Metadata = { title: 'Transporters' };
+export const metadata: Metadata = { title: 'Couriers' };
 
 export default function Transporters() {
   return (

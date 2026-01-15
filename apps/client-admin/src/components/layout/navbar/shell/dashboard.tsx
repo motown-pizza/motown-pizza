@@ -8,6 +8,7 @@ import {
   IconCircleFilled,
   IconDashboard,
   IconMilk,
+  IconMoped,
   IconPaperBag,
   IconUsers,
 } from '@tabler/icons-react';
@@ -117,13 +118,18 @@ const navlinks = [
     icon: IconPaperBag,
   },
   {
+    link: '/dashboard/deliveries',
+    label: 'Deliveries',
+    icon: IconMoped,
+  },
+  {
     link: '/dashboard/people',
-    label: 'People',
+    label: 'Human Resources',
     icon: IconUsers,
     subLinks: [
       {
-        link: '/dashboard/people/clients',
-        label: 'Clients',
+        link: '/dashboard/people/admins',
+        label: 'Admins',
       },
       {
         link: '/dashboard/people/supervisors',
@@ -135,11 +141,11 @@ const navlinks = [
       },
       {
         link: '/dashboard/people/transporters',
-        label: 'Transporters',
+        label: 'Couriers',
       },
       {
-        link: '/dashboard/people/admins',
-        label: 'Admins',
+        link: '/dashboard/people/clients',
+        label: 'Customers',
       },
     ],
   },
