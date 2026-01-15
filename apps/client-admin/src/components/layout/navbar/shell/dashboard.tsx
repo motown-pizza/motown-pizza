@@ -137,6 +137,10 @@ const navlinks = [
         link: '/dashboard/people/transporters',
         label: 'Transporters',
       },
+      {
+        link: '/dashboard/people/admins',
+        label: 'Admins',
+      },
     ],
   },
 ];

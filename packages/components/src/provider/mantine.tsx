@@ -43,9 +43,7 @@ export default function Mantine({
     >
       {children}
 
-      {options?.withNotifications && (
-        <Notifications limit={3} position="top-center" />
-      )}
+      {options?.withNotifications && <Notifications limit={3} />}
     </MantineProvider>
   );
 }
