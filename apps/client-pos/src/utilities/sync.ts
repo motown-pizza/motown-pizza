@@ -83,8 +83,6 @@ export const handleSync = async (
     clientOnly?: boolean;
   }
 ) => {
-  if (params.syncStatus == SyncStatus.PENDING) return;
-
   const {
     setSyncStatus,
     session,
@@ -106,12 +104,14 @@ export const handleSync = async (
       });
 
     if (hasPendingItems || hasDeletedItems) {
-      // setSyncStatus(SyncStatus.PENDING);
+      setSyncStatus(SyncStatus.PENDING);
 
       // update the client DB with pending items
       await syncToClientDB({ ...syncParams, online: isOnline, sameDate: true });
 
-      // setSyncStatus(SyncStatus.SAVED);
+      if (params.clientOnly) {
+        setSyncStatus(SyncStatus.SAVED);
+      }
     }
 
     // sync to the server if online and signed in and not client only
