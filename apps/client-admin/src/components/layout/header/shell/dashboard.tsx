@@ -9,9 +9,15 @@ import { APP_NAME } from '@/data/constants';
 import { ICON_WRAPPER_SIZE } from '@repo/constants/sizes';
 import MenuUser from '@/components/common/menu/user';
 import AvatarMain from '@/components/common/avatars/main';
+import IndicatorNetworkStatus from '@repo/components/common/indicators/network-status';
+import { useStoreSyncStatus } from '@repo/libraries/zustand/stores/sync-status';
+import IndicatorTheme from '@repo/components/common/indicators/theme';
+import { useStoreTheme } from '@repo/libraries/zustand/stores/theme';
 
 export default function Dashboard() {
   const { appshell, setAppShell } = useStoreAppShell();
+  const { syncStatus } = useStoreSyncStatus();
+  const { theme, setTheme } = useStoreTheme();
 
   const handleToogle = () => {
     if (!appshell) return;
@@ -42,6 +48,16 @@ export default function Dashboard() {
       </Group>
 
       <Group justify="end">
+        <IndicatorNetworkStatus props={{ syncStatus: syncStatus }} />
+
+        {/* {theme === undefined ? (
+          <Skeleton h={ICON_WRAPPER_SIZE} w={ICON_WRAPPER_SIZE} />
+        ) : !theme ? null : (
+          <IndicatorTheme
+            props={{ colorScheme: theme, setColorScheme: setTheme }}
+          />
+        )} */}
+
         <MenuUser>
           <AvatarMain />
         </MenuUser>

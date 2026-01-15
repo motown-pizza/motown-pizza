@@ -16,6 +16,7 @@
     "@react-email/components": "^0.0.41",
     "@repo/constants": "workspace:*",
     "@repo/hooks": "workspace:*",
+    "@repo/libraries": "workspace:*",
     "@repo/types": "workspace:*",
     "@repo/utilities": "workspace:*",
     "@tabler/icons-react": "^3.35.0",
