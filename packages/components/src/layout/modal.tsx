@@ -13,6 +13,8 @@ import {
   IconX,
 } from '@tabler/icons-react';
 import React from 'react';
+import IndicatorNetworkStatus from '../common/indicators/network-status';
+import { useStoreSyncStatus } from '@repo/libraries/zustand/stores/sync-status';
 
 export default function Modal({
   children,
@@ -24,6 +26,8 @@ export default function Modal({
   variant?: Alert;
   size?: string;
 }) {
+  const { syncStatus } = useStoreSyncStatus();
+
   let options: {
     icon: Icon | null;
     color: string | null;
@@ -61,14 +65,18 @@ export default function Modal({
           </Group>
         )}
 
-        <ActionIcon
-          size={ICON_WRAPPER_SIZE}
-          onClick={props.close}
-          variant="light"
-          color="gray"
-        >
-          <IconX size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-        </ActionIcon>
+        <Group gap={'xs'}>
+          <IndicatorNetworkStatus props={{ syncStatus: syncStatus }} />
+
+          <ActionIcon
+            size={ICON_WRAPPER_SIZE}
+            onClick={props.close}
+            variant="light"
+            color="gray"
+          >
+            <IconX size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+          </ActionIcon>
+        </Group>
       </Group>
 
       <Stack>
