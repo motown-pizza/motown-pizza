@@ -51,7 +51,7 @@ export const STORE_NAME = {
   RECIPIE_ITEMS: 'recipie-items',
   ORDERS: 'orders',
   ORDER_ITEMS: 'order-items',
+  DELIVERIES: 'deliveries',
   STOCK_MOVEMENTS: 'stock-movements',
-  TRANSPORTERS: 'transporters',
   STORES: 'stores',
 };

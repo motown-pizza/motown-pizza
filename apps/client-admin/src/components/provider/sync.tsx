@@ -14,6 +14,7 @@ import { useStoreSyncStatus } from '@repo/libraries/zustand/stores/sync-status';
 import { handleSync, syncToServerAfterDelay } from '@/utilities/sync';
 import {
   useSyncCategories,
+  useSyncDeliveries,
   useSyncIngredients,
   useSyncOrderItems,
   useSyncOrders,
@@ -95,6 +96,11 @@ export default function Sync({ children }: { children: React.ReactNode }) {
   });
 
   useSyncStockMovements({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  useSyncDeliveries({
     syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
   });

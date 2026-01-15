@@ -15,6 +15,7 @@ import { handleSync, syncToServerAfterDelay } from '@/utilities/sync';
 import {
   useSyncCartItems,
   useSyncCategories,
+  useSyncDeliveries,
   useSyncIngredients,
   useSyncOrderItems,
   useSyncOrders,
@@ -89,6 +90,11 @@ export default function Sync({ children }: { children: React.ReactNode }) {
   });
 
   useSyncOrderItems({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  useSyncDeliveries({
     syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
   });

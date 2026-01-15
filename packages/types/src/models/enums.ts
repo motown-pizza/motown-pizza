@@ -100,3 +100,13 @@ export enum MeasurementUnitType {
   MILLILITRES = 'MILLILITRES',
   PIECES = 'PIECES',
 }
+
+export enum DeliveryStatus {
+  PENDING = 'PENDING',
+  SHCEDULED = 'SHCEDULED',
+  OUT_FOR_DELIVERY = 'OUT_FOR_DELIVERY',
+  DELIVERED = 'DELIVERED',
+  FAILED = 'FAILED',
+  CANCELLED = 'CANCELLED',
+  RETURNED = 'RETURNED',
+}
