@@ -3,6 +3,7 @@ import { useStoreSession } from '@repo/libraries/zustand/stores/session';
 import { DeliveryGet } from '@repo/types/models/delivery';
 import {
   DeliveryStatus,
+  OrderFulfilmentType,
   Status,
   SyncStatus,
   TransportVehicleType,
@@ -37,7 +38,7 @@ export const useDeliveryActions = () => {
       failed_at: params.failed_at || null,
       order_id: params.order_id || '',
       previous_delivery_id: params.previous_delivery_id || '',
-      profile_id: params.profile_id || '',
+      profile_id: session.id || '',
       scheduled_date: params.scheduled_date || null,
       scheduled_window_start: params.scheduled_window_start || null,
       status_reason: params.status_reason || '',
@@ -62,7 +63,11 @@ export const useDeliveryActions = () => {
       return;
     }
 
-    const recipientPin = await generateRecipientPin(order.tracking_code);
+    let recipientPin: string = '';
+
+    if (order.fulfillment_type == OrderFulfilmentType.DELIVERY) {
+      recipientPin = await generateRecipientPin(order.tracking_code);
+    }
 
     addDelivery({ ...newDelivery, verfication_code: recipientPin });
 

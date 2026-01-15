@@ -5,9 +5,13 @@ import { Variant } from '@repo/types/enums';
 import { CartItemGet } from '@repo/types/models/cart-item';
 import { Status, SyncStatus } from '@repo/types/models/enums';
 import { generateUUID } from '@repo/utilities/generators';
+import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
+import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
 
 export const useCartItemActions = () => {
   const { session } = useStoreSession();
+  const { productVariants } = useStoreProductVariant();
+  const { products } = useStoreProduct();
   const { addCartItem, updateCartItem, deleteCartItem } = useStoreCartItem();
   const { showNotification } = useNotification();
 
@@ -30,10 +34,16 @@ export const useCartItemActions = () => {
 
     addCartItem(newCartItem);
 
+    const productVariant = productVariants?.find(
+      (pv) => pv.id == newCartItem.product_variant_id
+    );
+
+    const product = products?.find((p) => p.id == productVariant?.product_id);
+
     showNotification({
       variant: Variant.SUCCESS,
       title: 'Item Added',
-      desc: `Item has been added to cart`,
+      desc: `${!product ? 'Item' : `${product.title} (${productVariant?.title || productVariant?.size || ''})`} has been added to cart`,
     });
   };
 

@@ -18,6 +18,7 @@ import { OrderItemGet } from '@repo/types/models/order-item';
 import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
 import { generateTrackingCode } from '@repo/services/logic/generators/order-code';
 import { StoreGet } from '@repo/types/models/store';
+import { useDeliveryActions } from './delivery';
 
 export const useOrderActions = () => {
   const { session } = useStoreSession();
@@ -26,6 +27,7 @@ export const useOrderActions = () => {
   const { orderItems, setOrderItems } = useStoreOrderItem();
   const { productVariants } = useStoreProductVariant();
   const { cartItems, deleteCartItems } = useStoreCartItem();
+  const { deliveryCreate } = useDeliveryActions();
 
   const orderCreate = async (
     params: Partial<OrderGet>,
@@ -58,48 +60,21 @@ export const useOrderActions = () => {
     };
 
     const trackingCode = await generateTrackingCode({
-      date: newOrder.created_at,
+      date: new Date(newOrder.created_at),
       deliveryType: newOrder.fulfillment_type,
       hashInput: newOrder.id,
       storeTitle:
         options.stores.find((s) => s.id == newOrder.store_id)?.title || 'GEN',
     });
 
-    addOrder({ ...newOrder, tracking_code: trackingCode });
+    const orderToAdd = { ...newOrder, tracking_code: trackingCode };
 
-    const cartToOrderItems: OrderItemGet[] = (cartItems || []).map((ci) => {
-      const productVariant = productVariants?.find(
-        (pv) => pv.id == ci.product_variant_id
-      );
+    addOrder(orderToAdd);
 
-      return {
-        id: generateUUID(),
-        order_id: newOrder.id,
-        price_at_sale: (productVariant?.price || 0) * ci.quantity,
-        product_variant_id: productVariant?.id || '',
-        profile_id: session.id || '',
-        quantity: ci.quantity,
-        status: ci.status || Status.ACTIVE,
-        sync_status: SyncStatus.PENDING,
-        created_at: now.toISOString() as any,
-        updated_at: now.toISOString() as any,
-      };
-    });
-
-    setOrderItems([...(orderItems || []), ...cartToOrderItems]);
-
-    deleteCartItems(
-      (cartItems || []).map((ci) => {
-        return {
-          ...ci,
-          sync_status: SyncStatus.DELETED,
-          updated_at: now.toISOString() as any,
-        };
-      })
-    );
+    return orderToAdd;
   };
 
-  const orderUpdate = (params: OrderGet) => {
+  const orderUpdate = (params: OrderGet, options?: { placement?: boolean }) => {
     if (!session) return;
 
     const now = new Date();
@@ -109,6 +84,41 @@ export const useOrderActions = () => {
       sync_status: SyncStatus.PENDING,
       updated_at: now.toISOString() as any,
     };
+
+    if (options?.placement) {
+      const cartToOrderItems: OrderItemGet[] = (cartItems || []).map((ci) => {
+        const productVariant = productVariants?.find(
+          (pv) => pv.id == ci.product_variant_id
+        );
+
+        return {
+          id: generateUUID(),
+          order_id: newOrder.id,
+          price_at_sale: (productVariant?.price || 0) * ci.quantity,
+          product_variant_id: productVariant?.id || '',
+          profile_id: session.id || '',
+          quantity: ci.quantity,
+          status: ci.status || Status.ACTIVE,
+          sync_status: SyncStatus.PENDING,
+          created_at: now.toISOString() as any,
+          updated_at: now.toISOString() as any,
+        };
+      });
+
+      setOrderItems([...(orderItems || []), ...cartToOrderItems]);
+
+      deliveryCreate({ order_id: newOrder.id });
+
+      deleteCartItems(
+        (cartItems || []).map((ci) => {
+          return {
+            ...ci,
+            sync_status: SyncStatus.DELETED,
+            updated_at: now.toISOString() as any,
+          };
+        })
+      );
+    }
 
     updateOrder(newOrder);
   };

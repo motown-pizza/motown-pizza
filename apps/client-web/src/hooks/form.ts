@@ -27,6 +27,8 @@ type UseFormBaseOptions<TValues> = {
   onError?: (error: Error) => void;
 
   clientOnly?: boolean;
+
+  validateInputOnChange?: boolean;
 };
 
 export function useFormBase<TValues extends Record<string, any>>(
@@ -40,6 +42,7 @@ export function useFormBase<TValues extends Record<string, any>>(
   const form = useForm<TValues>({
     initialValues,
     validate,
+    validateInputOnChange: options?.validateInputOnChange,
   });
 
   const { showNotification } = useNotification();

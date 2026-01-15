@@ -32,20 +32,25 @@ import { OrderGet } from '@repo/types/models/order';
 import { stores } from '@/data/stores';
 import { StoreGet } from '@repo/types/models/store';
 import NextLink from '@repo/components/common/anchor/next-link';
+import { useStoreDelivery } from '@repo/libraries/zustand/stores/delivery';
+import { OrderFulfilmentType } from '@repo/types/models/enums';
 
 export default function Confirmed() {
   const clipboard = useClipboard({ timeout: 1000 });
   const { orders } = useStoreOrder();
+  const { deliveries } = useStoreDelivery();
 
   const [order, setOrder] = useState<OrderGet | null>(null);
   const [store, setStore] = useState<StoreGet | null>(null);
+
+  const delivery = deliveries?.find((d) => d.order_id == order?.id);
 
   useEffect(() => {
     if (orders === undefined) return;
     if (!orders) return;
 
-    const orderConfirmedId = getUrlParam(PARAM_NAME.ORDER_CONFIRMED);
-    const orderItem = orders?.find((o) => o.id == orderConfirmedId);
+    const orderID = getUrlParam(PARAM_NAME.ORDER_CONFIRMED);
+    const orderItem = orders?.find((o) => o.id == orderID);
 
     if (orderItem) {
       setOrder(orderItem);
@@ -84,24 +89,24 @@ export default function Confirmed() {
             >
               <Stack gap={'xs'}>
                 <Group justify="space-between">
-                  <Title order={3} fz={'sm'} fw={'normal'}>
-                    Order ID
+                  <Title order={3} fz={'sm'} fw={500}>
+                    Tracking Code
                   </Title>
 
-                  <Group>
-                    <Text ta={'end'} fw={500} fz={'sm'} visibleFrom="xs">
-                      {order?.id}
+                  <Group wrap="nowrap">
+                    <Text ta={'end'} fz={'sm'} visibleFrom="xs">
+                      {order?.tracking_code}
                     </Text>
 
                     <Tooltip
-                      label={clipboard.copied ? 'Coppied' : 'Copy Id'}
+                      label={clipboard.copied ? 'Coppied' : 'Copy Code'}
                       visibleFrom="xs"
                     >
                       <ActionIcon
                         size={ICON_WRAPPER_SIZE - 4}
                         color={clipboard.copied ? 'ter.6' : 'dark'}
                         onClick={() => {
-                          clipboard.copy(order.id);
+                          clipboard.copy(order.tracking_code);
                         }}
                         visibleFrom="xs"
                       >
@@ -116,7 +121,7 @@ export default function Confirmed() {
                       size="xs"
                       color={clipboard.copied ? 'ter.6' : 'dark'}
                       onClick={() => {
-                        clipboard.copy(order.id);
+                        clipboard.copy(order.tracking_code);
                       }}
                       hiddenFrom="xs"
                       leftSection={
@@ -126,78 +131,100 @@ export default function Confirmed() {
                         />
                       }
                     >
-                      {clipboard.copied ? 'Coppied' : 'Copy ID'}
+                      {clipboard.copied ? 'Coppied' : 'Copy Code'}
                     </Button>
                   </Group>
                 </Group>
 
                 <Divider variant="dashed" />
 
-                <Group justify="space-between">
-                  <Title order={3} fz={'sm'} fw={'normal'}>
+                <Group justify="space-between" wrap="nowrap">
+                  <Title order={3} fz={'sm'} fw={500}>
                     Fulfilment Type
                   </Title>
-                  <Text ta={'end'} fw={500} fz={'sm'}>
+                  <Text ta={'end'} fz={'sm'}>
                     {capitalizeWords(order?.fulfillment_type || '')}
                   </Text>
                 </Group>
 
                 <Divider variant="dashed" />
 
-                <Group justify="space-between">
-                  <Title order={3} fz={'sm'} fw={'normal'}>
+                <Group justify="space-between" wrap="nowrap">
+                  <Title order={3} fz={'sm'} fw={500}>
                     Payment Option
                   </Title>
-                  <Badge ta={'end'} fw={500} color="dark">
+                  <Badge ta={'end'} color="dark">
                     {order?.payment_method}
                   </Badge>
                 </Group>
 
                 <Divider variant="dashed" />
 
-                <Group justify="space-between">
-                  <Title order={3} fz={'sm'} fw={'normal'}>
+                <Group justify="space-between" wrap="nowrap">
+                  <Title order={3} fz={'sm'} fw={500}>
                     Name
                   </Title>
 
-                  <Text ta={'end'} fw={500} fz={'sm'}>
+                  <Text ta={'end'} fz={'sm'}>
                     {capitalizeWords(order?.customer_name || '')}
                   </Text>
                 </Group>
 
                 <Divider variant="dashed" />
 
-                <Group justify="space-between">
-                  <Title order={3} fz={'sm'} fw={'normal'}>
+                <Group justify="space-between" wrap="nowrap">
+                  <Title order={3} fz={'sm'} fw={500}>
                     Phone
                   </Title>
 
-                  <Text ta={'end'} fw={500} fz={'sm'}>
+                  <Text ta={'end'} fz={'sm'}>
                     {order?.customer_phone}
                   </Text>
                 </Group>
 
                 <Divider variant="dashed" />
 
-                <Group justify="space-between">
-                  <Title order={3} fz={'sm'} fw={'normal'}>
+                <Group justify="space-between" wrap="nowrap">
+                  <Title order={3} fz={'sm'} fw={500}>
                     Store
                   </Title>
 
-                  <Text ta={'end'} fw={500} fz={'sm'}>
+                  <Text ta={'end'} fz={'sm'} lineClamp={1}>
                     {`${store?.title}, ${store?.location}`}
                   </Text>
                 </Group>
               </Stack>
             </Card>
 
-            <Stack gap={'xs'}>
-              <Text inherit ta={'center'}>
-                You can track your order
-              </Text>
+            <Stack ta={'center'}>
+              <Title order={3} fz={'lg'}>
+                Order Tracking
+              </Title>
+
+              {order.fulfillment_type == OrderFulfilmentType.DELIVERY &&
+                delivery && (
+                  <Stack gap={'xs'} fz={'sm'} c={'dimmed'}>
+                    <Text inherit>
+                      Your verification pin is{' '}
+                      <Text component={'span'} inherit fw={'bold'} c={'sec'}>
+                        {delivery.verfication_code}
+                      </Text>
+                      .
+                    </Text>
+
+                    <Text inherit>
+                      It will be required to verify your identity when receiving
+                      your delivery. This security feature exists to protect
+                      orders (and customers) from theft. Don&apos;t share the
+                      pin with anyone other than the delivery person.
+                    </Text>
+                  </Stack>
+                )}
 
               <Group justify="center">
-                <NextLink href={`/order/track?orderId=${order.id}`}>
+                <NextLink
+                  href={`/order/track?trackingCode=${order.tracking_code}`}
+                >
                   <Button>Track Order</Button>
                 </NextLink>
               </Group>

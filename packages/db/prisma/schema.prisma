@@ -315,7 +315,7 @@ model Order {
 
   profile    Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   profile_id String
-  store      Store?  @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  // store      Store?  @relation(fields: [store_id], references: [id], onDelete: Cascade)
   store_id   String?
 
   order_items     OrderItem[]
@@ -438,22 +438,4 @@ model StockMovement {
   updated_at  DateTime   @updatedAt
 
   @@map(name: "stock_movements")
-}
-
-model Store {
-  id       String @id @default(uuid())
-  title    String
-  iframe   String
-  city     String
-  location String
-  phone    String
-
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
-
-  orders Order[]
-
-  @@map(name: "stores")
 }

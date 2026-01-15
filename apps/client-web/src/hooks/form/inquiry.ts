@@ -14,6 +14,7 @@ import { useFormBase } from '../form';
 import { useEffect } from 'react';
 import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-placement';
 import { defaultOrderDetails } from '@/data/orders';
+import { useDebouncedCallback } from '@mantine/hooks';
 
 type UseFormEmailInquiryOptions = {
   saveEmailContact?: boolean;
@@ -48,6 +49,7 @@ export const useFormEmailInquiry = (
       {
         close: options?.close,
         resetOnSuccess: true,
+        validateInputOnChange: true,
 
         onSubmit: async (rawValues) => {
           const values = normalizeFormValues(rawValues);
@@ -80,13 +82,17 @@ export const useFormEmailInquiry = (
       }
     );
 
+  const debouncedsetOrderDetails = useDebouncedCallback(setOrderDetails, 500);
+
   useEffect(() => {
-    setOrderDetails({
+    if (!options?.order) return;
+
+    debouncedsetOrderDetails({
       ...(orderDetails || defaultOrderDetails),
       customer_name: form.values.name,
       customer_phone: form.values.phone,
     });
-  }, [form.values.name, form.values.email, form.values.phone]);
+  }, [form.values]);
 
   return {
     form,
