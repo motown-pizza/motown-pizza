@@ -47,8 +47,15 @@
         "!.next/cache/**"
       ]
     },
-    "apps/client-web#build": {
-      "dependsOn": ["apps/server#build"]
+
+    "client-admin#build": {
+      "dependsOn": ["server#build"]
+    },
+    "client-pos#build": {
+      "dependsOn": ["client-admin#build"]
+    },
+    "client-web#build": {
+      "dependsOn": ["client-pos#build"]
     },
     "lint": {
       "dependsOn": ["^lint"]
