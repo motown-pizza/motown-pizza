@@ -30,6 +30,8 @@ import { useStoreStockMovement } from '@repo/libraries/zustand/stores/stock-move
 import { stockMovementsUpdate } from '@repo/handlers/requests/database/stock-movements';
 import { useDebouncedCallback } from '@mantine/hooks';
 import { DEBOUNCE_VALUE } from '@repo/constants/sizes';
+import { useStoreDelivery } from '@repo/libraries/zustand/stores/delivery';
+import { deliveriesUpdate } from '@repo/handlers/requests/database/deliveries';
 
 export const useSyncProfiles = (params: {
   syncFunction: (input: SyncParams) => void;
@@ -431,4 +433,43 @@ export const useSyncStockMovements = (params: {
   ]);
 
   return { syncStockMovements: debounceSyncStockMovements };
+};
+
+export const useSyncDeliveries = (params: {
+  syncFunction: (input: SyncParams) => void;
+  online: boolean;
+}) => {
+  const { syncFunction, online } = params;
+
+  const {
+    deliveries,
+    deleted: deletedDeliveries,
+    setDeliveries,
+    clearDeletedDeliveries,
+  } = useStoreDelivery();
+
+  const handleSyncDeliveries = useDebouncedCallback(() => {
+    syncFunction({
+      items: deliveries || [],
+      deletedItems: deletedDeliveries,
+      dataStore: STORE_NAME.DELIVERIES,
+      stateUpdateFunctionDeleted: () => clearDeletedDeliveries(),
+      stateUpdateFunction: (i) => setDeliveries(i),
+      serverUpdateFunction: async (i, di) => await deliveriesUpdate(i, di),
+    });
+  }, DEBOUNCE_VALUE);
+
+  const debounceSyncDeliveries = useDebouncedCallback(
+    handleSyncDeliveries,
+    DEBOUNCE_VALUE
+  );
+
+  useEffect(() => {
+    if (deliveries === undefined && deletedDeliveries === undefined) return;
+    if (!deliveries?.length && !deletedDeliveries?.length) return;
+
+    debounceSyncDeliveries();
+  }, [deliveries, deletedDeliveries, debounceSyncDeliveries, online]);
+
+  return { syncDeliveries: debounceSyncDeliveries };
 };

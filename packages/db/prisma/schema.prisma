@@ -126,6 +126,16 @@ enum MeasurementUnitType {
   PIECES
 }
 
+enum DeliveryStatus {
+  PENDING
+  SHCEDULED
+  OUT_FOR_DELIVERY
+  DELIVERED
+  FAILED
+  CANCELLED
+  RETURNED
+}
+
 // models
 
 model Profile {
@@ -145,6 +155,7 @@ model Profile {
   order_items    OrderItem[]
   cart_items     CartItem[]
   wishlist_items WishlistItem[]
+  deliveries     Delivery[] // for transporters
 
   status      Status     @default(ACTIVE)
   sync_status SyncStatus @default(SYNCED)
@@ -300,7 +311,7 @@ model Order {
   eta_estimate         String?
   customer_name        String
   customer_phone       String?
-  tracking_code        String? // (eg. NYC240115DK7QX9M2)
+  tracking_code        String // (eg. NYC240115DK7QX9M2)
 
   profile    Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   profile_id String
@@ -309,6 +320,7 @@ model Order {
 
   order_items     OrderItem[]
   stock_movements StockMovement[]
+  deliveries      Delivery[] // how many delivery attempts were made
 
   status      Status     @default(DRAFT)
   sync_status SyncStatus @default(SYNCED)
@@ -316,6 +328,44 @@ model Order {
   updated_at  DateTime   @updatedAt
 
   @@map(name: "orders")
+}
+
+model Delivery {
+  id              String         @id @default(uuid())
+  delivery_status DeliveryStatus @default(PENDING)
+
+  // time & schedule
+  scheduled_date         DateTime? // planned delivery date
+  scheduled_window_start DateTime? // scheduledWindowEnd – time window
+  dispatched_at          DateTime? // when courier left
+  estimated_delivery_at  DateTime? // ETA shown to customer
+  delivered_at           DateTime? // when delivery was completed
+
+  // logistics & tracking
+  vehicle_type TransportVehicleType? // bike, car, van, truck
+  vehicle_id   String?
+  distance_km  Float? // delivery distance
+  delivery_fee Float? // cost of delivery
+
+  // Proof of Delivery
+  verfication_code String? // shared to only user, admin, supervisor accounts (not shared with transporter)
+
+  // Failures & Exceptions
+  status_reason        String? // reason for failure/cancellation
+  failed_at            DateTime? // when it failed
+  previous_delivery_id String? // link to previous failed/cancelled attempt
+
+  profile    Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id String // courier
+  order      Order   @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  order_id   String // order being delivered
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@map(name: "deliveries")
 }
 
 model OrderItem {

@@ -101,3 +101,22 @@ export const generateTrackingCode = async (params: {
 
   return `${store}${date}${delivery}${hash}${random}`;
 };
+
+export const generateRecipientPin = async (
+  trackingCode: string,
+  length: number = 4,
+  secret: string = 'delivery-recipient-secret-(tracking-code)'
+): Promise<string> => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(`${trackingCode}:${secret}`);
+
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashBytes = new Uint8Array(hashBuffer);
+
+  let pin = '';
+  for (let i = 0; i < length; i++) {
+    pin += (hashBytes[i] % 10).toString();
+  }
+
+  return pin;
+};

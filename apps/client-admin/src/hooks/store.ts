@@ -58,12 +58,14 @@ import { ingredientsGet } from '@repo/handlers/requests/database/ingredients';
 import { recipieItemsGet } from '@repo/handlers/requests/database/recipie-items';
 import { ordersGet } from '@repo/handlers/requests/database/orders';
 import { orderItemsGet } from '@repo/handlers/requests/database/order-items';
+import { deliveriesGet } from '@repo/handlers/requests/database/deliveries';
 import { stockMovementsGet } from '@repo/handlers/requests/database/stock-movements';
 import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
 import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
 import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
 import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
 import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
+import { useStoreDelivery } from '@repo/libraries/zustand/stores/delivery';
 import { useStoreStockMovement } from '@repo/libraries/zustand/stores/stock-movement';
 import { User } from '@supabase/supabase-js';
 
@@ -267,6 +269,7 @@ export const useStoreData = (params?: {
   const { setRecipieItems } = useStoreRecipieItem();
   const { setOrders } = useStoreOrder();
   const { setOrderItems } = useStoreOrderItem();
+  const { setDeliveries } = useStoreDelivery();
   const { setStockMovements } = useStoreStockMovement();
 
   useEffect(() => {
@@ -525,5 +528,33 @@ export const useStoreData = (params?: {
     };
 
     loadStockMovements();
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    if (prevItemsRef.current.length) return;
+
+    const loadDeliveries = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.DELIVERIES,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return !session
+              ? { items: [] }
+              : await deliveriesGet({ profileId: session.id });
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setDeliveries(stateUpdateItems),
+      });
+    };
+
+    loadDeliveries();
   }, [session]);
 };

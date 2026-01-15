@@ -51,9 +51,11 @@ import { recipieItemsGet } from '@repo/handlers/requests/database/recipie-items'
 import { cartItemsGet } from '@repo/handlers/requests/database/cart-items';
 import { ordersGet } from '@repo/handlers/requests/database/orders';
 import { orderItemsGet } from '@repo/handlers/requests/database/order-items';
+import { deliveriesGet } from '@repo/handlers/requests/database/deliveries';
 import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
 import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
 import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
+import { useStoreDelivery } from '@repo/libraries/zustand/stores/delivery';
 
 export const useSessionStore = (params?: {
   options?: { clientOnly?: boolean };
@@ -209,6 +211,7 @@ export const useStoreData = (params?: {
   const { setCartItems } = useStoreCartItem();
   const { setOrders } = useStoreOrder();
   const { setOrderItems } = useStoreOrderItem();
+  const { setDeliveries } = useStoreDelivery();
 
   useEffect(() => {
     if (!session) return;
@@ -426,5 +429,33 @@ export const useStoreData = (params?: {
     };
 
     loadOrderItems();
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    if (prevItemsRef.current.length) return;
+
+    const loadDeliveries = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.DELIVERIES,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return !session
+              ? { items: [] }
+              : await deliveriesGet({ profileId: session.id });
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setDeliveries(stateUpdateItems),
+      });
+    };
+
+    loadDeliveries();
   }, [session]);
 };
