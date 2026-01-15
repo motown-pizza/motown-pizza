@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React from 'react';
 import LayoutSection from '@repo/components/layout/section';
 import {
   Badge,
@@ -26,7 +26,6 @@ import {
   OrderFulfilmentType,
   OrderPaymentMethod,
   OrderTime,
-  SyncStatus,
 } from '@repo/types/models/enums';
 import { stores } from '@/data/stores';
 import FormContact from '@/components/form/contact';
@@ -35,7 +34,6 @@ import ImageDefault from '@repo/components/common/images/default';
 import { images } from '@/assets/images';
 import NextLink from '@repo/components/common/anchor/next-link';
 import { useOrderActions } from '@repo/hooks/actions/order';
-import { generateUUID } from '@repo/utilities/generators';
 import { useGetSum } from '@/hooks/order';
 import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
 import CardMenuCart from '@/components/common/cards/menu/cart';
@@ -45,14 +43,13 @@ import { useNotification } from '@repo/hooks/notification';
 import { Variant } from '@repo/types/enums';
 
 export default function Checkout() {
-  const orderIdRef = useRef(generateUUID());
   const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
   const { cartItems } = useStoreCartItem();
-  const { orderCreate } = useOrderActions();
   const { getSum } = useGetSum();
   const { showNotification } = useNotification();
 
   const store = stores.find((s) => s.id == orderDetails?.store_id);
+  const { orderUpdate } = useOrderActions();
 
   const formIsValid =
     !!orderDetails?.customer_name.length &&
@@ -166,14 +163,19 @@ export default function Checkout() {
               </Title>
 
               <Text>
-                Sign In to your {APP_NAME}&apos;s Profile for faster checkout or
-                continue below as guest.
+                The information you provide will be used to contact you
+                regarding your order.
               </Text>
             </div>
 
             <Card bg={'transparent'} withBorder w={{ md: '70%' }}>
               <FormContact options={{ order: true }} />
             </Card>
+
+            <Text fz={'sm'} c={'dimmed'}>
+              You can also sign in to your {APP_NAME} profile for faster
+              checkout.
+            </Text>
           </Stack>
         </Card>
 
@@ -246,7 +248,7 @@ export default function Checkout() {
 
         <Group justify="end">
           <NextLink
-            href={`/order/confirmed?confirmedOrder=${orderIdRef.current}`}
+            href={`/order/confirmed?confirmedOrder=${orderDetails?.id}`}
             onClick={async (e) => {
               if (!isReadyForConfirmation) {
                 e.preventDefault();
@@ -260,14 +262,7 @@ export default function Checkout() {
                 return;
               }
 
-              await orderCreate(
-                {
-                  ...orderDetails,
-                  id: orderIdRef.current,
-                  sync_status: SyncStatus.PENDING,
-                },
-                { stores }
-              );
+              orderUpdate(orderDetails, { placement: true });
             }}
           >
             <Button color="pri" size="md" disabled={!isReadyForConfirmation}>

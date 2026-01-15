@@ -60,5 +60,9 @@ export const config: DBConfig = {
       name: STORE_NAME.ORDER_ITEMS,
       keyPath: 'id',
     },
+    {
+      name: STORE_NAME.DELIVERIES,
+      keyPath: 'id',
+    },
   ],
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Box, Button, Card, Group, Stack, Text } from '@mantine/core';
 import { IconBuildingStore, IconMapPin, IconPhone } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
@@ -6,10 +6,17 @@ import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-pla
 import { defaultOrderDetails } from '@/data/orders';
 import { useRouter } from 'next/navigation';
 import { StoreGet } from '@repo/types/models/store';
+import { useOrderActions } from '@repo/hooks/actions/order';
+import { generateUUID } from '@repo/utilities/generators';
+import { SyncStatus } from '@repo/types/models/enums';
+import { stores } from '@/data/stores';
 
 export default function Main({ props }: { props: StoreGet }) {
+  const orderIdRef = useRef(generateUUID());
   const router = useRouter();
+
   const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
+  const { orderCreate } = useOrderActions();
 
   return (
     <Card bg={'var(--mantine-color-dark-6)'}>
@@ -43,11 +50,16 @@ export default function Main({ props }: { props: StoreGet }) {
 
       <Group justify="end">
         <Button
-          onClick={() => {
-            setOrderDetails({
+          onClick={async () => {
+            const orderObject = {
               ...(orderDetails || defaultOrderDetails),
               store_id: props.id,
-            });
+              id: orderIdRef.current,
+              sync_status: SyncStatus.PENDING,
+            };
+
+            const newOrder = await orderCreate(orderObject, { stores });
+            setOrderDetails({ ...orderObject, ...newOrder });
 
             router.push('/order/select-menu?menuTab=pizzas');
           }}
