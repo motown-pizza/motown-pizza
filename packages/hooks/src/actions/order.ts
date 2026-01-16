@@ -85,6 +85,8 @@ export const useOrderActions = () => {
       updated_at: now.toISOString() as any,
     };
 
+    updateOrder(newOrder);
+
     if (options?.placement) {
       const cartToOrderItems: OrderItemGet[] = (cartItems || []).map((ci) => {
         const productVariant = productVariants?.find(
@@ -119,8 +121,6 @@ export const useOrderActions = () => {
         })
       );
     }
-
-    updateOrder(newOrder);
   };
 
   const orderDelete = (params: OrderGet) => {

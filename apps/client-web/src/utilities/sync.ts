@@ -13,6 +13,7 @@ export const syncToServerAfterDelay = async (
     session: SessionValue;
     networkStatus: UserNetworkReturnValue;
     syncStatus: SyncStatusValue;
+    clientOnly?: boolean;
   }
 ) => {
   const { setSyncStatus, networkStatus, ...syncParams } = params;
@@ -68,6 +69,10 @@ export const syncToServerAfterDelay = async (
 
       setSyncStatus(SyncStatus.SYNCED);
     }
+
+    if (params.deletedItems?.length) {
+      params.stateUpdateFunctionDeleted();
+    }
   } catch (error) {
     console.error('Sync to Server Error:', (error as Error).message);
   }
@@ -92,14 +97,14 @@ export const handleSync = async (
     ...syncParams
   } = params;
 
+  if (params.syncStatus == SyncStatus.PENDING) return;
+
   try {
     const isOnline = networkStatus.online;
 
     const { hasPendingItems, hasDeletedItems, hasSavedItems, hasErrorItems } =
-      triggerClientSync({
-        items: syncParams.items,
-        deletedItems: syncParams.deletedItems || [],
-        syncStatus: params.syncStatus,
+      await triggerClientSync({
+        ...params,
         online: isOnline,
       });
 
@@ -110,6 +115,10 @@ export const handleSync = async (
       await syncToClientDB({ ...syncParams, online: isOnline, sameDate: true });
 
       if (params.clientOnly) {
+        if (params.deletedItems?.length) {
+          params.stateUpdateFunctionDeleted();
+        }
+
         setSyncStatus(SyncStatus.SAVED);
       }
     }
@@ -132,13 +141,35 @@ export const handleSync = async (
   }
 };
 
-export const triggerClientSync = (params: {
-  items: any[];
-  deletedItems: any[];
-  syncStatus: SyncStatus;
-  online: boolean;
-}) => {
-  const hasDeletedItems = params.deletedItems.length > 0;
+export const triggerClientSync = async (
+  params: SyncParams & {
+    clientOnly?: any;
+    online: boolean;
+  }
+) => {
+  const db = await openDatabase(config);
+  const clientDbItems: any[] | undefined = await db.get(params.dataStore);
+
+  const hasDeletedItems = (() => {
+    if (!params.deletedItems?.length) return false;
+
+    return !!params.deletedItems.find((di) => {
+      const deletedItem = clientDbItems?.find((cdi) => cdi.id === di.id);
+      if (!deletedItem) return false;
+
+      const clientDbItemNotDeleted =
+        deletedItem.sync_status != SyncStatus.DELETED;
+
+      if (params.clientOnly) {
+        return clientDbItemNotDeleted;
+      } else {
+        return (
+          clientDbItemNotDeleted ||
+          clientDbItems?.some((cdi) => cdi.sync_status == SyncStatus.DELETED)
+        );
+      }
+    });
+  })();
 
   let hasPendingItems: boolean = false;
 
@@ -277,10 +308,6 @@ export const syncToClientDB = async (
     const stateItems = params.options?.fromServer
       ? syncedItems
       : finalClientDbItems.filter((i) => i.sync_status != SyncStatus.DELETED);
-
-    if (params.deletedItems?.length) {
-      params.stateUpdateFunctionDeleted();
-    }
 
     params.stateUpdateFunction(stateItems);
   } catch (error) {

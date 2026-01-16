@@ -26,6 +26,7 @@ import {
 } from '@/hooks/sync';
 import { SyncParams } from '@repo/types/sync';
 import { useSyncQueue } from '@repo/utilities/sync';
+import { DEBOUNCE_VALUE } from '@repo/constants/sizes';
 
 export default function Sync({ children }: { children: React.ReactNode }) {
   const networkStatus = useNetwork();
@@ -37,7 +38,7 @@ export default function Sync({ children }: { children: React.ReactNode }) {
 
   const debounceSyncToServer = useDebouncedCallback(
     syncToServerAfterDelay,
-    500
+    DEBOUNCE_VALUE
   );
 
   const restProps = {
