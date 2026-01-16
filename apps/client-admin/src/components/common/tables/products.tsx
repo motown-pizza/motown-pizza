@@ -130,7 +130,7 @@ export default function Products({
 
         <TableTd w={widths.title}>
           <Group gap={'xs'} wrap="nowrap">
-            <Avatar src={p.image} />
+            <Avatar src={p.image} radius={0} size={50} />
 
             <Stack gap={0} align="start">
               <Tooltip label={p.title} multiline maw={240}>
