@@ -1,4 +1,4 @@
-import { hasLength } from '@mantine/form';
+import { hasLength, UseFormReturnType } from '@mantine/form';
 import { useProductActions } from '@repo/hooks/actions/product';
 import { useFormBase } from '../form';
 import { ProductGet } from '@repo/types/models/product';
@@ -8,6 +8,11 @@ import {
   Status,
 } from '@repo/types/models/enums';
 
+export type FormProduct = UseFormReturnType<
+  Partial<ProductGet>,
+  (values: Partial<ProductGet>) => Partial<ProductGet>
+>;
+
 export const useFormProduct = (params?: {
   defaultValues?: Partial<ProductGet>;
 }) => {
@@ -15,10 +20,12 @@ export const useFormProduct = (params?: {
 
   const { form, submitted, handleSubmit } = useFormBase<Partial<ProductGet>>(
     {
+      id: params?.defaultValues?.id || '',
       description: params?.defaultValues?.description || '',
       dietary_class:
         params?.defaultValues?.dietary_class || ProductDietaryType.NEUTRAL,
       image: params?.defaultValues?.image || '',
+      image_id: params?.defaultValues?.image_id || '',
       type: params?.defaultValues?.type || ProductType.PIZZA,
       title: params?.defaultValues?.title || '',
       status: params?.defaultValues?.status || Status.DRAFT,

@@ -226,6 +226,7 @@ model Comment {
 model Product {
   id            String              @id @default(uuid())
   image         String
+  image_id      String?
   title         String
   description   String
   type          ProductType

@@ -25,6 +25,7 @@ export const useProductActions = () => {
     const newProduct: ProductGet = {
       id: params.id || id,
       image: params.image || '',
+      image_id: params.image_id || '',
       title: params.title || '',
       description: params.description || '',
       type: params.type || ProductType.PIZZA,
