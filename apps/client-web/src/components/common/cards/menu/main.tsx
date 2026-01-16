@@ -24,7 +24,6 @@ import { IconShoppingCart } from '@tabler/icons-react';
 import { usePathname } from 'next/navigation';
 import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
 import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
-import { images } from '@/assets/images';
 import { useCartItemActions } from '@repo/hooks/actions/cart-item';
 import { sortArray } from '@repo/utilities/array';
 import { Order } from '@repo/types/enums';
@@ -87,8 +86,8 @@ export default function Main({
     }
   };
 
-  const external = props.image.includes('https');
-  const drink = props.image.includes('drink');
+  // const external = props.image.includes('https');
+  // const drink = props.image.includes('drink');
   const isOrder = pathname.includes('order');
 
   return (
@@ -100,25 +99,12 @@ export default function Main({
     >
       <Stack h={'100%'} justify="space-between" gap={'xs'}>
         <div>
-          <CardSection
-            bg={'var(--mantine-color-dark-7)'}
-            py={external || drink ? undefined : 'xl'}
-          >
+          <CardSection bg={'var(--mantine-color-dark-7)'} py={'xl'}>
             <ImageDefault
-              // src={props.image}
-              src={images.products.pizzas.product1}
+              src={props.image}
               alt={props.title}
-              height={{
-                base:
-                  external || drink
-                    ? options?.small
-                      ? 200
-                      : 300
-                    : options?.small
-                      ? 100
-                      : 200,
-              }}
-              fit={external || drink ? undefined : 'contain'}
+              height={240}
+              fit={'contain'}
             />
           </CardSection>
 

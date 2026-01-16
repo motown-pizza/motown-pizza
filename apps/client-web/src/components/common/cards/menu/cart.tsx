@@ -21,7 +21,6 @@ import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-v
 import { capitalizeWords } from '@repo/utilities/string';
 import { CartItemGet } from '@repo/types/models/cart-item';
 import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
-import { images } from '@/assets/images';
 import { useCartItemActions } from '@repo/hooks/actions/cart-item';
 import { useNotification } from '@repo/hooks/notification';
 import { Variant } from '@repo/types/enums';
@@ -44,19 +43,18 @@ export default function Cart({
     (pv) => pv.id == props.product_variant_id
   );
   const product = (products || []).find((p) => p.id == variant?.product_id);
-  const external = product?.image.includes('https');
-  const drink = product?.image.includes('drink');
+  // const external = product?.image.includes('https');
+  // const drink = product?.image.includes('drink');
 
   return (
     <Card bg={'transparent'} padding={'xs'}>
       <Grid gutter={0}>
         <GridCol span={options?.checkout ? 1.5 : 3}>
           <ImageDefault
-            // src={product?.image||''}
-            src={images.products.pizzas.product1}
+            src={product?.image || ''}
             alt={product?.title || ''}
-            height={{ base: external || drink ? 80 : '100%' }}
-            fit={external || drink ? undefined : 'contain'}
+            height={80}
+            fit={'contain'}
             radius={'lg'}
           />
         </GridCol>
