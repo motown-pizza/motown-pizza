@@ -59,8 +59,8 @@ export const mergeItems = async (
     const localIndex = mergedItems.findIndex((i) => i.id === serverItem.id);
     const localItem = localIndex !== -1 ? mergedItems[localIndex] : null;
 
-    const serverItemLastUpdated = new Date(serverItem.updatedAt);
-    const localItemLastUpdated = new Date(localItem?.updatedAt || now);
+    const serverItemLastUpdated = new Date(serverItem.updated_at);
+    const localItemLastUpdated = new Date(localItem?.updated_at || now);
 
     if (
       !localItem ||
@@ -69,7 +69,7 @@ export const mergeItems = async (
       const updatedItem = {
         ...serverItem,
         sync_status: SyncStatus.SYNCED,
-        updated_at: serverItem.updated_at.toISOString(),
+        updated_at: new Date(serverItem.updated_at).toISOString(),
       };
 
       if (localIndex !== -1) {
@@ -106,9 +106,10 @@ export const loadInitialData = async (params: {
   const { session } = params;
 
   if (session) {
-    clientItems.map((i) => {
-      return { ...i, profile_id: session.id || null };
-    });
+    clientItems = clientItems.map((i) => ({
+      ...i,
+      profile_id: session.id || null,
+    }));
   }
 
   try {
