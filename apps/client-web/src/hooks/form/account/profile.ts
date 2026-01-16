@@ -7,14 +7,12 @@
 
 import { hasLength } from '@mantine/form';
 import { capitalizeWords, segmentFullName } from '@repo/utilities/string';
-import { createClient } from '@/libraries/supabase/client';
+import { supabase } from '@repo/libraries/supabase/client';
 import { profileUpdate } from '@repo/handlers/requests/database/profiles';
 import { useFormBase } from '@/hooks/form';
 import { useStoreSession } from '@repo/libraries/zustand/stores/session';
 
 export const useFormUserProfile = () => {
-  const supabase = createClient();
-
   const { session, setSession } = useStoreSession();
 
   const { form, submitted, handleSubmit } = useFormBase<{

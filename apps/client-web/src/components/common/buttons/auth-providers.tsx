@@ -8,13 +8,11 @@ import ImageDefault from '@repo/components/common/images/default';
 import { API_URL } from '@repo/constants/paths';
 import { AUTH_URLS } from '@/data/constants';
 import { PARAM_NAME } from '@repo/constants/names';
-import { createClient } from '@/libraries/supabase/client';
+import { supabase } from '@repo/libraries/supabase/client';
 import { getUrlParam } from '@repo/utilities/url';
 
 export default function Providers() {
   const [loading, setLoading] = useState('');
-
-  const supabase = createClient();
 
   const getButton = (providerDetails: { image: string; provider: string }) => {
     const handleClick = async () => {

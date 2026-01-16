@@ -5,12 +5,10 @@
  * Do not modify unless you intend to backport changes to the template.
  */
 
-import { createClient } from '@/libraries/supabase/client';
+import { supabase } from '@repo/libraries/supabase/client';
 
 export const bucketCreate = async (params: { bucketName: string }) => {
   try {
-    const supabase = createClient();
-
     // Check if bucket exists
     const { data: buckets, error: listError } =
       await supabase.storage.listBuckets();
