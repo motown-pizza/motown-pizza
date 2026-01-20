@@ -147,29 +147,31 @@ export const triggerClientSync = async (
     online: boolean;
   }
 ) => {
-  const db = await openDatabase(config);
-  const clientDbItems: any[] | undefined = await db.get(params.dataStore);
+  // const db = await openDatabase(config);
+  // const clientDbItems: any[] | undefined = await db.get(params.dataStore);
 
-  const hasDeletedItems = (() => {
-    if (!params.deletedItems?.length) return false;
+  // const hasDeletedItems = (() => {
+  //   if (!params.deletedItems?.length) return false;
 
-    return !!params.deletedItems.find((di) => {
-      const deletedItem = clientDbItems?.find((cdi) => cdi.id === di.id);
-      if (!deletedItem) return false;
+  //   return !!params.deletedItems.find((di) => {
+  //     const deletedItem = clientDbItems?.find((cdi) => cdi.id === di.id);
+  //     if (!deletedItem) return false;
 
-      const clientDbItemNotDeleted =
-        deletedItem.sync_status != SyncStatus.DELETED;
+  //     const clientDbItemNotDeleted =
+  //       deletedItem.sync_status != SyncStatus.DELETED;
 
-      if (params.clientOnly) {
-        return clientDbItemNotDeleted;
-      } else {
-        return (
-          clientDbItemNotDeleted ||
-          clientDbItems?.some((cdi) => cdi.sync_status == SyncStatus.DELETED)
-        );
-      }
-    });
-  })();
+  //     if (params.clientOnly) {
+  //       return clientDbItemNotDeleted;
+  //     } else {
+  //       return (
+  //         clientDbItemNotDeleted ||
+  //         clientDbItems?.some((cdi) => cdi.sync_status == SyncStatus.DELETED)
+  //       );
+  //     }
+  //   });
+  // })();
+
+  const hasDeletedItems = params.deletedItems?.length;
 
   let hasPendingItems: boolean = false;
 
