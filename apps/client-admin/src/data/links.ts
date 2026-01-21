@@ -36,7 +36,7 @@ export const links: NavLink[] = [
   },
 ];
 
-export const navLinkItems = {
+export const userLinkItems = {
   activity: [
     {
       icon: IconHeart,

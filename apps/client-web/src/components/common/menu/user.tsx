@@ -12,7 +12,7 @@ import {
   Stack,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { navLinkItems } from '@/data/links';
+import { userLinkItems } from '@/data/links';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import PartialUser from '@/components/partial/user';
 import classes from './user.module.scss';
@@ -52,7 +52,7 @@ export default function User({ children }: { children: React.ReactNode }) {
 
         {/* <MenuLabel>Activity</MenuLabel>
 
-        {navLinkItems.activity.map((item) => (
+        {userLinkItems.activity.map((item) => (
           <MenuItem
             key={item.label}
             leftSection={
@@ -72,7 +72,7 @@ export default function User({ children }: { children: React.ReactNode }) {
 
         <MenuLabel>Account</MenuLabel>
 
-        {navLinkItems.account.map((item) => (
+        {userLinkItems.account.map((item) => (
           <MenuItem
             key={item.label}
             leftSection={
@@ -90,7 +90,7 @@ export default function User({ children }: { children: React.ReactNode }) {
 
         <MenuLabel>Support</MenuLabel>
 
-        {navLinkItems.support.map((item) => (
+        {userLinkItems.support.map((item) => (
           <MenuItem
             key={item.label}
             leftSection={
@@ -106,7 +106,7 @@ export default function User({ children }: { children: React.ReactNode }) {
 
         <MenuDivider mb={0} />
 
-        {navLinkItems.danger.map((item) => (
+        {userLinkItems.danger.map((item) => (
           <MenuItem
             key={item.label}
             leftSection={

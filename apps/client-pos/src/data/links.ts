@@ -6,20 +6,24 @@
  */
 
 import {
+  Icon,
   IconBellRinging,
+  IconBrandAirtable,
   IconHeart,
   IconHelpCircle,
+  IconHome,
   IconInfoCircle,
   IconLicense,
   IconLock,
   IconLogout,
   IconPackage,
   IconStar,
+  IconToolsKitchen,
   IconUser,
 } from '@tabler/icons-react';
 import { AUTH_URLS } from '@/data/constants';
 
-export type Link = { link: string; label: string };
+export type Link = { link: string; label: string; icon?: Icon };
 
 export type NavLink = Link & { subLinks: Link[] | null };
 
@@ -36,7 +40,28 @@ export const links: NavLink[] = [
   },
 ];
 
-export const navLinkItems = {
+export const posLinks: NavLink[] = [
+  {
+    link: '/pos',
+    label: 'Home',
+    subLinks: null,
+    icon: IconHome,
+  },
+  {
+    link: '/pos/orders',
+    label: 'Orders',
+    subLinks: null,
+    icon: IconToolsKitchen,
+  },
+  {
+    link: '/pos/tables',
+    label: 'Tables',
+    subLinks: null,
+    icon: IconBrandAirtable,
+  },
+];
+
+export const userLinkItems = {
   activity: [
     {
       icon: IconHeart,

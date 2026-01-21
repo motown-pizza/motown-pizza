@@ -15,7 +15,7 @@ export default function Main() {
             alt={APP_NAME}
             height={240}
             width={240}
-            fit="contain"
+            // fit="contain"
             mode="grid"
           />
 
