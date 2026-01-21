@@ -19,14 +19,49 @@ export const config: DBConfig = {
       name: STORE_NAME.SETTINGS,
       keyPath: 'id',
     },
+    // {
+    //   name: STORE_NAME.PROFILES,
+    //   keyPath: 'id',
+    // },
     {
-      name: STORE_NAME.POSTS,
+      name: STORE_NAME.PRODUCTS,
       keyPath: 'id',
-      indexes: [{ name: 'by_categoryId', keyPath: 'category_id' }],
     },
     {
-      name: STORE_NAME.CATEGORIES,
+      name: STORE_NAME.CART_ITEMS,
       keyPath: 'id',
     },
+    {
+      name: STORE_NAME.WISHLIST_ITEMS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.PRODUCT_VARIANTS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.INGREDIENTS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.RECIPIE_ITEMS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.ORDERS,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.ORDER_ITEMS,
+      keyPath: 'id',
+    },
+    // {
+    //   name: STORE_NAME.STOCK_MOVEMENTS,
+    //   keyPath: 'id',
+    // },
+    // {
+    //   name: STORE_NAME.DELIVERIES,
+    //   keyPath: 'id',
+    // },
   ],
 };
