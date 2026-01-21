@@ -45,6 +45,25 @@ import {
 } from '@repo/libraries/zustand/stores/theme';
 import { ColorScheme } from '@repo/types/enums';
 import { DEFAULT_COLOR_SCHEME } from '@repo/constants/other';
+import { useStoreProfile } from '@repo/libraries/zustand/stores/profile';
+import { useStoreCategory } from '@repo/libraries/zustand/stores/category';
+import { categoriesGet } from '@repo/handlers/requests/database/category';
+import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
+import { productsGet } from '@repo/handlers/requests/database/products';
+import { productVariantsGet } from '@repo/handlers/requests/database/product-variants';
+import { ingredientsGet } from '@repo/handlers/requests/database/ingredients';
+import { recipieItemsGet } from '@repo/handlers/requests/database/recipie-items';
+import { ordersGet } from '@repo/handlers/requests/database/orders';
+import { orderItemsGet } from '@repo/handlers/requests/database/order-items';
+import { deliveriesGet } from '@repo/handlers/requests/database/deliveries';
+import { stockMovementsGet } from '@repo/handlers/requests/database/stock-movements';
+import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
+import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
+import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
+import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
+import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
+import { useStoreDelivery } from '@repo/libraries/zustand/stores/delivery';
+import { useStoreStockMovement } from '@repo/libraries/zustand/stores/stock-movement';
 
 export const useSessionStore = (params?: {
   options?: { clientOnly?: boolean };
@@ -223,30 +242,299 @@ export const useStoreData = (params?: {
   const prevItemsRef = useRef<any[]>([]);
 
   const { session } = useStoreSession();
-  const { setPosts } = useStorePost();
+  // const { setProfiles } = useStoreProfile();
+  const { setProducts } = useStoreProduct();
+  const { setProductVariants } = useStoreProductVariant();
+  const { setIngredients } = useStoreIngredient();
+  const { setRecipieItems } = useStoreRecipieItem();
+  const { setOrders } = useStoreOrder();
+  const { setOrderItems } = useStoreOrderItem();
+  // const { setDeliveries } = useStoreDelivery();
+  // const { setStockMovements } = useStoreStockMovement();
+
+  // useEffect(() => {
+  //   if (!session) return;
+  //   if (prevItemsRef.current.length) return;
+
+  //   const loadProfiles = async () => {
+  //     await loadInitialData({
+  //       prevItemsRef,
+  //       dataStore: STORE_NAME.PROFILES,
+  //       session,
+  //       dataFetchFunction: async () => {
+  //         if (clientOnly) {
+  //           return {
+  //             items: [],
+  //           };
+  //         } else {
+  //           return await profilesGet();
+  //         }
+  //       },
+  //       stateUpdateFunction: (stateUpdateItems) =>
+  //         setProfiles(stateUpdateItems),
+  //     });
+  //   };
+
+  //   loadProfiles();
+  // }, [session]);
+
+  // useEffect(() => {
+  //   if (!session) return;
+  //   if (prevItemsRef.current.length) return;
+
+  //   const loadPosts = async () => {
+  //     await loadInitialData({
+  //       prevItemsRef,
+  //       dataStore: STORE_NAME.POSTS,
+  //       session,
+  //       dataFetchFunction: async () => {
+  //         if (clientOnly) {
+  //           return {
+  //             items: samplePosts, // TODO: remove this after testing
+  //           };
+  //         } else {
+  //           return await postsGet();
+  //         }
+  //       },
+  //       stateUpdateFunction: (stateUpdateItems) => setPosts(stateUpdateItems),
+  //     });
+  //   };
+
+  //   loadPosts();
+  // }, [session]);
+
+  // useEffect(() => {
+  //   if (!session) return;
+  //   if (prevItemsRef.current.length) return;
+
+  //   const loadCategories = async () => {
+  //     await loadInitialData({
+  //       prevItemsRef,
+  //       dataStore: STORE_NAME.CATEGORIES,
+  //       session,
+  //       dataFetchFunction: async () => {
+  //         if (clientOnly) {
+  //           return {
+  //             items: [],
+  //           };
+  //         } else {
+  //           return await categoriesGet();
+  //         }
+  //       },
+  //       stateUpdateFunction: (stateUpdateItems) =>
+  //         setCategories(stateUpdateItems),
+  //     });
+  //   };
+
+  //   loadCategories();
+  // }, [session]);
 
   useEffect(() => {
     if (!session) return;
     if (prevItemsRef.current.length) return;
 
-    const loadPosts = async () => {
+    const loadProducts = async () => {
       await loadInitialData({
         prevItemsRef,
-        dataStore: STORE_NAME.POSTS,
+        dataStore: STORE_NAME.PRODUCTS,
         session,
         dataFetchFunction: async () => {
           if (clientOnly) {
             return {
-              items: samplePosts, // TODO: remove this after testing
+              items: [],
             };
           } else {
-            return await postsGet();
+            return await productsGet();
           }
         },
-        stateUpdateFunction: (stateUpdateItems) => setPosts(stateUpdateItems),
+        stateUpdateFunction: (stateUpdateItems) =>
+          setProducts(stateUpdateItems),
       });
     };
 
-    loadPosts();
+    loadProducts();
   }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    if (prevItemsRef.current.length) return;
+
+    const loadProductVariants = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.PRODUCT_VARIANTS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await productVariantsGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setProductVariants(stateUpdateItems),
+      });
+    };
+
+    loadProductVariants();
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    if (prevItemsRef.current.length) return;
+
+    const loadIngredients = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.INGREDIENTS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await ingredientsGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setIngredients(stateUpdateItems),
+      });
+    };
+
+    loadIngredients();
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    if (prevItemsRef.current.length) return;
+
+    const loadRecipieItems = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.RECIPIE_ITEMS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await recipieItemsGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setRecipieItems(stateUpdateItems),
+      });
+    };
+
+    loadRecipieItems();
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    if (prevItemsRef.current.length) return;
+
+    const loadOrders = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.ORDERS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await ordersGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) => setOrders(stateUpdateItems),
+      });
+    };
+
+    loadOrders();
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    if (prevItemsRef.current.length) return;
+
+    const loadOrderItems = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.ORDER_ITEMS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await orderItemsGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setOrderItems(stateUpdateItems),
+      });
+    };
+
+    loadOrderItems();
+  }, [session]);
+
+  // useEffect(() => {
+  //   if (!session) return;
+  //   if (prevItemsRef.current.length) return;
+
+  //   const loadStockMovements = async () => {
+  //     await loadInitialData({
+  //       prevItemsRef,
+  //       dataStore: STORE_NAME.STOCK_MOVEMENTS,
+  //       session,
+  //       dataFetchFunction: async () => {
+  //         if (clientOnly) {
+  //           return {
+  //             items: [],
+  //           };
+  //         } else {
+  //           return await stockMovementsGet();
+  //         }
+  //       },
+  //       stateUpdateFunction: (stateUpdateItems) =>
+  //         setStockMovements(stateUpdateItems),
+  //     });
+  //   };
+
+  //   loadStockMovements();
+  // }, [session]);
+
+  // useEffect(() => {
+  //   if (!session) return;
+  //   if (prevItemsRef.current.length) return;
+
+  //   const loadDeliveries = async () => {
+  //     await loadInitialData({
+  //       prevItemsRef,
+  //       dataStore: STORE_NAME.DELIVERIES,
+  //       session,
+  //       dataFetchFunction: async () => {
+  //         if (clientOnly) {
+  //           return {
+  //             items: [],
+  //           };
+  //         } else {
+  //           return !session
+  //             ? { items: [] }
+  //             : await deliveriesGet({ profileId: session.id });
+  //         }
+  //       },
+  //       stateUpdateFunction: (stateUpdateItems) =>
+  //         setDeliveries(stateUpdateItems),
+  //     });
+  //   };
+
+  //   loadDeliveries();
+  // }, [session]);
 };

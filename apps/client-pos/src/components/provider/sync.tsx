@@ -12,7 +12,14 @@ import { useDebouncedCallback, useNetwork } from '@mantine/hooks';
 import { useStoreSession } from '@repo/libraries/zustand/stores/session';
 import { useStoreSyncStatus } from '@repo/libraries/zustand/stores/sync-status';
 import { handleSync, syncToServerAfterDelay } from '@/utilities/sync';
-import { useSyncCategories, useSyncPosts } from '@/hooks/sync';
+import {
+  useSyncIngredients,
+  useSyncOrderItems,
+  useSyncOrders,
+  useSyncProducts,
+  useSyncProductVariants,
+  useSyncRecipieItems,
+} from '@repo/hooks/sync';
 import { SyncParams } from '@repo/types/sync';
 import { useSyncQueue } from '@repo/utilities/sync';
 
@@ -35,18 +42,53 @@ export default function Sync({ children }: { children: React.ReactNode }) {
     networkStatus,
     syncStatus,
     debounceSyncToServer,
-    clientOnly: true,
+    clientOnly: false,
   };
 
-  useSyncPosts({
+  // useSyncProfiles({
+  //   syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+  //   online: networkStatus.online,
+  // });
+
+  useSyncProducts({
     syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
   });
 
-  useSyncCategories({
+  useSyncProductVariants({
     syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
   });
+
+  useSyncIngredients({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  useSyncRecipieItems({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  useSyncOrders({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  useSyncOrderItems({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
+  // useSyncStockMovements({
+  //   syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+  //   online: networkStatus.online,
+  // });
+
+  // useSyncDeliveries({
+  //   syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+  //   online: networkStatus.online,
+  // });
 
   return <div>{children}</div>;
 }

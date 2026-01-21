@@ -23,7 +23,7 @@ import {
   useSyncProducts,
   useSyncProductVariants,
   useSyncRecipieItems,
-} from '@/hooks/sync';
+} from '@repo/hooks/sync';
 import { SyncParams } from '@repo/types/sync';
 import { useSyncQueue } from '@repo/utilities/sync';
 import { DEBOUNCE_VALUE } from '@repo/constants/sizes';
