@@ -22,15 +22,15 @@ export default function Main({ size }: { size?: number }) {
         <Skeleton h={size} w={size} radius={999} />
       ) : !session?.email ? (
         <WrapperAuth options={{ action: AuthAction.SIGN_IN }}>
-          <ActionIcon
-            size={size}
-            variant="subtle"
-            style={{ overflow: 'visible' }}
-          >
-            <Group>
+          <Group>
+            <ActionIcon
+              size={size}
+              variant="subtle"
+              style={{ overflow: 'visible' }}
+            >
               <IconUser size={ICON_SIZE * 1.2} stroke={ICON_STROKE_WIDTH} />
-            </Group>
-          </ActionIcon>
+            </ActionIcon>
+          </Group>
         </WrapperAuth>
       ) : (
         <Avatar
