@@ -46,10 +46,10 @@ export default function LayoutDefault({
             <Stack gap={'xl'}>
               <AnchorNextLink href={'/'}>
                 <ImageDefault
-                  src={images.brand.logo.light}
+                  src={images.brand.logo.landscape.meta}
                   alt={APP_NAME}
-                  height={{ base: 28 }}
-                  fit="contain"
+                  height={100}
+                  width={200}
                   mode="grid"
                 />
               </AnchorNextLink>
