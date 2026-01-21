@@ -5,7 +5,7 @@
  * Do not modify unless you intend to backport changes to the template.
  */
 
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { STORE_NAME } from '@repo/constants/names';
 import { postsUpdate } from '@repo/handlers/requests/database/posts';
 import { categoriesUpdate } from '@repo/handlers/requests/database/category';
@@ -28,49 +28,10 @@ import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
 import { orderItemsUpdate } from '@repo/handlers/requests/database/order-items';
 import { useStoreStockMovement } from '@repo/libraries/zustand/stores/stock-movement';
 import { stockMovementsUpdate } from '@repo/handlers/requests/database/stock-movements';
-import { useDebouncedCallback } from '@mantine/hooks';
-import { DEBOUNCE_VALUE } from '@repo/constants/sizes';
 import { useStoreDelivery } from '@repo/libraries/zustand/stores/delivery';
 import { deliveriesUpdate } from '@repo/handlers/requests/database/deliveries';
-
-export const useSyncProfiles = (params: {
-  syncFunction: (input: SyncParams) => void;
-  online: boolean;
-}) => {
-  const { syncFunction, online } = params;
-
-  const {
-    profiles,
-    deleted: deletedProfiles,
-    setProfiles,
-    clearDeletedProfiles,
-  } = useStoreProfile();
-
-  const handleSyncProfiles = useDebouncedCallback(() => {
-    syncFunction({
-      items: profiles || [],
-      deletedItems: deletedProfiles,
-      dataStore: STORE_NAME.PROFILES,
-      stateUpdateFunctionDeleted: () => clearDeletedProfiles(),
-      stateUpdateFunction: (i) => setProfiles(i),
-      serverUpdateFunction: async (i, di) => await profilesUpdate(i, di),
-    });
-  }, DEBOUNCE_VALUE);
-
-  const debounceSyncProfiles = useDebouncedCallback(
-    handleSyncProfiles,
-    DEBOUNCE_VALUE
-  );
-
-  useEffect(() => {
-    if (profiles === undefined && deletedProfiles === undefined) return;
-    if (!profiles?.length && !deletedProfiles?.length) return;
-
-    debounceSyncProfiles();
-  }, [profiles, deletedProfiles, debounceSyncProfiles, online]);
-
-  return { syncProfiles: debounceSyncProfiles };
-};
+import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
+import { cartItemsUpdate } from '@repo/handlers/requests/database/cart-items';
 
 export const useSyncPosts = (params: {
   syncFunction: (input: SyncParams) => void;
@@ -85,7 +46,7 @@ export const useSyncPosts = (params: {
     clearDeletedPosts,
   } = useStorePost();
 
-  const handleSyncPosts = useDebouncedCallback(() => {
+  const handleSyncPosts = useCallback(() => {
     syncFunction({
       items: posts || [],
       deletedItems: deletedPosts,
@@ -94,21 +55,16 @@ export const useSyncPosts = (params: {
       stateUpdateFunction: (i) => setPosts(i),
       serverUpdateFunction: async (i, di) => await postsUpdate(i, di),
     });
-  }, DEBOUNCE_VALUE);
-
-  const debounceSyncPosts = useDebouncedCallback(
-    handleSyncPosts,
-    DEBOUNCE_VALUE
-  );
+  }, [posts, deletedPosts, syncFunction, online]);
 
   useEffect(() => {
     if (posts === undefined && deletedPosts === undefined) return;
     if (!posts?.length && !deletedPosts?.length) return;
 
-    debounceSyncPosts();
-  }, [posts, deletedPosts, debounceSyncPosts, online]);
+    handleSyncPosts();
+  }, [posts, deletedPosts, handleSyncPosts, online]);
 
-  return { syncPosts: debounceSyncPosts };
+  return { syncPosts: handleSyncPosts };
 };
 
 export const useSyncCategories = (params: {
@@ -124,7 +80,7 @@ export const useSyncCategories = (params: {
     clearDeletedCategories,
   } = useStoreCategory();
 
-  const handleSyncCategories = useDebouncedCallback(() => {
+  const handleSyncCategories = useCallback(() => {
     syncFunction({
       items: categories || [],
       deletedItems: deletedCategories,
@@ -133,21 +89,50 @@ export const useSyncCategories = (params: {
       stateUpdateFunction: (i) => setCategories(i),
       serverUpdateFunction: async (i, di) => await categoriesUpdate(i, di),
     });
-  }, DEBOUNCE_VALUE);
-
-  const debounceSyncCategories = useDebouncedCallback(
-    handleSyncCategories,
-    DEBOUNCE_VALUE
-  );
+  }, [categories, deletedCategories, syncFunction, online]);
 
   useEffect(() => {
     if (categories === undefined && deletedCategories === undefined) return;
     if (!categories?.length && !deletedCategories?.length) return;
 
-    debounceSyncCategories();
-  }, [categories, deletedCategories, debounceSyncCategories, online]);
+    handleSyncCategories();
+  }, [categories, deletedCategories, handleSyncCategories, online]);
 
-  return { syncCategories: debounceSyncCategories };
+  return { syncCategories: handleSyncCategories };
+};
+
+export const useSyncProfiles = (params: {
+  syncFunction: (input: SyncParams) => void;
+  online: boolean;
+}) => {
+  const { syncFunction, online } = params;
+
+  const {
+    profiles,
+    deleted: deletedProfiles,
+    setProfiles,
+    clearDeletedProfiles,
+  } = useStoreProfile();
+
+  const handleSyncProfiles = useCallback(() => {
+    syncFunction({
+      items: profiles || [],
+      deletedItems: deletedProfiles,
+      dataStore: STORE_NAME.PROFILES,
+      stateUpdateFunctionDeleted: () => clearDeletedProfiles(),
+      stateUpdateFunction: (i) => setProfiles(i),
+      serverUpdateFunction: async (i, di) => await profilesUpdate(i, di),
+    });
+  }, [profiles, deletedProfiles, syncFunction, online]);
+
+  useEffect(() => {
+    if (profiles === undefined && deletedProfiles === undefined) return;
+    if (!profiles?.length && !deletedProfiles?.length) return;
+
+    handleSyncProfiles();
+  }, [profiles, deletedProfiles, handleSyncProfiles, online]);
+
+  return { syncProfiles: handleSyncProfiles };
 };
 
 export const useSyncProducts = (params: {
@@ -163,30 +148,27 @@ export const useSyncProducts = (params: {
     clearDeletedProducts,
   } = useStoreProduct();
 
-  const handleSyncProducts = useDebouncedCallback(() => {
+  const handleSyncProducts = useCallback(() => {
     syncFunction({
       items: products || [],
       deletedItems: deletedProducts,
       dataStore: STORE_NAME.PRODUCTS,
       stateUpdateFunctionDeleted: () => clearDeletedProducts(),
       stateUpdateFunction: (i) => setProducts(i),
-      serverUpdateFunction: async (i, di) => await productsUpdate(i, di),
+      serverUpdateFunction: async (i, di) => {
+        await productsUpdate(i, di);
+      },
     });
-  }, DEBOUNCE_VALUE);
-
-  const debounceSyncProducts = useDebouncedCallback(
-    handleSyncProducts,
-    DEBOUNCE_VALUE
-  );
+  }, [products, deletedProducts, syncFunction, online]);
 
   useEffect(() => {
     if (products === undefined && deletedProducts === undefined) return;
     if (!products?.length && !deletedProducts?.length) return;
 
-    debounceSyncProducts();
-  }, [products, deletedProducts, debounceSyncProducts, online]);
+    handleSyncProducts();
+  }, [products, deletedProducts, handleSyncProducts, online]);
 
-  return { syncProducts: debounceSyncProducts };
+  return { syncProducts: handleSyncProducts };
 };
 
 export const useSyncProductVariants = (params: {
@@ -202,36 +184,33 @@ export const useSyncProductVariants = (params: {
     clearDeletedProductVariants,
   } = useStoreProductVariant();
 
-  const handleSyncProductVariants = useDebouncedCallback(() => {
+  const handleSyncProductVariants = useCallback(() => {
     syncFunction({
       items: productVariants || [],
       deletedItems: deletedProductVariants,
       dataStore: STORE_NAME.PRODUCT_VARIANTS,
       stateUpdateFunctionDeleted: () => clearDeletedProductVariants(),
       stateUpdateFunction: (i) => setProductVariants(i),
-      serverUpdateFunction: async (i, di) => await productVariantsUpdate(i, di),
+      serverUpdateFunction: async (i, di) => {
+        await productVariantsUpdate(i, di);
+      },
     });
-  }, DEBOUNCE_VALUE);
-
-  const debounceSyncProductVariants = useDebouncedCallback(
-    handleSyncProductVariants,
-    DEBOUNCE_VALUE
-  );
+  }, [productVariants, deletedProductVariants, syncFunction, online]);
 
   useEffect(() => {
     if (productVariants === undefined && deletedProductVariants === undefined)
       return;
     if (!productVariants?.length && !deletedProductVariants?.length) return;
 
-    debounceSyncProductVariants();
+    handleSyncProductVariants();
   }, [
     productVariants,
     deletedProductVariants,
-    debounceSyncProductVariants,
+    handleSyncProductVariants,
     online,
   ]);
 
-  return { syncProductVariants: debounceSyncProductVariants };
+  return { syncProductVariants: handleSyncProductVariants };
 };
 
 export const useSyncIngredients = (params: {
@@ -247,7 +226,7 @@ export const useSyncIngredients = (params: {
     clearDeletedIngredients,
   } = useStoreIngredient();
 
-  const handleSyncIngredients = useDebouncedCallback(() => {
+  const handleSyncIngredients = useCallback(() => {
     syncFunction({
       items: ingredients || [],
       deletedItems: deletedIngredients,
@@ -256,21 +235,16 @@ export const useSyncIngredients = (params: {
       stateUpdateFunction: (i) => setIngredients(i),
       serverUpdateFunction: async (i, di) => await ingredientsUpdate(i, di),
     });
-  }, DEBOUNCE_VALUE);
-
-  const debounceSyncIngredients = useDebouncedCallback(
-    handleSyncIngredients,
-    DEBOUNCE_VALUE
-  );
+  }, [ingredients, deletedIngredients, syncFunction, online]);
 
   useEffect(() => {
     if (ingredients === undefined && deletedIngredients === undefined) return;
     if (!ingredients?.length && !deletedIngredients?.length) return;
 
-    debounceSyncIngredients();
-  }, [ingredients, deletedIngredients, debounceSyncIngredients, online]);
+    handleSyncIngredients();
+  }, [ingredients, deletedIngredients, handleSyncIngredients, online]);
 
-  return { syncIngredients: debounceSyncIngredients };
+  return { syncIngredients: handleSyncIngredients };
 };
 
 export const useSyncRecipieItems = (params: {
@@ -286,7 +260,7 @@ export const useSyncRecipieItems = (params: {
     clearDeletedRecipieItems,
   } = useStoreRecipieItem();
 
-  const handleSyncRecipieItems = useDebouncedCallback(() => {
+  const handleSyncRecipieItems = useCallback(() => {
     syncFunction({
       items: recipieItems || [],
       deletedItems: deletedRecipieItems,
@@ -295,21 +269,16 @@ export const useSyncRecipieItems = (params: {
       stateUpdateFunction: (i) => setRecipieItems(i),
       serverUpdateFunction: async (i, di) => await recipieItemsUpdate(i, di),
     });
-  }, DEBOUNCE_VALUE);
-
-  const debounceSyncRecipieItems = useDebouncedCallback(
-    handleSyncRecipieItems,
-    DEBOUNCE_VALUE
-  );
+  }, [recipieItems, deletedRecipieItems, syncFunction, online]);
 
   useEffect(() => {
     if (recipieItems === undefined && deletedRecipieItems === undefined) return;
     if (!recipieItems?.length && !deletedRecipieItems?.length) return;
 
-    debounceSyncRecipieItems();
-  }, [recipieItems, deletedRecipieItems, debounceSyncRecipieItems, online]);
+    handleSyncRecipieItems();
+  }, [recipieItems, deletedRecipieItems, handleSyncRecipieItems, online]);
 
-  return { syncRecipieItems: debounceSyncRecipieItems };
+  return { syncRecipieItems: handleSyncRecipieItems };
 };
 
 export const useSyncOrders = (params: {
@@ -325,30 +294,27 @@ export const useSyncOrders = (params: {
     clearDeletedOrders,
   } = useStoreOrder();
 
-  const handleSyncOrders = useDebouncedCallback(() => {
+  const handleSyncOrders = useCallback(() => {
     syncFunction({
       items: orders || [],
       deletedItems: deletedOrders,
       dataStore: STORE_NAME.ORDERS,
       stateUpdateFunctionDeleted: () => clearDeletedOrders(),
       stateUpdateFunction: (i) => setOrders(i),
-      serverUpdateFunction: async (i, di) => await ordersUpdate(i, di),
+      serverUpdateFunction: async (i, di) => {
+        await ordersUpdate(i, di);
+      },
     });
-  }, DEBOUNCE_VALUE);
-
-  const debounceSyncOrders = useDebouncedCallback(
-    handleSyncOrders,
-    DEBOUNCE_VALUE
-  );
+  }, [orders, deletedOrders, syncFunction, online]);
 
   useEffect(() => {
     if (orders === undefined && deletedOrders === undefined) return;
     if (!orders?.length && !deletedOrders?.length) return;
 
-    debounceSyncOrders();
-  }, [orders, deletedOrders, debounceSyncOrders, online]);
+    handleSyncOrders();
+  }, [orders, deletedOrders, handleSyncOrders, online]);
 
-  return { syncOrders: debounceSyncOrders };
+  return { syncOrders: handleSyncOrders };
 };
 
 export const useSyncOrderItems = (params: {
@@ -364,7 +330,7 @@ export const useSyncOrderItems = (params: {
     clearDeletedOrderItems,
   } = useStoreOrderItem();
 
-  const handleSyncOrderItems = useDebouncedCallback(() => {
+  const handleSyncOrderItems = useCallback(() => {
     syncFunction({
       items: orderItems || [],
       deletedItems: deletedOrderItems,
@@ -373,21 +339,16 @@ export const useSyncOrderItems = (params: {
       stateUpdateFunction: (i) => setOrderItems(i),
       serverUpdateFunction: async (i, di) => await orderItemsUpdate(i, di),
     });
-  }, DEBOUNCE_VALUE);
-
-  const debounceSyncOrderItems = useDebouncedCallback(
-    handleSyncOrderItems,
-    DEBOUNCE_VALUE
-  );
+  }, [orderItems, deletedOrderItems, syncFunction, online]);
 
   useEffect(() => {
     if (orderItems === undefined && deletedOrderItems === undefined) return;
     if (!orderItems?.length && !deletedOrderItems?.length) return;
 
-    debounceSyncOrderItems();
-  }, [orderItems, deletedOrderItems, debounceSyncOrderItems, online]);
+    handleSyncOrderItems();
+  }, [orderItems, deletedOrderItems, handleSyncOrderItems, online]);
 
-  return { syncOrderItems: debounceSyncOrderItems };
+  return { syncOrderItems: handleSyncOrderItems };
 };
 
 export const useSyncStockMovements = (params: {
@@ -403,7 +364,7 @@ export const useSyncStockMovements = (params: {
     clearDeletedStockMovements,
   } = useStoreStockMovement();
 
-  const handleSyncStockMovements = useDebouncedCallback(() => {
+  const handleSyncStockMovements = useCallback(() => {
     syncFunction({
       items: stockMovements || [],
       deletedItems: deletedStockMovements,
@@ -412,27 +373,17 @@ export const useSyncStockMovements = (params: {
       stateUpdateFunction: (i) => setStockMovements(i),
       serverUpdateFunction: async (i, di) => await stockMovementsUpdate(i, di),
     });
-  }, DEBOUNCE_VALUE);
-
-  const debounceSyncStockMovements = useDebouncedCallback(
-    handleSyncStockMovements,
-    DEBOUNCE_VALUE
-  );
+  }, [stockMovements, deletedStockMovements, syncFunction, online]);
 
   useEffect(() => {
     if (stockMovements === undefined && deletedStockMovements === undefined)
       return;
     if (!stockMovements?.length && !deletedStockMovements?.length) return;
 
-    debounceSyncStockMovements();
-  }, [
-    stockMovements,
-    deletedStockMovements,
-    debounceSyncStockMovements,
-    online,
-  ]);
+    handleSyncStockMovements();
+  }, [stockMovements, deletedStockMovements, handleSyncStockMovements, online]);
 
-  return { syncStockMovements: debounceSyncStockMovements };
+  return { syncStockMovements: handleSyncStockMovements };
 };
 
 export const useSyncDeliveries = (params: {
@@ -448,7 +399,7 @@ export const useSyncDeliveries = (params: {
     clearDeletedDeliveries,
   } = useStoreDelivery();
 
-  const handleSyncDeliveries = useDebouncedCallback(() => {
+  const handleSyncDeliveries = useCallback(() => {
     syncFunction({
       items: deliveries || [],
       deletedItems: deletedDeliveries,
@@ -457,19 +408,50 @@ export const useSyncDeliveries = (params: {
       stateUpdateFunction: (i) => setDeliveries(i),
       serverUpdateFunction: async (i, di) => await deliveriesUpdate(i, di),
     });
-  }, DEBOUNCE_VALUE);
-
-  const debounceSyncDeliveries = useDebouncedCallback(
-    handleSyncDeliveries,
-    DEBOUNCE_VALUE
-  );
+  }, [deliveries, deletedDeliveries, syncFunction, online]);
 
   useEffect(() => {
     if (deliveries === undefined && deletedDeliveries === undefined) return;
     if (!deliveries?.length && !deletedDeliveries?.length) return;
 
-    debounceSyncDeliveries();
-  }, [deliveries, deletedDeliveries, debounceSyncDeliveries, online]);
+    handleSyncDeliveries();
+  }, [deliveries, deletedDeliveries, handleSyncDeliveries, online]);
 
-  return { syncDeliveries: debounceSyncDeliveries };
+  return { syncDeliveries: handleSyncDeliveries };
+};
+
+export const useSyncCartItems = (params: {
+  syncFunction: (input: SyncParams) => void;
+  online: boolean;
+}) => {
+  const { syncFunction, online } = params;
+
+  const {
+    cartItems,
+    deleted: deletedCartItems,
+    setCartItems,
+    clearDeletedCartItems,
+  } = useStoreCartItem();
+
+  const handleSyncCartItems = useCallback(() => {
+    syncFunction({
+      items: cartItems || [],
+      deletedItems: deletedCartItems,
+      dataStore: STORE_NAME.CART_ITEMS,
+      stateUpdateFunctionDeleted: () => clearDeletedCartItems(),
+      stateUpdateFunction: (i) => setCartItems(i),
+      serverUpdateFunction: async (i, di) => {
+        await cartItemsUpdate(i, di);
+      },
+    });
+  }, [cartItems, deletedCartItems, syncFunction, online]);
+
+  useEffect(() => {
+    if (cartItems === undefined && deletedCartItems === undefined) return;
+    if (!cartItems?.length && !deletedCartItems?.length) return;
+
+    handleSyncCartItems();
+  }, [cartItems, deletedCartItems, handleSyncCartItems, online]);
+
+  return { syncCartItems: handleSyncCartItems };
 };
