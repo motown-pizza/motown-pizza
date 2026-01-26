@@ -20,7 +20,15 @@ export default function Pos() {
             <NextLink key={i} href={pl.link}>
               <Button
                 fullWidth
-                variant={active ? 'filled' : 'light'}
+                variant={
+                  i == 0
+                    ? pathname == '/pos'
+                      ? 'filled'
+                      : 'light'
+                    : active
+                      ? 'filled'
+                      : 'light'
+                }
                 leftSection={
                   pl.icon ? (
                     <pl.icon size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />

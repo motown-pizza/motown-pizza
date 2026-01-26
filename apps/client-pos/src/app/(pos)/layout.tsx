@@ -13,8 +13,8 @@ import { APP_NAME } from '@/data/constants';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Pos',
-    template: `%s - Pos - ${APP_NAME}`,
+    default: 'POS',
+    template: `%s - POS - ${APP_NAME}`,
   },
 };
 

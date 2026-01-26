@@ -3,11 +3,9 @@
 import React from 'react';
 import {
   Avatar,
-  Badge,
   Box,
   Button,
   Card,
-  Center,
   Divider,
   Grid,
   GridCol,
@@ -25,7 +23,6 @@ import { getRegionalDate } from '@repo/utilities/date-time';
 import CardOverview from '@/components/common/cards/overview';
 import {
   IconCoin,
-  IconMoodEmpty,
   IconMoodPuzzled,
   IconToolsKitchen,
 } from '@tabler/icons-react';
@@ -33,7 +30,7 @@ import InputSearch from '@/components/common/inputs/search';
 import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
 import { OrderGet } from '@repo/types/models/order';
 import { capitalizeWords } from '@repo/utilities/string';
-import { OrderStatus, ProductType } from '@repo/types/models/enums';
+import { ProductType } from '@repo/types/models/enums';
 import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
 import { ProductVariantGet } from '@repo/types/models/product-variant';
 import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
@@ -48,10 +45,11 @@ import {
   ICON_WRAPPER_SIZE,
   SECTION_SPACING,
 } from '@repo/constants/sizes';
+import BadgeOrderStatus from '../../../common/badges/order-status';
 
 export default function Home() {
   return (
-    <Grid>
+    <Grid py={'md'}>
       <GridCol span={7}>
         <Stack gap={'xs'}>
           <CardGreeting />
@@ -203,7 +201,7 @@ function CardRecentOrders() {
                   Fetching recent orders
                 </Text>
               </Stack>
-            ) : !orders ? (
+            ) : !orders?.length ? (
               <Stack
                 align="center"
                 py={SECTION_SPACING * 2}
@@ -222,7 +220,7 @@ function CardRecentOrders() {
                   />
                 </ThemeIcon>
 
-                <div>
+                <Stack align="center" ta={'center'} gap={0}>
                   <Text inherit maw={280}>
                     No recent orders.
                   </Text>
@@ -230,7 +228,7 @@ function CardRecentOrders() {
                   <Text inherit maw={320} mt={'xs'}>
                     Placed orders will appear here automatically.
                   </Text>
-                </div>
+                </Stack>
               </Stack>
             ) : (
               orders
@@ -271,53 +269,10 @@ function CardOrderRecent({ props }: { props: OrderGet }) {
         </Group>
 
         <Group justify="end">
-          <BadgeStatus props={props} />
+          <BadgeOrderStatus props={props} />
         </Group>
       </Group>
     </Card>
-  );
-}
-
-function BadgeStatus({ props }: { props: OrderGet }) {
-  const badgeProps = {
-    color: '',
-    label: capitalizeWords(props.order_status),
-  };
-
-  switch (props.order_status) {
-    case OrderStatus.CANCELLED:
-      badgeProps.color = 'red';
-      break;
-    case OrderStatus.COMPLETED:
-      badgeProps.color = 'green';
-      break;
-    case OrderStatus.DRAFT:
-      badgeProps.color = 'gray';
-      break;
-    case OrderStatus.FINALIZED:
-      badgeProps.color = 'lime';
-      break;
-    case OrderStatus.OUT_FOR_DELIVERY:
-      badgeProps.color = 'teal';
-      break;
-    case OrderStatus.PREPARING:
-      badgeProps.color = 'yellow';
-      break;
-    case OrderStatus.PROCESSING:
-      badgeProps.color = 'grape';
-      break;
-    case OrderStatus.READY:
-      badgeProps.color = 'cyan';
-      break;
-
-    default:
-      break;
-  }
-
-  return (
-    <Badge color={`${badgeProps.color}`} variant="light">
-      {badgeProps.label}
-    </Badge>
   );
 }
 
@@ -376,7 +331,7 @@ function CardPopularItems() {
                   Fetching popular items
                 </Text>
               </Stack>
-            ) : !dedupedPizzaVariants ? (
+            ) : !dedupedPizzaVariants.length ? (
               <Stack
                 align="center"
                 py={SECTION_SPACING * 2}
@@ -395,7 +350,7 @@ function CardPopularItems() {
                   />
                 </ThemeIcon>
 
-                <div>
+                <Stack align="center" ta={'center'} gap={0}>
                   <Text inherit maw={280}>
                     No popular items.
                   </Text>
@@ -403,7 +358,7 @@ function CardPopularItems() {
                   <Text inherit maw={280} mt={'xs'}>
                     Items will appear here automatically when orders are placed.
                   </Text>
-                </div>
+                </Stack>
               </Stack>
             ) : (
               dedupedPizzaVariants.map(

@@ -8,6 +8,7 @@
 import {
   Icon,
   IconBellRinging,
+  IconBowlChopsticks,
   IconBrandAirtable,
   IconHeart,
   IconHelpCircle,
@@ -46,6 +47,12 @@ export const posLinks: NavLink[] = [
     label: 'Home',
     subLinks: null,
     icon: IconHome,
+  },
+  {
+    link: '/pos/menu',
+    label: 'Menu',
+    subLinks: null,
+    icon: IconBowlChopsticks,
   },
   {
     link: '/pos/orders',

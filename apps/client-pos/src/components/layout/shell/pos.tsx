@@ -33,7 +33,7 @@ export default function Pos({ children }: { children: React.ReactNode }) {
           type="auto"
           scrollbars={'y'}
         >
-          <Box p={'md'}>{children}</Box>
+          <Box px={'md'}>{children}</Box>
         </ScrollArea>
       </AppShellMain>
 
