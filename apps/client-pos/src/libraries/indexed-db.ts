@@ -55,6 +55,14 @@ export const config: DBConfig = {
       name: STORE_NAME.ORDER_ITEMS,
       keyPath: 'id',
     },
+    {
+      name: STORE_NAME.TABLES,
+      keyPath: 'id',
+    },
+    {
+      name: STORE_NAME.TABLE_BOOKINGS,
+      keyPath: 'id',
+    },
     // {
     //   name: STORE_NAME.STOCK_MOVEMENTS,
     //   keyPath: 'id',

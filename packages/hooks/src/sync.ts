@@ -32,6 +32,10 @@ import { useStoreDelivery } from '@repo/libraries/zustand/stores/delivery';
 import { deliveriesUpdate } from '@repo/handlers/requests/database/deliveries';
 import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
 import { cartItemsUpdate } from '@repo/handlers/requests/database/cart-items';
+import { useStoreTable } from '@repo/libraries/zustand/stores/table';
+import { useStoreTableBooking } from '@repo/libraries/zustand/stores/table-booking';
+import { tablesUpdate } from '@repo/handlers/requests/database/tables';
+import { tableBookingsUpdate } from '@repo/handlers/requests/database/table-bookings';
 
 export const useSyncPosts = (params: {
   syncFunction: (input: SyncParams) => void;
@@ -454,4 +458,77 @@ export const useSyncCartItems = (params: {
   }, [cartItems, deletedCartItems, handleSyncCartItems, online]);
 
   return { syncCartItems: handleSyncCartItems };
+};
+
+export const useSyncTables = (params: {
+  syncFunction: (input: SyncParams) => void;
+  online: boolean;
+}) => {
+  const { syncFunction, online } = params;
+
+  const {
+    tables,
+    deleted: deletedTables,
+    setTables,
+    clearDeletedTables,
+  } = useStoreTable();
+
+  const handleSyncTables = useCallback(() => {
+    syncFunction({
+      items: tables || [],
+      deletedItems: deletedTables,
+      dataStore: STORE_NAME.TABLES,
+      stateUpdateFunctionDeleted: () => clearDeletedTables(),
+      stateUpdateFunction: (i) => setTables(i),
+      serverUpdateFunction: async (i, di) => {
+        await tablesUpdate(i, di);
+      },
+    });
+  }, [tables, deletedTables, syncFunction, online]);
+
+  useEffect(() => {
+    if (tables === undefined && deletedTables === undefined) return;
+    if (!tables?.length && !deletedTables?.length) return;
+
+    handleSyncTables();
+  }, [tables, deletedTables, handleSyncTables, online]);
+
+  return { syncTables: handleSyncTables };
+};
+
+export const useSyncTableBookings = (params: {
+  syncFunction: (input: SyncParams) => void;
+  online: boolean;
+}) => {
+  const { syncFunction, online } = params;
+
+  const {
+    tableBookings,
+    deleted: deletedTableBookings,
+    setTableBookings,
+    clearDeletedTableBookings,
+  } = useStoreTableBooking();
+
+  const handleSyncTableBookings = useCallback(() => {
+    syncFunction({
+      items: tableBookings || [],
+      deletedItems: deletedTableBookings,
+      dataStore: STORE_NAME.TABLE_BOOKINGS,
+      stateUpdateFunctionDeleted: () => clearDeletedTableBookings(),
+      stateUpdateFunction: (i) => setTableBookings(i),
+      serverUpdateFunction: async (i, di) => {
+        await tableBookingsUpdate(i, di);
+      },
+    });
+  }, [tableBookings, deletedTableBookings, syncFunction, online]);
+
+  useEffect(() => {
+    if (tableBookings === undefined && deletedTableBookings === undefined)
+      return;
+    if (!tableBookings?.length && !deletedTableBookings?.length) return;
+
+    handleSyncTableBookings();
+  }, [tableBookings, deletedTableBookings, handleSyncTableBookings, online]);
+
+  return { syncTableBookings: handleSyncTableBookings };
 };

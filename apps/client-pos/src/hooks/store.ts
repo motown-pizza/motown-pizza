@@ -55,6 +55,8 @@ import { ingredientsGet } from '@repo/handlers/requests/database/ingredients';
 import { recipieItemsGet } from '@repo/handlers/requests/database/recipie-items';
 import { ordersGet } from '@repo/handlers/requests/database/orders';
 import { orderItemsGet } from '@repo/handlers/requests/database/order-items';
+import { tablesGet } from '@repo/handlers/requests/database/tables';
+import { tableBookingsGet } from '@repo/handlers/requests/database/table-bookings';
 import { deliveriesGet } from '@repo/handlers/requests/database/deliveries';
 import { stockMovementsGet } from '@repo/handlers/requests/database/stock-movements';
 import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
@@ -64,6 +66,8 @@ import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
 import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
 import { useStoreDelivery } from '@repo/libraries/zustand/stores/delivery';
 import { useStoreStockMovement } from '@repo/libraries/zustand/stores/stock-movement';
+import { useStoreTable } from '@repo/libraries/zustand/stores/table';
+import { useStoreTableBooking } from '@repo/libraries/zustand/stores/table-booking';
 
 export const useSessionStore = (params?: {
   options?: { clientOnly?: boolean };
@@ -251,6 +255,8 @@ export const useStoreData = (params?: {
   const { setOrderItems } = useStoreOrderItem();
   // const { setDeliveries } = useStoreDelivery();
   // const { setStockMovements } = useStoreStockMovement();
+  const { setTables } = useStoreTable();
+  const { setTableBookings } = useStoreTableBooking();
 
   // useEffect(() => {
   //   if (!session) return;
@@ -537,4 +543,55 @@ export const useStoreData = (params?: {
 
   //   loadDeliveries();
   // }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    if (prevItemsRef.current.length) return;
+
+    const loadTables = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.TABLES,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await tablesGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) => setTables(stateUpdateItems),
+      });
+    };
+
+    loadTables();
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    if (prevItemsRef.current.length) return;
+
+    const loadTableBookings = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.TABLE_BOOKINGS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await tableBookingsGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setTableBookings(stateUpdateItems),
+      });
+    };
+
+    loadTableBookings();
+  }, [session]);
 };

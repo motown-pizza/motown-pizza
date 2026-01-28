@@ -53,4 +53,6 @@ export const STORE_NAME = {
   ORDER_ITEMS: 'order-items',
   DELIVERIES: 'deliveries',
   STOCK_MOVEMENTS: 'stock-movements',
+  TABLE_BOOKINGS: 'table-bookings',
+  TABLES: 'tables',
 };
