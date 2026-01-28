@@ -136,6 +136,18 @@ enum DeliveryStatus {
   RETURNED
 }
 
+enum TableStatus {
+  BOOKED
+  AVAILABLE
+  OCCUPIED
+}
+
+enum TableBookingStatus {
+  WAITING // awaiting an order
+  RECEIVED // received order(s)
+  DONE // done with order(s)
+}
+
 // models
 
 model Profile {
@@ -314,10 +326,12 @@ model Order {
   customer_phone       String?
   tracking_code        String // (eg. NYC240115DK7QX9M2)
 
-  profile    Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id String
+  profile          Profile       @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id       String
   // store      Store?  @relation(fields: [store_id], references: [id], onDelete: Cascade)
-  store_id   String?
+  store_id         String?
+  table_booking    TableBooking? @relation(fields: [table_booking_id], references: [id], onDelete: Cascade)
+  table_booking_id String?
 
   order_items     OrderItem[]
   stock_movements StockMovement[]
@@ -387,6 +401,40 @@ model OrderItem {
   updated_at  DateTime   @updatedAt
 
   @@map(name: "order_items")
+}
+
+model Table {
+  id           String      @id @default(uuid())
+  table_number String
+  seat_count   Int
+  table_status TableStatus @default(AVAILABLE)
+
+  tableBookings TableBooking[]
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@map(name: "tables")
+}
+
+model TableBooking {
+  id                   String             @id @default(uuid())
+  number_of_persons    Int // ie. table for x people
+  table_booking_status TableBookingStatus @default(WAITING)
+
+  table    Table  @relation(fields: [table_id], references: [id], onDelete: Cascade)
+  table_id String
+
+  orders Order[]
+
+  status      Status     @default(DRAFT)
+  sync_status SyncStatus @default(SYNCED)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@map(name: "table_bookings")
 }
 
 model CartItem {

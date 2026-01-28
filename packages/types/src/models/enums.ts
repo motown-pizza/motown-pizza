@@ -110,3 +110,15 @@ export enum DeliveryStatus {
   CANCELLED = 'CANCELLED',
   RETURNED = 'RETURNED',
 }
+
+export enum TableStatus {
+  BOOKED = 'BOOKED',
+  AVAILABLE = 'AVAILABLE',
+  OCCUPIED = 'OCCUPIED',
+}
+
+export enum TableBookingStatus {
+  WAITING = 'WAITING', // awaiting an order
+  RECEIVED = 'RECEIVED', // received order(s)
+  DONE = 'DONE', // done with order(s)
+}

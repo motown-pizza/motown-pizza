@@ -17,4 +17,4 @@ export const WEEK = DAY * 7;
 export const MONTH = DAY * 30;
 
 export const DEBOUNCE_VALUE = 400;
-export const INDEXEDDB_VERSION = 2;
+export const INDEXEDDB_VERSION = 3;
