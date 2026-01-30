@@ -141,7 +141,9 @@ export default function Products({
 
               <Tooltip label={content} multiline maw={240}>
                 <Text c={'dimmed'} fz={'sm'} lineClamp={1}>
-                  <Text component="span">{content}</Text>
+                  <Text component="span" inherit>
+                    {content}
+                  </Text>
                 </Text>
               </Tooltip>
 

@@ -18,7 +18,13 @@ export default function Product({
 
   return (
     <>
-      <Modal opened={opened} onClose={close} withCloseButton={false} centered>
+      <Modal
+        opened={opened}
+        onClose={close}
+        withCloseButton={false}
+        centered
+        padding={0}
+      >
         <LayoutModal
           props={{
             title: `${props?.defaultValues?.updated_at ? 'Edit' : 'Add'} Product`,

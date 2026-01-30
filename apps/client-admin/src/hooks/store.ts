@@ -544,9 +544,7 @@ export const useStoreData = (params?: {
               items: [],
             };
           } else {
-            return !session
-              ? { items: [] }
-              : await deliveriesGet({ profileId: session.id });
+            return !session ? { items: [] } : await deliveriesGet();
           }
         },
         stateUpdateFunction: (stateUpdateItems) =>

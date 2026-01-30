@@ -65,7 +65,7 @@ export default function Product({
       noValidate
     >
       <ScrollAreaAutosize mah={520} scrollbars={'y'}>
-        <Grid gutter={mobile ? 5 : undefined} px={'xs'}>
+        <Grid gutter={mobile ? 5 : undefined} pr={'xs'}>
           <GridCol span={12}>
             <DropzoneImage props={{ form }} />
           </GridCol>
