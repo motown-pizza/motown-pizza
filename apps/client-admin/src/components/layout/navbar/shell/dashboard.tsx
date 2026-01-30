@@ -62,7 +62,8 @@ export default function Dashboard() {
         component={Link}
         href={nl.link}
         defaultOpened={
-          nli == 0 ? pathname == nl.link : pathname.includes(nl.link)
+          true
+          // nli == 0 ? pathname == nl.link : pathname.includes(nl.link)
         }
       >
         <Stack gap={3}>{subLinks}</Stack>

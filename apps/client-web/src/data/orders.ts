@@ -22,7 +22,7 @@ export const defaultOrderDetails: OrderGet = {
   fulfillment_type: OrderFulfilmentType.DELIVERY,
   guest_count: 0,
   order_payment_status: OrderPaymentStatus.PENDING,
-  order_status: OrderStatus.PROCESSING,
+  order_status: OrderStatus.DRAFT,
   order_time: OrderTime.NOW,
   payment_method: OrderPaymentMethod.ONLINE,
   profile_id: '',
