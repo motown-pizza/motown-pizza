@@ -1,85 +1,71 @@
-import { useStoreTableBooking } from '@repo/libraries/zustand/stores/table-booking';
+import { useStoreTable } from '@repo/libraries/zustand/stores/table';
 import { useStoreSession } from '@repo/libraries/zustand/stores/session';
-import { TableBookingGet } from '@repo/types/models/table-booking';
-import {
-  Status,
-  SyncStatus,
-  TableBookingStatus,
-} from '@repo/types/models/enums';
+import { TableGet } from '@repo/types/models/table';
+import { Status, SyncStatus } from '@repo/types/models/enums';
 import { generateUUID } from '@repo/utilities/generators';
 import { useNotification } from '@repo/hooks/notification';
 import { Variant } from '@repo/types/enums';
-import { useStoreTable } from '@repo/libraries/zustand/stores/table';
 
-export const useTableBookingActions = () => {
+export const useTableActions = () => {
   const { session } = useStoreSession();
-  const { tables } = useStoreTable();
-  const { addTableBooking, updateTableBooking, deleteTableBooking } =
-    useStoreTableBooking();
+  const { addTable, updateTable, deleteTable } = useStoreTable();
   const { showNotification } = useNotification();
 
-  const tableBookingCreate = (params: Partial<TableBookingGet>) => {
+  const tableCreate = (params: Partial<TableGet>) => {
     if (!session) return;
 
     const id = generateUUID();
     const now = new Date();
 
-    const newTableBooking: TableBookingGet = {
+    const newTable: TableGet = {
       id: params.id || id,
-      table_booking_status:
-        params.table_booking_status || TableBookingStatus.WAITING,
-      number_of_persons: params.number_of_persons || 1,
-      table_id: params.table_id || '',
+      seat_count: params.seat_count || 0,
+      table_number: params.table_number || '',
+      // table_status: params.table_status || TableStatus.AVAILABLE,
       status: params.status || Status.ACTIVE,
       sync_status: SyncStatus.PENDING,
       created_at: now.toISOString() as any,
       updated_at: now.toISOString() as any,
     };
 
-    addTableBooking(newTableBooking);
-
-    const table = tables?.find((t) => t.id == params.table_id);
-
+    addTable(newTable);
     showNotification({
       variant: Variant.SUCCESS,
-      title: 'Table Booking Booked',
-      desc: `Table ${table?.table_number} has been booked`,
+      title: 'Table Added',
+      desc: `Table '${newTable.table_number}' has been added`,
     });
   };
 
-  const tableBookingUpdate = (params: TableBookingGet) => {
+  const tableUpdate = (params: TableGet) => {
     if (!session) return;
 
     const now = new Date();
 
-    const newTableBooking: TableBookingGet = {
+    const newTable: TableGet = {
       ...params,
       sync_status: SyncStatus.PENDING,
       updated_at: now.toISOString() as any,
     };
 
-    updateTableBooking(newTableBooking);
-
-    const table = tables?.find((t) => t.id == params.table_id);
-
+    updateTable(newTable);
     showNotification({
       variant: Variant.SUCCESS,
-      title: 'Table Booking Updated',
-      desc: `Table ${table?.table_number}'s booking has been updated`,
+      title: 'Table Updated',
+      desc: `'${newTable.table_number}' has been updated`,
     });
   };
 
-  const tableBookingDelete = (params: TableBookingGet) => {
+  const tableDelete = (params: TableGet) => {
     if (!session) return;
 
     const now = new Date();
 
-    deleteTableBooking({
+    deleteTable({
       ...params,
       sync_status: SyncStatus.DELETED,
       updated_at: now.toISOString() as any,
     });
   };
 
-  return { tableBookingCreate, tableBookingUpdate, tableBookingDelete };
+  return { tableCreate, tableUpdate, tableDelete };
 };

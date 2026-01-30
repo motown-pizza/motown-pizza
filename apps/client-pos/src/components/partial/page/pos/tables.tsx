@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActionIcon,
   Button,
@@ -25,15 +25,59 @@ import {
 } from '@repo/constants/sizes';
 import { IconArrowLeft, IconMoodPuzzled } from '@tabler/icons-react';
 import NextLink from '@repo/components/common/anchor/next-link';
+import { useStoreTableBooking } from '@repo/libraries/zustand/stores/table-booking';
+import { getTableStatus } from '@/hooks/table';
+import { TableGet } from '@repo/types/models/table';
 
 export default function Tables() {
   const [currentStatus, setCurrentStatus] = useState('All');
+  const [filteredTables, setFilteredTables] = useState<TableGet[]>([]);
 
   const { tables } = useStoreTable();
-  const filteredTables =
-    currentStatus == 'All'
-      ? tables
-      : tables?.filter((oi) => oi.table_status == currentStatus);
+  const { tableBookings } = useStoreTableBooking();
+
+  useEffect(() => {
+    if (tables == undefined) return;
+    if (tables == null) return;
+
+    const getFilteredTables = () => {
+      switch (currentStatus) {
+        case TableStatus.BOOKED:
+          setFilteredTables(
+            tables.filter((ti) => {
+              const tableStatus = getTableStatus({ table: ti, tableBookings });
+              return tableStatus.isBooked;
+            })
+          );
+          break;
+
+        case TableStatus.OCCUPIED:
+          setFilteredTables(
+            tables.filter((ti) => {
+              const tableStatus = getTableStatus({ table: ti, tableBookings });
+              return tableStatus.isOccupied;
+            })
+          );
+          break;
+
+        case TableStatus.AVAILABLE:
+          setFilteredTables(
+            tables.filter((ti) => {
+              const tableStatus = getTableStatus({ table: ti, tableBookings });
+              return !tableStatus.isOccupied && !tableStatus.isBooked;
+            })
+          );
+          break;
+
+        default:
+          setFilteredTables(tables);
+          break;
+      }
+    };
+
+    setFilteredTables([]);
+    setTimeout(() => getFilteredTables(), 50);
+  }, [tables, currentStatus]);
 
   return (
     <Stack gap={'xl'}>
