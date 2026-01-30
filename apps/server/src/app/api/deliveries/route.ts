@@ -27,11 +27,13 @@ export async function GET(request: NextRequest) {
     }
 
     const deliveryRecords = await prisma.delivery.findMany({
-      where: {
-        order_id: {
-          in: orderRecords.map((order) => order.id),
-        },
-      },
+      where: !orderRecords.length
+        ? undefined
+        : {
+            order_id: {
+              in: orderRecords.map((order) => order.id),
+            },
+          },
       orderBy: { created_at: 'desc' },
     });
 

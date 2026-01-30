@@ -14,15 +14,6 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const profileId = searchParams.get('profileId');
-
-    if (!profileId) {
-      console.log('---> route handler info (get tableBookings):', {
-        info: 'profile id not provided',
-      });
-    }
-
     const tableBookingRecords = await prisma.tableBooking.findMany({
       orderBy: { created_at: 'desc' },
     });

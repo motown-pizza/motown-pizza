@@ -24,10 +24,7 @@ export async function GET(request: NextRequest) {
     }
 
     const cartItemRecords = await prisma.cartItem.findMany({
-      where: {
-        profile_id: profileId || undefined,
-      },
-
+      where: !profileId ? undefined : { profile_id: profileId },
       orderBy: { created_at: 'desc' },
     });
 
