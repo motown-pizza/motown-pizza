@@ -19,11 +19,11 @@ import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-v
 import { generateTrackingCode } from '@repo/services/logic/generators/order-code';
 import { StoreGet } from '@repo/constants/stores';
 import { useDeliveryActions } from './delivery';
+import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-placement';
 
 export const useOrderActions = () => {
   const { session } = useStoreSession();
   const { addOrder, updateOrder, deleteOrder } = useStoreOrder();
-
   const { orderItems, setOrderItems } = useStoreOrderItem();
   const { productVariants } = useStoreProductVariant();
   const { cartItems, deleteCartItems } = useStoreCartItem();
@@ -44,15 +44,17 @@ export const useOrderActions = () => {
       customer_phone: params.customer_phone || '',
       eta_estimate: params.eta_estimate || '',
       fulfillment_type: params.fulfillment_type || OrderFulfilmentType.DELIVERY,
+      guest_count: params.guest_count || 0,
       order_payment_status:
         params.order_payment_status || OrderPaymentStatus.PENDING,
       order_status: params.order_status || OrderStatus.PROCESSING,
       order_time: params.order_time || OrderTime.NOW,
       payment_method: params.payment_method || OrderPaymentMethod.ONLINE,
-      profile_id: session.id || '',
+      profile_id: session.id || null,
       source: params.source || OrderSource.POS,
-      store_id: params.store_id || '',
+      store_id: params.store_id || null,
       tracking_code: params.tracking_code || '',
+      table_booking_id: params.table_booking_id || null,
       status: params.status || Status.ACTIVE,
       sync_status: SyncStatus.PENDING,
       created_at: now.toISOString() as any,
@@ -109,7 +111,9 @@ export const useOrderActions = () => {
 
       setOrderItems([...(orderItems || []), ...cartToOrderItems]);
 
-      deliveryCreate({ order_id: newOrder.id });
+      if (newOrder.fulfillment_type == OrderFulfilmentType.DELIVERY) {
+        deliveryCreate({ order_id: newOrder.id });
+      }
 
       deleteCartItems(
         (cartItems || []).map((ci) => {

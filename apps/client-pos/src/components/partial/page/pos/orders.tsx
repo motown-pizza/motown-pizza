@@ -16,7 +16,7 @@ import {
 import CardOrder from '@/components/common/cards/order';
 import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
 import { capitalizeWords } from '@repo/utilities/string';
-import { OrderStatus } from '@repo/types/models/enums';
+import { OrderFulfilmentType, OrderStatus } from '@repo/types/models/enums';
 import {
   ICON_SIZE,
   ICON_STROKE_WIDTH,
@@ -27,13 +27,19 @@ import { IconArrowLeft, IconMoodPuzzled } from '@tabler/icons-react';
 import NextLink from '@repo/components/common/anchor/next-link';
 
 export default function Orders() {
-  const [currentStatus, setCurrentStatus] = useState('All');
+  const [currentType, setCurrentStatus] = useState<
+    OrderFulfilmentType | string
+  >('All');
 
   const { orders } = useStoreOrder();
-  const filteredOrders =
-    currentStatus == 'All'
-      ? orders
-      : orders?.filter((oi) => oi.order_status == currentStatus);
+  const filteredOrders = orders?.filter(
+    (oi) => oi.order_status != OrderStatus.PROCESSING
+  );
+
+  const filteredOrdersTab =
+    currentType == 'All'
+      ? filteredOrders
+      : filteredOrders?.filter((oi) => oi.fulfillment_type == currentType);
 
   return (
     <Stack gap={'xl'}>
@@ -64,7 +70,7 @@ export default function Orders() {
             <Button
               key={i}
               size="xs"
-              color={currentStatus === s ? 'pri' : 'dark'}
+              color={currentType === s ? 'pri' : 'dark'}
               tt={'uppercase'}
               onClick={() => setCurrentStatus(s)}
             >
@@ -81,7 +87,7 @@ export default function Orders() {
             Fetching client orders
           </Text>
         </Stack>
-      ) : !filteredOrders?.length ? (
+      ) : !filteredOrdersTab?.length ? (
         <Stack
           align="center"
           py={SECTION_SPACING * 2}
@@ -98,7 +104,8 @@ export default function Orders() {
 
           <Stack align="center" ta={'center'} gap={0}>
             <Text inherit>
-              No orders with the status &apos;{currentStatus}&apos; found.
+              No orders with the fulfilment type &apos;{currentType}&apos;
+              found.
             </Text>
 
             <Text inherit maw={320} mt={'xs'}>
@@ -108,7 +115,7 @@ export default function Orders() {
         </Stack>
       ) : (
         <Grid gutter={'xl'}>
-          {filteredOrders.map((oi, i) => (
+          {filteredOrdersTab.map((oi, i) => (
             <GridCol key={i} span={4}>
               <CardOrder props={oi} />
             </GridCol>
@@ -121,9 +128,7 @@ export default function Orders() {
 
 const orderStatuses = [
   'All',
-  OrderStatus.PROCESSING,
-  OrderStatus.PREPARING,
-  OrderStatus.READY,
-  OrderStatus.OUT_FOR_DELIVERY,
-  OrderStatus.COMPLETED,
+  OrderFulfilmentType.DINE_IN,
+  OrderFulfilmentType.COLLECTION,
+  OrderFulfilmentType.DELIVERY,
 ];

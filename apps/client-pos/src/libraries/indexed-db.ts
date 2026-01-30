@@ -67,9 +67,9 @@ export const config: DBConfig = {
     //   name: STORE_NAME.STOCK_MOVEMENTS,
     //   keyPath: 'id',
     // },
-    // {
-    //   name: STORE_NAME.DELIVERIES,
-    //   keyPath: 'id',
-    // },
+    {
+      name: STORE_NAME.DELIVERIES,
+      keyPath: 'id',
+    },
   ],
 };

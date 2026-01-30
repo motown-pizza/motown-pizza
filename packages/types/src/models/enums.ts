@@ -26,6 +26,9 @@ export enum ProductType {
   PIZZA = 'PIZZA',
   SIDE = 'SIDE',
   DRINK = 'DRINK',
+  SOUP = 'SOUP',
+  DESSERT = 'DESSERT',
+  SALAD = 'SALAD',
 }
 
 export enum Size {
@@ -61,6 +64,7 @@ export enum OrderStatus {
 export enum OrderFulfilmentType {
   COLLECTION = 'COLLECTION',
   DELIVERY = 'DELIVERY',
+  DINE_IN = 'DINE_IN',
 }
 
 export enum OrderPaymentStatus {
@@ -118,6 +122,7 @@ export enum TableStatus {
 }
 
 export enum TableBookingStatus {
+  BOOKED = 'BOOKED', // awaiting an order
   WAITING = 'WAITING', // awaiting an order
   RECEIVED = 'RECEIVED', // received order(s)
   DONE = 'DONE', // done with order(s)

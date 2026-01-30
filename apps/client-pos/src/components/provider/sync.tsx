@@ -13,6 +13,8 @@ import { useStoreSession } from '@repo/libraries/zustand/stores/session';
 import { useStoreSyncStatus } from '@repo/libraries/zustand/stores/sync-status';
 import { handleSync, syncToServerAfterDelay } from '@/utilities/sync';
 import {
+  useSyncCartItems,
+  useSyncDeliveries,
   useSyncIngredients,
   useSyncOrderItems,
   useSyncOrders,
@@ -72,6 +74,11 @@ export default function Sync({ children }: { children: React.ReactNode }) {
     online: networkStatus.online,
   });
 
+  useSyncCartItems({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
+
   useSyncOrders({
     syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
@@ -87,10 +94,10 @@ export default function Sync({ children }: { children: React.ReactNode }) {
   //   online: networkStatus.online,
   // });
 
-  // useSyncDeliveries({
-  //   syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
-  //   online: networkStatus.online,
-  // });
+  useSyncDeliveries({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
 
   useSyncTables({
     syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),

@@ -18,6 +18,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
 import ProviderMantine from '@repo/components/provider/mantine';
 import ProviderStore from '@/components/provider/store';
+import ProviderSync from '@/components/provider/sync';
 import { APP_NAME } from '@/data/constants';
 import { mantine } from '@/assets/styles';
 import { DEFAULT_COLOR_SCHEME } from '@repo/constants/other';
@@ -61,7 +62,9 @@ export default async function RootLayout({
           appThemeProps={{ styleSheets: { ...mantine } }}
           colorScheme={DEFAULT_COLOR_SCHEME}
         >
-          <ProviderStore>{children}</ProviderStore>
+          <ProviderStore>
+            <ProviderSync>{children}</ProviderSync>
+          </ProviderStore>
         </ProviderMantine>
       </body>
     </html>

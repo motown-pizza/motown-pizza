@@ -68,6 +68,8 @@ import { useStoreDelivery } from '@repo/libraries/zustand/stores/delivery';
 import { useStoreStockMovement } from '@repo/libraries/zustand/stores/stock-movement';
 import { useStoreTable } from '@repo/libraries/zustand/stores/table';
 import { useStoreTableBooking } from '@repo/libraries/zustand/stores/table-booking';
+import { cartItemsGet } from '@repo/handlers/requests/database/cart-items';
+import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
 
 export const useSessionStore = (params?: {
   options?: { clientOnly?: boolean };
@@ -251,9 +253,10 @@ export const useStoreData = (params?: {
   const { setProductVariants } = useStoreProductVariant();
   const { setIngredients } = useStoreIngredient();
   const { setRecipieItems } = useStoreRecipieItem();
+  const { setCartItems } = useStoreCartItem();
   const { setOrders } = useStoreOrder();
   const { setOrderItems } = useStoreOrderItem();
-  // const { setDeliveries } = useStoreDelivery();
+  const { setDeliveries } = useStoreDelivery();
   // const { setStockMovements } = useStoreStockMovement();
   const { setTables } = useStoreTable();
   const { setTableBookings } = useStoreTableBooking();
@@ -443,6 +446,34 @@ export const useStoreData = (params?: {
     if (!session) return;
     if (prevItemsRef.current.length) return;
 
+    const loadCart = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.CART_ITEMS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return !session
+              ? { items: [] }
+              : await cartItemsGet({ profileId: session.id });
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setCartItems(stateUpdateItems),
+      });
+    };
+
+    loadCart();
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    if (prevItemsRef.current.length) return;
+
     const loadOrders = async () => {
       await loadInitialData({
         prevItemsRef,
@@ -516,33 +547,33 @@ export const useStoreData = (params?: {
   //   loadStockMovements();
   // }, [session]);
 
-  // useEffect(() => {
-  //   if (!session) return;
-  //   if (prevItemsRef.current.length) return;
+  useEffect(() => {
+    if (!session) return;
+    if (prevItemsRef.current.length) return;
 
-  //   const loadDeliveries = async () => {
-  //     await loadInitialData({
-  //       prevItemsRef,
-  //       dataStore: STORE_NAME.DELIVERIES,
-  //       session,
-  //       dataFetchFunction: async () => {
-  //         if (clientOnly) {
-  //           return {
-  //             items: [],
-  //           };
-  //         } else {
-  //           return !session
-  //             ? { items: [] }
-  //             : await deliveriesGet({ profileId: session.id });
-  //         }
-  //       },
-  //       stateUpdateFunction: (stateUpdateItems) =>
-  //         setDeliveries(stateUpdateItems),
-  //     });
-  //   };
+    const loadDeliveries = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.DELIVERIES,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return !session
+              ? { items: [] }
+              : await deliveriesGet({ profileId: session.id });
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setDeliveries(stateUpdateItems),
+      });
+    };
 
-  //   loadDeliveries();
-  // }, [session]);
+    loadDeliveries();
+  }, [session]);
 
   useEffect(() => {
     if (!session) return;
