@@ -20,6 +20,7 @@ export const defaultOrderDetails: OrderGet = {
   customer_phone: '',
   eta_estimate: '',
   fulfillment_type: OrderFulfilmentType.DELIVERY,
+  guest_count: 0,
   order_payment_status: OrderPaymentStatus.PENDING,
   order_status: OrderStatus.PROCESSING,
   order_time: OrderTime.NOW,

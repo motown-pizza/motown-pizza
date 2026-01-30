@@ -25,6 +25,7 @@ import { defaultOrderDetails } from '@/data/orders';
 import {
   OrderFulfilmentType,
   OrderPaymentMethod,
+  OrderStatus,
   OrderTime,
 } from '@repo/types/models/enums';
 import { stores } from '@repo/constants/stores';
@@ -262,7 +263,12 @@ export default function Checkout() {
                 return;
               }
 
-              orderUpdate(orderDetails, { placement: true });
+              orderUpdate(
+                { ...orderDetails, order_status: OrderStatus.PREPARING },
+                { placement: true }
+              );
+
+              setOrderDetails(defaultOrderDetails);
             }}
           >
             <Button color="pri" size="md" disabled={!isReadyForConfirmation}>
