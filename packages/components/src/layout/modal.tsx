@@ -4,7 +4,14 @@ import {
   ICON_WRAPPER_SIZE,
 } from '@repo/constants/sizes';
 import { Alert } from '@repo/types/enums';
-import { ActionIcon, Group, Stack, ThemeIcon, Title } from '@mantine/core';
+import {
+  ActionIcon,
+  Divider,
+  Group,
+  Stack,
+  ThemeIcon,
+  Title,
+} from '@mantine/core';
 import {
   Icon,
   IconAlertCircle,
@@ -50,10 +57,21 @@ export default function Modal({
       break;
   }
 
+  const titleComponent = (
+    <Title order={1} fz={'xl'} lh={1} ta={{ base: 'center', xs: 'start' }}>
+      {props.title}
+    </Title>
+  );
+
   return (
     <Stack pos={'relative'} gap={!variant ? 'md' : 'xl'}>
-      <Group justify={!options.icon ? 'end' : 'space-between'} align="start">
-        {options.icon && (
+      <Group
+        justify={'space-between'}
+        align={variant && options.icon ? 'start' : undefined}
+        px={'md'}
+        pt={'md'}
+      >
+        {variant && options.icon ? (
           <Group>
             <ThemeIcon
               size={ICON_WRAPPER_SIZE * 2}
@@ -63,6 +81,8 @@ export default function Modal({
               <options.icon size={ICON_SIZE * 2} stroke={ICON_STROKE_WIDTH} />
             </ThemeIcon>
           </Group>
+        ) : (
+          titleComponent
         )}
 
         <Group gap={'xs'}>
@@ -79,17 +99,10 @@ export default function Modal({
         </Group>
       </Group>
 
-      <Stack>
-        <Group>
-          <Title
-            order={1}
-            fz={'xl'}
-            lh={1}
-            ta={{ base: 'center', xs: 'start' }}
-          >
-            {props.title}
-          </Title>
-        </Group>
+      {!(variant && options.icon) && <Divider />}
+
+      <Stack px={'md'} pb={'md'}>
+        {variant && <Group>{titleComponent}</Group>}
 
         {children}
       </Stack>

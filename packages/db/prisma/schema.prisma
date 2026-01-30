@@ -51,6 +51,9 @@ enum ProductType {
   PIZZA
   SIDE
   DRINK
+  SOUP
+  DESSERT
+  SALAD
 }
 
 enum Size {
@@ -86,6 +89,7 @@ enum OrderStatus {
 enum OrderFulfilmentType {
   COLLECTION
   DELIVERY
+  DINE_IN
 }
 
 enum OrderPaymentStatus {
@@ -143,6 +147,7 @@ enum TableStatus {
 }
 
 enum TableBookingStatus {
+  BOOKED // awaiting an order
   WAITING // awaiting an order
   RECEIVED // received order(s)
   DONE // done with order(s)
@@ -324,10 +329,11 @@ model Order {
   eta_estimate         String?
   customer_name        String
   customer_phone       String?
+  guest_count          Int?
   tracking_code        String // (eg. NYC240115DK7QX9M2)
 
-  profile          Profile       @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id       String
+  profile          Profile?      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id       String?
   // store      Store?  @relation(fields: [store_id], references: [id], onDelete: Cascade)
   store_id         String?
   table_booking    TableBooking? @relation(fields: [table_booking_id], references: [id], onDelete: Cascade)
@@ -388,8 +394,8 @@ model OrderItem {
   quantity      Int
   price_at_sale Int
 
-  profile            Profile        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id         String
+  profile            Profile?       @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id         String?
   order              Order          @relation(fields: [order_id], references: [id], onDelete: Cascade)
   order_id           String
   product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
@@ -404,10 +410,10 @@ model OrderItem {
 }
 
 model Table {
-  id           String      @id @default(uuid())
+  id           String @id @default(uuid())
   table_number String
   seat_count   Int
-  table_status TableStatus @default(AVAILABLE)
+  // table_status TableStatus @default(AVAILABLE)
 
   tableBookings TableBooking[]
 
@@ -441,8 +447,8 @@ model CartItem {
   id       String @id @default(uuid())
   quantity Int    @default(1)
 
-  profile            Profile        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id         String
+  profile            Profile?       @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id         String?
   product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
   product_variant_id String
 

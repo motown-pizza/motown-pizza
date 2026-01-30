@@ -25,18 +25,16 @@ import {
   ICON_WRAPPER_SIZE,
   SECTION_SPACING,
 } from '@repo/constants/sizes';
-import { IconCheck, IconCopy } from '@tabler/icons-react';
-import { capitalizeWords } from '@repo/utilities/string';
-import { useClipboard } from '@mantine/hooks';
+import { IconCheck } from '@tabler/icons-react';
 import { OrderGet } from '@repo/types/models/order';
 import { stores } from '@repo/constants/stores';
 import { StoreGet } from '@repo/constants/stores';
 import NextLink from '@repo/components/common/anchor/next-link';
 import { useStoreDelivery } from '@repo/libraries/zustand/stores/delivery';
 import { OrderFulfilmentType } from '@repo/types/models/enums';
+import CardOrderConfirmed from '@repo/components/common/cards/orders/confirmed';
 
 export default function Confirmed() {
-  const clipboard = useClipboard({ timeout: 1000 });
   const { orders } = useStoreOrder();
   const { deliveries } = useStoreDelivery();
 
@@ -83,118 +81,7 @@ export default function Confirmed() {
 
         {order && (
           <Stack gap={'xl'} mt={SECTION_SPACING}>
-            <Card
-              bg={'var(--mantine-color-dark-8)'}
-              p={{ base: 'md', md: 'xl' }}
-            >
-              <Stack gap={'xs'}>
-                <Group justify="space-between">
-                  <Title order={3} fz={'sm'} fw={500}>
-                    Tracking Code
-                  </Title>
-
-                  <Group wrap="nowrap">
-                    <Text ta={'end'} fz={'sm'} visibleFrom="xs">
-                      {order?.tracking_code}
-                    </Text>
-
-                    <Tooltip
-                      label={clipboard.copied ? 'Coppied' : 'Copy Code'}
-                      visibleFrom="xs"
-                    >
-                      <ActionIcon
-                        size={ICON_WRAPPER_SIZE - 4}
-                        color={clipboard.copied ? 'ter.6' : 'dark'}
-                        onClick={() => {
-                          clipboard.copy(order.tracking_code);
-                        }}
-                        visibleFrom="xs"
-                      >
-                        <IconCopy
-                          size={ICON_SIZE - 4}
-                          stroke={ICON_STROKE_WIDTH}
-                        />
-                      </ActionIcon>
-                    </Tooltip>
-
-                    <Button
-                      size="xs"
-                      color={clipboard.copied ? 'ter.6' : 'dark'}
-                      onClick={() => {
-                        clipboard.copy(order.tracking_code);
-                      }}
-                      hiddenFrom="xs"
-                      leftSection={
-                        <IconCopy
-                          size={ICON_SIZE - 4}
-                          stroke={ICON_STROKE_WIDTH}
-                        />
-                      }
-                    >
-                      {clipboard.copied ? 'Coppied' : 'Copy Code'}
-                    </Button>
-                  </Group>
-                </Group>
-
-                <Divider variant="dashed" />
-
-                <Group justify="space-between" wrap="nowrap">
-                  <Title order={3} fz={'sm'} fw={500}>
-                    Fulfilment Type
-                  </Title>
-                  <Text ta={'end'} fz={'sm'}>
-                    {capitalizeWords(order?.fulfillment_type || '')}
-                  </Text>
-                </Group>
-
-                <Divider variant="dashed" />
-
-                <Group justify="space-between" wrap="nowrap">
-                  <Title order={3} fz={'sm'} fw={500}>
-                    Payment Option
-                  </Title>
-                  <Badge ta={'end'} color="dark">
-                    {order?.payment_method}
-                  </Badge>
-                </Group>
-
-                <Divider variant="dashed" />
-
-                <Group justify="space-between" wrap="nowrap">
-                  <Title order={3} fz={'sm'} fw={500}>
-                    Name
-                  </Title>
-
-                  <Text ta={'end'} fz={'sm'}>
-                    {capitalizeWords(order?.customer_name || '')}
-                  </Text>
-                </Group>
-
-                <Divider variant="dashed" />
-
-                <Group justify="space-between" wrap="nowrap">
-                  <Title order={3} fz={'sm'} fw={500}>
-                    Phone
-                  </Title>
-
-                  <Text ta={'end'} fz={'sm'}>
-                    {order?.customer_phone}
-                  </Text>
-                </Group>
-
-                <Divider variant="dashed" />
-
-                <Group justify="space-between" wrap="nowrap">
-                  <Title order={3} fz={'sm'} fw={500}>
-                    Store
-                  </Title>
-
-                  <Text ta={'end'} fz={'sm'} lineClamp={1}>
-                    {`${store?.title}, ${store?.location}`}
-                  </Text>
-                </Group>
-              </Stack>
-            </Card>
+            <CardOrderConfirmed props={{ order, store }} />
 
             <Stack ta={'center'}>
               <Title order={3} fz={'lg'}>

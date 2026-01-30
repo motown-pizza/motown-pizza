@@ -3,6 +3,7 @@
 import React from 'react';
 import {
   Avatar,
+  Badge,
   Card,
   Divider,
   Group,
@@ -16,9 +17,21 @@ import { capitalizeWords } from '@repo/utilities/string';
 import BadgeOrderStatus from '../badges/order-status';
 import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
 import { getRegionalDate } from '@repo/utilities/date-time';
+import BadgeOrderType from '../badges/order-type';
+import { OrderFulfilmentType } from '@repo/types/models/enums';
+import { useStoreTable } from '@repo/libraries/zustand/stores/table';
+import { useStoreTableBooking } from '@repo/libraries/zustand/stores/table-booking';
 
 export default function Order({ props }: { props: OrderGet }) {
   const { orderItems } = useStoreOrderItem();
+  const { tableBookings } = useStoreTableBooking();
+  const { tables } = useStoreTable();
+  const tableBookingCurrent = tableBookings?.find(
+    (tb) => tb.id == props.table_booking_id
+  );
+  const tableCurrent = tables?.find(
+    (ti) => ti.id == tableBookingCurrent?.table_id
+  );
 
   const orderItemsCurrent = orderItems?.filter((oi) => oi.order_id == props.id);
   const dateCreated = getRegionalDate(props.created_at, {
@@ -41,8 +54,8 @@ export default function Order({ props }: { props: OrderGet }) {
   return (
     <Card bg={'var(--mantine-color-dark-9)'}>
       <Stack>
-        <Group align="start" justify="space-between">
-          <Group>
+        <Group align="start" justify="space-between" wrap="nowrap">
+          <Group wrap="nowrap">
             <div>
               <Avatar
                 key={props.customer_name}
@@ -52,19 +65,21 @@ export default function Order({ props }: { props: OrderGet }) {
             </div>
 
             <div>
-              <Title order={3} fz={'md'} fw={'bold'}>
+              <Title order={3} fz={'md'} fw={'bold'} lineClamp={1}>
                 {capitalizeWords(props.customer_name)}
               </Title>
 
-              <Text fz={'sm'} c={'dimmed'}>
+              <Text fz={'sm'} c={'dimmed'} lineClamp={1}>
                 {props.tracking_code}
               </Text>
             </div>
           </Group>
 
-          <Stack align="end">
-            <BadgeOrderStatus props={props} />
-          </Stack>
+          <Group justify="end" gap={'xs'}>
+            {props.fulfillment_type == OrderFulfilmentType.DINE_IN && (
+              <Badge variant="light">{tableCurrent?.table_number}</Badge>
+            )}
+          </Group>
         </Group>
 
         <Group justify="space-between" c={'dimmed'} fz={'sm'}>
@@ -77,6 +92,11 @@ export default function Order({ props }: { props: OrderGet }) {
               <NumberFormatter value={orderItemsCurrent.length} /> items
             </Text>
           )}
+        </Group>
+
+        <Group gap={'xs'}>
+          <BadgeOrderStatus props={props} />
+          <BadgeOrderType props={props} />
         </Group>
 
         <Divider />
