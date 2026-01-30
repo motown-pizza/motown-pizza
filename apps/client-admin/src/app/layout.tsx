@@ -9,6 +9,7 @@
 import '@mantine/core/styles.css';
 import '@mantine/carousel/styles.css';
 import '@mantine/notifications/styles.css';
+import '@mantine/charts/styles.css';
 
 // custom styles
 import '../styles/globals.scss';
