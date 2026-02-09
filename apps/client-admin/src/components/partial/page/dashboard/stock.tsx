@@ -10,7 +10,7 @@ import TableIngredients from '@/components/common/tables/ingredients';
 import { usePathname } from 'next/navigation';
 import { crumbify } from '@repo/utilities/url';
 
-export default function Ingredients() {
+export default function Stock() {
   const pathname = usePathname();
   const crumbs = crumbify(pathname);
   const title = crumbs[crumbs.length - 1].label;

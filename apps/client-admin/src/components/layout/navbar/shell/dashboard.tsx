@@ -107,6 +107,16 @@ const navlinks = [
     link: '/dashboard/ingredients',
     label: 'Ingredients',
     icon: IconCheese,
+    subLinks: [
+      {
+        link: '/dashboard/ingredients/stock',
+        label: 'Stock',
+      },
+      {
+        link: '/dashboard/ingredients/stock-movements',
+        label: 'Stock Movements',
+      },
+    ],
   },
   {
     link: '/dashboard/recipie-items',
