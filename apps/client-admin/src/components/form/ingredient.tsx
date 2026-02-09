@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormIngredient } from '@/hooks/form/ingredient';
 import {
   Button,
@@ -12,15 +12,16 @@ import {
   TextInput,
 } from '@mantine/core';
 import {
+  IconContainer,
   IconLetterCase,
   IconMeterCube,
-  IconNumber,
-  IconPackage,
-  IconPackageImport,
+  IconStack,
+  IconStack2,
+  IconStack3,
 } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import { IngredientGet } from '@repo/types/models/ingredient';
-import { useMediaQuery } from '@mantine/hooks';
+import { useDebouncedCallback, useMediaQuery } from '@mantine/hooks';
 import { capitalizeWords } from '@repo/utilities/string';
 import { MeasurementUnitType } from '@repo/types/models/enums';
 
@@ -29,6 +30,7 @@ export default function Ingredient({
 }: {
   props?: {
     defaultValues?: Partial<IngredientGet>;
+    options?: { stockup?: boolean };
     close?: () => void;
   };
 }) {
@@ -36,7 +38,27 @@ export default function Ingredient({
     defaultValues: props?.defaultValues,
   });
 
+  const [stockQuantity, setStockQuantity] = useState(0);
+  const [stockUp, setStockUp] = useState<string | number>('');
+
   const mobile = useMediaQuery('(max-width: 36em)');
+
+  useEffect(() => {
+    if (form.values.stock_quantity)
+      setStockQuantity(form.values.stock_quantity);
+  }, []);
+
+  const handleupdate = useDebouncedCallback(() => {
+    if (!stockUp) {
+      form.reset();
+    } else {
+      form.setFieldValue('stock_quantity', stockQuantity + Number(stockUp));
+    }
+  }, 250);
+
+  useEffect(() => {
+    handleupdate();
+  }, [stockUp]);
 
   return (
     <form
@@ -59,11 +81,12 @@ export default function Ingredient({
             leftSection={
               <IconLetterCase size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
             }
+            disabled={props?.options?.stockup}
             {...form.getInputProps('name')}
           />
         </GridCol>
 
-        <GridCol span={{ base: 12, xs: 4 }}>
+        <GridCol span={{ base: 12, xs: 6 }}>
           <NumberInput
             required
             label={mobile ? 'Stock Quantity' : undefined}
@@ -71,27 +94,79 @@ export default function Ingredient({
             placeholder="Stock Quantity"
             min={0}
             leftSection={
-              <IconPackage size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+              <IconStack3 size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
             }
+            disabled={props?.options?.stockup}
             {...form.getInputProps('stock_quantity')}
           />
         </GridCol>
 
-        <GridCol span={{ base: 12, xs: 4 }}>
-          <NumberInput
-            required
-            label={mobile ? 'Stockout Margin' : undefined}
-            aria-label="Stockout Margin"
-            placeholder="Stockout Margin"
-            min={0}
-            leftSection={
-              <IconPackageImport size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-            }
-            {...form.getInputProps('stockout_margin')}
-          />
-        </GridCol>
+        {props?.options?.stockup && (
+          <GridCol span={{ base: 12, xs: 6 }}>
+            <NumberInput
+              required
+              label={mobile ? 'Stock-up Quantity' : undefined}
+              aria-label="Stock-up Quantity"
+              placeholder="Stock-up Quantity"
+              min={0}
+              leftSection={
+                <IconStack3 size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+              }
+              value={stockUp}
+              onChange={setStockUp}
+            />
+          </GridCol>
+        )}
 
-        <GridCol span={{ base: 12, xs: 4 }}>
+        {!props?.options?.stockup && (
+          <GridCol span={{ base: 12, xs: 6 }}>
+            <NumberInput
+              required
+              label={mobile ? 'Low Stock Margin' : undefined}
+              aria-label="Low Stock Margin"
+              placeholder="Low Stock Margin"
+              min={0}
+              leftSection={
+                <IconStack2 size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+              }
+              {...form.getInputProps('low_stock_margin')}
+            />
+          </GridCol>
+        )}
+
+        {!props?.options?.stockup && (
+          <GridCol span={{ base: 12, xs: 6 }}>
+            <NumberInput
+              required
+              label={mobile ? 'Stockout Margin' : undefined}
+              aria-label="Stockout Margin"
+              placeholder="Stockout Margin"
+              min={0}
+              leftSection={
+                <IconStack size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+              }
+              {...form.getInputProps('stockout_margin')}
+            />
+          </GridCol>
+        )}
+
+        {!props?.options?.stockup && (
+          <GridCol span={{ base: 12, xs: 6 }}>
+            <NumberInput
+              required
+              label={mobile ? 'Stock Capacity' : undefined}
+              aria-label="Stock Capacity"
+              placeholder="Stock Capacity"
+              min={0}
+              leftSection={
+                <IconContainer size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+              }
+              {...form.getInputProps('stock_capacity')}
+            />
+          </GridCol>
+        )}
+
+        <GridCol span={{ base: 12, xs: 6 }}>
           <Select
             required
             label={mobile ? 'Unit' : undefined}
@@ -103,18 +178,18 @@ export default function Ingredient({
               <IconMeterCube size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
             }
             data={[
-              {
-                value: MeasurementUnitType.GRAMS,
-                label: capitalizeWords(MeasurementUnitType.GRAMS),
-              },
+              // {
+              //   value: MeasurementUnitType.GRAMS,
+              //   label: capitalizeWords(MeasurementUnitType.GRAMS),
+              // },
               {
                 value: MeasurementUnitType.KILOGRAMS,
                 label: capitalizeWords(MeasurementUnitType.KILOGRAMS),
               },
-              {
-                value: MeasurementUnitType.MILLILITRES,
-                label: capitalizeWords(MeasurementUnitType.MILLILITRES),
-              },
+              // {
+              //   value: MeasurementUnitType.MILLILITRES,
+              //   label: capitalizeWords(MeasurementUnitType.MILLILITRES),
+              // },
               {
                 value: MeasurementUnitType.LITRES,
                 label: capitalizeWords(MeasurementUnitType.LITRES),
@@ -124,6 +199,7 @@ export default function Ingredient({
               //   label: capitalizeWords(MeasurementUnitType.PIECES),
               // },
             ]}
+            disabled={props?.options?.stockup}
             {...form.getInputProps('unit')}
           />
         </GridCol>

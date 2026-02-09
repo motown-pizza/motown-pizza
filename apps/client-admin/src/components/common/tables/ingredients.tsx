@@ -40,6 +40,7 @@ import {
   IconEdit,
   IconMilk,
   IconMilkOff,
+  IconStackPop,
   IconTrash,
 } from '@tabler/icons-react';
 import { usePaginate } from '@repo/hooks/paginate';
@@ -128,9 +129,13 @@ export default function Ingredients({
             </Text>
 
             <Progress
-              value={(p.stock_quantity / p.stockout_margin) * 100}
+              value={
+                p.stock_quantity == 0
+                  ? 1
+                  : (p.stock_quantity / p.stock_capacity) * 100
+              }
               size={3}
-              color={getStockColor(p.stock_quantity, p.stockout_margin)}
+              color={getStockColor(p)}
             />
           </Stack>
         </TableTd>
@@ -184,6 +189,21 @@ export default function Ingredients({
                 </Group>
               </ModalConfirm>
             )}
+
+            <ModalCrudIngredient
+              props={{ defaultValues: p, options: { stockup: true } }}
+            >
+              <Group>
+                <Tooltip label={`Stock up on ${p.name}`}>
+                  <ActionIcon size={ICON_WRAPPER_SIZE - 4} variant="light">
+                    <IconStackPop
+                      size={ICON_SIZE - 4}
+                      stroke={ICON_STROKE_WIDTH}
+                    />
+                  </ActionIcon>
+                </Tooltip>
+              </Group>
+            </ModalCrudIngredient>
 
             <ModalCrudIngredient props={{ defaultValues: p }}>
               <Group>
@@ -493,12 +513,12 @@ export default function Ingredients({
 
 const widths = {
   selection: '5%',
-  title: '25%',
+  title: '20%',
   stock: '15%',
   stockStatus: '15%',
   status: '10%',
   added: '20%',
-  actions: '10%',
+  actions: '15%',
 };
 
 const sleketons = (
@@ -572,16 +592,16 @@ function BadgeStockStatus({ props }: { props: IngredientGet }) {
     color: '',
   };
 
-  const stockColor = getStockColor(props.stock_quantity, props.stockout_margin);
+  const stockColor = getStockColor(props);
 
-  if (props.stock_quantity > props.stockout_margin) {
+  if (props.stock_quantity > props.low_stock_margin) {
     badgeProps.label = 'In Stock';
     badgeProps.color = stockColor;
-  } else if (
-    props.stock_quantity <= props.stockout_margin &&
-    props.stock_quantity > 0
-  ) {
+  } else if (props.stock_quantity > props.stockout_margin) {
     badgeProps.label = 'Low Stock';
+    badgeProps.color = stockColor;
+  } else if (props.stock_quantity > 0) {
+    badgeProps.label = 'Near Stockout';
     badgeProps.color = stockColor;
   } else {
     badgeProps.label = 'Out of Stock';
@@ -595,12 +615,14 @@ function BadgeStockStatus({ props }: { props: IngredientGet }) {
   );
 }
 
-const getStockColor = (stock: number, stockout_margin: number) => {
-  if (stock > stockout_margin) {
+const getStockColor = (props: IngredientGet) => {
+  if (props.stock_quantity > props.low_stock_margin) {
     return 'green';
-  } else if (stock <= stockout_margin && stock > 0) {
+  } else if (props.stock_quantity > props.stockout_margin) {
     return 'yellow';
-  } else {
+  } else if (props.stock_quantity > 0) {
     return 'red';
+  } else {
+    return 'pink';
   }
 };
