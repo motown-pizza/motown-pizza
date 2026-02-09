@@ -11,7 +11,10 @@ export default function Ingredient({
   props,
   children,
 }: {
-  props?: { defaultValues?: Partial<IngredientGet> };
+  props?: {
+    defaultValues?: Partial<IngredientGet>;
+    options?: { stockup?: boolean };
+  };
   children: React.ReactNode;
 }) {
   const [opened, { open, close }] = useDisclosure(false);
@@ -27,12 +30,18 @@ export default function Ingredient({
       >
         <LayoutModal
           props={{
-            title: `${props?.defaultValues?.updated_at ? 'Edit' : 'Add'} Ingredient`,
+            title: props?.options?.stockup
+              ? `Ingredient Stock-up`
+              : `${props?.defaultValues?.updated_at ? 'Edit' : 'Add'} Ingredient`,
             close,
           }}
         >
           <FormIngredient
-            props={{ defaultValues: props?.defaultValues, close }}
+            props={{
+              defaultValues: props?.defaultValues,
+              options: { stockup: props?.options?.stockup },
+              close,
+            }}
           />
         </LayoutModal>
       </Modal>

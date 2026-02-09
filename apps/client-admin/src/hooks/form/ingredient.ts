@@ -13,7 +13,9 @@ export const useFormIngredient = (params?: {
     {
       name: params?.defaultValues?.name || '',
       stock_quantity: params?.defaultValues?.stock_quantity || 0,
-      stockout_margin: params?.defaultValues?.stockout_margin || 20,
+      low_stock_margin: params?.defaultValues?.low_stock_margin || 0,
+      stockout_margin: params?.defaultValues?.stockout_margin || 0,
+      stock_capacity: params?.defaultValues?.stock_capacity || 0,
       unit: (params?.defaultValues?.unit || '') as any,
       status: params?.defaultValues?.status || Status.DRAFT,
     },
