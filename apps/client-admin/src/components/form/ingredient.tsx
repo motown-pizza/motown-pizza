@@ -23,7 +23,11 @@ import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import { IngredientGet } from '@repo/types/models/ingredient';
 import { useDebouncedCallback, useMediaQuery } from '@mantine/hooks';
 import { capitalizeWords } from '@repo/utilities/string';
-import { MeasurementUnitType } from '@repo/types/models/enums';
+import {
+  MeasurementUnitType,
+  StockMovementType,
+} from '@repo/types/models/enums';
+import { useStockMovementActions } from '@repo/hooks/actions/stock-movement';
 
 export default function Ingredient({
   props,
@@ -34,6 +38,8 @@ export default function Ingredient({
     close?: () => void;
   };
 }) {
+  const { stockMovementCreate } = useStockMovementActions();
+
   const { form, submitted, handleSubmit } = useFormIngredient({
     defaultValues: props?.defaultValues,
   });
@@ -64,6 +70,15 @@ export default function Ingredient({
     <form
       onSubmit={form.onSubmit(() => {
         handleSubmit();
+
+        if (props?.defaultValues?.updated_at && props.options?.stockup) {
+          stockMovementCreate({
+            ingredient_id: props.defaultValues.id,
+            quantity: Number(stockUp),
+            type: StockMovementType.PURCHASE,
+          });
+        }
+
         if (props?.close) props.close();
       })}
       noValidate
