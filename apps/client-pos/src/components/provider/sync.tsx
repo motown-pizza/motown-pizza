@@ -21,6 +21,7 @@ import {
   useSyncProducts,
   useSyncProductVariants,
   useSyncRecipieItems,
+  useSyncStockMovements,
   useSyncTableBookings,
   useSyncTables,
 } from '@repo/hooks/sync';
@@ -89,10 +90,10 @@ export default function Sync({ children }: { children: React.ReactNode }) {
     online: networkStatus.online,
   });
 
-  // useSyncStockMovements({
-  //   syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
-  //   online: networkStatus.online,
-  // });
+  useSyncStockMovements({
+    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+    online: networkStatus.online,
+  });
 
   useSyncDeliveries({
     syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),

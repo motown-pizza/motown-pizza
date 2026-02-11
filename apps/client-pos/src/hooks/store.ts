@@ -257,7 +257,7 @@ export const useStoreData = (params?: {
   const { setOrders } = useStoreOrder();
   const { setOrderItems } = useStoreOrderItem();
   const { setDeliveries } = useStoreDelivery();
-  // const { setStockMovements } = useStoreStockMovement();
+  const { setStockMovements } = useStoreStockMovement();
   const { setTables } = useStoreTable();
   const { setTableBookings } = useStoreTableBooking();
 
@@ -521,31 +521,31 @@ export const useStoreData = (params?: {
     loadOrderItems();
   }, [session]);
 
-  // useEffect(() => {
-  //   if (!session) return;
-  //   if (prevItemsRef.current.length) return;
+  useEffect(() => {
+    if (!session) return;
+    if (prevItemsRef.current.length) return;
 
-  //   const loadStockMovements = async () => {
-  //     await loadInitialData({
-  //       prevItemsRef,
-  //       dataStore: STORE_NAME.STOCK_MOVEMENTS,
-  //       session,
-  //       dataFetchFunction: async () => {
-  //         if (clientOnly) {
-  //           return {
-  //             items: [],
-  //           };
-  //         } else {
-  //           return await stockMovementsGet();
-  //         }
-  //       },
-  //       stateUpdateFunction: (stateUpdateItems) =>
-  //         setStockMovements(stateUpdateItems),
-  //     });
-  //   };
+    const loadStockMovements = async () => {
+      await loadInitialData({
+        prevItemsRef,
+        dataStore: STORE_NAME.STOCK_MOVEMENTS,
+        session,
+        dataFetchFunction: async () => {
+          if (clientOnly) {
+            return {
+              items: [],
+            };
+          } else {
+            return await stockMovementsGet();
+          }
+        },
+        stateUpdateFunction: (stateUpdateItems) =>
+          setStockMovements(stateUpdateItems),
+      });
+    };
 
-  //   loadStockMovements();
-  // }, [session]);
+    loadStockMovements();
+  }, [session]);
 
   useEffect(() => {
     if (!session) return;
