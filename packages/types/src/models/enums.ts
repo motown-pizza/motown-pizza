@@ -99,10 +99,7 @@ export enum StockMovementType {
 
 export enum MeasurementUnitType {
   GRAMS = 'GRAMS',
-  KILOGRAMS = 'KILOGRAMS',
-  LITRES = 'LITRES',
   MILLILITRES = 'MILLILITRES',
-  PIECES = 'PIECES',
 }
 
 export enum DeliveryStatus {

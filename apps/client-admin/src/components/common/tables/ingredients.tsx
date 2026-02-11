@@ -33,7 +33,11 @@ import {
   SECTION_SPACING,
 } from '@repo/constants/sizes';
 import { IngredientGet } from '@repo/types/models/ingredient';
-import { Status, SyncStatus } from '@repo/types/models/enums';
+import {
+  MeasurementUnitType,
+  Status,
+  SyncStatus,
+} from '@repo/types/models/enums';
 import {
   IconArrowDown,
   IconArrowUp,
@@ -123,9 +127,15 @@ export default function Ingredients({
           <Stack gap={0}>
             <Text fz={'sm'}>
               <Text component="span" inherit>
-                <NumberFormatter value={p.stock_quantity} />
+                <NumberFormatter
+                  value={
+                    p.stock_quantity == 0
+                      ? 0
+                      : (p.stock_quantity / 1000).toFixed(2)
+                  }
+                />
               </Text>{' '}
-              {capitalizeWords(p.unit)}
+              {p.unit == MeasurementUnitType.GRAMS ? 'Kilograms' : 'Litres'}
             </Text>
 
             <Progress

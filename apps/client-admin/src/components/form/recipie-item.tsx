@@ -63,9 +63,7 @@ export default function RecipieItem({
     (ii) => ii.id == form.values.ingredient_id
   );
 
-  const solidWeight =
-    ingredient?.unit == MeasurementUnitType.GRAMS ||
-    ingredient?.unit == MeasurementUnitType.KILOGRAMS;
+  const solidWeight = ingredient?.unit == MeasurementUnitType.GRAMS;
 
   return (
     <form
@@ -165,24 +163,12 @@ export default function RecipieItem({
                       value: MeasurementUnitType.GRAMS,
                       label: capitalizeWords(MeasurementUnitType.GRAMS),
                     },
-                    {
-                      value: MeasurementUnitType.KILOGRAMS,
-                      label: capitalizeWords(MeasurementUnitType.KILOGRAMS),
-                    },
                   ]
                 : [
                     {
                       value: MeasurementUnitType.MILLILITRES,
                       label: capitalizeWords(MeasurementUnitType.MILLILITRES),
                     },
-                    {
-                      value: MeasurementUnitType.LITRES,
-                      label: capitalizeWords(MeasurementUnitType.LITRES),
-                    },
-                    // {
-                    //   value: MeasurementUnitType.PIECES,
-                    //   label: capitalizeWords(MeasurementUnitType.PIECES),
-                    // },
                   ]
             }
             {...form.getInputProps('unit')}

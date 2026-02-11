@@ -193,26 +193,14 @@ export default function Ingredient({
               <IconMeterCube size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
             }
             data={[
-              // {
-              //   value: MeasurementUnitType.GRAMS,
-              //   label: capitalizeWords(MeasurementUnitType.GRAMS),
-              // },
               {
-                value: MeasurementUnitType.KILOGRAMS,
-                label: capitalizeWords(MeasurementUnitType.KILOGRAMS),
+                value: MeasurementUnitType.GRAMS,
+                label: capitalizeWords(MeasurementUnitType.GRAMS),
               },
-              // {
-              //   value: MeasurementUnitType.MILLILITRES,
-              //   label: capitalizeWords(MeasurementUnitType.MILLILITRES),
-              // },
               {
-                value: MeasurementUnitType.LITRES,
-                label: capitalizeWords(MeasurementUnitType.LITRES),
+                value: MeasurementUnitType.MILLILITRES,
+                label: capitalizeWords(MeasurementUnitType.MILLILITRES),
               },
-              // {
-              //   value: MeasurementUnitType.PIECES,
-              //   label: capitalizeWords(MeasurementUnitType.PIECES),
-              // },
             ]}
             disabled={props?.options?.stockup}
             {...form.getInputProps('unit')}

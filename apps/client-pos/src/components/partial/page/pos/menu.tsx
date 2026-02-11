@@ -254,7 +254,7 @@ function CardOrderDetails() {
         if (deduction > 0) {
           const updatedIngredient: IngredientGet = {
             ...ii,
-            stock_quantity: (ii.stock_quantity * 1000 - deduction) / 1000,
+            stock_quantity: ii.stock_quantity - deduction,
             sync_status: SyncStatus.PENDING,
             updated_at: now.toISOString() as any,
           };

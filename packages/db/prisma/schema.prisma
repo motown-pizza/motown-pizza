@@ -124,10 +124,7 @@ enum StockMovementType {
 
 enum MeasurementUnitType {
   GRAMS
-  KILOGRAMS
-  LITRES
   MILLILITRES
-  PIECES
 }
 
 enum DeliveryStatus {
@@ -286,10 +283,10 @@ model Ingredient {
   id               String              @id @default(uuid())
   name             String
   unit             MeasurementUnitType
-  stock_quantity   Float               @default(0)
-  low_stock_margin Float               @default(0)
-  stockout_margin  Float               @default(0)
-  stock_capacity   Float               @default(0)
+  stock_quantity   Float
+  low_stock_margin Float
+  stockout_margin  Float
+  stock_capacity   Float
 
   recipie_items   RecipieItem[]
   stock_movements StockMovement[]

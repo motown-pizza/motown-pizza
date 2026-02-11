@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import {
   ActionIcon,
   Badge,
+  Box,
   Button,
   Center,
   Checkbox,
@@ -34,7 +35,10 @@ import {
   SECTION_SPACING,
 } from '@repo/constants/sizes';
 import { StockMovementGet } from '@repo/types/models/stock-movement';
-import { StockMovementType } from '@repo/types/models/enums';
+import {
+  MeasurementUnitType,
+  StockMovementType,
+} from '@repo/types/models/enums';
 import {
   IconArrowDown,
   IconArrowUp,
@@ -49,6 +53,7 @@ import ModalConfirm from '@repo/components/common/modals/confirm';
 import { useStockMovementActions } from '@repo/hooks/actions/stock-movement';
 import { capitalizeWords } from '@repo/utilities/string';
 import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
+import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
 
 export default function StockMovements({
   props,
@@ -57,6 +62,7 @@ export default function StockMovements({
 }) {
   const { stockMovements } = useStoreStockMovement();
   const { ingredients } = useStoreIngredient();
+  const { orders } = useStoreOrder();
   const { stockMovementDelete } = useStockMovementActions();
 
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
@@ -75,6 +81,7 @@ export default function StockMovements({
     };
 
     const ingredient = ingredients?.find((ii) => ii.id == p.ingredient_id);
+    const order = orders?.find((oi) => oi.id == p.order_id);
 
     return (
       <TableTr
@@ -117,14 +124,17 @@ export default function StockMovements({
           <Group gap={'xs'}>
             <ThemeIcon
               size={ICON_WRAPPER_SIZE - 8}
-              variant="light"
-              color="var(--mantine-color-text)"
+              variant="transparent"
+              color={p.type == StockMovementType.PURCHASE ? 'green.6' : 'red.6'}
             >
               {p.type == StockMovementType.PURCHASE ? (
-                <IconArrowUp size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
+                <IconArrowUp
+                  size={ICON_WRAPPER_SIZE - 8}
+                  stroke={ICON_STROKE_WIDTH}
+                />
               ) : (
                 <IconArrowDown
-                  size={ICON_SIZE - 4}
+                  size={ICON_WRAPPER_SIZE - 8}
                   stroke={ICON_STROKE_WIDTH}
                 />
               )}
@@ -132,15 +142,47 @@ export default function StockMovements({
 
             <Text fz={'sm'}>
               <Text component="span" inherit>
-                <NumberFormatter value={p.quantity} />
+                <NumberFormatter
+                  value={
+                    p.quantity == 0
+                      ? 0
+                      : p.quantity > 1000
+                        ? (p.quantity / 1000).toFixed(2)
+                        : p.quantity
+                  }
+                />
               </Text>{' '}
-              {capitalizeWords(ingredient?.unit || '')}
+              {ingredient?.unit == MeasurementUnitType.GRAMS
+                ? p.quantity > 1000
+                  ? 'Kilograms'
+                  : 'Grams'
+                : p.quantity > 1000
+                  ? 'Litres'
+                  : 'Mililitres'}
             </Text>
           </Group>
         </TableTd>
 
         <TableTd w={widths.type}>
           <BadgeType props={p} />
+        </TableTd>
+
+        <TableTd w={widths.type}>
+          <Stack gap={0} fz={'sm'} mih={40.3} justify="center">
+            {!order ? (
+              <p>-</p>
+            ) : (
+              <>
+                <Text inherit fz={'xs'}>
+                  {order.tracking_code}
+                </Text>
+
+                <Text inherit c={'dimmed'}>
+                  {order.customer_name}
+                </Text>
+              </>
+            )}
+          </Stack>
         </TableTd>
 
         <TableTd
@@ -337,6 +379,7 @@ export default function StockMovements({
             <TableTh w={widths.title}>Title</TableTh>
             <TableTh w={widths.quantity}>Quantity</TableTh>
             <TableTh w={widths.type}>Type</TableTh>
+            <TableTh w={widths.order}>Order</TableTh>
             <TableTh w={widths.added}>Added</TableTh>
             <TableTh w={widths.actions} />
           </TableTr>
@@ -404,11 +447,12 @@ export default function StockMovements({
 
 const widths = {
   selection: '5%',
-  title: '25%',
-  quantity: '20%',
+  title: '20%',
+  quantity: '15%',
   type: '15%',
+  order: '20%',
   added: '20%',
-  actions: '15%',
+  actions: '5%',
 };
 
 const sleketons = (
@@ -428,6 +472,10 @@ const sleketons = (
     </TableTd>
 
     <TableTd w={widths.type}>
+      <Skeleton h={20} w={'75%'} />
+    </TableTd>
+
+    <TableTd w={widths.order}>
       <Skeleton h={20} w={'75%'} />
     </TableTd>
 
