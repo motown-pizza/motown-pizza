@@ -100,7 +100,7 @@ export const useOrderActions = () => {
           order_id: newOrder.id,
           price_at_sale: (productVariant?.price || 0) * ci.quantity,
           product_variant_id: productVariant?.id || '',
-          profile_id: session.id || '',
+          profile_id: session.id || null,
           quantity: ci.quantity,
           status: ci.status || Status.ACTIVE,
           sync_status: SyncStatus.PENDING,

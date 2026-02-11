@@ -484,8 +484,8 @@ model StockMovement {
   type     StockMovementType
   quantity Int
 
-  order         Order      @relation(fields: [order_id], references: [id], onDelete: Cascade)
-  order_id      String
+  order         Order?     @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  order_id      String?
   ingredient    Ingredient @relation(fields: [ingredient_id], references: [id], onDelete: Cascade)
   ingredient_id String
 
