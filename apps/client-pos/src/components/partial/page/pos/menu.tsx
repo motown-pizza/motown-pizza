@@ -31,6 +31,9 @@ import {
   OrderFulfilmentType,
   OrderStatus,
   ProductType,
+  Status,
+  StockMovementType,
+  SyncStatus,
 } from '@repo/types/models/enums';
 import {
   ICON_SIZE,
@@ -66,9 +69,16 @@ import { useStoreTable } from '@repo/libraries/zustand/stores/table';
 import { useStoreTableBooking } from '@repo/libraries/zustand/stores/table-booking';
 import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
 import { useOrderActions } from '@repo/hooks/actions/order';
+import { useStockMovementActions } from '@repo/hooks/actions/stock-movement';
 import { useRouter } from 'next/navigation';
 import { PARAM_NAME } from '@repo/constants/names';
 import { defaultOrderDetails } from '@/data/orders';
+import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
+import { useStoreStockMovement } from '@repo/libraries/zustand/stores/stock-movement';
+import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
+import { IngredientGet } from '@repo/types/models/ingredient';
+import { StockMovementGet } from '@repo/types/models/stock-movement';
+import { generateUUID } from '@repo/utilities/generators';
 
 export default function Menu() {
   const { orderDetails } = useOrderPlacementData();
@@ -165,7 +175,10 @@ function CardOrderDetails() {
   const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
   const { orderUpdate, orderDelete } = useOrderActions();
   const { cartItems, setCartItems } = useStoreCartItem();
+  const { ingredients, setIngredients } = useStoreIngredient();
+  const { stockMovements, setStockMovements } = useStoreStockMovement();
   const { productVariants } = useStoreProductVariant();
+  const { recipieItems } = useStoreRecipieItem();
 
   const getSum = () => {
     let total = 0;
@@ -205,11 +218,68 @@ function CardOrderDetails() {
     if (orderDetails === null) return;
 
     setLoadingPlace(true);
-    orderUpdate(
+    const result = orderUpdate(
       { ...orderDetails, order_status: OrderStatus.PREPARING },
       { placement: true }
     );
     setOrderDetails(defaultOrderDetails);
+
+    if (result.cartToOrderItems) {
+      const productVariantIds = result.cartToOrderItems.map(
+        (ci) => ci.product_variant_id
+      );
+
+      const recipieItemsOrdered = recipieItems?.filter((ri) =>
+        productVariantIds.includes(ri.product_variant_id)
+      );
+
+      const deductionMap = new Map<string, number>();
+
+      recipieItemsOrdered?.forEach((rio) => {
+        const existing = deductionMap.get(rio.ingredient_id) || 0;
+        deductionMap.set(
+          rio.ingredient_id,
+          existing + (rio.quantity_needed || 0)
+        );
+      });
+
+      const now = new Date();
+
+      const updatedIngredients: IngredientGet[] = [];
+      const updatedStockMovements: StockMovementGet[] = [];
+
+      ingredients?.forEach((ii) => {
+        const deduction = deductionMap.get(ii.id) || 0;
+
+        if (deduction > 0) {
+          const updatedIngredient: IngredientGet = {
+            ...ii,
+            stock_quantity: (ii.stock_quantity * 1000 - deduction) / 1000,
+            sync_status: SyncStatus.PENDING,
+            updated_at: now.toISOString() as any,
+          };
+
+          updatedIngredients.push(updatedIngredient);
+
+          updatedStockMovements.push({
+            id: generateUUID(),
+            ingredient_id: ii.id,
+            order_id: orderDetails?.id || '',
+            type: StockMovementType.CONSUMPTION,
+            quantity: deduction,
+            status: Status.ACTIVE,
+            sync_status: SyncStatus.PENDING,
+            created_at: now,
+            updated_at: now,
+          });
+        } else {
+          updatedIngredients.push(ii);
+        }
+      });
+
+      setIngredients(updatedIngredients);
+      setStockMovements([...(stockMovements || []), ...updatedStockMovements]);
+    }
 
     router.push(
       `/pos/order-confirmed?${PARAM_NAME.ORDER_CONFIRMED}=${orderDetails.id}`
@@ -437,7 +507,9 @@ function CardMenuItemGroup({
     type: ProductType;
   };
 }) {
-  const cardProps = { bg: '', c: '', icon: IconPizza, type: '' };
+  const { products } = useStoreProduct();
+
+  const cardProps = { bg: '', c: '', icon: IconPizza, type: '', length: 0 };
 
   switch (props.type) {
     case ProductType.PIZZA:
@@ -445,36 +517,48 @@ function CardMenuItemGroup({
       cardProps.c = 'var(--mantine-color-white)';
       cardProps.icon = IconPizza;
       cardProps.type = ProductType.PIZZA;
+      cardProps.length =
+        products?.filter((pi) => pi.type == ProductType.PIZZA).length || 0;
       break;
     case ProductType.DRINK:
       cardProps.bg = 'indigo';
       cardProps.c = 'var(--mantine-color-white)';
       cardProps.icon = IconBeer;
       cardProps.type = ProductType.DRINK;
+      cardProps.length =
+        products?.filter((pi) => pi.type == ProductType.DRINK).length || 0;
       break;
     case ProductType.SIDE:
       cardProps.bg = 'pink';
       cardProps.c = 'var(--mantine-color-white)';
       cardProps.icon = IconMeat;
       cardProps.type = ProductType.SIDE;
+      cardProps.length =
+        products?.filter((pi) => pi.type == ProductType.SIDE).length || 0;
       break;
     case ProductType.SOUP:
       cardProps.bg = 'orange';
       cardProps.c = 'var(--mantine-color-white)';
       cardProps.icon = IconSoup;
       cardProps.type = ProductType.SOUP;
+      cardProps.length =
+        products?.filter((pi) => pi.type == ProductType.SOUP).length || 0;
       break;
     case ProductType.DESSERT:
       cardProps.bg = 'red';
       cardProps.c = 'var(--mantine-color-white)';
       cardProps.icon = IconCookie;
       cardProps.type = ProductType.DESSERT;
+      cardProps.length =
+        products?.filter((pi) => pi.type == ProductType.DESSERT).length || 0;
       break;
     case ProductType.SALAD:
       cardProps.bg = 'green';
       cardProps.c = 'var(--mantine-color-white)';
       cardProps.icon = IconSalad;
       cardProps.type = ProductType.SALAD;
+      cardProps.length =
+        products?.filter((pi) => pi.type == ProductType.SALAD).length || 0;
       break;
 
     default:
@@ -497,7 +581,7 @@ function CardMenuItemGroup({
         </Group>
 
         <Text inherit fz={'sm'}>
-          <NumberFormatter value={'4'} /> items
+          <NumberFormatter value={cardProps.length} /> items
         </Text>
       </Stack>
     </Card>
@@ -579,22 +663,46 @@ function TabsMenu() {
       <TabsList>
         <SimpleGrid cols={{ base: 1, md: 3 }}>
           <TabsTab value={ProductType.PIZZA}>
-            <CardMenuItemGroup props={{ type: ProductType.PIZZA }} />
+            <CardMenuItemGroup
+              props={{
+                type: ProductType.PIZZA,
+              }}
+            />
           </TabsTab>
           <TabsTab value={ProductType.SIDE}>
-            <CardMenuItemGroup props={{ type: ProductType.SIDE }} />
+            <CardMenuItemGroup
+              props={{
+                type: ProductType.SIDE,
+              }}
+            />
           </TabsTab>
           <TabsTab value={ProductType.DRINK}>
-            <CardMenuItemGroup props={{ type: ProductType.DRINK }} />
+            <CardMenuItemGroup
+              props={{
+                type: ProductType.DRINK,
+              }}
+            />
           </TabsTab>
           <TabsTab value={ProductType.SOUP}>
-            <CardMenuItemGroup props={{ type: ProductType.SOUP }} />
+            <CardMenuItemGroup
+              props={{
+                type: ProductType.SOUP,
+              }}
+            />
           </TabsTab>
           <TabsTab value={ProductType.DESSERT}>
-            <CardMenuItemGroup props={{ type: ProductType.DESSERT }} />
+            <CardMenuItemGroup
+              props={{
+                type: ProductType.DESSERT,
+              }}
+            />
           </TabsTab>
           <TabsTab value={ProductType.SALAD}>
-            <CardMenuItemGroup props={{ type: ProductType.SALAD }} />
+            <CardMenuItemGroup
+              props={{
+                type: ProductType.SALAD,
+              }}
+            />
           </TabsTab>
         </SimpleGrid>
       </TabsList>

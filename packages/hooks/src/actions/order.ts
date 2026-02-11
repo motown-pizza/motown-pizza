@@ -76,8 +76,11 @@ export const useOrderActions = () => {
     return orderToAdd;
   };
 
-  const orderUpdate = (params: OrderGet, options?: { placement?: boolean }) => {
-    if (!session) return;
+  const orderUpdate = (
+    params: OrderGet,
+    options?: { placement?: boolean }
+  ): { cartToOrderItems?: OrderItemGet[] } => {
+    if (!session) return {};
 
     const now = new Date();
 
@@ -124,7 +127,11 @@ export const useOrderActions = () => {
           };
         })
       );
+
+      return { cartToOrderItems };
     }
+
+    return {};
   };
 
   const orderDelete = (params: OrderGet) => {
