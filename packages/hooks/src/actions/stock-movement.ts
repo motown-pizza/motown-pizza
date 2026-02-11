@@ -7,11 +7,17 @@ import {
   SyncStatus,
 } from '@repo/types/models/enums';
 import { generateUUID } from '@repo/utilities/generators';
+import { useIngredientActions } from './ingredient';
+import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
+import { IngredientGet } from '@repo/types/models/ingredient';
 
 export const useStockMovementActions = () => {
   const { session } = useStoreSession();
   const { addStockMovement, updateStockMovement, deleteStockMovement } =
     useStoreStockMovement();
+
+  const { ingredients } = useStoreIngredient();
+  const { ingredientUpdate } = useIngredientActions();
 
   const stockMovementCreate = (params: Partial<StockMovementGet>) => {
     if (!session) return;
@@ -22,7 +28,7 @@ export const useStockMovementActions = () => {
     const newStockMovement: StockMovementGet = {
       id: params.id || id,
       ingredient_id: params.ingredient_id || '',
-      order_id: params.order_id || '',
+      order_id: params.order_id || null,
       quantity: params.quantity || 0,
       type: params.type || StockMovementType.CONSUMPTION,
       status: params.status || Status.ACTIVE,
@@ -52,6 +58,22 @@ export const useStockMovementActions = () => {
     if (!session) return;
 
     const now = new Date();
+
+    const ingredient = ingredients?.find((i) => i.id === params.ingredient_id);
+
+    if (!ingredient) return;
+
+    const updatedIngredient: IngredientGet = {
+      ...ingredient,
+      stock_quantity:
+        params.type == StockMovementType.CONSUMPTION
+          ? ingredient.stock_quantity + params.quantity
+          : params.type === StockMovementType.PURCHASE
+            ? ingredient.stock_quantity - params.quantity
+            : ingredient.stock_quantity,
+    };
+
+    ingredientUpdate(updatedIngredient);
 
     deleteStockMovement({
       ...params,
