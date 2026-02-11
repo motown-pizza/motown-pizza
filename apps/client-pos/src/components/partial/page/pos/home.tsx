@@ -30,7 +30,7 @@ import InputSearch from '@/components/common/inputs/search';
 import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
 import { OrderGet } from '@repo/types/models/order';
 import { capitalizeWords } from '@repo/utilities/string';
-import { ProductType } from '@repo/types/models/enums';
+import { OrderStatus, ProductType } from '@repo/types/models/enums';
 import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
 import { ProductVariantGet } from '@repo/types/models/product-variant';
 import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
@@ -133,6 +133,9 @@ function CardGreeting() {
 
 function CardRecentOrders() {
   const { orders } = useStoreOrder();
+  const filteredOrders = orders?.filter(
+    (oi) => oi.order_status != OrderStatus.DRAFT
+  );
 
   return (
     <Card bg={'var(--mantine-color-dark-9)'} padding={0}>
@@ -182,7 +185,7 @@ function CardRecentOrders() {
                   Fetching recent orders
                 </Text>
               </Stack>
-            ) : !orders?.length ? (
+            ) : !filteredOrders?.length ? (
               <Stack
                 align="center"
                 py={SECTION_SPACING * 2}
@@ -212,14 +215,12 @@ function CardRecentOrders() {
                 </Stack>
               </Stack>
             ) : (
-              orders
-                .concat(orders.concat(orders.concat(orders)))
-                .map((oi, i) => (
-                  <div key={i}>
-                    {i > 0 && <Divider />}
-                    <CardOrderRecent props={oi} />
-                  </div>
-                ))
+              filteredOrders.map((oi, i) => (
+                <div key={i}>
+                  {i > 0 && <Divider />}
+                  <CardOrderRecent props={oi} />
+                </div>
+              ))
             )}
           </Stack>
         </Stack>
