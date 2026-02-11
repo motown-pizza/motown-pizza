@@ -24,7 +24,7 @@ export const useCartItemActions = () => {
     const newCartItem: CartItemGet = {
       id: params.id || id,
       product_variant_id: params.product_variant_id || '',
-      profile_id: session.id || '',
+      profile_id: session.id || null,
       quantity: params.quantity || 1,
       status: params.status || Status.ACTIVE,
       sync_status: SyncStatus.PENDING,
