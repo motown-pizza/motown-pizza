@@ -4,7 +4,7 @@ import React from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { Modal } from '@mantine/core';
 import LayoutModal from '@repo/components/layout/modal';
-import FormRecipieItem from '@/components/form/recipie-item';
+import FormRecipieItem from '../../../form/stores/recipie-item';
 import { RecipieItemGet } from '@repo/types/models/recipie-item';
 
 export default function RecipieItem({

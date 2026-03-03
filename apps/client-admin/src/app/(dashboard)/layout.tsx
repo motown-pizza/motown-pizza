@@ -9,12 +9,12 @@ import React from 'react';
 import { Metadata } from 'next';
 import LayoutBody from '@repo/components/layout/body';
 import LayoutShellDashboard from '@/components/layout/shell/dashboard';
-import { APP_NAME } from '@/data/constants';
+import { APP_NAME } from '@repo/constants/app';
 
 export const metadata: Metadata = {
   title: {
     default: 'Dashboard',
-    template: `%s - Dashboard - ${APP_NAME}`,
+    template: `%s - Dashboard - ${APP_NAME.ADMIN}`,
   },
 };
 

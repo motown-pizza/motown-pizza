@@ -7,43 +7,80 @@
 
 import { useCallback, useEffect } from 'react';
 import { STORE_NAME } from '@repo/constants/names';
-import { budgetsUpdate } from '@repo/handlers/requests/database/budgets';
-import { accountsUpdate } from '@repo/handlers/requests/database/accounts';
-import { accountGroupsUpdate } from '@repo/handlers/requests/database/account-groups';
-import { transactionsUpdate } from '@repo/handlers/requests/database/transactions';
-import { categoriesUpdate } from '@repo/handlers/requests/database/category';
-import { useStoreCategory } from '@repo/libraries/zustand/stores/category';
-import { useStoreBudget } from '@repo/libraries/zustand/stores/budget';
-import { useStoreAccount } from '@repo/libraries/zustand/stores/account';
-import { useStoreAccountGroup } from '@repo/libraries/zustand/stores/account-group';
-import { useStoreTransaction } from '@repo/libraries/zustand/stores/transaction';
 import { SyncParams } from '@repo/types/sync';
+import { categoriesGet } from '@repo/handlers/requests/database/category';
+import {
+  ingredientsGet,
+  ingredientsUpdate,
+} from '@repo/handlers/requests/database/ingredients';
+import {
+  ordersGet,
+  ordersUpdate,
+} from '@repo/handlers/requests/database/orders';
+import {
+  productsGet,
+  productsUpdate,
+} from '@repo/handlers/requests/database/products';
+import {
+  orderItemsGet,
+  orderItemsUpdate,
+} from '@repo/handlers/requests/database/order-items';
+import {
+  productVariantsGet,
+  productVariantsUpdate,
+} from '@repo/handlers/requests/database/product-variants';
+import {
+  profilesGet,
+  profilesUpdate,
+} from '@repo/handlers/requests/database/profiles';
+import {
+  recipieItemsGet,
+  recipieItemsUpdate,
+} from '@repo/handlers/requests/database/recipie-items';
+import {
+  stockMovementsGet,
+  stockMovementsUpdate,
+} from '@repo/handlers/requests/database/stock-movements';
+import {
+  wishlistItemsGet,
+  wishlistItemsUpdate,
+} from '@repo/handlers/requests/database/wishlist-items';
+import { profileGet } from '@repo/handlers/requests/database/profiles';
+import {
+  tablesGet,
+  tablesUpdate,
+} from '@repo/handlers/requests/database/tables';
+import {
+  cartItemsGet,
+  cartItemsUpdate,
+} from '@repo/handlers/requests/database/cart-items';
+import {
+  deliveriesGet,
+  deliveriesUpdate,
+} from '@repo/handlers/requests/database/deliveries';
+import {
+  tableBookingsGet,
+  tableBookingsUpdate,
+} from '@repo/handlers/requests/database/table-bookings';
 import {
   SessionValue,
   useStoreSession,
 } from '@repo/libraries/zustand/stores/session';
-import { useStoreNote } from '@repo/libraries/zustand/stores/note';
-import { notesUpdate } from '@repo/handlers/requests/database/notes';
-import { useStoreLink } from '@repo/libraries/zustand/stores/link';
-import { linksUpdate } from '@repo/handlers/requests/database/links';
-import { useStorePost } from '@repo/libraries/zustand/stores/post';
-import { postsUpdate } from '@repo/handlers/requests/database/posts';
-import { useStoreFood } from '@repo/libraries/zustand/stores/food';
-import { foodsUpdate } from '@repo/handlers/requests/database/foods';
-import { useStoreMeal } from '@repo/libraries/zustand/stores/meal';
-import { mealsUpdate } from '@repo/handlers/requests/database/meals';
-import { useStoreServing } from '@repo/libraries/zustand/stores/serving';
-import { servingsUpdate } from '@repo/handlers/requests/database/servings';
-import { useStoreEat } from '@repo/libraries/zustand/stores/eat';
-import { eatsUpdate } from '@repo/handlers/requests/database/eats';
-import { useStoreMass } from '@repo/libraries/zustand/stores/mass';
-import { massesUpdate } from '@repo/handlers/requests/database/masses';
-import { chatsUpdate } from '@repo/handlers/requests/database/chats';
-import { useStoreChat } from '@repo/libraries/zustand/stores/chat';
-import { useStoreCustomization } from '@repo/libraries/zustand/stores/customization';
-import { customizationsUpdate } from '@repo/handlers/requests/database/customizations';
-import { useStoreChatMessage } from '@repo/libraries/zustand/stores/chat-message';
-import { chatMessagesUpdate } from '@repo/handlers/requests/database/chat-messages';
+import { RoleValue, useStoreRole } from '@repo/libraries/zustand/stores/role';
+import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
+import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
+import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
+import { useStoreProfile } from '@repo/libraries/zustand/stores/profile';
+import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
+import { useStoreStockMovement } from '@repo/libraries/zustand/stores/stock-movement';
+import { useStoreTable } from '@repo/libraries/zustand/stores/table';
+import { useStoreCategory } from '@repo/libraries/zustand/stores/category';
+import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
+import { useStoreDelivery } from '@repo/libraries/zustand/stores/delivery';
+import { useStoreTableBooking } from '@repo/libraries/zustand/stores/table-booking';
+import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
+import { useStoreWishlistItem } from '@repo/libraries/zustand/stores/wishlist-item';
+import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
 
 const useSessionCheck = () => {
   const session = useStoreSession((s) => s.session);
@@ -65,149 +102,122 @@ type SyncStoreConfig<TItems = any, THookReturn = any> = {
 };
 
 export const SYNC_STORES: Record<string, SyncStoreConfig> = {
-  posts: {
-    dataStore: STORE_NAME.POSTS,
-    useStoreHook: useStorePost,
-    serverUpdate: postsUpdate,
-    getItems: (store) => store.posts,
+  cartItems: {
+    dataStore: STORE_NAME.CART_ITEMS,
+    useStoreHook: useStoreCartItem,
+    serverUpdate: cartItemsUpdate,
+    getItems: (store) => store.cartItems,
     getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setPosts(items),
-    clearDeleted: (store) => store.clearDeletedPosts(),
+    setItems: (store, items) => store.setCartItems(items),
+    clearDeleted: (store) => store.clearDeletedCartItems(),
   },
-  categories: {
-    dataStore: STORE_NAME.CATEGORIES,
-    useStoreHook: useStoreCategory,
-    serverUpdate: categoriesUpdate,
-    getItems: (store) => store.categories,
+  deliveries: {
+    dataStore: STORE_NAME.DELIVERIES,
+    useStoreHook: useStoreDelivery,
+    serverUpdate: deliveriesUpdate,
+    getItems: (store) => store.deliveries,
     getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setCategories(items),
-    clearDeleted: (store) => store.clearDeletedCategories(),
+    setItems: (store, items) => store.setDeliverys(items),
+    clearDeleted: (store) => store.clearDeletedDeliverys(),
   },
-  budgets: {
-    dataStore: STORE_NAME.BUDGETS,
-    useStoreHook: useStoreBudget,
-    serverUpdate: budgetsUpdate,
-    getItems: (store) => store.budgets,
+  ingredients: {
+    dataStore: STORE_NAME.INGREDIENTS,
+    useStoreHook: useStoreIngredient,
+    serverUpdate: ingredientsUpdate,
+    getItems: (store) => store.ingredients,
     getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setBudgets(items),
-    clearDeleted: (store) => store.clearDeletedBudgets(),
+    setItems: (store, items) => store.setIngredients(items),
+    clearDeleted: (store) => store.clearDeletedIngredients(),
   },
-  accounts: {
-    dataStore: STORE_NAME.ACCOUNTS,
-    useStoreHook: useStoreAccount,
-    serverUpdate: accountsUpdate,
-    getItems: (store) => store.accounts,
+  orders: {
+    dataStore: STORE_NAME.ORDERS,
+    useStoreHook: useStoreOrder,
+    serverUpdate: ordersUpdate,
+    getItems: (store) => store.orders,
     getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setAccounts(items),
-    clearDeleted: (store) => store.clearDeletedAccounts(),
+    setItems: (store, items) => store.setOrders(items),
+    clearDeleted: (store) => store.clearDeletedOrders(),
   },
-  accountGroups: {
-    dataStore: STORE_NAME.ACCOUNT_GROUPS,
-    useStoreHook: useStoreAccountGroup,
-    serverUpdate: accountGroupsUpdate,
-    getItems: (store) => store.accountGroups,
+  orderItems: {
+    dataStore: STORE_NAME.ORDER_ITEMS,
+    useStoreHook: useStoreOrderItem,
+    serverUpdate: orderItemsUpdate,
+    getItems: (store) => store.orderItems,
     getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setAccountGroups(items),
-    clearDeleted: (store) => store.clearDeletedAccountGroups(),
+    setItems: (store, items) => store.setOrderItems(items),
+    clearDeleted: (store) => store.clearDeletedOrderItems(),
   },
-  transactions: {
-    dataStore: STORE_NAME.TRANSACTIONS,
-    useStoreHook: useStoreTransaction,
-    serverUpdate: transactionsUpdate,
-    getItems: (store) => store.transactions,
+  products: {
+    dataStore: STORE_NAME.PRODUCTS,
+    useStoreHook: useStoreProduct,
+    serverUpdate: productsUpdate,
+    getItems: (store) => store.products,
     getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setTransactions(items),
-    clearDeleted: (store) => store.clearDeletedTransactions(),
+    setItems: (store, items) => store.setProducts(items),
+    clearDeleted: (store) => store.clearDeletedProducts(),
   },
-  notes: {
-    dataStore: STORE_NAME.NOTES,
-    useStoreHook: useStoreNote,
-    serverUpdate: notesUpdate,
-    getItems: (store) => store.notes,
+  productVariants: {
+    dataStore: STORE_NAME.PRODUCT_VARIANTS,
+    useStoreHook: useStoreProductVariant,
+    serverUpdate: productVariantsUpdate,
+    getItems: (store) => store.productVariants,
     getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setNotes(items),
-    clearDeleted: (store) => store.clearDeletedNotes(),
+    setItems: (store, items) => store.setProductVariants(items),
+    clearDeleted: (store) => store.clearDeletedProductVariants(),
   },
-  links: {
-    dataStore: STORE_NAME.LINKS,
-    useStoreHook: useStoreLink,
-    serverUpdate: linksUpdate,
-    getItems: (store) => store.links,
+  profiles: {
+    dataStore: STORE_NAME.PROFILES,
+    useStoreHook: useStoreProfile,
+    serverUpdate: profilesUpdate,
+    getItems: (store) => store.profiles,
     getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setLinks(items),
-    clearDeleted: (store) => store.clearDeletedLinks(),
+    setItems: (store, items) => store.setProfiles(items),
+    clearDeleted: (store) => store.clearDeletedProfiles(),
   },
-  foods: {
-    dataStore: STORE_NAME.FOODS,
-    useStoreHook: useStoreFood,
-    serverUpdate: foodsUpdate,
-    getItems: (store) => store.foods,
+  recipieItems: {
+    dataStore: STORE_NAME.RECIPIE_ITEMS,
+    useStoreHook: useStoreRecipieItem,
+    serverUpdate: recipieItemsUpdate,
+    getItems: (store) => store.recipieItems,
     getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setFoods(items),
-    clearDeleted: (store) => store.clearDeletedFoods(),
+    setItems: (store, items) => store.setRecipieItems(items),
+    clearDeleted: (store) => store.clearDeletedRecipieItems(),
   },
-  meals: {
-    dataStore: STORE_NAME.MEALS,
-    useStoreHook: useStoreMeal,
-    serverUpdate: mealsUpdate,
-    getItems: (store) => store.meals,
+  stockMovements: {
+    dataStore: STORE_NAME.STOCK_MOVEMENTS,
+    useStoreHook: useStoreStockMovement,
+    serverUpdate: stockMovementsUpdate,
+    getItems: (store) => store.stockMovements,
     getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setMeals(items),
-    clearDeleted: (store) => store.clearDeletedMeals(),
+    setItems: (store, items) => store.setStockMovements(items),
+    clearDeleted: (store) => store.clearDeletedStockMovements(),
   },
-  servings: {
-    dataStore: STORE_NAME.SERVINGS,
-    useStoreHook: useStoreServing,
-    serverUpdate: servingsUpdate,
-    getItems: (store) => store.servings,
+  tables: {
+    dataStore: STORE_NAME.TABLES,
+    useStoreHook: useStoreTable,
+    serverUpdate: tablesUpdate,
+    getItems: (store) => store.tables,
     getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setServings(items),
-    clearDeleted: (store) => store.clearDeletedServings(),
+    setItems: (store, items) => store.setTablees(items),
+    clearDeleted: (store) => store.clearDeletedTablees(),
   },
-  eats: {
-    dataStore: STORE_NAME.EATS,
-    useStoreHook: useStoreEat,
-    serverUpdate: eatsUpdate,
-    getItems: (store) => store.eats,
+  tableBookings: {
+    dataStore: STORE_NAME.TABLE_BOOKINGS,
+    useStoreHook: useStoreTableBooking,
+    serverUpdate: tableBookingsUpdate,
+    getItems: (store) => store.tableBookings,
     getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setEats(items),
-    clearDeleted: (store) => store.clearDeletedEats(),
+    setItems: (store, items) => store.setTableBookings(items),
+    clearDeleted: (store) => store.clearDeletedTableBookings(),
   },
-  masses: {
-    dataStore: STORE_NAME.MASSES,
-    useStoreHook: useStoreMass,
-    serverUpdate: massesUpdate,
-    getItems: (store) => store.masses,
+  wishlistItems: {
+    dataStore: STORE_NAME.WISHLIST_ITEMS,
+    useStoreHook: useStoreWishlistItem,
+    serverUpdate: wishlistItemsUpdate,
+    getItems: (store) => store.wishlistItems,
     getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setMasses(items),
-    clearDeleted: (store) => store.clearDeletedMasses(),
-  },
-  chats: {
-    dataStore: STORE_NAME.CHATS,
-    useStoreHook: useStoreChat,
-    serverUpdate: chatsUpdate,
-    getItems: (store) => store.chats,
-    getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setChats(items),
-    clearDeleted: (store) => store.clearDeletedChats(),
-  },
-  chatMessages: {
-    dataStore: STORE_NAME.CHAT_MESSAGES,
-    useStoreHook: useStoreChatMessage,
-    serverUpdate: chatMessagesUpdate,
-    getItems: (store) => store.chatMessages,
-    getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setChatMessages(items),
-    clearDeleted: (store) => store.clearDeletedChatMessages(),
-  },
-  customizations: {
-    dataStore: STORE_NAME.CUSTOMIZATIONS,
-    useStoreHook: useStoreCustomization,
-    serverUpdate: customizationsUpdate,
-    getItems: (store) => store.customizations,
-    getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setCustomizations(items),
-    clearDeleted: (store) => store.clearDeletedCustomizations(),
+    setItems: (store, items) => store.setWishlistItems(items),
+    clearDeleted: (store) => store.clearDeletedWishlistItems(),
   },
 } as const;
 

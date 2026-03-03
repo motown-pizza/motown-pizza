@@ -3,7 +3,7 @@
 import React from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { Modal } from '@mantine/core';
-import FormContact from '@/components/form/contact';
+import FormContact from '@repo/components/form/contact';
 
 export default function LoyaltyProgram({
   children,

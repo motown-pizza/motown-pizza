@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useFormProfile } from '@/hooks/form/profile';
+import { useFormProfile } from '@repo/hooks/form/profile';
 import { Button, Grid, GridCol, Group, Select, TextInput } from '@mantine/core';
 import {
   IconAt,

@@ -2,11 +2,7 @@
 
 import { defaultBackupConfig } from '@repo/libraries/fsa';
 import { config } from '@repo/libraries/indexed-db/config';
-import { useStoreAccount } from '@repo/libraries/zustand/stores/account';
-import { useStoreAccountGroup } from '@repo/libraries/zustand/stores/account-group';
-import { useStoreBudget } from '@repo/libraries/zustand/stores/budget';
 import { useStoreCategory } from '@repo/libraries/zustand/stores/category';
-import { useStoreTransaction } from '@repo/libraries/zustand/stores/transaction';
 import { useDebouncedCallback } from '@mantine/hooks';
 import { createFileSyncAdapter } from '@repo/libraries/fsa/handler';
 import { openDatabase } from '@repo/libraries/indexed-db/actions';
@@ -93,20 +89,12 @@ export function useFileSyncAdapter() {
 
 export function useBundledBackupSync({ clientOnly }: { clientOnly: boolean }) {
   const { fileSyncAdapter, hasHandle, hasAccess } = useFileSyncAdapter();
-  const accounts = useStoreAccount((s) => s.accounts);
-  const accountGroups = useStoreAccountGroup((s) => s.accountGroups);
-  const budgets = useStoreBudget((s) => s.budgets);
   const categories = useStoreCategory((s) => s.categories);
-  const transactions = useStoreTransaction((s) => s.transactions);
 
   const debouncedFsWrite = useDebouncedCallback(async () => {
     if (!fileSyncAdapter) return;
     const bundle = {
-      accounts,
-      accountGroups,
-      budgets,
       categories,
-      transactions,
     };
     await fileSyncAdapter.writeBackup(bundle); // atomic write internally
   }, 3000);
@@ -122,10 +110,6 @@ export function useBundledBackupSync({ clientOnly }: { clientOnly: boolean }) {
     debouncedFsWrite,
     hasAccess,
     hasHandle,
-    accounts,
-    accountGroups,
-    budgets,
     categories,
-    transactions,
   ]);
 }

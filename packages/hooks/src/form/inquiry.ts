@@ -12,22 +12,29 @@ import { handleInquiry } from '@repo/handlers/requests/email/inquiry';
 import { contactAdd } from '@repo/handlers/requests/contact';
 import { formValuesInitialInquiry, FormValuesInquiry } from '@repo/types/form';
 import { useFormBase } from '../form';
-import { companyName } from '@repo/constants/app';
+import { COMPANY_NAME } from '@repo/constants/app';
+import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-placement';
+import { useEffect } from 'react';
+import { useDebouncedCallback } from '@mantine/hooks';
+import { defaultOrderDetails } from '@repo/constants/orders';
 
 type UseFormEmailInquiryOptions = {
   saveEmailContact?: boolean;
   close?: () => void;
+  order?: boolean;
 };
 
 export const useFormEmailInquiry = (
   initialValues?: Partial<FormValuesInquiry>,
   options?: UseFormEmailInquiryOptions
 ) => {
+  const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
+
   const { form, submitted, handleSubmit, reset, validate } =
     useFormBase<FormValuesInquiry>(
       {
         ...formValuesInitialInquiry,
-        appName: companyName,
+        appName: COMPANY_NAME,
         ...initialValues,
       },
       {
@@ -77,6 +84,18 @@ export const useFormEmailInquiry = (
         },
       }
     );
+
+  const debouncedsetOrderDetails = useDebouncedCallback(setOrderDetails, 500);
+
+  useEffect(() => {
+    if (!options?.order) return;
+
+    debouncedsetOrderDetails({
+      ...(orderDetails || defaultOrderDetails),
+      customer_name: form.values.name,
+      customer_phone: form.values.phone,
+    });
+  }, [form.values]);
 
   return {
     form,

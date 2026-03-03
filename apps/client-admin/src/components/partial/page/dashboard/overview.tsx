@@ -32,10 +32,10 @@ import {
   IconUsers,
 } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
-import ModalCrudProfile from '@/components/common/modals/crud/profile';
+import ModalCrudProfile from '@repo/components/common/modals/crud/profile';
 import { useTime } from '@repo/hooks/time';
 import { getRegionalDate } from '@repo/utilities/date-time';
-import CardOverviewMain from '@/components/common/cards/overview/main';
+import CardOverviewMain from '@repo/components/common/cards/overview/main';
 import ChartAreaOverviewMain from '@/components/common/charts/area/overview/main';
 import ChartBarOverviewMain from '@/components/common/charts/bar/overview/main';
 

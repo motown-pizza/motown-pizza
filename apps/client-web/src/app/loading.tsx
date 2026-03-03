@@ -6,17 +6,13 @@
  */
 
 import React from 'react';
-import LoadingMain from '@/components/partial/loading/main';
+import LoadingMain from '@repo/components/partial/loading/main';
 import ProviderMantine from '@repo/components/provider/mantine';
-import { mantine } from '@/assets/styles';
-import { APP_NAME } from '@/data/constants';
+import { mantine } from '@/data/styles';
 
 export default function Loading() {
   return (
-    <ProviderMantine
-      appThemeProps={{ styleSheets: { ...mantine } }}
-      appName={APP_NAME}
-    >
+    <ProviderMantine appThemeProps={{ styleSheets: { ...mantine } }}>
       <LoadingMain />
     </ProviderMantine>
   );

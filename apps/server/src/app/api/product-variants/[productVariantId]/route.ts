@@ -5,7 +5,7 @@
  * Do not modify unless you intend to backport changes to the template.
  */
 
-import prisma from '@/libraries/prisma';
+import prisma from '@repo/libraries/prisma';
 import { ProductVariantGet } from '@repo/types/models/product-variant';
 import { NextRequest, NextResponse } from 'next/server';
 

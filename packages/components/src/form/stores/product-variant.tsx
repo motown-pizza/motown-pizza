@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useFormProductVariant } from '@/hooks/form/product-variant';
+import { useFormProductVariant } from '@repo/hooks/form/product-variant';
 import {
   Button,
   Center,
@@ -31,8 +31,8 @@ import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
 import { sortArray } from '@repo/utilities/array';
 import { Order } from '@repo/types/enums';
 import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
-import ModalCrudRecipieItem from '../common/modals/crud/recipie-item';
-import CardRecipieItem from '../common/cards/recipie-item';
+import ModalCrudRecipieItem from '@repo/components/common/modals/crud/recipie-item';
+import CardRecipieItem from '@repo/components/common/cards/recipie-item';
 
 export default function ProductVariant({
   props,

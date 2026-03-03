@@ -4,7 +4,7 @@ import React from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { Modal } from '@mantine/core';
 import LayoutModal from '@repo/components/layout/modal';
-import FormIngredient from '@/components/form/ingredient';
+import FormIngredient from '../../../form/stores/ingredient';
 import { IngredientGet } from '@repo/types/models/ingredient';
 
 export default function Ingredient({

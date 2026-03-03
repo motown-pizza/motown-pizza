@@ -5,7 +5,7 @@ import LayoutSection from '@repo/components/layout/section';
 import { Button, Group, Title } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
-import ModalCrudIngredient from '@/components/common/modals/crud/ingredient';
+import ModalCrudIngredient from '@repo/components/common/modals/crud/ingredient';
 import TableIngredients from '@/components/common/tables/ingredients';
 import { usePathname } from 'next/navigation';
 import { crumbify } from '@repo/utilities/url';

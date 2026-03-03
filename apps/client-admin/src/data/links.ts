@@ -8,10 +8,6 @@
 import { cleanPaths } from '@repo/utilities/array';
 import { NavLink } from '@repo/types/link';
 
-export type Link = { link: string; label: string };
-
-export type NavLink = Link & { subLinks: Link[] | null };
-
 export const links: NavLink[] = [
   {
     link: '/',

@@ -5,12 +5,16 @@
  * Do not modify unless you intend to backport changes to the template.
  */
 
+import { PARAM_NAME } from '@repo/constants/names';
+import { AUTH_URLS } from '@repo/constants/paths';
+import { validateRoute } from '@repo/utilities/url';
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export const updateSession = async (
   request: NextRequest,
-  response: NextResponse
+  response: NextResponse,
+  baseUrl: string
 ) => {
   const withPathname =
     request.nextUrl.pathname && !request.nextUrl.pathname.includes('undefined');
@@ -27,15 +31,15 @@ export const updateSession = async (
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet: any) {
+        setAll(cookiesToSet) {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          cookiesToSet.forEach(({ name, value, options }: any) =>
+          cookiesToSet.forEach(({ name, value, options }) =>
             request.cookies.set(name, value)
           );
 
           supabaseResponse = NextResponse.next({ request });
 
-          cookiesToSet.forEach(({ name, value, options }: any) =>
+          cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           );
         },
@@ -50,9 +54,31 @@ export const updateSession = async (
   // IMPORTANT: DO NOT REMOVE auth.getUser()
 
   const {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     data: { user },
   } = await supabase.auth.getUser();
+
+  const { redirectToAuth, redirectFromAuth, redirectToHome } = validateRoute({
+    request,
+    user,
+    pathname: request.nextUrl.pathname,
+  });
+
+  if (redirectToHome) {
+    const redirectUrl = new URL(baseUrl, request.url);
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  if (redirectToAuth) {
+    const redirectUrl = new URL(AUTH_URLS.SIGN_IN, request.url);
+    redirectUrl.searchParams.set(PARAM_NAME.REDIRECT, request.nextUrl.pathname);
+
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  if (redirectFromAuth) {
+    const redirectUrl = new URL(baseUrl, request.url);
+    return NextResponse.redirect(redirectUrl);
+  }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:

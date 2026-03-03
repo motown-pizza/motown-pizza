@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useFormIngredient } from '@/hooks/form/ingredient';
+import { useFormIngredient } from '@repo/hooks/form/ingredient';
 import {
   Button,
   Grid,

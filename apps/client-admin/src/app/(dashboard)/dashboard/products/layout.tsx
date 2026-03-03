@@ -8,12 +8,12 @@
 import React from 'react';
 import LayoutBody from '@repo/components/layout/body';
 import { Metadata } from 'next';
-import { APP_NAME } from '@/data/constants';
+import { APP_NAME } from '@repo/constants/app';
 
 export const metadata: Metadata = {
   title: {
     default: 'Products',
-    template: `%s - Products - Dashboard - ${APP_NAME}`,
+    template: `%s - Products - Dashboard - ${APP_NAME.ADMIN}`,
   },
 };
 

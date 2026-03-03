@@ -43,7 +43,7 @@ import {
   IconUserOff,
 } from '@tabler/icons-react';
 import { usePaginate } from '@repo/hooks/paginate';
-import ModalCrudProfile from '../modals/crud/profile';
+import ModalCrudProfile from '@repo/components/common/modals/crud/profile';
 import { sortArray } from '@repo/utilities/array';
 import { Order } from '@repo/types/enums';
 import ModalConfirm from '@repo/components/common/modals/confirm';

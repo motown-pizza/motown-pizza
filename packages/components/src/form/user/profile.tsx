@@ -18,14 +18,18 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { useFormUserProfile } from '@/hooks/form/account/profile';
+import { useFormUserProfile } from '@repo/hooks/form/account/profile';
 import InputComboboxCountryCode from '@repo/components/common/inputs/combobox/country-code';
 
 export default function Profile() {
   const { form, submitted, handleSubmit, session } = useFormUserProfile();
 
   return (
-    <Box component="form" onSubmit={form.onSubmit(handleSubmit)} noValidate>
+    <Box
+      component="form"
+      onSubmit={form.onSubmit(() => handleSubmit())}
+      noValidate
+    >
       <Grid>
         <GridCol span={{ base: 12, sm: 6 }}>
           <TextInput

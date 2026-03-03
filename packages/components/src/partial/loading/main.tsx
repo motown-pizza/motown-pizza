@@ -2,8 +2,8 @@ import { Center, Stack } from '@mantine/core';
 import LayoutSection from '@repo/components/layout/section';
 import LoaderMain from '@repo/components/common/loaders/main';
 import ImageDefault from '@repo/components/common/images/default';
-import { images } from '@/assets/images';
-import { APP_NAME } from '@/data/constants';
+import { images } from '@repo/constants/images';
+import { COMPANY_NAME } from '@repo/constants/app';
 
 export default function Main() {
   return (
@@ -12,7 +12,7 @@ export default function Main() {
         <Stack align="center">
           <ImageDefault
             src={images.brand.logo.potrait.meta}
-            alt={APP_NAME}
+            alt={COMPANY_NAME}
             height={240}
             width={240}
             // fit="contain"

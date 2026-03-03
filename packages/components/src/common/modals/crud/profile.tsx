@@ -4,7 +4,7 @@ import React from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { Modal } from '@mantine/core';
 import LayoutModal from '@repo/components/layout/modal';
-import FormProfile from '@/components/form/profile';
+import FormProfile from '../../../form/stores/profile';
 import { ProfileGet } from '@repo/types/models/profile';
 
 export default function Profile({

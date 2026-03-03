@@ -4,14 +4,14 @@ import React from 'react';
 import LayoutSection from '@repo/components/layout/section';
 import { Group, Stack, Text } from '@mantine/core';
 import { IconMoped, IconPizza } from '@tabler/icons-react';
-import { phones } from '@repo/constants/app';
-import { APP_NAME } from '@/data/constants';
+import { PHONES } from '@repo/constants/app';
+import { APP_NAME } from '@repo/constants/app';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import NextLink from '@repo/components/common/anchor/next-link';
 import classes from './main.module.scss';
 import { useMediaQuery } from '@mantine/hooks';
 import ImageDefault from '@repo/components/common/images/default';
-import { images } from '@/assets/images';
+import { images } from '@repo/constants/images';
 
 export default function Main() {
   const tablet = useMediaQuery('(min-width: 48em)');
@@ -22,7 +22,7 @@ export default function Main() {
         <NextLink href="/" underline="never">
           <ImageDefault
             src={images.brand.logo.landscape.meta}
-            alt={APP_NAME}
+            alt={APP_NAME.WEB}
             height={80}
             width={160}
             mode="grid"
@@ -67,8 +67,8 @@ const headerLinks = [
   },
   {
     icon: IconMoped,
-    link: `tel:${phones.main}`,
-    label: phones.main,
+    link: `tel:${PHONES.MAIN}`,
+    label: PHONES.MAIN,
     subLabel: 'Call and Order In',
   },
 ];

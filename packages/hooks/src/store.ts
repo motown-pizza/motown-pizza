@@ -32,52 +32,47 @@ import {
 import { Role } from '@repo/types/models/enums';
 import { WEEK } from '@repo/constants/sizes';
 import { ProfileGet } from '@repo/types/models/profile';
-import { profileGet } from '@repo/handlers/requests/database/profiles';
-import { RoleValue, useStoreRole } from '@repo/libraries/zustand/stores/role';
 import {
   AppShellValue,
   useStoreAppShell,
 } from '@repo/libraries/zustand/stores/shell';
-import { useStoreCategory } from '@repo/libraries/zustand/stores/category';
-import { useStoreAccount } from '@repo/libraries/zustand/stores/account';
-import { useStoreAccountGroup } from '@repo/libraries/zustand/stores/account-group';
-import { useStoreBudget } from '@repo/libraries/zustand/stores/budget';
-import { useStoreTransaction } from '@repo/libraries/zustand/stores/transaction';
-import { categoriesGet } from '@repo/handlers/requests/database/category';
-import { budgetsGet } from '@repo/handlers/requests/database/budgets';
-import { accountsGet } from '@repo/handlers/requests/database/accounts';
-import { accountGroupsGet } from '@repo/handlers/requests/database/account-groups';
-import { transactionsGet } from '@repo/handlers/requests/database/transactions';
 import {
   ThemeValue,
   useStoreTheme,
 } from '@repo/libraries/zustand/stores/theme';
+import { RoleValue, useStoreRole } from '@repo/libraries/zustand/stores/role';
+import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
+import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
+import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
+import { useStoreProfile } from '@repo/libraries/zustand/stores/profile';
+import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
+import { useStoreStockMovement } from '@repo/libraries/zustand/stores/stock-movement';
+import { useStoreTable } from '@repo/libraries/zustand/stores/table';
+import { useStoreCategory } from '@repo/libraries/zustand/stores/category';
+import { categoriesGet } from '@repo/handlers/requests/database/category';
+import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
+import { useStoreDelivery } from '@repo/libraries/zustand/stores/delivery';
+import { useStoreTableBooking } from '@repo/libraries/zustand/stores/table-booking';
+import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
+import { useStoreWishlistItem } from '@repo/libraries/zustand/stores/wishlist-item';
+import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
+import { ingredientsGet } from '@repo/handlers/requests/database/ingredients';
+import { ordersGet } from '@repo/handlers/requests/database/orders';
+import { productsGet } from '@repo/handlers/requests/database/products';
+import { orderItemsGet } from '@repo/handlers/requests/database/order-items';
+import { productVariantsGet } from '@repo/handlers/requests/database/product-variants';
+import { profilesGet } from '@repo/handlers/requests/database/profiles';
+import { recipieItemsGet } from '@repo/handlers/requests/database/recipie-items';
+import { stockMovementsGet } from '@repo/handlers/requests/database/stock-movements';
+import { wishlistItemsGet } from '@repo/handlers/requests/database/wishlist-items';
+import { profileGet } from '@repo/handlers/requests/database/profiles';
+import { tablesGet } from '@repo/handlers/requests/database/tables';
+import { cartItemsGet } from '@repo/handlers/requests/database/cart-items';
+import { deliveriesGet } from '@repo/handlers/requests/database/deliveries';
+import { tableBookingsGet } from '@repo/handlers/requests/database/table-bookings';
 import { ColorScheme } from '@repo/types/enums';
 import { DEFAULT_COLOR_SCHEME } from '@repo/constants/other';
-import { useStoreUserStates } from '@repo/libraries/zustand/stores/user-states';
-import { useStoreNote } from '@repo/libraries/zustand/stores/note';
-import { useStoreLink } from '@repo/libraries/zustand/stores/link';
-import { linksGet } from '@repo/handlers/requests/database/links';
-import { notesGet } from '@repo/handlers/requests/database/notes';
-import { useStoreFood } from '@repo/libraries/zustand/stores/food';
-import { useStoreMeal } from '@repo/libraries/zustand/stores/meal';
-import { useStoreServing } from '@repo/libraries/zustand/stores/serving';
-import { useStoreEat } from '@repo/libraries/zustand/stores/eat';
-import { useStoreMass } from '@repo/libraries/zustand/stores/mass';
-import { foodsGet } from '@repo/handlers/requests/database/foods';
-import { mealsGet } from '@repo/handlers/requests/database/meals';
-import { servingsGet } from '@repo/handlers/requests/database/servings';
-import { eatsGet } from '@repo/handlers/requests/database/eats';
-import { massesGet } from '@repo/handlers/requests/database/masses';
 import { useMediaQuery } from '@mantine/hooks';
-import { chatsGet } from '@repo/handlers/requests/database/chats';
-import { chatMessagesGet } from '@repo/handlers/requests/database/chat-messages';
-import { useStoreChat } from '@repo/libraries/zustand/stores/chat';
-import { useStoreChatMessage } from '@repo/libraries/zustand/stores/chat-message';
-import { useStoreCustomization } from '@repo/libraries/zustand/stores/customization';
-import { customizationsGet } from '@repo/handlers/requests/database/customizations';
-import { useStoreChatTemporary } from '@repo/libraries/zustand/stores/chat-temporary';
-import { SAMPLE_CHAT } from '@repo/constants/chat';
 import { User } from '@supabase/supabase-js';
 
 export const useSessionStore = (params?: {
@@ -263,30 +258,6 @@ export const useThemeStore = () => {
   }, [setTheme]);
 };
 
-export const useChatTemporaryStore = () => {
-  const setChatTemporary = useStoreChatTemporary((s) => s.setChatTemporary);
-
-  useEffect(() => {
-    const initializeChatTemproary = () => {
-      setChatTemporary(null);
-    };
-
-    initializeChatTemproary();
-  }, [setChatTemporary]);
-};
-
-export const useUserStatesStore = () => {
-  const setUserStates = useStoreUserStates((s) => s.setUserStates);
-
-  useEffect(() => {
-    const initializeUserState = () => {
-      setUserStates({ editing: true });
-    };
-
-    initializeUserState();
-  }, [setUserStates]);
-};
-
 type LoadStoreConfig<TItems = any, THookReturn = any> = {
   dataStore: (typeof STORE_NAME)[keyof typeof STORE_NAME];
   useStoreHook: () => THookReturn;
@@ -295,95 +266,83 @@ type LoadStoreConfig<TItems = any, THookReturn = any> = {
 };
 
 export const LOAD_STORES: Record<string, LoadStoreConfig> = {
-  categories: {
-    dataStore: STORE_NAME.CATEGORIES,
-    useStoreHook: useStoreCategory,
-    fetchItems: (id) => categoriesGet({ userId: id }),
-    setState: (store, items) => store.setCategories(items),
+  cartItems: {
+    dataStore: STORE_NAME.CART_ITEMS,
+    useStoreHook: useStoreCartItem,
+    fetchItems: (id) => cartItemsGet({ userId: id }),
+    setState: (store, items) => store.setCartItems(items),
   },
-  budgets: {
-    dataStore: STORE_NAME.BUDGETS,
-    useStoreHook: useStoreBudget,
-    fetchItems: (id) => budgetsGet({ userId: id }),
-    setState: (store, items) => store.setBudgets(items),
+  deliveries: {
+    dataStore: STORE_NAME.DELIVERIES,
+    useStoreHook: useStoreDelivery,
+    fetchItems: (id) => deliveriesGet({ userId: id }),
+    setState: (store, items) => store.setDeliveries(items),
   },
-  accounts: {
-    dataStore: STORE_NAME.ACCOUNTS,
-    useStoreHook: useStoreAccount,
-    fetchItems: (id) => accountsGet({ userId: id }),
-    setState: (store, items) => store.setAccounts(items),
+  ingredients: {
+    dataStore: STORE_NAME.INGREDIENTS,
+    useStoreHook: useStoreIngredient,
+    fetchItems: ingredientsGet,
+    setState: (store, items) => store.setIngredients(items),
   },
-  accountGroups: {
-    dataStore: STORE_NAME.ACCOUNT_GROUPS,
-    useStoreHook: useStoreAccountGroup,
-    fetchItems: (id) => accountGroupsGet({ userId: id }),
-    setState: (store, items) => store.setAccountGroups(items),
+  orders: {
+    dataStore: STORE_NAME.ORDERS,
+    useStoreHook: useStoreOrder,
+    fetchItems: (id) => ordersGet({ userId: id }),
+    setState: (store, items) => store.setOrders(items),
   },
-  transactions: {
-    dataStore: STORE_NAME.TRANSACTIONS,
-    useStoreHook: useStoreTransaction,
-    fetchItems: (id) => transactionsGet({ userId: id }),
-    setState: (store, items) => store.setTransactions(items),
+  orderItems: {
+    dataStore: STORE_NAME.ORDER_ITEMS,
+    useStoreHook: useStoreOrderItem,
+    fetchItems: (id) => orderItemsGet({ userId: id }),
+    setState: (store, items) => store.setOrderItems(items),
   },
-  notes: {
-    dataStore: STORE_NAME.NOTES,
-    useStoreHook: useStoreNote,
-    fetchItems: (id) => notesGet({ userId: id }),
-    setState: (store, items) => store.setNotes(items),
+  products: {
+    dataStore: STORE_NAME.PRODUCTS,
+    useStoreHook: useStoreProduct,
+    fetchItems: productsGet,
+    setState: (store, items) => store.setProducts(items),
   },
-  links: {
-    dataStore: STORE_NAME.LINKS,
-    useStoreHook: useStoreLink,
-    fetchItems: (id) => linksGet({ userId: id }),
-    setState: (store, items) => store.setLinks(items),
+  productVariants: {
+    dataStore: STORE_NAME.PRODUCT_VARIANTS,
+    useStoreHook: useStoreProductVariant,
+    fetchItems: productVariantsGet,
+    setState: (store, items) => store.setProductVariants(items),
   },
-  foods: {
-    dataStore: STORE_NAME.FOODS,
-    useStoreHook: useStoreFood,
-    fetchItems: (id) => foodsGet({ userId: id }),
-    setState: (store, items) => store.setFoods(items),
+  profiles: {
+    dataStore: STORE_NAME.PROFILES,
+    useStoreHook: useStoreProfile,
+    fetchItems: profilesGet,
+    setState: (store, items) => store.setProfiles(items),
   },
-  meals: {
-    dataStore: STORE_NAME.MEALS,
-    useStoreHook: useStoreMeal,
-    fetchItems: (id) => mealsGet({ userId: id }),
-    setState: (store, items) => store.setMeals(items),
+  recipieItems: {
+    dataStore: STORE_NAME.RECIPIE_ITEMS,
+    useStoreHook: useStoreRecipieItem,
+    fetchItems: recipieItemsGet,
+    setState: (store, items) => store.setRecipieItems(items),
   },
-  servings: {
-    dataStore: STORE_NAME.SERVINGS,
-    useStoreHook: useStoreServing,
-    fetchItems: (id) => servingsGet({ userId: id }),
-    setState: (store, items) => store.setServings(items),
+  stockMovments: {
+    dataStore: STORE_NAME.STOCK_MOVEMENTS,
+    useStoreHook: useStoreStockMovement,
+    fetchItems: stockMovementsGet,
+    setState: (store, items) => store.setStockMovements(items),
   },
-  eats: {
-    dataStore: STORE_NAME.EATS,
-    useStoreHook: useStoreEat,
-    fetchItems: (id) => eatsGet({ userId: id }),
-    setState: (store, items) => store.setEats(items),
+  tables: {
+    dataStore: STORE_NAME.TABLES,
+    useStoreHook: useStoreTable,
+    fetchItems: (id) => tablesGet({ userId: id }),
+    setState: (store, items) => store.setTables(items),
   },
-  masses: {
-    dataStore: STORE_NAME.MASSES,
-    useStoreHook: useStoreMass,
-    fetchItems: (id) => massesGet({ userId: id }),
-    setState: (store, items) => store.setMasses(items),
+  tableBookings: {
+    dataStore: STORE_NAME.TABLE_BOOKINGS,
+    useStoreHook: useStoreTableBooking,
+    fetchItems: (id) => tableBookingsGet({ userId: id }),
+    setState: (store, items) => store.setTableBookings(items),
   },
-  chats: {
-    dataStore: STORE_NAME.CHATS,
-    useStoreHook: useStoreChat,
-    fetchItems: (id) => chatsGet({ userId: id }),
-    setState: (store, items) => store.setChats(items),
-  },
-  chatMessages: {
-    dataStore: STORE_NAME.CHAT_MESSAGES,
-    useStoreHook: useStoreChatMessage,
-    fetchItems: (id) => chatMessagesGet({ userId: id }),
-    setState: (store, items) => store.setChatMessages(items),
-  },
-  customizations: {
-    dataStore: STORE_NAME.CUSTOMIZATIONS,
-    useStoreHook: useStoreCustomization,
-    fetchItems: (id) => customizationsGet({ userId: id }),
-    setState: (store, items) => store.setCustomizations(items),
+  wishlistItems: {
+    dataStore: STORE_NAME.WISHLIST_ITEMS,
+    useStoreHook: useStoreWishlistItem,
+    fetchItems: (id) => wishlistItemsGet({ userId: id }),
+    setState: (store, items) => store.setWishlistItem(items),
   },
 } as const;
 

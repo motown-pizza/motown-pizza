@@ -18,7 +18,7 @@ import {
   ICON_WRAPPER_SIZE,
   SECTION_SPACING,
 } from '@repo/constants/sizes';
-import { useCountdown } from '@/hooks/order';
+import { useCountdown } from '@repo/hooks/order';
 import { IconCheck } from '@tabler/icons-react';
 import IntroSection from '@repo/components/layout/intros/section';
 

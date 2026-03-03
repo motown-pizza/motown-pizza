@@ -18,7 +18,7 @@ import {
 import CardStoreAside from '@/components/common/cards/store/aside';
 import NextLink from '@repo/components/common/anchor/next-link';
 import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-placement';
-import { defaultOrderDetails } from '@/data/orders';
+import { defaultOrderDetails } from '@repo/constants/orders';
 import { capitalizeWords } from '@repo/utilities/string';
 import { SECTION_SPACING } from '@repo/constants/sizes';
 import { usePathname } from 'next/navigation';
@@ -28,7 +28,7 @@ import { getUrlParam } from '@repo/utilities/url';
 import { PARAM_NAME } from '@repo/constants/names';
 import { DateTimePicker } from '@mantine/dates';
 import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
-import { useGetSum } from '@/hooks/order';
+import { useGetSum } from '@repo/hooks/order';
 
 export default function Order() {
   const pathname = usePathname();

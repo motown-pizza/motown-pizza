@@ -48,7 +48,7 @@ import {
   IconTrash,
 } from '@tabler/icons-react';
 import { usePaginate } from '@repo/hooks/paginate';
-import ModalCrudProduct from '../modals/crud/product';
+import ModalCrudProduct from '@repo/components/common/modals/crud/product';
 import { sortArray } from '@repo/utilities/array';
 import { Order } from '@repo/types/enums';
 import ModalConfirm from '@repo/components/common/modals/confirm';
