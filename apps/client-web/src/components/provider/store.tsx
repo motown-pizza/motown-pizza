@@ -8,16 +8,38 @@
  */
 
 import React from 'react';
-import { useSessionStore, useStoreData } from '@/hooks/store';
+import { useSessionStore, useLoadStores } from '@repo/hooks/store';
 import ProviderSync from './sync';
+import { User } from '@supabase/supabase-js';
 
-export default function Store({ children }: { children: React.ReactNode }) {
+export default function Store({
+  props,
+  children,
+}: {
+  props?: { sessionUser: User | null };
+  children: React.ReactNode;
+}) {
   // initialize stores
 
-  useSessionStore({ options: { clientOnly: true } });
-  // useUserRoleStore();
-  // useAppshellStore();
-  useStoreData({ options: { clientOnly: false } });
+  useSessionStore({
+    sessionUser: props?.sessionUser || null,
+    options: { clientOnly: false },
+  });
+  useLoadStores({
+    options: {
+      clientOnly: false,
+      storesToLoad: {
+        products: true,
+        productVariants: true,
+        ingredients: true,
+        recipieItems: true,
+        cartItems: true,
+        orders: true,
+        orderItems: true,
+        deliveries: true,
+      },
+    },
+  });
 
   return (
     <div>

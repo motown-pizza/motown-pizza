@@ -16,9 +16,9 @@ import type { Metadata } from 'next';
 import { Kanit, Tomorrow } from 'next/font/google';
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
 import ProviderMantine from '@repo/components/provider/mantine';
-import { APP_NAME } from '@/data/constants';
+import { APP_DESC, COMPANY_NAME } from '@repo/constants/app';
 import { DEFAULT_COLOR_SCHEME } from '@repo/constants/other';
-import { mantine } from '@/assets/styles';
+import { mantine } from '@/data/styles';
 
 const kanitSans = Kanit({
   variable: '--font-kanit-sans',
@@ -33,8 +33,8 @@ const tomorrowSans = Tomorrow({
 });
 
 export const metadata: Metadata = {
-  title: `${APP_NAME} - API Engine`,
-  // description: '',
+  title: `${COMPANY_NAME} - API Engine`,
+  description: APP_DESC.WEB,
 };
 
 export default async function RootLayout({
@@ -53,7 +53,7 @@ export default async function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         {/* <meta name="description" content={''} /> */}
 
-        <title>{APP_NAME}</title>
+        <title>{COMPANY_NAME}</title>
 
         <ColorSchemeScript defaultColorScheme={DEFAULT_COLOR_SCHEME} />
       </head>

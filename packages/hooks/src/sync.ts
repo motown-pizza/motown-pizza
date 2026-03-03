@@ -5,530 +5,261 @@
  * Do not modify unless you intend to backport changes to the template.
  */
 
-import { useEffect, useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { STORE_NAME } from '@repo/constants/names';
-import { postsUpdate } from '@repo/handlers/requests/database/posts';
+import { budgetsUpdate } from '@repo/handlers/requests/database/budgets';
+import { accountsUpdate } from '@repo/handlers/requests/database/accounts';
+import { accountGroupsUpdate } from '@repo/handlers/requests/database/account-groups';
+import { transactionsUpdate } from '@repo/handlers/requests/database/transactions';
 import { categoriesUpdate } from '@repo/handlers/requests/database/category';
-import { useStorePost } from '@repo/libraries/zustand/stores/post';
 import { useStoreCategory } from '@repo/libraries/zustand/stores/category';
+import { useStoreBudget } from '@repo/libraries/zustand/stores/budget';
+import { useStoreAccount } from '@repo/libraries/zustand/stores/account';
+import { useStoreAccountGroup } from '@repo/libraries/zustand/stores/account-group';
+import { useStoreTransaction } from '@repo/libraries/zustand/stores/transaction';
 import { SyncParams } from '@repo/types/sync';
-import { useStoreProfile } from '@repo/libraries/zustand/stores/profile';
-import { profilesUpdate } from '@repo/handlers/requests/database/profiles';
-import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
-import { productsUpdate } from '@repo/handlers/requests/database/products';
-import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
-import { productVariantsUpdate } from '@repo/handlers/requests/database/product-variants';
-import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
-import { ingredientsUpdate } from '@repo/handlers/requests/database/ingredients';
-import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
-import { recipieItemsUpdate } from '@repo/handlers/requests/database/recipie-items';
-import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
-import { ordersUpdate } from '@repo/handlers/requests/database/orders';
-import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
-import { orderItemsUpdate } from '@repo/handlers/requests/database/order-items';
-import { useStoreStockMovement } from '@repo/libraries/zustand/stores/stock-movement';
-import { stockMovementsUpdate } from '@repo/handlers/requests/database/stock-movements';
-import { useStoreDelivery } from '@repo/libraries/zustand/stores/delivery';
-import { deliveriesUpdate } from '@repo/handlers/requests/database/deliveries';
-import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
-import { cartItemsUpdate } from '@repo/handlers/requests/database/cart-items';
-import { useStoreTable } from '@repo/libraries/zustand/stores/table';
-import { useStoreTableBooking } from '@repo/libraries/zustand/stores/table-booking';
-import { tablesUpdate } from '@repo/handlers/requests/database/tables';
-import { tableBookingsUpdate } from '@repo/handlers/requests/database/table-bookings';
+import {
+  SessionValue,
+  useStoreSession,
+} from '@repo/libraries/zustand/stores/session';
+import { useStoreNote } from '@repo/libraries/zustand/stores/note';
+import { notesUpdate } from '@repo/handlers/requests/database/notes';
+import { useStoreLink } from '@repo/libraries/zustand/stores/link';
+import { linksUpdate } from '@repo/handlers/requests/database/links';
+import { useStorePost } from '@repo/libraries/zustand/stores/post';
+import { postsUpdate } from '@repo/handlers/requests/database/posts';
+import { useStoreFood } from '@repo/libraries/zustand/stores/food';
+import { foodsUpdate } from '@repo/handlers/requests/database/foods';
+import { useStoreMeal } from '@repo/libraries/zustand/stores/meal';
+import { mealsUpdate } from '@repo/handlers/requests/database/meals';
+import { useStoreServing } from '@repo/libraries/zustand/stores/serving';
+import { servingsUpdate } from '@repo/handlers/requests/database/servings';
+import { useStoreEat } from '@repo/libraries/zustand/stores/eat';
+import { eatsUpdate } from '@repo/handlers/requests/database/eats';
+import { useStoreMass } from '@repo/libraries/zustand/stores/mass';
+import { massesUpdate } from '@repo/handlers/requests/database/masses';
+import { chatsUpdate } from '@repo/handlers/requests/database/chats';
+import { useStoreChat } from '@repo/libraries/zustand/stores/chat';
+import { useStoreCustomization } from '@repo/libraries/zustand/stores/customization';
+import { customizationsUpdate } from '@repo/handlers/requests/database/customizations';
+import { useStoreChatMessage } from '@repo/libraries/zustand/stores/chat-message';
+import { chatMessagesUpdate } from '@repo/handlers/requests/database/chat-messages';
 
-export const useSyncPosts = (params: {
-  syncFunction: (input: SyncParams) => void;
-  online: boolean;
-}) => {
-  const { syncFunction, online } = params;
+const useSessionCheck = () => {
+  const session = useStoreSession((s) => s.session);
+  const noSession =
+    session === undefined ||
+    (!session && (!(session as SessionValue)?.email as any));
 
-  const {
-    posts,
-    deleted: deletedPosts,
-    setPosts,
-    clearDeletedPosts,
-  } = useStorePost();
-
-  const handleSyncPosts = useCallback(() => {
-    syncFunction({
-      items: posts || [],
-      deletedItems: deletedPosts,
-      dataStore: STORE_NAME.POSTS,
-      stateUpdateFunctionDeleted: () => clearDeletedPosts(),
-      stateUpdateFunction: (i) => setPosts(i),
-      serverUpdateFunction: async (i, di) => await postsUpdate(i, di),
-    });
-  }, [posts, deletedPosts, syncFunction, online]);
-
-  useEffect(() => {
-    if (posts === undefined && deletedPosts === undefined) return;
-    if (!posts?.length && !deletedPosts?.length) return;
-
-    handleSyncPosts();
-  }, [posts, deletedPosts, handleSyncPosts, online]);
-
-  return { syncPosts: handleSyncPosts };
+  return { noSession };
 };
 
-export const useSyncCategories = (params: {
-  syncFunction: (input: SyncParams) => void;
-  online: boolean;
-}) => {
-  const { syncFunction, online } = params;
-
-  const {
-    categories,
-    deleted: deletedCategories,
-    setCategories,
-    clearDeletedCategories,
-  } = useStoreCategory();
-
-  const handleSyncCategories = useCallback(() => {
-    syncFunction({
-      items: categories || [],
-      deletedItems: deletedCategories,
-      dataStore: STORE_NAME.CATEGORIES,
-      stateUpdateFunctionDeleted: () => clearDeletedCategories(),
-      stateUpdateFunction: (i) => setCategories(i),
-      serverUpdateFunction: async (i, di) => await categoriesUpdate(i, di),
-    });
-  }, [categories, deletedCategories, syncFunction, online]);
-
-  useEffect(() => {
-    if (categories === undefined && deletedCategories === undefined) return;
-    if (!categories?.length && !deletedCategories?.length) return;
-
-    handleSyncCategories();
-  }, [categories, deletedCategories, handleSyncCategories, online]);
-
-  return { syncCategories: handleSyncCategories };
+type SyncStoreConfig<TItems = any, THookReturn = any> = {
+  dataStore: (typeof STORE_NAME)[keyof typeof STORE_NAME];
+  useStoreHook: () => THookReturn;
+  serverUpdate: (items: TItems[], deleted: TItems[]) => Promise<any>;
+  getItems: (store: THookReturn) => TItems[];
+  getDeleted: (store: THookReturn) => TItems[];
+  setItems: (store: THookReturn, items: TItems[]) => void;
+  clearDeleted: (store: THookReturn) => void;
 };
 
-export const useSyncProfiles = (params: {
+export const SYNC_STORES: Record<string, SyncStoreConfig> = {
+  posts: {
+    dataStore: STORE_NAME.POSTS,
+    useStoreHook: useStorePost,
+    serverUpdate: postsUpdate,
+    getItems: (store) => store.posts,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setPosts(items),
+    clearDeleted: (store) => store.clearDeletedPosts(),
+  },
+  categories: {
+    dataStore: STORE_NAME.CATEGORIES,
+    useStoreHook: useStoreCategory,
+    serverUpdate: categoriesUpdate,
+    getItems: (store) => store.categories,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setCategories(items),
+    clearDeleted: (store) => store.clearDeletedCategories(),
+  },
+  budgets: {
+    dataStore: STORE_NAME.BUDGETS,
+    useStoreHook: useStoreBudget,
+    serverUpdate: budgetsUpdate,
+    getItems: (store) => store.budgets,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setBudgets(items),
+    clearDeleted: (store) => store.clearDeletedBudgets(),
+  },
+  accounts: {
+    dataStore: STORE_NAME.ACCOUNTS,
+    useStoreHook: useStoreAccount,
+    serverUpdate: accountsUpdate,
+    getItems: (store) => store.accounts,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setAccounts(items),
+    clearDeleted: (store) => store.clearDeletedAccounts(),
+  },
+  accountGroups: {
+    dataStore: STORE_NAME.ACCOUNT_GROUPS,
+    useStoreHook: useStoreAccountGroup,
+    serverUpdate: accountGroupsUpdate,
+    getItems: (store) => store.accountGroups,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setAccountGroups(items),
+    clearDeleted: (store) => store.clearDeletedAccountGroups(),
+  },
+  transactions: {
+    dataStore: STORE_NAME.TRANSACTIONS,
+    useStoreHook: useStoreTransaction,
+    serverUpdate: transactionsUpdate,
+    getItems: (store) => store.transactions,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setTransactions(items),
+    clearDeleted: (store) => store.clearDeletedTransactions(),
+  },
+  notes: {
+    dataStore: STORE_NAME.NOTES,
+    useStoreHook: useStoreNote,
+    serverUpdate: notesUpdate,
+    getItems: (store) => store.notes,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setNotes(items),
+    clearDeleted: (store) => store.clearDeletedNotes(),
+  },
+  links: {
+    dataStore: STORE_NAME.LINKS,
+    useStoreHook: useStoreLink,
+    serverUpdate: linksUpdate,
+    getItems: (store) => store.links,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setLinks(items),
+    clearDeleted: (store) => store.clearDeletedLinks(),
+  },
+  foods: {
+    dataStore: STORE_NAME.FOODS,
+    useStoreHook: useStoreFood,
+    serverUpdate: foodsUpdate,
+    getItems: (store) => store.foods,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setFoods(items),
+    clearDeleted: (store) => store.clearDeletedFoods(),
+  },
+  meals: {
+    dataStore: STORE_NAME.MEALS,
+    useStoreHook: useStoreMeal,
+    serverUpdate: mealsUpdate,
+    getItems: (store) => store.meals,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setMeals(items),
+    clearDeleted: (store) => store.clearDeletedMeals(),
+  },
+  servings: {
+    dataStore: STORE_NAME.SERVINGS,
+    useStoreHook: useStoreServing,
+    serverUpdate: servingsUpdate,
+    getItems: (store) => store.servings,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setServings(items),
+    clearDeleted: (store) => store.clearDeletedServings(),
+  },
+  eats: {
+    dataStore: STORE_NAME.EATS,
+    useStoreHook: useStoreEat,
+    serverUpdate: eatsUpdate,
+    getItems: (store) => store.eats,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setEats(items),
+    clearDeleted: (store) => store.clearDeletedEats(),
+  },
+  masses: {
+    dataStore: STORE_NAME.MASSES,
+    useStoreHook: useStoreMass,
+    serverUpdate: massesUpdate,
+    getItems: (store) => store.masses,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setMasses(items),
+    clearDeleted: (store) => store.clearDeletedMasses(),
+  },
+  chats: {
+    dataStore: STORE_NAME.CHATS,
+    useStoreHook: useStoreChat,
+    serverUpdate: chatsUpdate,
+    getItems: (store) => store.chats,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setChats(items),
+    clearDeleted: (store) => store.clearDeletedChats(),
+  },
+  chatMessages: {
+    dataStore: STORE_NAME.CHAT_MESSAGES,
+    useStoreHook: useStoreChatMessage,
+    serverUpdate: chatMessagesUpdate,
+    getItems: (store) => store.chatMessages,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setChatMessages(items),
+    clearDeleted: (store) => store.clearDeletedChatMessages(),
+  },
+  customizations: {
+    dataStore: STORE_NAME.CUSTOMIZATIONS,
+    useStoreHook: useStoreCustomization,
+    serverUpdate: customizationsUpdate,
+    getItems: (store) => store.customizations,
+    getDeleted: (store) => store.deleted,
+    setItems: (store, items) => store.setCustomizations(items),
+    clearDeleted: (store) => store.clearDeletedCustomizations(),
+  },
+} as const;
+
+type SyncStoreKey = keyof typeof SYNC_STORES;
+
+const useGenericSync = <K extends keyof typeof SYNC_STORES>(params: {
+  storeKey: K;
   syncFunction: (input: SyncParams) => void;
   online: boolean;
 }) => {
-  const { syncFunction, online } = params;
+  const { storeKey, syncFunction, online } = params;
+  const { noSession } = useSessionCheck();
 
-  const {
-    profiles,
-    deleted: deletedProfiles,
-    setProfiles,
-    clearDeletedProfiles,
-  } = useStoreProfile();
+  const config = SYNC_STORES[storeKey] as SyncStoreConfig;
+  const store = config.useStoreHook();
 
-  const handleSyncProfiles = useCallback(() => {
+  const sync = useCallback(() => {
     syncFunction({
-      items: profiles || [],
-      deletedItems: deletedProfiles,
-      dataStore: STORE_NAME.PROFILES,
-      stateUpdateFunctionDeleted: () => clearDeletedProfiles(),
-      stateUpdateFunction: (i) => setProfiles(i),
-      serverUpdateFunction: async (i, di) => await profilesUpdate(i, di),
+      items: config.getItems(store) ?? [], // ← fallback to []
+      deletedItems: config.getDeleted(store) ?? [], // ← fallback to []
+      dataStore: config.dataStore,
+      stateUpdateFunctionDeleted: () => config.clearDeleted(store),
+      stateUpdateFunction: (i) => config.setItems(store, i),
+      serverUpdateFunction: async (i, di) =>
+        await config.serverUpdate(i ?? [], di ?? []), // ← fallback here too
     });
-  }, [profiles, deletedProfiles, syncFunction, online]);
+  }, [store, syncFunction, config]);
 
   useEffect(() => {
-    if (profiles === undefined && deletedProfiles === undefined) return;
-    if (!profiles?.length && !deletedProfiles?.length) return;
-
-    handleSyncProfiles();
-  }, [profiles, deletedProfiles, handleSyncProfiles, online]);
-
-  return { syncProfiles: handleSyncProfiles };
+    if (noSession) return;
+    sync();
+  }, [store, online, noSession, sync]);
 };
 
-export const useSyncProducts = (params: {
+export const useSyncStores = (params: {
   syncFunction: (input: SyncParams) => void;
   online: boolean;
+  storesToSync: Partial<Record<SyncStoreKey, boolean>>;
 }) => {
-  const { syncFunction, online } = params;
+  const { syncFunction, online, storesToSync } = params;
 
-  const {
-    products,
-    deleted: deletedProducts,
-    setProducts,
-    clearDeletedProducts,
-  } = useStoreProduct();
+  const results = {} as Record<string, any>;
 
-  const handleSyncProducts = useCallback(() => {
-    syncFunction({
-      items: products || [],
-      deletedItems: deletedProducts,
-      dataStore: STORE_NAME.PRODUCTS,
-      stateUpdateFunctionDeleted: () => clearDeletedProducts(),
-      stateUpdateFunction: (i) => setProducts(i),
-      serverUpdateFunction: async (i, di) => {
-        await productsUpdate(i, di);
-      },
+  (Object.keys(storesToSync) as SyncStoreKey[]).forEach((key) => {
+    if (!storesToSync[key]) return;
+
+    results[key] = useGenericSync({
+      storeKey: key,
+      syncFunction,
+      online,
     });
-  }, [products, deletedProducts, syncFunction, online]);
+  });
 
-  useEffect(() => {
-    if (products === undefined && deletedProducts === undefined) return;
-    if (!products?.length && !deletedProducts?.length) return;
-
-    handleSyncProducts();
-  }, [products, deletedProducts, handleSyncProducts, online]);
-
-  return { syncProducts: handleSyncProducts };
-};
-
-export const useSyncProductVariants = (params: {
-  syncFunction: (input: SyncParams) => void;
-  online: boolean;
-}) => {
-  const { syncFunction, online } = params;
-
-  const {
-    productVariants,
-    deleted: deletedProductVariants,
-    setProductVariants,
-    clearDeletedProductVariants,
-  } = useStoreProductVariant();
-
-  const handleSyncProductVariants = useCallback(() => {
-    syncFunction({
-      items: productVariants || [],
-      deletedItems: deletedProductVariants,
-      dataStore: STORE_NAME.PRODUCT_VARIANTS,
-      stateUpdateFunctionDeleted: () => clearDeletedProductVariants(),
-      stateUpdateFunction: (i) => setProductVariants(i),
-      serverUpdateFunction: async (i, di) => {
-        await productVariantsUpdate(i, di);
-      },
-    });
-  }, [productVariants, deletedProductVariants, syncFunction, online]);
-
-  useEffect(() => {
-    if (productVariants === undefined && deletedProductVariants === undefined)
-      return;
-    if (!productVariants?.length && !deletedProductVariants?.length) return;
-
-    handleSyncProductVariants();
-  }, [
-    productVariants,
-    deletedProductVariants,
-    handleSyncProductVariants,
-    online,
-  ]);
-
-  return { syncProductVariants: handleSyncProductVariants };
-};
-
-export const useSyncIngredients = (params: {
-  syncFunction: (input: SyncParams) => void;
-  online: boolean;
-}) => {
-  const { syncFunction, online } = params;
-
-  const {
-    ingredients,
-    deleted: deletedIngredients,
-    setIngredients,
-    clearDeletedIngredients,
-  } = useStoreIngredient();
-
-  const handleSyncIngredients = useCallback(() => {
-    syncFunction({
-      items: ingredients || [],
-      deletedItems: deletedIngredients,
-      dataStore: STORE_NAME.INGREDIENTS,
-      stateUpdateFunctionDeleted: () => clearDeletedIngredients(),
-      stateUpdateFunction: (i) => setIngredients(i),
-      serverUpdateFunction: async (i, di) => await ingredientsUpdate(i, di),
-    });
-  }, [ingredients, deletedIngredients, syncFunction, online]);
-
-  useEffect(() => {
-    if (ingredients === undefined && deletedIngredients === undefined) return;
-    if (!ingredients?.length && !deletedIngredients?.length) return;
-
-    handleSyncIngredients();
-  }, [ingredients, deletedIngredients, handleSyncIngredients, online]);
-
-  return { syncIngredients: handleSyncIngredients };
-};
-
-export const useSyncRecipieItems = (params: {
-  syncFunction: (input: SyncParams) => void;
-  online: boolean;
-}) => {
-  const { syncFunction, online } = params;
-
-  const {
-    recipieItems,
-    deleted: deletedRecipieItems,
-    setRecipieItems,
-    clearDeletedRecipieItems,
-  } = useStoreRecipieItem();
-
-  const handleSyncRecipieItems = useCallback(() => {
-    syncFunction({
-      items: recipieItems || [],
-      deletedItems: deletedRecipieItems,
-      dataStore: STORE_NAME.RECIPIE_ITEMS,
-      stateUpdateFunctionDeleted: () => clearDeletedRecipieItems(),
-      stateUpdateFunction: (i) => setRecipieItems(i),
-      serverUpdateFunction: async (i, di) => await recipieItemsUpdate(i, di),
-    });
-  }, [recipieItems, deletedRecipieItems, syncFunction, online]);
-
-  useEffect(() => {
-    if (recipieItems === undefined && deletedRecipieItems === undefined) return;
-    if (!recipieItems?.length && !deletedRecipieItems?.length) return;
-
-    handleSyncRecipieItems();
-  }, [recipieItems, deletedRecipieItems, handleSyncRecipieItems, online]);
-
-  return { syncRecipieItems: handleSyncRecipieItems };
-};
-
-export const useSyncOrders = (params: {
-  syncFunction: (input: SyncParams) => void;
-  online: boolean;
-}) => {
-  const { syncFunction, online } = params;
-
-  const {
-    orders,
-    deleted: deletedOrders,
-    setOrders,
-    clearDeletedOrders,
-  } = useStoreOrder();
-
-  const handleSyncOrders = useCallback(() => {
-    syncFunction({
-      items: orders || [],
-      deletedItems: deletedOrders,
-      dataStore: STORE_NAME.ORDERS,
-      stateUpdateFunctionDeleted: () => clearDeletedOrders(),
-      stateUpdateFunction: (i) => setOrders(i),
-      serverUpdateFunction: async (i, di) => {
-        await ordersUpdate(i, di);
-      },
-    });
-  }, [orders, deletedOrders, syncFunction, online]);
-
-  useEffect(() => {
-    if (orders === undefined && deletedOrders === undefined) return;
-    if (!orders?.length && !deletedOrders?.length) return;
-
-    handleSyncOrders();
-  }, [orders, deletedOrders, handleSyncOrders, online]);
-
-  return { syncOrders: handleSyncOrders };
-};
-
-export const useSyncOrderItems = (params: {
-  syncFunction: (input: SyncParams) => void;
-  online: boolean;
-}) => {
-  const { syncFunction, online } = params;
-
-  const {
-    orderItems,
-    deleted: deletedOrderItems,
-    setOrderItems,
-    clearDeletedOrderItems,
-  } = useStoreOrderItem();
-
-  const handleSyncOrderItems = useCallback(() => {
-    syncFunction({
-      items: orderItems || [],
-      deletedItems: deletedOrderItems,
-      dataStore: STORE_NAME.ORDER_ITEMS,
-      stateUpdateFunctionDeleted: () => clearDeletedOrderItems(),
-      stateUpdateFunction: (i) => setOrderItems(i),
-      serverUpdateFunction: async (i, di) => await orderItemsUpdate(i, di),
-    });
-  }, [orderItems, deletedOrderItems, syncFunction, online]);
-
-  useEffect(() => {
-    if (orderItems === undefined && deletedOrderItems === undefined) return;
-    if (!orderItems?.length && !deletedOrderItems?.length) return;
-
-    handleSyncOrderItems();
-  }, [orderItems, deletedOrderItems, handleSyncOrderItems, online]);
-
-  return { syncOrderItems: handleSyncOrderItems };
-};
-
-export const useSyncStockMovements = (params: {
-  syncFunction: (input: SyncParams) => void;
-  online: boolean;
-}) => {
-  const { syncFunction, online } = params;
-
-  const {
-    stockMovements,
-    deleted: deletedStockMovements,
-    setStockMovements,
-    clearDeletedStockMovements,
-  } = useStoreStockMovement();
-
-  const handleSyncStockMovements = useCallback(() => {
-    syncFunction({
-      items: stockMovements || [],
-      deletedItems: deletedStockMovements,
-      dataStore: STORE_NAME.STOCK_MOVEMENTS,
-      stateUpdateFunctionDeleted: () => clearDeletedStockMovements(),
-      stateUpdateFunction: (i) => setStockMovements(i),
-      serverUpdateFunction: async (i, di) => await stockMovementsUpdate(i, di),
-    });
-  }, [stockMovements, deletedStockMovements, syncFunction, online]);
-
-  useEffect(() => {
-    if (stockMovements === undefined && deletedStockMovements === undefined)
-      return;
-    if (!stockMovements?.length && !deletedStockMovements?.length) return;
-
-    handleSyncStockMovements();
-  }, [stockMovements, deletedStockMovements, handleSyncStockMovements, online]);
-
-  return { syncStockMovements: handleSyncStockMovements };
-};
-
-export const useSyncDeliveries = (params: {
-  syncFunction: (input: SyncParams) => void;
-  online: boolean;
-}) => {
-  const { syncFunction, online } = params;
-
-  const {
-    deliveries,
-    deleted: deletedDeliveries,
-    setDeliveries,
-    clearDeletedDeliveries,
-  } = useStoreDelivery();
-
-  const handleSyncDeliveries = useCallback(() => {
-    syncFunction({
-      items: deliveries || [],
-      deletedItems: deletedDeliveries,
-      dataStore: STORE_NAME.DELIVERIES,
-      stateUpdateFunctionDeleted: () => clearDeletedDeliveries(),
-      stateUpdateFunction: (i) => setDeliveries(i),
-      serverUpdateFunction: async (i, di) => await deliveriesUpdate(i, di),
-    });
-  }, [deliveries, deletedDeliveries, syncFunction, online]);
-
-  useEffect(() => {
-    if (deliveries === undefined && deletedDeliveries === undefined) return;
-    if (!deliveries?.length && !deletedDeliveries?.length) return;
-
-    handleSyncDeliveries();
-  }, [deliveries, deletedDeliveries, handleSyncDeliveries, online]);
-
-  return { syncDeliveries: handleSyncDeliveries };
-};
-
-export const useSyncCartItems = (params: {
-  syncFunction: (input: SyncParams) => void;
-  online: boolean;
-}) => {
-  const { syncFunction, online } = params;
-
-  const {
-    cartItems,
-    deleted: deletedCartItems,
-    setCartItems,
-    clearDeletedCartItems,
-  } = useStoreCartItem();
-
-  const handleSyncCartItems = useCallback(() => {
-    syncFunction({
-      items: cartItems || [],
-      deletedItems: deletedCartItems,
-      dataStore: STORE_NAME.CART_ITEMS,
-      stateUpdateFunctionDeleted: () => clearDeletedCartItems(),
-      stateUpdateFunction: (i) => setCartItems(i),
-      serverUpdateFunction: async (i, di) => {
-        await cartItemsUpdate(i, di);
-      },
-    });
-  }, [cartItems, deletedCartItems, syncFunction, online]);
-
-  useEffect(() => {
-    if (cartItems === undefined && deletedCartItems === undefined) return;
-    if (!cartItems?.length && !deletedCartItems?.length) return;
-
-    handleSyncCartItems();
-  }, [cartItems, deletedCartItems, handleSyncCartItems, online]);
-
-  return { syncCartItems: handleSyncCartItems };
-};
-
-export const useSyncTables = (params: {
-  syncFunction: (input: SyncParams) => void;
-  online: boolean;
-}) => {
-  const { syncFunction, online } = params;
-
-  const {
-    tables,
-    deleted: deletedTables,
-    setTables,
-    clearDeletedTables,
-  } = useStoreTable();
-
-  const handleSyncTables = useCallback(() => {
-    syncFunction({
-      items: tables || [],
-      deletedItems: deletedTables,
-      dataStore: STORE_NAME.TABLES,
-      stateUpdateFunctionDeleted: () => clearDeletedTables(),
-      stateUpdateFunction: (i) => setTables(i),
-      serverUpdateFunction: async (i, di) => {
-        await tablesUpdate(i, di);
-      },
-    });
-  }, [tables, deletedTables, syncFunction, online]);
-
-  useEffect(() => {
-    if (tables === undefined && deletedTables === undefined) return;
-    if (!tables?.length && !deletedTables?.length) return;
-
-    handleSyncTables();
-  }, [tables, deletedTables, handleSyncTables, online]);
-
-  return { syncTables: handleSyncTables };
-};
-
-export const useSyncTableBookings = (params: {
-  syncFunction: (input: SyncParams) => void;
-  online: boolean;
-}) => {
-  const { syncFunction, online } = params;
-
-  const {
-    tableBookings,
-    deleted: deletedTableBookings,
-    setTableBookings,
-    clearDeletedTableBookings,
-  } = useStoreTableBooking();
-
-  const handleSyncTableBookings = useCallback(() => {
-    syncFunction({
-      items: tableBookings || [],
-      deletedItems: deletedTableBookings,
-      dataStore: STORE_NAME.TABLE_BOOKINGS,
-      stateUpdateFunctionDeleted: () => clearDeletedTableBookings(),
-      stateUpdateFunction: (i) => setTableBookings(i),
-      serverUpdateFunction: async (i, di) => {
-        await tableBookingsUpdate(i, di);
-      },
-    });
-  }, [tableBookings, deletedTableBookings, syncFunction, online]);
-
-  useEffect(() => {
-    if (tableBookings === undefined && deletedTableBookings === undefined)
-      return;
-    if (!tableBookings?.length && !deletedTableBookings?.length) return;
-
-    handleSyncTableBookings();
-  }, [tableBookings, deletedTableBookings, handleSyncTableBookings, online]);
-
-  return { syncTableBookings: handleSyncTableBookings };
+  return results;
 };

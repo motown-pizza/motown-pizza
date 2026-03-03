@@ -8,11 +8,6 @@
 const isProduction = process.env.NODE_ENV === 'production';
 const useRemoteServer = process.env.NEXT_PUBLIC_USE_REMOTE_SERVER === 'true';
 
-// Select client web host
-export const HOSTNAME_CLIENT_WEB = isProduction
-  ? process.env.NEXT_PUBLIC_HOST_CLIENT_WEB_PROD
-  : process.env.NEXT_PUBLIC_HOST_CLIENT_WEB_DEV;
-
 // Select client admin host
 export const HOSTNAME_CLIENT_ADMIN = isProduction
   ? process.env.NEXT_PUBLIC_HOST_CLIENT_ADMIN_PROD
@@ -22,6 +17,16 @@ export const HOSTNAME_CLIENT_ADMIN = isProduction
 export const HOSTNAME_CLIENT_POS = isProduction
   ? process.env.NEXT_PUBLIC_HOST_CLIENT_POS_PROD
   : process.env.NEXT_PUBLIC_HOST_CLIENT_POS_DEV;
+
+// Select client kds host
+export const HOSTNAME_CLIENT_KDS = isProduction
+  ? process.env.NEXT_PUBLIC_HOST_CLIENT_KDS_PROD
+  : process.env.NEXT_PUBLIC_HOST_CLIENT_KDS_DEV;
+
+// Select client web host
+export const HOSTNAME_CLIENT_WEB = isProduction
+  ? process.env.NEXT_PUBLIC_HOST_CLIENT_WEB_PROD
+  : process.env.NEXT_PUBLIC_HOST_CLIENT_WEB_DEV;
 
 // Select server host
 const HOSTNAME_SERVER = isProduction
@@ -50,4 +55,22 @@ export const API_URL = `${BASE_URL_SERVER}/api`;
 
 export const GEO_DATA_URL = {
   COUNTRIES: `${process.env.NEXT_PUBLIC_REST_COUNTRIES_API_URL}`,
+};
+
+export const AUTH_URLS = {
+  SIGN_IN: `/auth/sign-in`,
+  SIGN_UP: `/auth/sign-up`,
+  CHECK_EMAIL: `/auth/check-email`,
+  ERROR: `/auth/error`,
+  SIGN_OUT: `/auth/sign-out`,
+  REDIRECT: {
+    DEFAULT: '/app',
+  },
+};
+
+export const BASE_URL_CLIENT = {
+  ADMIN: `${getUrlPrefix(HOSTNAME_CLIENT_ADMIN)}${HOSTNAME_CLIENT_ADMIN}`,
+  POS: `${getUrlPrefix(HOSTNAME_CLIENT_POS)}${HOSTNAME_CLIENT_POS}`,
+  KDS: `${getUrlPrefix(HOSTNAME_CLIENT_KDS)}${HOSTNAME_CLIENT_KDS}`,
+  WEB: `${getUrlPrefix(HOSTNAME_CLIENT_WEB)}${HOSTNAME_CLIENT_WEB}`,
 };

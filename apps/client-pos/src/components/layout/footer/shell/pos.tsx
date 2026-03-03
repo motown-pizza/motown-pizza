@@ -11,7 +11,7 @@ import {
 } from '@repo/constants/sizes';
 import { usePathname, useRouter } from 'next/navigation';
 import { IconPlus } from '@tabler/icons-react';
-import ModalOrderNew from '@/components/common/modals/orders/new';
+import ModalOrderNew from '@repo/components/common/modals/crud/order';
 
 export default function Pos() {
   const pathname = usePathname();
