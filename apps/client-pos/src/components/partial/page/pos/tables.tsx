@@ -26,7 +26,7 @@ import {
 import { IconArrowLeft, IconMoodPuzzled } from '@tabler/icons-react';
 import NextLink from '@repo/components/common/anchor/next-link';
 import { useStoreTableBooking } from '@repo/libraries/zustand/stores/table-booking';
-import { getTableStatus } from '@/hooks/table';
+import { getTableStatus } from '@repo/hooks/table';
 import { TableGet } from '@repo/types/models/table';
 
 export default function Tables() {

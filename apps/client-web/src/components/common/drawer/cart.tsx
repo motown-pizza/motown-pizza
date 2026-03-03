@@ -22,7 +22,7 @@ import { sortArray } from '@repo/utilities/array';
 import { Order } from '@repo/types/enums';
 import NextLink from '@repo/components/common/anchor/next-link';
 import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
-import { useGetSum } from '@/hooks/order';
+import { useGetSum } from '@repo/hooks/order';
 
 export default function Cart({ children }: { children: React.ReactNode }) {
   const [opened, { open, close }] = useDisclosure(false);

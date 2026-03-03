@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Avatar,
   Box,
@@ -20,13 +20,13 @@ import {
 } from '@mantine/core';
 import NextLink from '@repo/components/common/anchor/next-link';
 import { getRegionalDate } from '@repo/utilities/date-time';
-import CardOverview from '@/components/common/cards/overview';
+import CardOverview from '@repo/components/common/cards/overview/main';
 import {
   IconCoin,
   IconMoodPuzzled,
   IconToolsKitchen,
 } from '@tabler/icons-react';
-import InputSearch from '@/components/common/inputs/search';
+import InputSearch from '@repo/components/common/inputs/text/search';
 import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
 import { OrderGet } from '@repo/types/models/order';
 import { capitalizeWords } from '@repo/utilities/string';
@@ -45,7 +45,7 @@ import {
   ICON_WRAPPER_SIZE,
   SECTION_SPACING,
 } from '@repo/constants/sizes';
-import BadgeOrderStatus from '../../../common/badges/order-status';
+import BadgeOrderStatus from '@repo/components/common/badges/order-status';
 import { useTime } from '@repo/hooks/time';
 
 export default function Home() {
@@ -137,6 +137,8 @@ function CardRecentOrders() {
     (oi) => oi.order_status != OrderStatus.DRAFT
   );
 
+  const [search, setSearch] = useState('');
+
   return (
     <Card bg={'var(--mantine-color-dark-9)'} padding={0}>
       <ScrollAreaAutosize
@@ -158,6 +160,7 @@ function CardRecentOrders() {
 
               <Group justify="end" gap={'xs'}>
                 <InputSearch
+                  props={{ value: search, setValue: setSearch }}
                   w={{ md: 200 }}
                   size="xs"
                   variant="filled"

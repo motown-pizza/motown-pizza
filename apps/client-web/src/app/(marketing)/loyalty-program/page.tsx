@@ -23,7 +23,7 @@ import {
 } from '@repo/constants/sizes';
 import ModalLoyaltyProgram from '@/components/common/modal/loyalty-program';
 import { IconCheck } from '@tabler/icons-react';
-import AccordionFaq from '@/components/common/accordions/faq';
+import AccordionFaq from '@repo/components/common/accordions/faq';
 import { faqLoyalty } from '@/data/faq';
 import IntroSection from '@repo/components/layout/intros/section';
 

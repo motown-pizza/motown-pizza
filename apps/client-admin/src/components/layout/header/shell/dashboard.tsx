@@ -4,11 +4,11 @@ import React from 'react';
 import { Box, Burger, Group, Skeleton } from '@mantine/core';
 import { useStoreAppShell } from '@repo/libraries/zustand/stores/shell';
 import ImageDefault from '@repo/components/common/images/default';
-import { images } from '@/assets/images';
-import { APP_NAME } from '@/data/constants';
+import { images } from '@repo/constants/images';
+import { APP_NAME } from '@repo/constants/app';
 import { ICON_WRAPPER_SIZE } from '@repo/constants/sizes';
-import MenuUser from '@/components/common/menu/user';
-import AvatarMain from '@/components/common/avatars/main';
+import MenuUser from '@repo/components/common/menu/user';
+import AvatarMain from '@repo/components/common/avatars/main';
 import IndicatorNetworkStatus from '@repo/components/common/indicators/network-status';
 import { useStoreSyncStatus } from '@repo/libraries/zustand/stores/sync-status';
 import IndicatorTheme from '@repo/components/common/indicators/theme';
@@ -43,7 +43,7 @@ export default function Dashboard() {
           src={images.brand.logo.landscape.meta}
           height={40}
           width={120}
-          alt={APP_NAME}
+          alt={APP_NAME.ADMIN}
         />
       </Group>
 

@@ -22,7 +22,7 @@ import {
 import { IconMinus, IconPlus } from '@tabler/icons-react';
 import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-placement';
 import { useOrderActions } from '@repo/hooks/actions/order';
-import { useFormOrderNew } from '@/hooks/form/order/new';
+import { useFormOrderNew } from '@repo/hooks/form/order';
 import { OrderFulfilmentType } from '@repo/types/models/enums';
 import { capitalizeWords } from '@repo/utilities/string';
 
@@ -39,7 +39,11 @@ export default function Order({
   const { form, handleSubmit } = useFormOrderNew({}, { close: options?.close });
 
   return (
-    <Box component="form" onSubmit={form.onSubmit(handleSubmit)} noValidate>
+    <Box
+      component="form"
+      onSubmit={form.onSubmit(() => handleSubmit())}
+      noValidate
+    >
       <Grid>
         <GridCol span={12}>
           <TextInput

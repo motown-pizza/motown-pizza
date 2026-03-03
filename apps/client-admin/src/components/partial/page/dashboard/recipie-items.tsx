@@ -5,7 +5,7 @@ import LayoutSection from '@repo/components/layout/section';
 import { Button, Group, Title } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
-import ModalCrudRecipieItem from '@/components/common/modals/crud/recipie-item';
+import ModalCrudRecipieItem from '@repo/components/common/modals/crud/recipie-item';
 import TableRecipieItems from '@/components/common/tables/recipie-items';
 import { usePathname } from 'next/navigation';
 import { crumbify } from '@repo/utilities/url';

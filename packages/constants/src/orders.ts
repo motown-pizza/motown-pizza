@@ -10,12 +10,11 @@ import {
   Status,
   SyncStatus,
 } from '@repo/types/models/enums';
-import { generateUUID } from '@repo/utilities/generators';
 
 const now = new Date();
 
 export const defaultOrderDetails: OrderGet = {
-  id: generateUUID(),
+  id: 'new',
   customer_name: '',
   customer_phone: '',
   eta_estimate: '',

@@ -9,13 +9,13 @@ import React from 'react';
 import { Metadata } from 'next';
 import LayoutBody from '@repo/components/layout/body';
 import AffixNavbar from '@repo/components/common/affixi/navbar';
-import { APP_NAME } from '@/data/constants';
+import { APP_NAME } from '@repo/constants/app';
 import HeaderMain from '@/components/layout/header/main';
 import NavbarMain from '@/components/layout/navbar/main';
 import FooterMain from '@/components/layout/footer/main';
 
 export const metadata: Metadata = {
-  title: { default: APP_NAME, template: `%s - ${APP_NAME}` },
+  title: { default: APP_NAME.WEB, template: `%s - ${APP_NAME.WEB}` },
 };
 
 export default async function LayoutMarketing({

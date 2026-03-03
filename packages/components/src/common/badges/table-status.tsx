@@ -1,4 +1,4 @@
-import { useTableStatus } from '@/hooks/table';
+import { useTableStatus } from '@repo/hooks/table';
 import { Badge } from '@mantine/core';
 import { TableStatus as EnumTableStatus } from '@repo/types/models/enums';
 import { TableGet } from '@repo/types/models/table';

@@ -4,7 +4,7 @@ import React from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { Modal } from '@mantine/core';
 import LayoutModal from '@repo/components/layout/modal';
-import FormProduct from '@/components/form/product';
+import FormProduct from '../../../form/stores/product';
 import { ProductGet } from '@repo/types/models/product';
 
 export default function Product({

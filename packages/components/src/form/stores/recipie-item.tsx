@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useFormRecipieItem } from '@/hooks/form/recipie-item';
+import { useFormRecipieItem } from '@repo/hooks/form/recipie-item';
 import {
   Button,
   Center,

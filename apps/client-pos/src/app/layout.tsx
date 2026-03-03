@@ -19,8 +19,8 @@ import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
 import ProviderMantine from '@repo/components/provider/mantine';
 import ProviderStore from '@/components/provider/store';
 import ProviderSync from '@/components/provider/sync';
-import { APP_NAME } from '@/data/constants';
-import { mantine } from '@/assets/styles';
+import { APP_NAME } from '@repo/constants/app';
+import { mantine } from '@/data/styles';
 import { DEFAULT_COLOR_SCHEME } from '@repo/constants/other';
 
 const geistSans = Geist({
@@ -34,7 +34,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: APP_NAME,
+  title: APP_NAME.POS,
   description: '',
 };
 

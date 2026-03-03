@@ -20,8 +20,8 @@ import {
   ICON_WRAPPER_SIZE,
   SECTION_SPACING,
 } from '@repo/constants/sizes';
-import { socials } from '@repo/constants/app';
-import { APP_NAME } from '@/data/constants';
+import { SOCIALS } from '@repo/constants/app';
+import { APP_NAME } from '@repo/constants/app';
 import {
   IconBrandFacebook,
   IconBrandInstagram,
@@ -102,7 +102,7 @@ export default function Main() {
       <LayoutSection id={'footer-main-fine'}>
         <Group justify="center" fz={'sm'} c={'white'}>
           <Text inherit>
-            © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
+            © {new Date().getFullYear()} {APP_NAME.WEB}. All rights reserved.
           </Text>
         </Group>
       </LayoutSection>
@@ -142,22 +142,22 @@ const linkGroups = [
 const social = [
   {
     icon: IconBrandX,
-    label: socials[0].label,
-    link: socials[0].link,
+    label: SOCIALS.X.label,
+    link: SOCIALS.X.link,
   },
   {
     icon: IconBrandFacebook,
-    label: socials[1].label,
-    link: socials[1].link,
+    label: SOCIALS.FB.label,
+    link: SOCIALS.FB.link,
   },
   {
     icon: IconBrandInstagram,
-    label: socials[2].label,
-    link: socials[2].link,
+    label: SOCIALS.IG.label,
+    link: SOCIALS.IG.link,
   },
   {
     icon: IconBrandLinkedin,
-    label: socials[3].label,
-    link: socials[3].link,
+    label: SOCIALS.LI.label,
+    link: SOCIALS.LI.link,
   },
 ];

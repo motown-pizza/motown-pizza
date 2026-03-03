@@ -2,13 +2,13 @@ import React from 'react';
 import LayoutPage from '@repo/components/layout/page';
 import { typeParams } from '../layout';
 import { extractUuidFromParam, linkify } from '@repo/utilities/url';
+import { PostRelations } from '@repo/types/models/post';
 // import { postsGet } from '@repo/handlers/requests/database/posts';
-import { samplePosts as posts } from '@/data/sample/posts';
 
 export async function generateStaticParams() {
   // const { items: posts }: { items: PostRelations[] } = await postsGet();
 
-  return posts.map((post) => ({
+  return ([] as PostRelations[]).map((post) => ({
     'postTitle-postId': `${linkify(post.title)}-${post.id}`,
   }));
 }

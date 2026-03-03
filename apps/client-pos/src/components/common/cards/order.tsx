@@ -14,10 +14,10 @@ import {
 } from '@mantine/core';
 import { OrderGet } from '@repo/types/models/order';
 import { capitalizeWords } from '@repo/utilities/string';
-import BadgeOrderStatus from '../badges/order-status';
+import BadgeOrderStatus from '@repo/components/common/badges/order-status';
 import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
 import { getRegionalDate } from '@repo/utilities/date-time';
-import BadgeOrderType from '../badges/order-type';
+import BadgeOrderType from '@repo/components/common/badges/order-type';
 import { OrderFulfilmentType } from '@repo/types/models/enums';
 import { useStoreTable } from '@repo/libraries/zustand/stores/table';
 import { useStoreTableBooking } from '@repo/libraries/zustand/stores/table-booking';

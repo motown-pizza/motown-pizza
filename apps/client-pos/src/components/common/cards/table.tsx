@@ -13,10 +13,10 @@ import {
   Title,
 } from '@mantine/core';
 import { TableGet } from '@repo/types/models/table';
-import BadgeTableStatus from '../badges/table-status';
+import BadgeTableStatus from '@repo/components/common/badges/table-status';
 import { useStoreTableBooking } from '@repo/libraries/zustand/stores/table-booking';
 import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
-import { useOrderPlacementData } from '@/hooks/order';
+import { useOrderPlacementData } from '@repo/hooks/order';
 import { IconCheck } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import { TableBookingStatus } from '@repo/types/models/enums';
@@ -24,7 +24,7 @@ import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-pla
 import { useRouter } from 'next/navigation';
 import { useTableBookingActions } from '@repo/hooks/actions/table-booking';
 import { generateUUID } from '@repo/utilities/generators';
-import { useTableStatus } from '@/hooks/table';
+import { useTableStatus } from '@repo/hooks/table';
 import { useOrderActions } from '@repo/hooks/actions/order';
 
 export default function Table({ props }: { props: TableGet }) {

@@ -9,12 +9,12 @@ import React from 'react';
 import { Metadata } from 'next';
 import LayoutBody from '@repo/components/layout/body';
 import LayoutShellPos from '@/components/layout/shell/pos';
-import { APP_NAME } from '@/data/constants';
+import { APP_NAME } from '@repo/constants/app';
 
 export const metadata: Metadata = {
   title: {
     default: 'POS',
-    template: `%s - POS - ${APP_NAME}`,
+    template: `%s - POS - ${APP_NAME.POS}`,
   },
 };
 

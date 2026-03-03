@@ -1,14 +1,14 @@
 import React from 'react';
 import { Metadata } from 'next';
 import LayoutBody from '@repo/components/layout/body';
-import { APP_NAME } from '@/data/constants';
+import { APP_NAME } from '@repo/constants/app';
 
 export type typeParams = Promise<{
   'postTitle-postId': string;
 }>;
 
 export const metadata: Metadata = {
-  title: { default: 'Blog', template: `%s - Blog - ${APP_NAME}` },
+  title: { default: 'Blog', template: `%s - Blog - ${APP_NAME.WEB}` },
 };
 
 export default function LayoutBlog({

@@ -4,7 +4,7 @@ import LayoutPage from '@repo/components/layout/page';
 import LayoutSection from '@repo/components/layout/section';
 import IntroPage from '@repo/components/layout/intros/page';
 import { Box, Grid, GridCol } from '@mantine/core';
-import FormContact from '@/components/form/contact';
+import FormContact from '@repo/components/form/contact';
 import { SECTION_SPACING } from '@repo/constants/sizes';
 
 export const metadata: Metadata = { title: 'Contact' };

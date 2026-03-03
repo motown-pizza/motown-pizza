@@ -1,24 +1,26 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Burger, Grid, GridCol, Group, Skeleton } from '@mantine/core';
 import { useStoreAppShell } from '@repo/libraries/zustand/stores/shell';
 import ImageDefault from '@repo/components/common/images/default';
-import { images } from '@/assets/images';
-import { APP_NAME } from '@/data/constants';
+import { images } from '@repo/constants/images';
+import { APP_NAME } from '@repo/constants/app';
 import { ICON_WRAPPER_SIZE } from '@repo/constants/sizes';
-import MenuUser from '@/components/common/menu/user';
-import AvatarMain from '@/components/common/avatars/main';
+import MenuUser from '@repo/components/common/menu/user';
+import AvatarMain from '@repo/components/common/avatars/main';
 import IndicatorNetworkStatus from '@repo/components/common/indicators/network-status';
 import { useStoreSyncStatus } from '@repo/libraries/zustand/stores/sync-status';
 import IndicatorTheme from '@repo/components/common/indicators/theme';
 import { useStoreTheme } from '@repo/libraries/zustand/stores/theme';
-import InputSearch from '../../../common/inputs/search';
+import InputSearch from '@repo/components/common/inputs/text/search';
 
 export default function Pos() {
   const { appshell, setAppShell } = useStoreAppShell();
   const { syncStatus } = useStoreSyncStatus();
   const { theme, setTheme } = useStoreTheme();
+
+  const [search, setSearch] = useState('');
 
   const handleToogle = () => {
     if (!appshell) return;
@@ -45,7 +47,7 @@ export default function Pos() {
             src={images.brand.logo.landscape.meta}
             height={60}
             width={120}
-            alt={APP_NAME}
+            alt={APP_NAME.POS}
             style={{ transform: 'scale(1.2)' }}
           />
         </Group>
@@ -54,6 +56,7 @@ export default function Pos() {
       <GridCol span={6}>
         <Group justify="center">
           <InputSearch
+            props={{ value: search, setValue: setSearch }}
             w={{ md: '75%' }}
             variant="filled"
             styles={{

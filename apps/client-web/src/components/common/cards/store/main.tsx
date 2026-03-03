@@ -3,7 +3,7 @@ import { Box, Button, Card, Group, Stack, Text } from '@mantine/core';
 import { IconBuildingStore, IconMapPin, IconPhone } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-placement';
-import { defaultOrderDetails } from '@/data/orders';
+import { defaultOrderDetails } from '@repo/constants/orders';
 import { useRouter } from 'next/navigation';
 import { StoreGet } from '@repo/constants/stores';
 import { useOrderActions } from '@repo/hooks/actions/order';

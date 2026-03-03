@@ -27,7 +27,7 @@ import FooterMain from '@/components/layout/footer/main';
 import NextLink from '@repo/components/common/anchor/next-link';
 import { OrderFulfilmentType } from '@repo/types/models/enums';
 import ImageDefault from '@repo/components/common/images/default';
-import { images } from '@/assets/images';
+import { images } from '@repo/constants/images';
 import { SECTION_SPACING } from '@repo/constants/sizes';
 
 export default function Home() {

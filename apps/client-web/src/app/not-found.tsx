@@ -8,15 +8,11 @@
 import React from 'react';
 import Error404 from '@repo/components/partial/errors/404';
 import ProviderMantine from '@repo/components/provider/mantine';
-import { mantine } from '@/assets/styles';
-import { APP_NAME } from '@/data/constants';
+import { mantine } from '@/data/styles';
 
 export default function NotFound() {
   return (
-    <ProviderMantine
-      appThemeProps={{ styleSheets: { ...mantine } }}
-      appName={APP_NAME}
-    >
+    <ProviderMantine appThemeProps={{ styleSheets: { ...mantine } }}>
       <Error404 />
     </ProviderMantine>
   );

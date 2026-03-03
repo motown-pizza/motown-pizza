@@ -42,7 +42,7 @@ import {
   IconTrash,
 } from '@tabler/icons-react';
 import { usePaginate } from '@repo/hooks/paginate';
-import ModalCrudRecipieItem from '../modals/crud/recipie-item';
+import ModalCrudRecipieItem from '@repo/components/common/modals/crud/recipie-item';
 import { sortArray } from '@repo/utilities/array';
 import { Order } from '@repo/types/enums';
 import ModalConfirm from '@repo/components/common/modals/confirm';

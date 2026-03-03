@@ -21,7 +21,7 @@ import {
 } from '@mantine/core';
 import IntroSection from '@repo/components/layout/intros/section';
 import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-placement';
-import { defaultOrderDetails } from '@/data/orders';
+import { defaultOrderDetails } from '@repo/constants/orders';
 import {
   OrderFulfilmentType,
   OrderPaymentMethod,
@@ -29,13 +29,13 @@ import {
   OrderTime,
 } from '@repo/types/models/enums';
 import { stores } from '@repo/constants/stores';
-import FormContact from '@/components/form/contact';
-import { APP_NAME } from '@/data/constants';
+import FormContact from '@repo/components/form/contact';
+import { APP_NAME } from '@repo/constants/app';
 import ImageDefault from '@repo/components/common/images/default';
-import { images } from '@/assets/images';
+import { images } from '@repo/constants/images';
 import NextLink from '@repo/components/common/anchor/next-link';
 import { useOrderActions } from '@repo/hooks/actions/order';
-import { useGetSum } from '@/hooks/order';
+import { useGetSum } from '@repo/hooks/order';
 import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
 import CardMenuCart from '@/components/common/cards/menu/cart';
 import { SECTION_SPACING } from '@repo/constants/sizes';
@@ -174,7 +174,7 @@ export default function Checkout() {
             </Card>
 
             <Text fz={'sm'} c={'dimmed'}>
-              You can also sign in to your {APP_NAME} profile for faster
+              You can also sign in to your {APP_NAME.WEB} profile for faster
               checkout.
             </Text>
           </Stack>

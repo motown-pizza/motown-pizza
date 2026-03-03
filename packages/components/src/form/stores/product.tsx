@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useFormProduct } from '@/hooks/form/product';
+import { useFormProduct } from '@repo/hooks/form/product';
 import {
   Button,
   Center,
@@ -30,11 +30,11 @@ import { useMediaQuery } from '@mantine/hooks';
 import { ProductDietaryType, ProductType } from '@repo/types/models/enums';
 import { capitalizeWords } from '@repo/utilities/string';
 import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
-import ModalCrudProductVariant from '../common/modals/crud/product-variant';
-import CardProductVariant from '../common/cards/product-variant';
+import ModalCrudProductVariant from '@repo/components/common/modals/crud/product-variant';
+import CardProductVariant from '@repo/components/common/cards/product-variant';
+import DropzoneImage from '@repo/components/common/dropzones/image';
 import { sortArray } from '@repo/utilities/array';
 import { Order } from '@repo/types/enums';
-import DropzoneImage from '../common/dropzones/image';
 
 export default function Product({
   props,

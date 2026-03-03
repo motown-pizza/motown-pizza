@@ -19,8 +19,8 @@ import { Montserrat, Geist_Mono } from 'next/font/google';
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
 import ProviderMantine from '@repo/components/provider/mantine';
 import ProviderStore from '@/components/provider/store';
-import { APP_NAME } from '@/data/constants';
-import { mantine } from '@/assets/styles';
+import { APP_NAME } from '@repo/constants/app';
+import { mantine } from '@/data/styles';
 import { DEFAULT_COLOR_SCHEME } from '@repo/constants/other';
 
 const montserrat = Montserrat({
@@ -34,7 +34,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: APP_NAME,
+  title: APP_NAME.WEB,
   description: '',
 };
 
@@ -61,7 +61,7 @@ export default async function RootLayout({
           options={{ withNotifications: true }}
           appThemeProps={{ styleSheets: { ...mantine } }}
           colorScheme={DEFAULT_COLOR_SCHEME}
-          appName={APP_NAME}
+          appName={APP_NAME.WEB}
         >
           <ProviderStore>{children}</ProviderStore>
         </ProviderMantine>
