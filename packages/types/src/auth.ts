@@ -6,3 +6,7 @@ export type SignIn = {
 };
 
 export type SignUp = { email: string; password: string };
+
+export type SignOut = {
+  options: { baseUrl: string };
+};

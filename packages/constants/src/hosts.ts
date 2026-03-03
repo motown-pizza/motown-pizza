@@ -8,12 +8,16 @@
 export const crossOrigins = [
   'localhost',
   '127.0.0.1',
-  'domain.com', // production domain
-  'devokrann.vercel.app', // vercel deployment
-  'motown-pizza-server.vercel.app',
-  'motown-pizza-client-admin.vercel.app',
-  'motown-pizza-client-pos.vercel.app',
+
   'motown-pizza-client-web.vercel.app',
+  'motownpizza.com',
+
+  'motown-pizza-client-admin.vercel.app',
+  'admin.motownpizza.com',
+
+  'motown-pizza-client-pos.vercel.app',
+  'pos.motownpizza.com',
+
   'motown-pizza-client-kds.vercel.app',
-  'motown-pizza-server.vercel.app',
+  'kds.motownpizza.com',
 ];

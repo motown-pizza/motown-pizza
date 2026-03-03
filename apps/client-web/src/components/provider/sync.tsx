@@ -11,34 +11,23 @@ import React from 'react';
 import { useDebouncedCallback, useNetwork } from '@mantine/hooks';
 import { useStoreSession } from '@repo/libraries/zustand/stores/session';
 import { useStoreSyncStatus } from '@repo/libraries/zustand/stores/sync-status';
-import { handleSync, syncToServerAfterDelay } from '@/utilities/sync';
-import {
-  useSyncCartItems,
-  useSyncCategories,
-  useSyncDeliveries,
-  useSyncIngredients,
-  useSyncOrderItems,
-  useSyncOrders,
-  useSyncPosts,
-  useSyncProducts,
-  useSyncProductVariants,
-  useSyncRecipieItems,
-} from '@repo/hooks/sync';
+import { handleSync, syncToServerAfterDelay } from '@repo/libraries/sync';
+import { useSyncStores } from '@repo/hooks/sync';
 import { SyncParams } from '@repo/types/sync';
-import { useSyncQueue } from '@repo/utilities/sync';
-import { DEBOUNCE_VALUE } from '@repo/constants/sizes';
+import { useSyncQueue } from '@repo/libraries/sync';
 
 export default function Sync({ children }: { children: React.ReactNode }) {
   const networkStatus = useNetwork();
 
-  const { session } = useStoreSession();
-  const { syncStatus, setSyncStatus } = useStoreSyncStatus();
+  const session = useStoreSession((s) => s.session);
+  const syncStatus = useStoreSyncStatus((s) => s.syncStatus);
+  const setSyncStatus = useStoreSyncStatus((s) => s.setSyncStatus);
 
   const enqueueSync = useSyncQueue({ syncFunction: handleSync });
 
   const debounceSyncToServer = useDebouncedCallback(
     syncToServerAfterDelay,
-    DEBOUNCE_VALUE
+    500
   );
 
   const restProps = {
@@ -50,54 +39,19 @@ export default function Sync({ children }: { children: React.ReactNode }) {
     clientOnly: false,
   };
 
-  useSyncPosts({
+  useSyncStores({
     syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
     online: networkStatus.online,
-  });
-
-  useSyncCategories({
-    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
-    online: networkStatus.online,
-  });
-
-  useSyncProducts({
-    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
-    online: networkStatus.online,
-  });
-
-  useSyncProductVariants({
-    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
-    online: networkStatus.online,
-  });
-
-  useSyncIngredients({
-    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
-    online: networkStatus.online,
-  });
-
-  useSyncRecipieItems({
-    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
-    online: networkStatus.online,
-  });
-
-  useSyncCartItems({
-    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
-    online: networkStatus.online,
-  });
-
-  useSyncOrders({
-    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
-    online: networkStatus.online,
-  });
-
-  useSyncOrderItems({
-    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
-    online: networkStatus.online,
-  });
-
-  useSyncDeliveries({
-    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
-    online: networkStatus.online,
+    storesToSync: {
+      products: true,
+      productVariants: true,
+      ingredients: true,
+      recipieItems: true,
+      cartItems: true,
+      orders: true,
+      orderItems: true,
+      deliveries: true,
+    },
   });
 
   return <div>{children}</div>;

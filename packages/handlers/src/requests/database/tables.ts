@@ -15,11 +15,10 @@ import {
 
 const baseRequestUrl = `${API_URL}/tables`;
 
-export const tablesGet = async (options?: { profileId?: string }) => {
+export const tablesGet = async (params?: { userId?: string }) => {
   try {
     const request = new Request(
-      baseRequestUrl +
-        `${!options?.profileId ? '' : `?profileId=${options.profileId}`}`,
+      baseRequestUrl + `${!params?.userId ? '' : `?userId=${params.userId}`}`,
       {
         method: 'GET',
         headers: HEADERS.WITHOUT_BODY,

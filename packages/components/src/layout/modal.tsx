@@ -4,14 +4,7 @@ import {
   ICON_WRAPPER_SIZE,
 } from '@repo/constants/sizes';
 import { Alert } from '@repo/types/enums';
-import {
-  ActionIcon,
-  Divider,
-  Group,
-  Stack,
-  ThemeIcon,
-  Title,
-} from '@mantine/core';
+import { ActionIcon, Group, Stack, ThemeIcon, Title } from '@mantine/core';
 import {
   Icon,
   IconAlertCircle,
@@ -20,8 +13,6 @@ import {
   IconX,
 } from '@tabler/icons-react';
 import React from 'react';
-import IndicatorNetworkStatus from '../common/indicators/network-status';
-import { useStoreSyncStatus } from '@repo/libraries/zustand/stores/sync-status';
 
 export default function Modal({
   children,
@@ -33,8 +24,6 @@ export default function Modal({
   variant?: Alert;
   size?: string;
 }) {
-  const { syncStatus } = useStoreSyncStatus();
-
   let options: {
     icon: Icon | null;
     color: string | null;
@@ -57,21 +46,10 @@ export default function Modal({
       break;
   }
 
-  const titleComponent = (
-    <Title order={1} fz={'xl'} lh={1} ta={{ base: 'center', xs: 'start' }}>
-      {props.title}
-    </Title>
-  );
-
   return (
-    <Stack pos={'relative'} gap={!variant ? 'md' : 'xl'}>
-      <Group
-        justify={'space-between'}
-        align={variant && options.icon ? 'start' : undefined}
-        px={'md'}
-        pt={'md'}
-      >
-        {variant && options.icon ? (
+    <Stack pos={'relative'} gap={!variant ? 'md' : 'xl'} p={'md'}>
+      <Group justify={!options.icon ? 'end' : 'space-between'} align="start">
+        {options.icon && (
           <Group>
             <ThemeIcon
               size={ICON_WRAPPER_SIZE * 2}
@@ -81,28 +59,29 @@ export default function Modal({
               <options.icon size={ICON_SIZE * 2} stroke={ICON_STROKE_WIDTH} />
             </ThemeIcon>
           </Group>
-        ) : (
-          titleComponent
         )}
 
-        <Group gap={'xs'}>
-          <IndicatorNetworkStatus props={{ syncStatus: syncStatus }} />
-
-          <ActionIcon
-            size={ICON_WRAPPER_SIZE}
-            onClick={props.close}
-            variant="light"
-            color="gray"
-          >
-            <IconX size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-          </ActionIcon>
-        </Group>
+        <ActionIcon
+          size={ICON_WRAPPER_SIZE}
+          onClick={props.close}
+          variant="light"
+          color="gray"
+        >
+          <IconX size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+        </ActionIcon>
       </Group>
 
-      {!(variant && options.icon) && <Divider />}
-
-      <Stack px={'md'} pb={'md'}>
-        {variant && <Group>{titleComponent}</Group>}
+      <Stack>
+        <Group>
+          <Title
+            order={1}
+            fz={'xl'}
+            lh={1}
+            ta={{ base: 'center', xs: 'start' }}
+          >
+            {props.title}
+          </Title>
+        </Group>
 
         {children}
       </Stack>

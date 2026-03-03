@@ -6,27 +6,13 @@
  */
 
 import {
-  Icon,
-  IconBellRinging,
   IconBowlChopsticks,
   IconBrandAirtable,
-  IconHeart,
-  IconHelpCircle,
   IconHome,
-  IconInfoCircle,
-  IconLicense,
-  IconLock,
-  IconLogout,
-  IconPackage,
-  IconStar,
   IconToolsKitchen,
-  IconUser,
 } from '@tabler/icons-react';
-import { AUTH_URLS } from '@/data/constants';
-
-export type Link = { link: string; label: string; icon?: Icon };
-
-export type NavLink = Link & { subLinks: Link[] | null };
+import { cleanPaths } from '@repo/utilities/array';
+import { NavLink } from '@repo/types/link';
 
 export const links: NavLink[] = [
   {
@@ -68,73 +54,27 @@ export const posLinks: NavLink[] = [
   },
 ];
 
-export const userLinkItems = {
-  activity: [
-    {
-      icon: IconHeart,
-      link: `/account/wishlist`,
-      label: 'My Wishlist',
-    },
-    {
-      icon: IconPackage,
-      link: `/account/orders`,
-      label: 'My Orders',
-    },
-    {
-      icon: IconStar,
-      link: `/account/reviews`,
-      label: 'My Reviews',
-    },
-  ],
-  account: [
-    {
-      icon: IconUser,
-      link: `/account/profile`,
-      label: 'Profile Settings',
-    },
-    {
-      icon: IconLock,
-      link: `/account/security`,
-      label: 'Account Security',
-    },
-    // {
-    // 	icon: IconCoins,
-    // 	link: `/account/payment`,
-    // 	label: "Payment Details",
-    // },
-    // {
-    // 	icon: IconMapPin,
-    // 	link: `/account/addresses`,
-    // 	label: "Addresses",
-    // },
-    {
-      icon: IconBellRinging,
-      link: `/account/notifications`,
-      label: 'Notifications',
-    },
-  ],
-  support: [
-    {
-      icon: IconHelpCircle,
-      link: `/help`,
-      label: 'Help Center',
-    },
-    {
-      icon: IconLicense,
-      link: `/legal/terms-and-conditions`,
-      label: 'Terms and Conditions',
-    },
-    {
-      icon: IconInfoCircle,
-      link: `/legal/privacy-policy`,
-      label: 'Privacy Policy',
-    },
-  ],
-  danger: [
-    {
-      icon: IconLogout,
-      link: AUTH_URLS.SIGN_OUT,
-      label: 'Sign Out',
-    },
-  ],
-};
+const mainLinks = links.map((l) => l.link);
+const subLinks: string[] = [];
+
+links.map((l) => {
+  if (l.subLinks) {
+    l.subLinks.map((sl) => {
+      subLinks.push(sl.link);
+    });
+  }
+});
+
+export const unprotectedRoutes = [
+  ...cleanPaths(
+    [
+      '/',
+      ...mainLinks,
+      ...subLinks,
+      // '/legal/terms',
+      // '/legal/policy',
+    ].filter((l) => !l.startsWith('/#'))
+  ),
+];
+
+export const sitemapRoutes = [...unprotectedRoutes].filter((l) => l != '/');

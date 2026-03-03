@@ -23,7 +23,7 @@ import { IconMinus, IconPlus, IconShoppingCart } from '@tabler/icons-react';
 import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
 import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
 import { useCartItemActions } from '@repo/hooks/actions/cart-item';
-import { useOrderPlacementData } from '@/hooks/order';
+import { useOrderPlacementData } from '@repo/hooks/order';
 
 export default function MenuItem({ props }: { props: ProductGet }) {
   const { orderDetails } = useOrderPlacementData();
