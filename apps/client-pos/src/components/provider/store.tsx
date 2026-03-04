@@ -36,14 +36,14 @@ export default function Store({
     options: {
       clientOnly: false,
       storesToLoad: {
-        products: true,
-        productVariants: true,
-        ingredients: true,
         cartItems: true,
+        deliveries: true,
+        ingredients: true,
         orders: true,
         orderItems: true,
+        products: true,
+        productVariants: true,
         stockMovements: true,
-        deliveries: true,
         tables: true,
         tableBookings: true,
       },

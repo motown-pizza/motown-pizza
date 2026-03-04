@@ -10,14 +10,14 @@ export const CROSS_ORIGINS = [
   '127.0.0.1',
 
   'motown-pizza-client-web.vercel.app',
-  'motownpizza.com',
+  'motownpizza.co.ke',
 
   'motown-pizza-client-admin.vercel.app',
-  'admin.motownpizza.com',
+  'admin.motownpizza.co.ke',
 
   'motown-pizza-client-pos.vercel.app',
-  'pos.motownpizza.com',
+  'pos.motownpizza.co.ke',
 
   'motown-pizza-client-kds.vercel.app',
-  'kds.motownpizza.com',
+  'kds.motownpizza.co.ke',
 ];

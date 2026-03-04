@@ -23,7 +23,7 @@ export default function Home() {
   const apiStatus = 'online'; // could be dynamic in future
   const version = 'v1.0';
   const lastDeployment = '2026-02-17 10:00 UTC';
-  const rootSiteLink = 'meridianbyte.com';
+  const rootSiteLink = 'motownpizza.co.ke';
 
   const statusColor = apiStatus === 'online' ? 'green' : 'red';
 
@@ -37,7 +37,7 @@ export default function Home() {
               mb="xs"
               fz={{ base: '1.5rem', sm: 'var(--mantine-h1-font-size)' }}
             >
-              API.meridianbyte.com
+              API.motownpizza.co.ke
             </Title>
 
             <Text
