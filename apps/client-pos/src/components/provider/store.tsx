@@ -37,13 +37,11 @@ export default function Store({
       clientOnly: false,
       storesToLoad: {
         cartItems: true,
-        deliveries: true,
         ingredients: true,
         orders: true,
         orderItems: true,
         products: true,
         productVariants: true,
-        stockMovements: true,
         tables: true,
         tableBookings: true,
       },
