@@ -45,9 +45,9 @@ export default function Sync({ children }: { children: React.ReactNode }) {
     storesToSync: {
       products: true,
       productVariants: true,
-      ingredients: true,
       recipieItems: true,
       cartItems: true,
+      wishlistItems: true,
       orders: true,
       orderItems: true,
       deliveries: true,
