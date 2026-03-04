@@ -1,0 +1,5 @@
+export const APPSHELL = {
+  HEADER_HEIGHT: 60,
+  NAVBAR_WIDTH: 300,
+  FOOTER_HEIGHT: 60,
+};

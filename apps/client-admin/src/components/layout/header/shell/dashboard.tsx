@@ -2,9 +2,6 @@
 
 import React, { useState } from 'react';
 import { Box, Group, Skeleton } from '@mantine/core';
-import ImageDefault from '@repo/components/common/images/default';
-import { images } from '@repo/constants/images';
-import { APP_NAME } from '@repo/constants/app';
 import { ICON_WRAPPER_SIZE } from '@repo/constants/sizes';
 import MenuUser from '@repo/components/common/menu/user';
 import AvatarMain from '@repo/components/common/avatars/main';
@@ -31,7 +28,7 @@ export default function Dashboard() {
   // };
 
   return (
-    <Group justify="space-between" h={'100%'} px={'md'}>
+    <Group justify="space-between" h={'100%'} px={'lg'}>
       <Group>
         <ButtonAppshellNavbar />
 

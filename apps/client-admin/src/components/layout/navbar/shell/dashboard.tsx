@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { NavLink, Stack } from '@mantine/core';
+import { Box, Divider, Group, NavLink, Stack } from '@mantine/core';
 import {
   IconCheese,
   IconChefHat,
@@ -15,6 +15,10 @@ import {
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import ImageDefault from '@repo/components/common/images/default';
+import { images } from '@repo/constants/images';
+import { APP_NAME } from '@repo/constants/app';
+import { APPSHELL } from '@/data/constants';
 
 export default function Dashboard() {
   const pathname = usePathname();
@@ -62,8 +66,7 @@ export default function Dashboard() {
         component={Link}
         href={nl.link}
         defaultOpened={
-          true
-          // nli == 0 ? pathname == nl.link : pathname.includes(nl.link)
+          nli == 0 ? pathname == nl.link : pathname.includes(nl.link)
         }
       >
         <Stack gap={3}>{subLinks}</Stack>
@@ -72,9 +75,30 @@ export default function Dashboard() {
   });
 
   return (
-    <Stack p={'xs'} gap={4}>
-      {items}
-    </Stack>
+    <>
+      <Box
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 10,
+          backgroundColor:
+            'light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-7))',
+        }}
+      >
+        <Group justify="center" mih={APPSHELL.HEADER_HEIGHT} px={'sm'}>
+          <ImageDefault
+            src={images.brand.logo.landscape.meta}
+            height={60}
+            width={160}
+            alt={APP_NAME.ADMIN}
+          />
+        </Group>
+      </Box>
+
+      <Stack p={'xs'} pl={5} gap={4}>
+        {items}
+      </Stack>
+    </>
   );
 }
 
