@@ -51,8 +51,6 @@ const nextConfig: NextConfig = {
     implementation: 'sass-embedded',
     additionalData: `@use "${path.join(process.cwd(), '_mantine').replace(/\\/g, '/')}" as mantine;`,
   },
-
-  output: 'export',
 };
 
 export default nextConfig;
