@@ -17,6 +17,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
 
   return (
     <AppShell
+      layout="alt"
       header={{ height: 60 }}
       navbar={{
         width: 300,

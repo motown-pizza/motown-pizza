@@ -14,7 +14,7 @@ import {
   ICON_STROKE_WIDTH,
   ICON_WRAPPER_SIZE,
 } from '@repo/constants/sizes';
-import { IconDeviceDesktop, IconMoon, IconSun } from '@tabler/icons-react';
+import { IconMoon, IconSun } from '@tabler/icons-react';
 import { capitalizeWord } from '@repo/utilities/string';
 
 export default function Theme({
@@ -25,7 +25,7 @@ export default function Theme({
     setColorScheme: (colorScheme: ColorScheme) => void;
   };
 }) {
-  const { setColorScheme } = useMantineColorScheme({ keepTransitions: true });
+  const { setColorScheme } = useMantineColorScheme({ keepTransitions: false });
 
   const { handleChange } = useColorSchemeHandler({
     schemeState: props.colorScheme,
@@ -34,24 +34,15 @@ export default function Theme({
   });
 
   const iconProps = {
-    icon:
-      props.colorScheme == ColorScheme.LIGHT
-        ? IconSun
-        : props.colorScheme == ColorScheme.DARK
-          ? IconMoon
-          : IconDeviceDesktop,
+    icon: props.colorScheme == ColorScheme.LIGHT ? IconSun : IconMoon,
     label:
       props.colorScheme == ColorScheme.LIGHT
         ? ColorScheme.DARK
-        : props.colorScheme == ColorScheme.DARK
-          ? ColorScheme.AUTO
-          : ColorScheme.LIGHT,
+        : ColorScheme.LIGHT,
     action:
       props.colorScheme == ColorScheme.LIGHT
         ? ColorScheme.DARK
-        : props.colorScheme == ColorScheme.DARK
-          ? ColorScheme.AUTO
-          : ColorScheme.LIGHT,
+        : ColorScheme.LIGHT,
   };
 
   return (
@@ -68,6 +59,7 @@ export default function Theme({
           variant={'subtle'}
           size={ICON_WRAPPER_SIZE}
           onClick={() => handleChange(iconProps.action)}
+          color={'dark'}
         >
           <iconProps.icon size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
         </ActionIcon>

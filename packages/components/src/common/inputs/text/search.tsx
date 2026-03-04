@@ -3,18 +3,23 @@
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import { ActionIcon, TextInput, TextInputProps, Tooltip } from '@mantine/core';
 import { IconSearch, IconX } from '@tabler/icons-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDebouncedCallback } from '@mantine/hooks';
 import SpinnerApp from '../../spinners/app';
+import MenuSearch from '../../menu/search';
 
 export default function Search({
   props,
   ...restProps
 }: {
-  props: { value: string; setValue: any };
+  props: { value: string; setValue: any; options?: { withMenu?: boolean } };
 } & TextInputProps) {
   const [loading, setLoading] = useState(false);
-  const [value, setValue] = useState(props.value);
+  const [value, setSearchValue] = useState(props.value);
+
+  useEffect(() => {
+    setSearchValue(props.value);
+  }, [props.value]);
 
   const debounceHandleChange = useDebouncedCallback(async (v: string) => {
     props.setValue(v);
@@ -22,22 +27,33 @@ export default function Search({
   }, 500);
 
   const handleChange = (v: string) => {
-    setValue(v);
+    setSearchValue(v);
     setLoading(true);
     debounceHandleChange(v);
   };
 
-  return (
+  const [menuOpened, setMenuOpened] = useState(false);
+
+  useEffect(() => {
+    if (!value.trim().length) {
+      if (menuOpened) setMenuOpened(false);
+    } else {
+      if (!menuOpened) setMenuOpened(true);
+    }
+  }, [value]);
+
+  const input = (
     <TextInput
       value={value}
       onChange={(e) => handleChange(e.currentTarget.value)}
       variant="filled"
-      aria-label="Search notes"
-      placeholder="Search notes"
+      aria-label="Search for anything"
+      placeholder="Search for anything"
+      onBlur={() => setMenuOpened(false)}
       rightSection={
         loading ? (
           <SpinnerApp props={{ size: ICON_SIZE - 4 }} />
-        ) : !props.value.trim().length ? (
+        ) : !value.trim().length ? (
           <IconSearch size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
         ) : (
           <Tooltip label={'Clear Search'}>
@@ -45,7 +61,7 @@ export default function Search({
               size={ICON_SIZE}
               variant="transparent"
               onClick={() => {
-                setValue('');
+                setSearchValue('');
                 props.setValue('');
               }}
             >
@@ -63,5 +79,19 @@ export default function Search({
       }}
       {...restProps}
     />
+  );
+
+  return !props.options?.withMenu ? (
+    input
+  ) : (
+    <MenuSearch
+      props={{
+        opened: menuOpened,
+        setOpened: setMenuOpened,
+        setSearchValue: setSearchValue,
+      }}
+    >
+      {input}
+    </MenuSearch>
   );
 }
