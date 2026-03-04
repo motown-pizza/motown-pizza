@@ -19,9 +19,11 @@ import { Montserrat, Geist_Mono } from 'next/font/google';
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
 import ProviderMantine from '@repo/components/provider/mantine';
 import ProviderStore from '@/components/provider/store';
+import ProviderSync from '@/components/provider/sync';
 import { APP_NAME } from '@repo/constants/app';
 import { mantine } from '@/data/styles';
 import { DEFAULT_COLOR_SCHEME } from '@repo/constants/other';
+import { createClient } from '@repo/libraries/supabase/server';
 
 const montserrat = Montserrat({
   variable: '--font-montserrat',
@@ -43,6 +45,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const { data: session } = await supabase.auth.getUser();
+
   return (
     <html
       lang="en"
@@ -63,7 +68,9 @@ export default async function RootLayout({
           colorScheme={DEFAULT_COLOR_SCHEME}
           appName={APP_NAME.WEB}
         >
-          <ProviderStore>{children}</ProviderStore>
+          <ProviderStore props={{ sessionUser: session.user }}>
+            <ProviderSync>{children}</ProviderSync>
+          </ProviderStore>
         </ProviderMantine>
       </body>
     </html>

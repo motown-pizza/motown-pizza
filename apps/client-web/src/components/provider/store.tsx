@@ -25,15 +25,16 @@ export default function Store({
     sessionUser: props?.sessionUser || null,
     options: { clientOnly: false },
   });
+
   useLoadStores({
     options: {
       clientOnly: false,
       storesToLoad: {
         products: true,
         productVariants: true,
-        ingredients: true,
         recipieItems: true,
         cartItems: true,
+        wishlistItems: true,
         orders: true,
         orderItems: true,
         deliveries: true,
