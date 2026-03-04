@@ -28,7 +28,7 @@ export default function Store({
 
   useSessionStore({
     sessionUser: props?.sessionUser || null,
-    options: { clientOnly: true },
+    options: { clientOnly: false },
   });
 
   useThemeStore();
