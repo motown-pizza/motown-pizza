@@ -25,9 +25,9 @@ export default function User({ children }: { children: React.ReactNode }) {
 
   return (
     <Menu
-      position="top-start"
+      position="bottom-end"
       width={mobile ? 200 : 240}
-      trigger="click"
+      trigger="click-hover"
       openDelay={50}
       closeDelay={200}
       opened={desktop ? undefined : false}
