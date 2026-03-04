@@ -80,7 +80,7 @@ export function SignOut({
       <LoadingOverlay
         visible={clicked}
         zIndex={1000}
-        overlayProps={{ radius: 'sm', blur: 2 }}
+        overlayProps={{ radius: 'lg', blur: 2 }}
         loaderProps={{ size: 'xs' }}
       />
       {children}
