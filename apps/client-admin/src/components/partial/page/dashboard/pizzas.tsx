@@ -2,49 +2,29 @@
 
 import React from 'react';
 import LayoutSection from '@repo/components/layout/section';
-import { Button, Group, Title } from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
-import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
-import ModalCrudProduct from '@repo/components/common/modals/crud/product';
 import TableProducts from '@/components/common/tables/products';
-import { usePathname } from 'next/navigation';
-import { crumbify } from '@repo/utilities/url';
 import { ProductType } from '@repo/types/models/enums';
 import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
+import PartialPageLayout from '../layout';
+import PartialPageIntro from '../intro';
+import { Card } from '@mantine/core';
 
 export default function Pizzas() {
-  const pathname = usePathname();
-  const crumbs = crumbify(pathname);
-  const title = crumbs[crumbs.length - 1].label;
   const { products } = useStoreProduct();
 
   return (
-    <div>
-      <LayoutSection id="pizza-header" margined>
-        <Group justify="space-between">
-          <Title order={2}>{title}</Title>
+    <PartialPageLayout>
+      <PartialPageIntro />
 
-          <Group justify="end">
-            <ModalCrudProduct>
-              <Button
-                leftSection={
-                  <IconPlus size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-                }
-              >
-                New
-              </Button>
-            </ModalCrudProduct>
-          </Group>
-        </Group>
+      <LayoutSection id="pizza-content" containerized={false}>
+        <Card shadow="xs">
+          <TableProducts
+            props={{
+              products: products?.filter((p) => p.type == ProductType.PIZZA),
+            }}
+          />
+        </Card>
       </LayoutSection>
-
-      <LayoutSection id="pizza-content" margined>
-        <TableProducts
-          props={{
-            products: products?.filter((p) => p.type == ProductType.PIZZA),
-          }}
-        />
-      </LayoutSection>
-    </div>
+    </PartialPageLayout>
   );
 }

@@ -49,7 +49,12 @@ export default function Overview() {
 
   return (
     <div>
-      <LayoutSection id="overview-header" margined mb={'xl'}>
+      <LayoutSection
+        id="overview-header"
+        margined
+        mb={'xl'}
+        containerized={false}
+      >
         <Group justify="space-between">
           <div>
             <Title order={2}>Hello, Mike</Title>
@@ -67,7 +72,12 @@ export default function Overview() {
         </Group>
       </LayoutSection>
 
-      <LayoutSection id="overview-content" margined mt={'xl'}>
+      <LayoutSection
+        id="overview-content"
+        margined
+        mt={'xl'}
+        containerized={false}
+      >
         <Grid gutter={'lg'}>
           <GridCol span={8}>
             <Card bg={'transparent'} withBorder>

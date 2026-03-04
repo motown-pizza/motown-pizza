@@ -2,42 +2,21 @@
 
 import React from 'react';
 import LayoutSection from '@repo/components/layout/section';
-import { Button, Group, Title } from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
-import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
-import ModalCrudIngredient from '@repo/components/common/modals/crud/ingredient';
 import TableStockMovement from '@/components/common/tables/stock-movement';
-import { usePathname } from 'next/navigation';
-import { crumbify } from '@repo/utilities/url';
+import PartialPageLayout from '../layout';
+import PartialPageIntro from '../intro';
+import { Card } from '@mantine/core';
 
 export default function StockMovements() {
-  const pathname = usePathname();
-  const crumbs = crumbify(pathname);
-  const title = crumbs[crumbs.length - 1].label;
-
   return (
-    <div>
-      <LayoutSection id="stock-movements-header" margined>
-        <Group justify="space-between">
-          <Title order={2}>{title}</Title>
+    <PartialPageLayout>
+      <PartialPageIntro />
 
-          <Group justify="end">
-            <ModalCrudIngredient>
-              <Button
-                leftSection={
-                  <IconPlus size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-                }
-              >
-                New
-              </Button>
-            </ModalCrudIngredient>
-          </Group>
-        </Group>
+      <LayoutSection id="stock-movements-content" containerized={false}>
+        <Card shadow="xs">
+          <TableStockMovement />
+        </Card>
       </LayoutSection>
-
-      <LayoutSection id="stock-movements-content" margined>
-        <TableStockMovement />
-      </LayoutSection>
-    </div>
+    </PartialPageLayout>
   );
 }

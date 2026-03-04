@@ -11,6 +11,7 @@ import {
 import { useStoreAppShell } from '@repo/libraries/zustand/stores/shell';
 import HeaderShellDashboard from '../header/shell/dashboard';
 import NavbarShellDashboard from '../navbar/shell/dashboard';
+import { APPSHELL } from '@/data/constants';
 
 export default function Dashboard({ children }: { children: React.ReactNode }) {
   const { appshell } = useStoreAppShell();
@@ -18,9 +19,10 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
   return (
     <AppShell
       layout="alt"
-      header={{ height: 60 }}
+      withBorder={false}
+      header={{ height: APPSHELL.HEADER_HEIGHT }}
       navbar={{
-        width: 300,
+        width: APPSHELL.NAVBAR_WIDTH,
         breakpoint: 'sm',
         collapsed: {
           mobile: !appshell ? true : !appshell.navbar,
@@ -32,14 +34,22 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
         <HeaderShellDashboard />
       </AppShellHeader>
 
-      <AppShellNavbar>
-        <ScrollArea h={`calc(100vh - ${60}px)`} type="auto" scrollbars={'y'}>
+      <AppShellNavbar
+        bg={
+          'light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-7))'
+        }
+      >
+        <ScrollArea h={`calc(100vh)`} type="auto" scrollbars={'y'}>
           <NavbarShellDashboard />
         </ScrollArea>
       </AppShellNavbar>
 
       <AppShellMain>
-        <ScrollArea h={`calc(100vh - ${60}px)`} type="auto" scrollbars={'y'}>
+        <ScrollArea
+          h={`calc(100vh - ${APPSHELL.HEADER_HEIGHT}px)`}
+          type="auto"
+          scrollbars={'y'}
+        >
           {children}
         </ScrollArea>
       </AppShellMain>
