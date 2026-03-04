@@ -49,13 +49,13 @@ import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item
 import { useStoreStockMovement } from '@repo/libraries/zustand/stores/stock-movement';
 import { useStoreTable } from '@repo/libraries/zustand/stores/table';
 import { useStoreCategory } from '@repo/libraries/zustand/stores/category';
-import { categoriesGet } from '@repo/handlers/requests/database/category';
 import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
 import { useStoreDelivery } from '@repo/libraries/zustand/stores/delivery';
 import { useStoreTableBooking } from '@repo/libraries/zustand/stores/table-booking';
 import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
 import { useStoreWishlistItem } from '@repo/libraries/zustand/stores/wishlist-item';
 import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
+import { categoriesGet } from '@repo/handlers/requests/database/category';
 import { ingredientsGet } from '@repo/handlers/requests/database/ingredients';
 import { ordersGet } from '@repo/handlers/requests/database/orders';
 import { productsGet } from '@repo/handlers/requests/database/products';
@@ -320,7 +320,7 @@ export const LOAD_STORES: Record<string, LoadStoreConfig> = {
     fetchItems: recipieItemsGet,
     setState: (store, items) => store.setRecipieItems(items),
   },
-  stockMovments: {
+  stockMovements: {
     dataStore: STORE_NAME.STOCK_MOVEMENTS,
     useStoreHook: useStoreStockMovement,
     fetchItems: stockMovementsGet,
@@ -351,17 +351,19 @@ type LoadStoreKey = keyof typeof LOAD_STORES;
 const useGenericLoader = <K extends LoadStoreKey>(params: {
   storeKey: K;
   clientOnly?: boolean;
-  session?: SessionValue | null;
 }) => {
-  const { storeKey, clientOnly, session } = params;
+  const { storeKey, clientOnly } = params;
   const prevItemsRef = useRef<any[]>([]);
-  const noSession = !session || !session?.email;
 
   const config = LOAD_STORES[storeKey];
   const store = config.useStoreHook();
 
+  const session = useStoreSession((s) => s.session);
+
   useEffect(() => {
     if (session === undefined) return;
+
+    const noSession = !session || !session?.id;
 
     const load = async () => {
       if (prevItemsRef.current.length) return;
@@ -382,7 +384,7 @@ const useGenericLoader = <K extends LoadStoreKey>(params: {
     };
 
     load();
-  }, [store, clientOnly, session, noSession]);
+  }, [store, clientOnly, session]);
 };
 
 export const useLoadStores = (params?: {
@@ -393,7 +395,6 @@ export const useLoadStores = (params?: {
 }) => {
   const { options } = params || {};
   const { clientOnly, storesToLoad = {} } = options || {};
-  const session = useStoreSession((s) => s.session);
 
   const results = {} as Record<string, void>;
 
@@ -403,7 +404,6 @@ export const useLoadStores = (params?: {
     results[key] = useGenericLoader({
       storeKey: key,
       clientOnly,
-      session,
     });
   });
 

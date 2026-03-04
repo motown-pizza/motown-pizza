@@ -28,7 +28,7 @@ export default function Store({
 
   useSessionStore({
     sessionUser: props?.sessionUser || null,
-    options: { clientOnly: false },
+    options: { clientOnly: true },
   });
 
   useThemeStore();
@@ -38,10 +38,11 @@ export default function Store({
     options: {
       clientOnly: false,
       storesToLoad: {
+        profiles: true,
         products: true,
         productVariants: true,
         ingredients: true,
-        cartItems: true,
+        recipieItems: true,
         orders: true,
         orderItems: true,
         stockMovements: true,

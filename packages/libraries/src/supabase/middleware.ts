@@ -53,32 +53,32 @@ export const updateSession = async (
 
   // IMPORTANT: DO NOT REMOVE auth.getUser()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // const {
+  //   data: { user },
+  // } = await supabase.auth.getUser();
 
-  const { redirectToAuth, redirectFromAuth, redirectToHome } = validateRoute({
-    request,
-    user,
-    pathname: request.nextUrl.pathname,
-  });
+  // const { redirectToAuth, redirectFromAuth, redirectToHome } = validateRoute({
+  //   request,
+  //   user,
+  //   pathname: request.nextUrl.pathname,
+  // });
 
-  if (redirectToHome) {
-    const redirectUrl = new URL(baseUrl, request.url);
-    return NextResponse.redirect(redirectUrl);
-  }
+  // if (redirectToHome) {
+  //   const redirectUrl = new URL(baseUrl, request.url);
+  //   return NextResponse.redirect(redirectUrl);
+  // }
 
-  if (redirectToAuth) {
-    const redirectUrl = new URL(AUTH_URLS.SIGN_IN, request.url);
-    redirectUrl.searchParams.set(PARAM_NAME.REDIRECT, request.nextUrl.pathname);
+  // if (redirectToAuth) {
+  //   const redirectUrl = new URL(AUTH_URLS.SIGN_IN, request.url);
+  //   redirectUrl.searchParams.set(PARAM_NAME.REDIRECT, request.nextUrl.pathname);
 
-    return NextResponse.redirect(redirectUrl);
-  }
+  //   return NextResponse.redirect(redirectUrl);
+  // }
 
-  if (redirectFromAuth) {
-    const redirectUrl = new URL(baseUrl, request.url);
-    return NextResponse.redirect(redirectUrl);
-  }
+  // if (redirectFromAuth) {
+  //   const redirectUrl = new URL(baseUrl, request.url);
+  //   return NextResponse.redirect(redirectUrl);
+  // }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:
