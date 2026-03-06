@@ -45,7 +45,7 @@ import {
   ICON_WRAPPER_SIZE,
   SECTION_SPACING,
 } from '@repo/constants/sizes';
-import BadgeOrderStatus from '@repo/components/common/badges/order-status';
+import BadgeStatus from '@repo/components/common/badges/status';
 import { useTime } from '@repo/hooks/time';
 
 export default function Home() {
@@ -254,7 +254,7 @@ function CardOrderRecent({ props }: { props: OrderGet }) {
         </Group>
 
         <Group justify="end">
-          <BadgeOrderStatus props={props} />
+          <BadgeStatus props={{ status: props.order_status }} />
         </Group>
       </Group>
     </Card>

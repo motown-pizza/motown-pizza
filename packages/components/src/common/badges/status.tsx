@@ -1,15 +1,27 @@
 import { Badge } from '@mantine/core';
 import { OrderStatus as EnumOrderStatus } from '@repo/types/models/enums';
-import { OrderGet } from '@repo/types/models/order';
 import { capitalizeWords } from '@repo/utilities/string';
+import { Status as EnumStatus } from '@repo/types/models/enums';
 
-export default function OrderStatus({ props }: { props: OrderGet }) {
+export default function Status({ props }: { props: { status: any } }) {
   const badgeProps = {
     color: '',
-    label: capitalizeWords(props.order_status),
+    label: capitalizeWords(props.status),
   };
 
-  switch (props.order_status) {
+  switch (props.status) {
+    // default cases
+    case EnumStatus.ACTIVE:
+      badgeProps.color = 'green';
+      break;
+    case EnumStatus.DRAFT:
+      badgeProps.color = 'blue';
+      break;
+    case EnumStatus.INACTIVE:
+      badgeProps.color = 'yellow';
+      break;
+
+    // order cases
     case EnumOrderStatus.CANCELLED:
       badgeProps.color = 'red';
       break;

@@ -14,7 +14,7 @@ import {
 } from '@mantine/core';
 import { OrderGet } from '@repo/types/models/order';
 import { capitalizeWords } from '@repo/utilities/string';
-import BadgeOrderStatus from '@repo/components/common/badges/order-status';
+import BadgeStatus from '@repo/components/common/badges/status';
 import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
 import { getRegionalDate } from '@repo/utilities/date-time';
 import BadgeOrderType from '@repo/components/common/badges/order-type';
@@ -95,7 +95,7 @@ export default function Order({ props }: { props: OrderGet }) {
         </Group>
 
         <Group gap={'xs'}>
-          <BadgeOrderStatus props={props} />
+          <BadgeStatus props={{ status: props.order_status }} />
           <BadgeOrderType props={props} />
         </Group>
 
