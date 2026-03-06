@@ -6,6 +6,7 @@ import TableStockMovement from '@/components/common/tables/stock-movement';
 import PartialPageLayout from '../layout';
 import PartialPageIntro from '../intro';
 import { Card } from '@mantine/core';
+import CardTable from '@/components/common/cards/table';
 
 export default function StockMovements() {
   return (
@@ -13,9 +14,9 @@ export default function StockMovements() {
       <PartialPageIntro />
 
       <LayoutSection id="stock-movements-content" containerized={false}>
-        <Card shadow="xs">
+        <CardTable>
           <TableStockMovement />
-        </Card>
+        </CardTable>
       </LayoutSection>
     </PartialPageLayout>
   );

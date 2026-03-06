@@ -6,6 +6,7 @@ import TableRecipieItems from '@/components/common/tables/recipie-items';
 import PartialPageLayout from '../layout';
 import PartialPageIntro from '../intro';
 import { Card } from '@mantine/core';
+import CardTable from '@/components/common/cards/table';
 
 export default function RecipieItems() {
   return (
@@ -13,9 +14,9 @@ export default function RecipieItems() {
       <PartialPageIntro />
 
       <LayoutSection id="recipieItem-content" containerized={false}>
-        <Card shadow="xs">
+        <CardTable>
           <TableRecipieItems />
-        </Card>
+        </CardTable>
       </LayoutSection>
     </PartialPageLayout>
   );

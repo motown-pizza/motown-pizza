@@ -6,6 +6,7 @@ import TableOrders from '@/components/common/tables/orders';
 import PartialPageLayout from '../layout';
 import PartialPageIntro from '../intro';
 import { Card } from '@mantine/core';
+import CardTable from '@/components/common/cards/table';
 
 export default function Orders() {
   return (
@@ -13,9 +14,9 @@ export default function Orders() {
       <PartialPageIntro />
 
       <LayoutSection id="pizza-content" containerized={false}>
-        <Card shadow="xs">
+        <CardTable>
           <TableOrders />
-        </Card>
+        </CardTable>
       </LayoutSection>
     </PartialPageLayout>
   );

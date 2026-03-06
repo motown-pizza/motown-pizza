@@ -8,6 +8,7 @@ import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
 import PartialPageLayout from '../layout';
 import PartialPageIntro from '../intro';
 import { Card } from '@mantine/core';
+import CardTable from '@/components/common/cards/table';
 
 export default function Sides() {
   const { products } = useStoreProduct();
@@ -17,13 +18,13 @@ export default function Sides() {
       <PartialPageIntro />
 
       <LayoutSection id="side-content" containerized={false}>
-        <Card shadow="xs">
+        <CardTable>
           <TableProducts
             props={{
               products: products?.filter((p) => p.type == ProductType.SIDE),
             }}
           />
-        </Card>
+        </CardTable>
       </LayoutSection>
     </PartialPageLayout>
   );

@@ -1,25 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
   ActionIcon,
   Badge,
-  Box,
-  Button,
-  Center,
-  Checkbox,
-  Divider,
   Group,
   NumberFormatter,
-  Pagination,
-  Progress,
-  Skeleton,
   Stack,
-  Table,
-  TableTbody,
   TableTd,
   TableTh,
-  TableThead,
   TableTr,
   Text,
   ThemeIcon,
@@ -32,12 +21,13 @@ import {
   ICON_SIZE,
   ICON_STROKE_WIDTH,
   ICON_WRAPPER_SIZE,
-  SECTION_SPACING,
 } from '@repo/constants/sizes';
 import { StockMovementGet } from '@repo/types/models/stock-movement';
 import {
   MeasurementUnitType,
+  Status,
   StockMovementType,
+  SyncStatus,
 } from '@repo/types/models/enums';
 import {
   IconArrowDown,
@@ -45,35 +35,44 @@ import {
   IconEdit,
   IconTrash,
 } from '@tabler/icons-react';
-import { usePaginate } from '@repo/hooks/paginate';
 // import ModalCrudStockMovement from '../modals/crud/stock-movement';
-import { sortArray } from '@repo/utilities/array';
-import { Order } from '@repo/types/enums';
 import ModalConfirm from '@repo/components/common/modals/confirm';
 import { useStockMovementActions } from '@repo/hooks/actions/stock-movement';
 import { capitalizeWords } from '@repo/utilities/string';
 import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
 import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
+import { useTableListing } from '@repo/hooks/table-listing';
+import PartialTableHeader from '@repo/components/partial/table/header';
+import PartialTableMain from '@repo/components/partial/table/main';
+import PartialTableFooter from '@repo/components/partial/table/footer';
+import CheckboxTable from '@repo/components/common/checkboxes/table';
+import ButtonPublish from '@repo/components/common/buttons/publish';
+import ButtonDelete from '@repo/components/common/buttons/delete';
 
 export default function StockMovements({
   props,
 }: {
   props?: { stockMovements?: StockMovementGet[] };
 }) {
-  const { stockMovements } = useStoreStockMovement();
+  const { stockMovements, setStockMovements } = useStoreStockMovement();
   const { ingredients } = useStoreIngredient();
   const { orders } = useStoreOrder();
   const { stockMovementDelete } = useStockMovementActions();
 
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const filteredItems = props?.stockMovements || stockMovements;
 
-  const filteredItems = props?.stockMovements || stockMovements || [];
-
-  const { items, activePage, setActivePage, totalPages, pageRange } =
-    usePaginate(
-      sortArray(filteredItems, (v) => v.created_at, Order.DESCENDING),
-      15
-    );
+  const {
+    search,
+    setSearch,
+    selectedRows,
+    setSelectedRows,
+    items,
+    activePage,
+    setActivePage,
+    totalPages,
+    pageRange,
+    anyDraft,
+  } = useTableListing({ list: filteredItems || [] });
 
   const rows = items.map((p) => {
     const dates = {
@@ -93,19 +92,14 @@ export default function StockMovements({
         }
       >
         <TableTd w={widths.selection}>
-          <Center>
-            <Checkbox
-              aria-label={`Select ${ingredient?.name}`}
-              checked={selectedRows.includes(p.id)}
-              onChange={(event) =>
-                setSelectedRows(
-                  event.currentTarget.checked
-                    ? [...selectedRows, p.id]
-                    : selectedRows.filter((item) => item !== p.id)
-                )
-              }
-            />
-          </Center>
+          <CheckboxTable
+            props={{
+              list: filteredItems,
+              selectedRows,
+              setSelectedRows,
+              options: { head: true, itemId: p.id },
+            }}
+          />
         </TableTd>
 
         <TableTd w={widths.title}>
@@ -232,54 +226,14 @@ export default function StockMovements({
 
   return (
     <div>
-      <Group justify="space-between" mih={30}>
-        <Group>
-          {stockMovements === undefined ? (
-            <Skeleton h={20} w={120} />
-          ) : (
-            <Text fz={'lg'} fw={'bold'}>
-              <Text component="span" inherit>
-                {selectedRows.length ? 'Selected' : 'Total'}:{' '}
-              </Text>
-
-              <Text component="span" inherit>
-                {selectedRows.length ? (
-                  <NumberFormatter value={selectedRows.length} />
-                ) : (
-                  <NumberFormatter value={filteredItems.length || 0} />
-                )}
-              </Text>
-            </Text>
-          )}
-        </Group>
-
+      <PartialTableHeader
+        props={{ list: filteredItems, selectedRows, search, setSearch }}
+      >
         {selectedRows.length && (
-          <Group justify="end">
-            {/* {selectedRows.length == 1 && (
-              <ModalCrudStockMovement
-                props={{
-                  defaultValues: filteredItems?.find(
-                    (p) => p.id == selectedRows[0]
-                  ),
-                }}
-              >
-                <Button
-                  size="xs"
-                  leftSection={
-                    <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-                  }
-                >
-                  Edit StockMovement
-                </Button>
-              </ModalCrudStockMovement>
-            )} */}
-
-            {/* <ModalConfirm
+          <>
+            <ButtonPublish
               props={{
-                title: `${anyDraft ? 'Publish' : 'Unpublish'} StockMovements`,
-                desc: anyDraft
-                  ? `The selected stockMovements will be made visible to users.`
-                  : `The selected stockMovements will no longer be visible to users.`,
+                anyDraft,
                 onConfirm: () => {
                   setStockMovements(
                     stockMovements?.map((p) => {
@@ -296,151 +250,55 @@ export default function StockMovements({
                   setSelectedRows([]);
                 },
               }}
-            >
-              <Button
-                size="xs"
-                leftSection={
-                  <stockMovementsProps.draft
-                    size={ICON_SIZE}
-                    stroke={ICON_STROKE_WIDTH}
-                  />
-                }
-              >
-                {anyDraft ? 'Publish' : 'Unpublish'}
-              </Button>
-            </ModalConfirm> */}
+            />
 
-            {/* <ModalConfirm
+            <ButtonDelete
               props={{
-                title: `${anyActive ? 'Deactivate' : 'Activate'} StockMovements`,
-                desc: anyActive
-                  ? `The selected stockMovements will no longer be visible to users.`
-                  : `Visibility of the stockMovements to users will be restored.`,
                 onConfirm: () => {
-                  setStockMovements(
-                    stockMovements?.map((p) => {
-                      if (!selectedRows.includes(p.id)) return p;
+                  if (selectedRows.length == 1) {
+                    const stockMovement = stockMovements?.find(
+                      (i) => i.id == selectedRows[0]
+                    );
 
-                      return {
-                        ...p,
-                        sync_status: SyncStatus.PENDING,
-                        status: anyActive ? Status.INACTIVE : Status.ACTIVE,
-                      };
-                    })
-                  );
-
-                  setSelectedRows([]);
+                    if (stockMovement) stockMovementDelete(stockMovement);
+                  } else {
+                    const filteredStockMovement = stockMovements?.filter(
+                      (i) => !selectedRows.includes(i.id)
+                    );
+                  }
                 },
               }}
-            >
-              <Button
-                size="xs"
-                leftSection={
-                  <stockMovementsProps.active
-                    size={ICON_SIZE}
-                    stroke={ICON_STROKE_WIDTH}
-                  />
-                }
-              >
-                {anyActive ? 'Deactivate' : 'Activate'}
-              </Button>
-            </ModalConfirm> */}
-          </Group>
-        )}
-      </Group>
-
-      <Table highlightOnHover={rows.length > 0} mt={'xl'}>
-        <TableThead>
-          <TableTr>
-            <TableTh w={widths.selection}>
-              <Center>
-                {stockMovements === undefined ? (
-                  <Skeleton h={20} w={20} />
-                ) : (
-                  <Tooltip label={`Select/Deselect all stockMovements`}>
-                    <Checkbox
-                      aria-label={`Select all stockMovements`}
-                      checked={
-                        rows.length > 0 &&
-                        selectedRows.length == filteredItems?.length
-                      }
-                      onChange={(event) =>
-                        setSelectedRows(
-                          event.currentTarget.checked
-                            ? (filteredItems || []).map((p) => p.id)
-                            : []
-                        )
-                      }
-                    />
-                  </Tooltip>
-                )}
-              </Center>
-            </TableTh>
-            <TableTh w={widths.title}>Title</TableTh>
-            <TableTh w={widths.quantity}>Quantity</TableTh>
-            <TableTh w={widths.type}>Type</TableTh>
-            <TableTh w={widths.order}>Order</TableTh>
-            <TableTh w={widths.added}>Added</TableTh>
-            <TableTh w={widths.actions} />
-          </TableTr>
-        </TableThead>
-
-        <TableTbody>
-          {stockMovements === undefined ? (
-            <>
-              <>{sleketons}</>
-              <>{sleketons}</>
-              <>{sleketons}</>
-              <>{sleketons}</>
-              <>{sleketons}</>
-            </>
-          ) : !rows.length ? (
-            <TableTr>
-              <TableTd colSpan={100}>
-                <Center py={SECTION_SPACING * 2}>
-                  <Text ta={'center'} c={'dimmed'}>
-                    No records found
-                  </Text>
-                </Center>
-              </TableTd>
-            </TableTr>
-          ) : (
-            rows
-          )}
-        </TableTbody>
-      </Table>
-
-      {rows.length > 0 && <Divider />}
-
-      <Group justify="space-between" mt={'xl'}>
-        {stockMovements === undefined ? (
-          <Skeleton h={20} w={120} />
-        ) : !pageRange ? null : (
-          <Text>
-            Showing: <NumberFormatter value={pageRange?.from} /> to{' '}
-            <NumberFormatter value={pageRange?.to} />
-          </Text>
-        )}
-
-        <Group justify="end">
-          {stockMovements === undefined ? (
-            <>
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-            </>
-          ) : !totalPages ? null : (
-            <Pagination
-              size={'sm'}
-              total={totalPages}
-              value={activePage}
-              onChange={setActivePage}
             />
-          )}
-        </Group>
-      </Group>
+          </>
+        )}
+      </PartialTableHeader>
+
+      <PartialTableMain
+        props={{
+          filteredItems,
+          rows,
+          selectedRows,
+          setSelectedRows,
+          widths,
+        }}
+      >
+        <TableTh w={widths.title}>Title</TableTh>
+        <TableTh w={widths.quantity}>Quantity</TableTh>
+        <TableTh w={widths.type}>Type</TableTh>
+        <TableTh w={widths.order}>Order</TableTh>
+        <TableTh w={widths.added}>Added</TableTh>
+        <TableTh w={widths.actions} />
+      </PartialTableMain>
+
+      <PartialTableFooter
+        props={{
+          list: filteredItems,
+          activePage,
+          setActivePage,
+          totalPages,
+          pageRange,
+        }}
+      />
     </div>
   );
 }
@@ -454,44 +312,6 @@ const widths = {
   added: '20%',
   actions: '5%',
 };
-
-const sleketons = (
-  <TableTr h={59}>
-    <TableTd w={widths.selection}>
-      <Center>
-        <Skeleton h={20} w={20} />
-      </Center>
-    </TableTd>
-
-    <TableTd w={widths.title}>
-      <Skeleton h={16} w={160} />
-    </TableTd>
-
-    <TableTd w={widths.quantity}>
-      <Skeleton h={20} w={'75%'} />
-    </TableTd>
-
-    <TableTd w={widths.type}>
-      <Skeleton h={20} w={'75%'} />
-    </TableTd>
-
-    <TableTd w={widths.order}>
-      <Skeleton h={20} w={'75%'} />
-    </TableTd>
-
-    <TableTd w={widths.added}>
-      <Skeleton h={20} w={'75%'} />
-    </TableTd>
-
-    <TableTd w={widths.actions}>
-      <Group gap={'xs'} justify="end" wrap="nowrap">
-        <Skeleton h={ICON_WRAPPER_SIZE - 4} w={ICON_WRAPPER_SIZE - 4} />
-        <Skeleton h={ICON_WRAPPER_SIZE - 4} w={ICON_WRAPPER_SIZE - 4} />
-        <Skeleton h={ICON_WRAPPER_SIZE - 4} w={ICON_WRAPPER_SIZE - 4} />
-      </Group>
-    </TableTd>
-  </TableTr>
-);
 
 function BadgeType({ props }: { props: StockMovementGet }) {
   const badgeProps = {

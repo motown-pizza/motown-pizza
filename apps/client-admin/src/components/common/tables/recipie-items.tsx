@@ -1,23 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
   ActionIcon,
-  Badge,
-  Button,
   Center,
-  Checkbox,
-  Divider,
   Group,
   NumberFormatter,
-  Pagination,
-  Skeleton,
   Stack,
-  Table,
-  TableTbody,
   TableTd,
   TableTh,
-  TableThead,
   TableTr,
   Text,
   Title,
@@ -29,27 +20,31 @@ import {
   ICON_SIZE,
   ICON_STROKE_WIDTH,
   ICON_WRAPPER_SIZE,
-  SECTION_SPACING,
 } from '@repo/constants/sizes';
 import { RecipieItemGet } from '@repo/types/models/recipie-item';
 import { Status, SyncStatus } from '@repo/types/models/enums';
 import {
-  IconArrowDown,
   IconArrowUp,
   IconEdit,
   IconMilk,
   IconMilkOff,
   IconTrash,
 } from '@tabler/icons-react';
-import { usePaginate } from '@repo/hooks/paginate';
 import ModalCrudRecipieItem from '@repo/components/common/modals/crud/recipie-item';
-import { sortArray } from '@repo/utilities/array';
-import { Order } from '@repo/types/enums';
 import ModalConfirm from '@repo/components/common/modals/confirm';
 import { useRecipieItemActions } from '@repo/hooks/actions/recipie-item';
 import { capitalizeWords } from '@repo/utilities/string';
 import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
 import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
+import { useTableListing } from '@repo/hooks/table-listing';
+import BadgeStatus from '@repo/components/common/badges/status';
+import PartialTableHeader from '@repo/components/partial/table/header';
+import PartialTableMain from '@repo/components/partial/table/main';
+import PartialTableFooter from '@repo/components/partial/table/footer';
+import CheckboxTable from '@repo/components/common/checkboxes/table';
+import ButtonPublish from '@repo/components/common/buttons/publish';
+import ButtonActivate from '@repo/components/common/buttons/activate';
+import ButtonDelete from '@repo/components/common/buttons/delete';
 
 export default function RecipieItems({
   props,
@@ -61,15 +56,21 @@ export default function RecipieItems({
   const { recipieItems, setRecipieItems } = useStoreRecipieItem();
   const { recipieItemUpdate, recipieItemDelete } = useRecipieItemActions();
 
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const filteredItems = props?.recipieItems || recipieItems;
 
-  const filteredItems = props?.recipieItems || recipieItems || [];
-
-  const { items, activePage, setActivePage, totalPages, pageRange } =
-    usePaginate(
-      sortArray(filteredItems, (v) => v.created_at, Order.DESCENDING),
-      15
-    );
+  const {
+    search,
+    setSearch,
+    selectedRows,
+    setSelectedRows,
+    items,
+    activePage,
+    setActivePage,
+    totalPages,
+    pageRange,
+    anyActive,
+    anyDraft,
+  } = useTableListing({ list: filteredItems || [] });
 
   const rows = items.map((p) => {
     const dates = {
@@ -98,19 +99,14 @@ export default function RecipieItems({
         }
       >
         <TableTd w={widths.selection}>
-          <Center>
-            <Checkbox
-              aria-label={`Select ${ingredient?.name}`}
-              checked={selectedRows.includes(p.id)}
-              onChange={(event) =>
-                setSelectedRows(
-                  event.currentTarget.checked
-                    ? [...selectedRows, p.id]
-                    : selectedRows.filter((item) => item !== p.id)
-                )
-              }
-            />
-          </Center>
+          <CheckboxTable
+            props={{
+              list: filteredItems,
+              selectedRows,
+              setSelectedRows,
+              options: { head: true, itemId: p.id },
+            }}
+          />
         </TableTd>
 
         <TableTd w={widths.title}>
@@ -268,69 +264,16 @@ export default function RecipieItems({
     );
   });
 
-  const anyActive = selectedRows?.find((iid) => {
-    return filteredItems?.find((p) => p.id == iid)?.status == Status.ACTIVE;
-  });
-
-  const anyDraft = selectedRows?.find((iid) => {
-    return filteredItems?.find((p) => p.id == iid)?.status == Status.DRAFT;
-  });
-
-  const recipieItemsProps = {
-    active: anyActive ? IconMilkOff : IconMilk,
-    draft: anyDraft ? IconArrowUp : IconArrowDown,
-  };
-
   return (
     <div>
-      <Group justify="space-between" mih={30}>
-        <Group>
-          {recipieItems === undefined ? (
-            <Skeleton h={20} w={120} />
-          ) : (
-            <Text fz={'lg'} fw={'bold'}>
-              <Text component="span" inherit>
-                {selectedRows.length ? 'Selected' : 'Total'}:{' '}
-              </Text>
-
-              <Text component="span" inherit>
-                {selectedRows.length ? (
-                  <NumberFormatter value={selectedRows.length} />
-                ) : (
-                  <NumberFormatter value={filteredItems.length || 0} />
-                )}
-              </Text>
-            </Text>
-          )}
-        </Group>
-
+      <PartialTableHeader
+        props={{ list: filteredItems, selectedRows, search, setSearch }}
+      >
         {selectedRows.length && (
-          <Group justify="end">
-            {selectedRows.length == 1 && (
-              <ModalCrudRecipieItem
-                props={{
-                  defaultValues: filteredItems?.find(
-                    (p) => p.id == selectedRows[0]
-                  ),
-                }}
-              >
-                <Button
-                  size="xs"
-                  leftSection={
-                    <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-                  }
-                >
-                  Edit Recipie Item
-                </Button>
-              </ModalCrudRecipieItem>
-            )}
-
-            <ModalConfirm
+          <>
+            <ButtonPublish
               props={{
-                title: `${anyDraft ? 'Publish' : 'Unpublish'} Recipie Items`,
-                desc: anyDraft
-                  ? `The selected recipie items will be made visible to users.`
-                  : `The selected recipie items will no longer be visible to users.`,
+                anyDraft,
                 onConfirm: () => {
                   setRecipieItems(
                     recipieItems?.map((p) => {
@@ -347,26 +290,11 @@ export default function RecipieItems({
                   setSelectedRows([]);
                 },
               }}
-            >
-              <Button
-                size="xs"
-                leftSection={
-                  <recipieItemsProps.draft
-                    size={ICON_SIZE}
-                    stroke={ICON_STROKE_WIDTH}
-                  />
-                }
-              >
-                {anyDraft ? 'Publish' : 'Unpublish'}
-              </Button>
-            </ModalConfirm>
+            />
 
-            <ModalConfirm
+            <ButtonActivate
               props={{
-                title: `${anyActive ? 'Deactivate' : 'Activate'} Recipie Items`,
-                desc: anyActive
-                  ? `The selected recipie items will no longer be visible to users.`
-                  : `Visibility of the recipie items to users will be restored.`,
+                anyActive,
                 onConfirm: () => {
                   setRecipieItems(
                     recipieItems?.map((p) => {
@@ -383,115 +311,55 @@ export default function RecipieItems({
                   setSelectedRows([]);
                 },
               }}
-            >
-              <Button
-                size="xs"
-                leftSection={
-                  <recipieItemsProps.active
-                    size={ICON_SIZE}
-                    stroke={ICON_STROKE_WIDTH}
-                  />
-                }
-              >
-                {anyActive ? 'Deactivate' : 'Activate'}
-              </Button>
-            </ModalConfirm>
-          </Group>
-        )}
-      </Group>
-
-      <Table highlightOnHover={rows.length > 0} mt={'xl'}>
-        <TableThead>
-          <TableTr>
-            <TableTh w={widths.selection}>
-              <Center>
-                {recipieItems === undefined ? (
-                  <Skeleton h={20} w={20} />
-                ) : (
-                  <Tooltip label={`Select/Deselect all recipie items`}>
-                    <Checkbox
-                      aria-label={`Select all recipie items`}
-                      checked={
-                        rows.length > 0 &&
-                        selectedRows.length == filteredItems?.length
-                      }
-                      onChange={(event) =>
-                        setSelectedRows(
-                          event.currentTarget.checked
-                            ? (filteredItems || []).map((p) => p.id)
-                            : []
-                        )
-                      }
-                    />
-                  </Tooltip>
-                )}
-              </Center>
-            </TableTh>
-            <TableTh w={widths.title}>Ingredient</TableTh>
-            <TableTh w={widths.product}>Product</TableTh>
-            <TableTh w={widths.quantity}>Quantity Needed</TableTh>
-            <TableTh w={widths.status}>Status</TableTh>
-            <TableTh w={widths.added}>Added</TableTh>
-            <TableTh w={widths.actions} />
-          </TableTr>
-        </TableThead>
-
-        <TableTbody>
-          {recipieItems === undefined ? (
-            <>
-              <>{sleketons}</>
-              <>{sleketons}</>
-              <>{sleketons}</>
-              <>{sleketons}</>
-              <>{sleketons}</>
-            </>
-          ) : !rows.length ? (
-            <TableTr>
-              <TableTd colSpan={100}>
-                <Center py={SECTION_SPACING * 2}>
-                  <Text ta={'center'} c={'dimmed'}>
-                    No records found
-                  </Text>
-                </Center>
-              </TableTd>
-            </TableTr>
-          ) : (
-            rows
-          )}
-        </TableTbody>
-      </Table>
-
-      {rows.length > 0 && <Divider />}
-
-      <Group justify="space-between" mt={'xl'}>
-        {recipieItems === undefined ? (
-          <Skeleton h={20} w={120} />
-        ) : !pageRange ? null : (
-          <Text>
-            Showing: <NumberFormatter value={pageRange?.from} /> to{' '}
-            <NumberFormatter value={pageRange?.to} />
-          </Text>
-        )}
-
-        <Group justify="end">
-          {recipieItems === undefined ? (
-            <>
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-            </>
-          ) : !totalPages ? null : (
-            <Pagination
-              size={'sm'}
-              total={totalPages}
-              value={activePage}
-              onChange={setActivePage}
             />
-          )}
-        </Group>
-      </Group>
+
+            <ButtonDelete
+              props={{
+                onConfirm: () => {
+                  if (selectedRows.length == 1) {
+                    const recipieItem = recipieItems?.find(
+                      (i) => i.id == selectedRows[0]
+                    );
+
+                    if (recipieItem) recipieItemDelete(recipieItem);
+                  } else {
+                    const filteredRecipieItems = recipieItems?.filter(
+                      (i) => !selectedRows.includes(i.id)
+                    );
+                  }
+                },
+              }}
+            />
+          </>
+        )}
+      </PartialTableHeader>
+
+      <PartialTableMain
+        props={{
+          filteredItems,
+          rows,
+          selectedRows,
+          setSelectedRows,
+          widths,
+        }}
+      >
+        <TableTh w={widths.title}>Ingredient</TableTh>
+        <TableTh w={widths.product}>Product</TableTh>
+        <TableTh w={widths.quantity}>Quantity Needed</TableTh>
+        <TableTh w={widths.status}>Status</TableTh>
+        <TableTh w={widths.added}>Added</TableTh>
+        <TableTh w={widths.actions} />
+      </PartialTableMain>
+
+      <PartialTableFooter
+        props={{
+          list: filteredItems,
+          activePage,
+          setActivePage,
+          totalPages,
+          pageRange,
+        }}
+      />
     </div>
   );
 }
@@ -505,68 +373,3 @@ const widths = {
   added: '15%',
   actions: '10%',
 };
-
-const sleketons = (
-  <TableTr h={59}>
-    <TableTd w={widths.selection}>
-      <Center>
-        <Skeleton h={20} w={20} />
-      </Center>
-    </TableTd>
-
-    <TableTd w={widths.title}>
-      <Skeleton h={16} w={160} />
-    </TableTd>
-
-    <TableTd w={widths.product}>
-      <Skeleton h={16} w={160} />
-    </TableTd>
-
-    <TableTd w={widths.quantity}>
-      <Skeleton h={20} w={'75%'} />
-    </TableTd>
-
-    <TableTd w={widths.status}>
-      <Skeleton h={20} w={'75%'} />
-    </TableTd>
-
-    <TableTd w={widths.added}>
-      <Skeleton h={20} w={'60%'} />
-    </TableTd>
-
-    <TableTd w={widths.actions}>
-      <Group gap={'xs'} justify="end" wrap="nowrap">
-        <Skeleton h={ICON_WRAPPER_SIZE - 4} w={ICON_WRAPPER_SIZE - 4} />
-        <Skeleton h={ICON_WRAPPER_SIZE - 4} w={ICON_WRAPPER_SIZE - 4} />
-        <Skeleton h={ICON_WRAPPER_SIZE - 4} w={ICON_WRAPPER_SIZE - 4} />
-      </Group>
-    </TableTd>
-  </TableTr>
-);
-
-function BadgeStatus({ props }: { props: RecipieItemGet }) {
-  const badgeProps = {
-    color: '',
-  };
-
-  switch (props.status) {
-    case Status.ACTIVE:
-      badgeProps.color = 'green';
-      break;
-    case Status.DRAFT:
-      badgeProps.color = 'blue';
-      break;
-    case Status.INACTIVE:
-      badgeProps.color = 'yellow';
-      break;
-
-    default:
-      break;
-  }
-
-  return (
-    <Badge variant="dot" color={`${badgeProps.color}.9`}>
-      {props.status}
-    </Badge>
-  );
-}

@@ -1,24 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
   ActionIcon,
   Badge,
-  Button,
-  Center,
-  Checkbox,
-  Divider,
   Group,
   NumberFormatter,
-  Pagination,
   Progress,
-  Skeleton,
   Stack,
-  Table,
-  TableTbody,
   TableTd,
   TableTh,
-  TableThead,
   TableTr,
   Text,
   Title,
@@ -30,7 +21,6 @@ import {
   ICON_SIZE,
   ICON_STROKE_WIDTH,
   ICON_WRAPPER_SIZE,
-  SECTION_SPACING,
 } from '@repo/constants/sizes';
 import { IngredientGet } from '@repo/types/models/ingredient';
 import {
@@ -39,7 +29,6 @@ import {
   SyncStatus,
 } from '@repo/types/models/enums';
 import {
-  IconArrowDown,
   IconArrowUp,
   IconEdit,
   IconMilk,
@@ -47,13 +36,18 @@ import {
   IconStackPop,
   IconTrash,
 } from '@tabler/icons-react';
-import { usePaginate } from '@repo/hooks/paginate';
 import ModalCrudIngredient from '@repo/components/common/modals/crud/ingredient';
-import { sortArray } from '@repo/utilities/array';
-import { Order } from '@repo/types/enums';
 import ModalConfirm from '@repo/components/common/modals/confirm';
 import { useIngredientActions } from '@repo/hooks/actions/ingredient';
-import { capitalizeWords } from '@repo/utilities/string';
+import { useTableListing } from '@repo/hooks/table-listing';
+import BadgeStatus from '@repo/components/common/badges/status';
+import PartialTableHeader from '@repo/components/partial/table/header';
+import PartialTableMain from '@repo/components/partial/table/main';
+import PartialTableFooter from '@repo/components/partial/table/footer';
+import CheckboxTable from '@repo/components/common/checkboxes/table';
+import ButtonPublish from '@repo/components/common/buttons/publish';
+import ButtonActivate from '@repo/components/common/buttons/activate';
+import ButtonDelete from '@repo/components/common/buttons/delete';
 
 export default function Ingredients({
   props,
@@ -63,15 +57,21 @@ export default function Ingredients({
   const { ingredients, setIngredients } = useStoreIngredient();
   const { ingredientUpdate, ingredientDelete } = useIngredientActions();
 
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const filteredItems = props?.ingredients || ingredients;
 
-  const filteredItems = props?.ingredients || ingredients || [];
-
-  const { items, activePage, setActivePage, totalPages, pageRange } =
-    usePaginate(
-      sortArray(filteredItems, (v) => v.created_at, Order.DESCENDING),
-      15
-    );
+  const {
+    search,
+    setSearch,
+    selectedRows,
+    setSelectedRows,
+    items,
+    activePage,
+    setActivePage,
+    totalPages,
+    pageRange,
+    anyActive,
+    anyDraft,
+  } = useTableListing({ list: filteredItems || [] });
 
   const rows = items.map((p) => {
     const dates = {
@@ -96,19 +96,14 @@ export default function Ingredients({
         }
       >
         <TableTd w={widths.selection}>
-          <Center>
-            <Checkbox
-              aria-label={`Select ${p.name}`}
-              checked={selectedRows.includes(p.id)}
-              onChange={(event) =>
-                setSelectedRows(
-                  event.currentTarget.checked
-                    ? [...selectedRows, p.id]
-                    : selectedRows.filter((item) => item !== p.id)
-                )
-              }
-            />
-          </Center>
+          <CheckboxTable
+            props={{
+              list: filteredItems,
+              selectedRows,
+              setSelectedRows,
+              options: { head: true, itemId: p.id },
+            }}
+          />
         </TableTd>
 
         <TableTd w={widths.title}>
@@ -293,69 +288,16 @@ export default function Ingredients({
     );
   });
 
-  const anyActive = selectedRows?.find((iid) => {
-    return filteredItems?.find((p) => p.id == iid)?.status == Status.ACTIVE;
-  });
-
-  const anyDraft = selectedRows?.find((iid) => {
-    return filteredItems?.find((p) => p.id == iid)?.status == Status.DRAFT;
-  });
-
-  const ingredientsProps = {
-    active: anyActive ? IconMilkOff : IconMilk,
-    draft: anyDraft ? IconArrowUp : IconArrowDown,
-  };
-
   return (
     <div>
-      <Group justify="space-between" mih={30}>
-        <Group>
-          {ingredients === undefined ? (
-            <Skeleton h={20} w={120} />
-          ) : (
-            <Text fz={'lg'} fw={'bold'}>
-              <Text component="span" inherit>
-                {selectedRows.length ? 'Selected' : 'Total'}:{' '}
-              </Text>
-
-              <Text component="span" inherit>
-                {selectedRows.length ? (
-                  <NumberFormatter value={selectedRows.length} />
-                ) : (
-                  <NumberFormatter value={filteredItems.length || 0} />
-                )}
-              </Text>
-            </Text>
-          )}
-        </Group>
-
+      <PartialTableHeader
+        props={{ list: filteredItems, selectedRows, search, setSearch }}
+      >
         {selectedRows.length && (
-          <Group justify="end">
-            {selectedRows.length == 1 && (
-              <ModalCrudIngredient
-                props={{
-                  defaultValues: filteredItems?.find(
-                    (p) => p.id == selectedRows[0]
-                  ),
-                }}
-              >
-                <Button
-                  size="xs"
-                  leftSection={
-                    <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-                  }
-                >
-                  Edit Ingredient
-                </Button>
-              </ModalCrudIngredient>
-            )}
-
-            <ModalConfirm
+          <>
+            <ButtonPublish
               props={{
-                title: `${anyDraft ? 'Publish' : 'Unpublish'} Ingredients`,
-                desc: anyDraft
-                  ? `The selected ingredients will be made visible to users.`
-                  : `The selected ingredients will no longer be visible to users.`,
+                anyDraft,
                 onConfirm: () => {
                   setIngredients(
                     ingredients?.map((p) => {
@@ -372,26 +314,11 @@ export default function Ingredients({
                   setSelectedRows([]);
                 },
               }}
-            >
-              <Button
-                size="xs"
-                leftSection={
-                  <ingredientsProps.draft
-                    size={ICON_SIZE}
-                    stroke={ICON_STROKE_WIDTH}
-                  />
-                }
-              >
-                {anyDraft ? 'Publish' : 'Unpublish'}
-              </Button>
-            </ModalConfirm>
+            />
 
-            <ModalConfirm
+            <ButtonActivate
               props={{
-                title: `${anyActive ? 'Deactivate' : 'Activate'} Ingredients`,
-                desc: anyActive
-                  ? `The selected ingredients will no longer be visible to users.`
-                  : `Visibility of the ingredients to users will be restored.`,
+                anyActive,
                 onConfirm: () => {
                   setIngredients(
                     ingredients?.map((p) => {
@@ -408,115 +335,55 @@ export default function Ingredients({
                   setSelectedRows([]);
                 },
               }}
-            >
-              <Button
-                size="xs"
-                leftSection={
-                  <ingredientsProps.active
-                    size={ICON_SIZE}
-                    stroke={ICON_STROKE_WIDTH}
-                  />
-                }
-              >
-                {anyActive ? 'Deactivate' : 'Activate'}
-              </Button>
-            </ModalConfirm>
-          </Group>
-        )}
-      </Group>
-
-      <Table highlightOnHover={rows.length > 0} mt={'xl'}>
-        <TableThead>
-          <TableTr>
-            <TableTh w={widths.selection}>
-              <Center>
-                {ingredients === undefined ? (
-                  <Skeleton h={20} w={20} />
-                ) : (
-                  <Tooltip label={`Select/Deselect all ingredients`}>
-                    <Checkbox
-                      aria-label={`Select all ingredients`}
-                      checked={
-                        rows.length > 0 &&
-                        selectedRows.length == filteredItems?.length
-                      }
-                      onChange={(event) =>
-                        setSelectedRows(
-                          event.currentTarget.checked
-                            ? (filteredItems || []).map((p) => p.id)
-                            : []
-                        )
-                      }
-                    />
-                  </Tooltip>
-                )}
-              </Center>
-            </TableTh>
-            <TableTh w={widths.title}>Title</TableTh>
-            <TableTh w={widths.stock}>Stock</TableTh>
-            <TableTh w={widths.stockStatus}>Stock Status</TableTh>
-            <TableTh w={widths.status}>Status</TableTh>
-            <TableTh w={widths.added}>Added</TableTh>
-            <TableTh w={widths.actions} />
-          </TableTr>
-        </TableThead>
-
-        <TableTbody>
-          {ingredients === undefined ? (
-            <>
-              <>{sleketons}</>
-              <>{sleketons}</>
-              <>{sleketons}</>
-              <>{sleketons}</>
-              <>{sleketons}</>
-            </>
-          ) : !rows.length ? (
-            <TableTr>
-              <TableTd colSpan={100}>
-                <Center py={SECTION_SPACING * 2}>
-                  <Text ta={'center'} c={'dimmed'}>
-                    No records found
-                  </Text>
-                </Center>
-              </TableTd>
-            </TableTr>
-          ) : (
-            rows
-          )}
-        </TableTbody>
-      </Table>
-
-      {rows.length > 0 && <Divider />}
-
-      <Group justify="space-between" mt={'xl'}>
-        {ingredients === undefined ? (
-          <Skeleton h={20} w={120} />
-        ) : !pageRange ? null : (
-          <Text>
-            Showing: <NumberFormatter value={pageRange?.from} /> to{' '}
-            <NumberFormatter value={pageRange?.to} />
-          </Text>
-        )}
-
-        <Group justify="end">
-          {ingredients === undefined ? (
-            <>
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-            </>
-          ) : !totalPages ? null : (
-            <Pagination
-              size={'sm'}
-              total={totalPages}
-              value={activePage}
-              onChange={setActivePage}
             />
-          )}
-        </Group>
-      </Group>
+
+            <ButtonDelete
+              props={{
+                onConfirm: () => {
+                  if (selectedRows.length == 1) {
+                    const ingredient = ingredients?.find(
+                      (i) => i.id == selectedRows[0]
+                    );
+
+                    if (ingredient) ingredientDelete(ingredient);
+                  } else {
+                    const filteredIngredient = ingredients?.filter(
+                      (i) => !selectedRows.includes(i.id)
+                    );
+                  }
+                },
+              }}
+            />
+          </>
+        )}
+      </PartialTableHeader>
+
+      <PartialTableMain
+        props={{
+          filteredItems,
+          rows,
+          selectedRows,
+          setSelectedRows,
+          widths,
+        }}
+      >
+        <TableTh w={widths.title}>Title</TableTh>
+        <TableTh w={widths.stock}>Stock</TableTh>
+        <TableTh w={widths.stockStatus}>Stock Status</TableTh>
+        <TableTh w={widths.status}>Status</TableTh>
+        <TableTh w={widths.added}>Added</TableTh>
+        <TableTh w={widths.actions} />
+      </PartialTableMain>
+
+      <PartialTableFooter
+        props={{
+          list: filteredItems,
+          activePage,
+          setActivePage,
+          totalPages,
+          pageRange,
+        }}
+      />
     </div>
   );
 }
@@ -530,71 +397,6 @@ const widths = {
   added: '20%',
   actions: '15%',
 };
-
-const sleketons = (
-  <TableTr h={59}>
-    <TableTd w={widths.selection}>
-      <Center>
-        <Skeleton h={20} w={20} />
-      </Center>
-    </TableTd>
-
-    <TableTd w={widths.title}>
-      <Skeleton h={16} w={160} />
-    </TableTd>
-
-    <TableTd w={widths.stock}>
-      <Skeleton h={20} w={'75%'} />
-    </TableTd>
-
-    <TableTd w={widths.stockStatus}>
-      <Skeleton h={20} w={'75%'} />
-    </TableTd>
-
-    <TableTd w={widths.status}>
-      <Skeleton h={20} w={'75%'} />
-    </TableTd>
-
-    <TableTd w={widths.added}>
-      <Skeleton h={20} w={'60%'} />
-    </TableTd>
-
-    <TableTd w={widths.actions}>
-      <Group gap={'xs'} justify="end" wrap="nowrap">
-        <Skeleton h={ICON_WRAPPER_SIZE - 4} w={ICON_WRAPPER_SIZE - 4} />
-        <Skeleton h={ICON_WRAPPER_SIZE - 4} w={ICON_WRAPPER_SIZE - 4} />
-        <Skeleton h={ICON_WRAPPER_SIZE - 4} w={ICON_WRAPPER_SIZE - 4} />
-      </Group>
-    </TableTd>
-  </TableTr>
-);
-
-function BadgeStatus({ props }: { props: IngredientGet }) {
-  const badgeProps = {
-    color: '',
-  };
-
-  switch (props.status) {
-    case Status.ACTIVE:
-      badgeProps.color = 'green';
-      break;
-    case Status.DRAFT:
-      badgeProps.color = 'blue';
-      break;
-    case Status.INACTIVE:
-      badgeProps.color = 'yellow';
-      break;
-
-    default:
-      break;
-  }
-
-  return (
-    <Badge variant="dot" color={`${badgeProps.color}.9`}>
-      {props.status}
-    </Badge>
-  );
-}
 
 function BadgeStockStatus({ props }: { props: IngredientGet }) {
   const badgeProps = {

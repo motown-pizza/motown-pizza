@@ -1,24 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
   ActionIcon,
   Avatar,
   Badge,
   Button,
   Center,
-  Checkbox,
-  Divider,
   Group,
-  NumberFormatter,
-  Pagination,
-  Skeleton,
   Stack,
-  Table,
-  TableTbody,
   TableTd,
   TableTh,
-  TableThead,
   TableTr,
   Text,
   Title,
@@ -29,7 +21,6 @@ import {
   ICON_SIZE,
   ICON_STROKE_WIDTH,
   ICON_WRAPPER_SIZE,
-  SECTION_SPACING,
 } from '@repo/constants/sizes';
 import {
   OrderFulfilmentType,
@@ -37,29 +28,36 @@ import {
   OrderStatus,
 } from '@repo/types/models/enums';
 import { IconTrash } from '@tabler/icons-react';
-import { usePaginate } from '@repo/hooks/paginate';
-import { sortArray } from '@repo/utilities/array';
-import { Order } from '@repo/types/enums';
 import ModalConfirm from '@repo/components/common/modals/confirm';
 import { useOrderActions } from '@repo/hooks/actions/order';
 import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
 import { OrderGet } from '@repo/types/models/order';
+import { useTableListing } from '@repo/hooks/table-listing';
+import PartialTableHeader from '@repo/components/partial/table/header';
+import PartialTableMain from '@repo/components/partial/table/main';
+import PartialTableFooter from '@repo/components/partial/table/footer';
+import CheckboxTable from '@repo/components/common/checkboxes/table';
+import ButtonDelete from '@repo/components/common/buttons/delete';
 
 export default function Orders() {
   const { orders } = useStoreOrder();
   const { orderDelete } = useOrderActions();
 
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
-
-  const filteredItems = (orders || []).filter(
+  const filteredItems = orders?.filter(
     (oi) => oi.order_status != OrderStatus.DRAFT
   );
 
-  const { items, activePage, setActivePage, totalPages, pageRange } =
-    usePaginate(
-      sortArray(filteredItems, (v) => v.created_at, Order.DESCENDING),
-      15
-    );
+  const {
+    search,
+    setSearch,
+    selectedRows,
+    setSelectedRows,
+    items,
+    activePage,
+    setActivePage,
+    totalPages,
+    pageRange,
+  } = useTableListing({ list: filteredItems || [] });
 
   const rows = items.map((p) => {
     const createdAt = getRegionalDate(p.created_at);
@@ -74,19 +72,14 @@ export default function Orders() {
         }
       >
         <TableTd w={widths.selection}>
-          <Center>
-            <Checkbox
-              aria-label={`Select ${p.tracking_code}`}
-              checked={selectedRows.includes(p.id)}
-              onChange={(event) =>
-                setSelectedRows(
-                  event.currentTarget.checked
-                    ? [...selectedRows, p.id]
-                    : selectedRows.filter((item) => item !== p.id)
-                )
-              }
-            />
-          </Center>
+          <CheckboxTable
+            props={{
+              list: filteredItems,
+              selectedRows,
+              setSelectedRows,
+              options: { head: true, itemId: p.id },
+            }}
+          />
         </TableTd>
 
         <TableTd w={widths.code}>
@@ -183,144 +176,60 @@ export default function Orders() {
 
   return (
     <div>
-      <Group justify="space-between" mih={30}>
-        <Group>
-          {orders === undefined ? (
-            <Skeleton h={20} w={120} />
-          ) : (
-            <Text fz={'lg'} fw={'bold'}>
-              <Text component="span" inherit>
-                {selectedRows.length ? 'Selected' : 'Total'}:{' '}
-              </Text>
-
-              <Text component="span" inherit>
-                {selectedRows.length ? (
-                  <NumberFormatter value={selectedRows.length} />
-                ) : (
-                  <NumberFormatter value={filteredItems.length || 0} />
-                )}
-              </Text>
-            </Text>
-          )}
-        </Group>
-
+      <PartialTableHeader
+        props={{ list: filteredItems, selectedRows, search, setSearch }}
+      >
         {selectedRows.length && (
-          <Group justify="end">
+          <>
             {selectedRows.length > 0 && (
-              <ModalConfirm
+              <ButtonDelete
                 props={{
-                  title: `Delete Order(s)`,
-                  desc: `This will remove all data associated with the selected orders. This action is irreversible.`,
-                  // onConfirm: () => orderDelete(p),
-                  confirmMessage: `The selected order(s) and all data associated with them has been removed.`,
+                  onConfirm: () => {
+                    if (selectedRows.length == 1) {
+                      const order = orders?.find(
+                        (i) => i.id == selectedRows[0]
+                      );
+
+                      if (order) orderDelete(order);
+                    } else {
+                      const filteredOrder = orders?.filter(
+                        (i) => !selectedRows.includes(i.id)
+                      );
+                    }
+                  },
                 }}
-              >
-                <Button
-                  size="xs"
-                  leftSection={
-                    <IconTrash size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-                  }
-                >
-                  Delete Order(s)
-                </Button>
-              </ModalConfirm>
+              />
             )}
-          </Group>
+          </>
         )}
-      </Group>
+      </PartialTableHeader>
 
-      <Table highlightOnHover={rows.length > 0} mt={'xl'}>
-        <TableThead>
-          <TableTr>
-            <TableTh w={widths.selection}>
-              <Center>
-                {orders === undefined ? (
-                  <Skeleton h={20} w={20} />
-                ) : (
-                  <Tooltip label={`Select/Deselect all products`}>
-                    <Checkbox
-                      aria-label={`Select all products`}
-                      checked={
-                        rows.length > 0 &&
-                        selectedRows.length == filteredItems?.length
-                      }
-                      onChange={(event) =>
-                        setSelectedRows(
-                          event.currentTarget.checked
-                            ? (filteredItems || []).map((p) => p.id)
-                            : []
-                        )
-                      }
-                    />
-                  </Tooltip>
-                )}
-              </Center>
-            </TableTh>
-            <TableTh w={widths.code}>Code</TableTh>
-            <TableTh w={widths.title}>Ordered By</TableTh>
-            <TableTh w={widths.fulfilmentType}>Fulfilment Type</TableTh>
-            <TableTh w={widths.source}>Source</TableTh>
-            <TableTh w={widths.dateOrdered}>Placed On</TableTh>
-            <TableTh w={widths.actions} />
-          </TableTr>
-        </TableThead>
+      <PartialTableMain
+        props={{
+          filteredItems,
+          rows,
+          selectedRows,
+          setSelectedRows,
+          widths,
+        }}
+      >
+        <TableTh w={widths.code}>Code</TableTh>
+        <TableTh w={widths.title}>Ordered By</TableTh>
+        <TableTh w={widths.fulfilmentType}>Fulfilment Type</TableTh>
+        <TableTh w={widths.source}>Source</TableTh>
+        <TableTh w={widths.dateOrdered}>Placed On</TableTh>
+        <TableTh w={widths.actions} />
+      </PartialTableMain>
 
-        <TableTbody>
-          {orders === undefined ? (
-            <>
-              <>{sleketons}</>
-              <>{sleketons}</>
-              <>{sleketons}</>
-              <>{sleketons}</>
-              <>{sleketons}</>
-            </>
-          ) : !rows.length ? (
-            <TableTr>
-              <TableTd colSpan={100}>
-                <Center py={SECTION_SPACING * 2}>
-                  <Text ta={'center'} c={'dimmed'}>
-                    No records found
-                  </Text>
-                </Center>
-              </TableTd>
-            </TableTr>
-          ) : (
-            rows
-          )}
-        </TableTbody>
-      </Table>
-
-      {rows.length > 0 && <Divider />}
-
-      <Group justify="space-between" mt={'xl'}>
-        {orders === undefined ? (
-          <Skeleton h={20} w={120} />
-        ) : !pageRange ? null : (
-          <Text>
-            Showing: <NumberFormatter value={pageRange?.from} /> to{' '}
-            <NumberFormatter value={pageRange?.to} />
-          </Text>
-        )}
-
-        <Group justify="end">
-          {orders === undefined ? (
-            <>
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-              <Skeleton h={24} w={24} />
-            </>
-          ) : !totalPages ? null : (
-            <Pagination
-              size={'sm'}
-              total={totalPages}
-              value={activePage}
-              onChange={setActivePage}
-            />
-          )}
-        </Group>
-      </Group>
+      <PartialTableFooter
+        props={{
+          list: filteredItems,
+          activePage,
+          setActivePage,
+          totalPages,
+          pageRange,
+        }}
+      />
     </div>
   );
 }
@@ -334,55 +243,6 @@ const widths = {
   dateOrdered: '20%',
   actions: '5%',
 };
-
-const sleketons = (
-  <TableTr h={59}>
-    <TableTd w={widths.selection}>
-      <Center>
-        <Skeleton h={20} w={20} />
-      </Center>
-    </TableTd>
-
-    <TableTd w={widths.code}>
-      <Skeleton h={20} w={'75%'} />
-    </TableTd>
-
-    <TableTd w={widths.title}>
-      <Group gap={'xs'} wrap="nowrap">
-        <Skeleton
-          h={ICON_WRAPPER_SIZE + 10}
-          w={ICON_WRAPPER_SIZE + 10}
-          radius={999}
-        />
-
-        <Stack gap={5}>
-          <Skeleton h={16} w={160} />
-          <Skeleton h={16} w={240} />
-        </Stack>
-      </Group>
-    </TableTd>
-
-    <TableTd w={widths.fulfilmentType}>
-      <Skeleton h={20} w={'75%'} />
-    </TableTd>
-
-    <TableTd w={widths.source}>
-      <Skeleton h={20} w={'75%'} />
-    </TableTd>
-
-    <TableTd w={widths.dateOrdered}>
-      <Skeleton h={20} w={'60%'} />
-    </TableTd>
-
-    <TableTd w={widths.actions}>
-      <Group gap={'xs'} justify="end" wrap="nowrap">
-        <Skeleton h={ICON_WRAPPER_SIZE - 4} w={ICON_WRAPPER_SIZE - 4} />
-        <Skeleton h={ICON_WRAPPER_SIZE - 4} w={ICON_WRAPPER_SIZE - 4} />
-        <Skeleton h={ICON_WRAPPER_SIZE - 4} w={ICON_WRAPPER_SIZE - 4} />
-      </Group>
-    </TableTd>
-  </TableTr>
-);
 
 function BadgeFulfilmentType({ props }: { props: OrderGet }) {
   const badgeProps = {
