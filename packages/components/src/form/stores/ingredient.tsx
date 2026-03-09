@@ -56,6 +56,7 @@ export default function Ingredient({
 
   const { form, submitted, handleSubmit } = useFormIngredient({
     defaultValues: props?.defaultValues,
+    options: { stockup: !!stockup },
   });
 
   const [stockQuantity, setStockQuantity] = useState(0);
@@ -287,29 +288,29 @@ export default function Ingredient({
                 <Button type="submit" loading={submitted}>
                   {!props?.defaultValues?.updated_at ? 'Save Draft' : 'Update'}
                 </Button>
-
-                <Button
-                  type="submit"
-                  loading={submitted}
-                  color="blue"
-                  display={
-                    !stockup &&
-                    (!props?.defaultValues?.updated_at ||
-                      props.defaultValues.status != Status.ACTIVE)
-                      ? undefined
-                      : 'none'
-                  }
-                  onClick={() => {
-                    form.setValues({ ...form.values, status: Status.ACTIVE });
-
-                    handleSubmit({
-                      values: { ...form.values, status: Status.ACTIVE },
-                    });
-                  }}
-                >
-                  Publish
-                </Button>
               </Group>
+
+              <Button
+                type="submit"
+                loading={submitted}
+                color="blue"
+                display={
+                  !stockup &&
+                  (!props?.defaultValues?.updated_at ||
+                    props.defaultValues.status != Status.ACTIVE)
+                    ? undefined
+                    : 'none'
+                }
+                onClick={() => {
+                  form.setValues({ ...form.values, status: Status.ACTIVE });
+
+                  handleSubmit({
+                    values: { ...form.values, status: Status.ACTIVE },
+                  });
+                }}
+              >
+                Publish
+              </Button>
             </Group>
           </GridCol>
         </Grid>

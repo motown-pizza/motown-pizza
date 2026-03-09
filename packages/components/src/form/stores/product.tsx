@@ -76,7 +76,7 @@ export default function Product({
       noValidate
     >
       <Card bg={'var(--mantine-color-body)'} shadow="xs" pt={'xs'}>
-        <Grid gutter={mobile ? 5 : undefined}>
+        <Grid>
           <GridCol span={8}>
             <Stack>
               <Fieldset legend="Basic product information">
@@ -250,36 +250,40 @@ export default function Product({
           </GridCol>
 
           <GridCol span={4}>
-            <Stack>
-              <Fieldset legend="Product status">
-                <RadioGroup
-                  name="product-status"
-                  label="Select the product's current status"
-                  description="This determines the product's visibility to users"
-                  required
-                  {...form.getInputProps('status')}
-                >
-                  <Group mt="xs">
-                    <Radio
-                      value={Status.DRAFT}
-                      label={capitalizeWords(Status.DRAFT)}
-                    />
-                    <Radio
-                      value={Status.INACTIVE}
-                      label={capitalizeWords(Status.INACTIVE)}
-                    />
-                    <Radio
-                      value={Status.ACTIVE}
-                      label={capitalizeWords(Status.ACTIVE)}
-                    />
-                  </Group>
-                </RadioGroup>
-              </Fieldset>
+            <Grid>
+              <GridCol span={12}>
+                <Fieldset legend="Product status">
+                  <RadioGroup
+                    name="product-status"
+                    label="Select the product's current status"
+                    description="This determines the product's visibility to users"
+                    required
+                    {...form.getInputProps('status')}
+                  >
+                    <Group mt="xs">
+                      <Radio
+                        value={Status.DRAFT}
+                        label={capitalizeWords(Status.DRAFT)}
+                      />
+                      <Radio
+                        value={Status.INACTIVE}
+                        label={capitalizeWords(Status.INACTIVE)}
+                      />
+                      <Radio
+                        value={Status.ACTIVE}
+                        label={capitalizeWords(Status.ACTIVE)}
+                      />
+                    </Group>
+                  </RadioGroup>
+                </Fieldset>
+              </GridCol>
 
-              <Fieldset legend="Product visuals">
-                <DropzoneImage props={{ form }} />
-              </Fieldset>
-            </Stack>
+              <GridCol span={12}>
+                <Fieldset legend="Product visuals">
+                  <DropzoneImage props={{ form }} />
+                </Fieldset>
+              </GridCol>
+            </Grid>
           </GridCol>
 
           <GridCol span={12} mt={'md'}>
@@ -299,28 +303,28 @@ export default function Product({
                 <Button type="submit" loading={submitted}>
                   {!props?.defaultValues?.updated_at ? 'Save Draft' : 'Update'}
                 </Button>
-
-                <Button
-                  type="submit"
-                  loading={submitted}
-                  color="blue"
-                  display={
-                    !props?.defaultValues?.updated_at ||
-                    props.defaultValues.status != Status.ACTIVE
-                      ? undefined
-                      : 'none'
-                  }
-                  onClick={() => {
-                    form.setValues({ ...form.values, status: Status.ACTIVE });
-
-                    handleSubmit({
-                      values: { ...form.values, status: Status.ACTIVE },
-                    });
-                  }}
-                >
-                  Publish
-                </Button>
               </Group>
+
+              <Button
+                type="submit"
+                loading={submitted}
+                color="blue"
+                display={
+                  !props?.defaultValues?.updated_at ||
+                  props.defaultValues.status != Status.ACTIVE
+                    ? undefined
+                    : 'none'
+                }
+                onClick={() => {
+                  form.setValues({ ...form.values, status: Status.ACTIVE });
+
+                  handleSubmit({
+                    values: { ...form.values, status: Status.ACTIVE },
+                  });
+                }}
+              >
+                Publish
+              </Button>
             </Group>
           </GridCol>
         </Grid>

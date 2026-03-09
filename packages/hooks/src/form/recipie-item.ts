@@ -3,11 +3,13 @@ import { useRecipieItemActions } from '@repo/hooks/actions/recipie-item';
 import { useFormBase } from '../form';
 import { RecipieItemGet } from '@repo/types/models/recipie-item';
 import { MeasurementUnitType, Status } from '@repo/types/models/enums';
+import { useRouter } from 'next/navigation';
 
 export const useFormRecipieItem = (params?: {
   defaultValues?: Partial<RecipieItemGet>;
 }) => {
   const { recipieItemCreate, recipieItemUpdate } = useRecipieItemActions();
+  const router = useRouter();
 
   const { form, submitted, handleSubmit } = useFormBase<
     Partial<RecipieItemGet>
@@ -26,7 +28,7 @@ export const useFormRecipieItem = (params?: {
       status: hasLength({ min: 1 }, 'User status required'),
     },
     {
-      resetOnSuccess: true,
+      resetOnSuccess: false,
       hideSuccessNotification: true,
       clientOnly: true,
 
@@ -45,6 +47,9 @@ export const useFormRecipieItem = (params?: {
             ...submitObject,
           } as RecipieItemGet);
         }
+
+        form.reset();
+        router.push(`/dashboard/recipie-items`);
       },
     }
   );

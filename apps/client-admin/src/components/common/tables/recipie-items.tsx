@@ -45,6 +45,7 @@ import CheckboxTable from '@repo/components/common/checkboxes/table';
 import ButtonPublish from '@repo/components/common/buttons/publish';
 import ButtonActivate from '@repo/components/common/buttons/activate';
 import ButtonDelete from '@repo/components/common/buttons/delete';
+import Link from 'next/link';
 
 export default function RecipieItems({
   props,
@@ -186,15 +187,18 @@ export default function RecipieItems({
               </ModalConfirm>
             )}
 
-            <ModalCrudRecipieItem props={{ defaultValues: p }}>
-              <Group>
-                <Tooltip label={'Edit Recipie Item'}>
-                  <ActionIcon size={ICON_WRAPPER_SIZE - 4} variant="light">
-                    <IconEdit size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
-                  </ActionIcon>
-                </Tooltip>
-              </Group>
-            </ModalCrudRecipieItem>
+            <Group>
+              <Tooltip label={'Edit Recipie Item'}>
+                <ActionIcon
+                  size={ICON_WRAPPER_SIZE - 4}
+                  variant="light"
+                  component={Link}
+                  href={`/dashboard/recipie-items/${p.id}`}
+                >
+                  <IconEdit size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
 
             <ModalConfirm
               props={{
