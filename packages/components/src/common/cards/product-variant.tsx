@@ -28,6 +28,7 @@ import {
 import ModalConfirm from '@repo/components/common/modals/confirm';
 import { useProductVariantActions } from '@repo/hooks/actions/product-variant';
 import { Status } from '@repo/types/models/enums';
+import BadgeStatus from '../badges/status';
 
 export default function ProductVariant({
   props,
@@ -183,6 +184,8 @@ export default function ProductVariant({
             </Text>
             /-
           </Text>
+
+          <BadgeStatus props={{ status: props.status }} />
         </Stack>
       </Group>
     </Card>

@@ -1,4 +1,4 @@
-import { Badge } from '@mantine/core';
+import { Badge, Tooltip } from '@mantine/core';
 import { OrderStatus as EnumOrderStatus } from '@repo/types/models/enums';
 import { capitalizeWords } from '@repo/utilities/string';
 import { Status as EnumStatus } from '@repo/types/models/enums';
@@ -52,8 +52,10 @@ export default function Status({ props }: { props: { status: any } }) {
   }
 
   return (
-    <Badge color={`${badgeProps.color}`} variant="light">
-      {badgeProps.label}
-    </Badge>
+    <Tooltip label={`Item status`}>
+      <Badge color={`${badgeProps.color}`} variant="light">
+        {badgeProps.label}
+      </Badge>
+    </Tooltip>
   );
 }
