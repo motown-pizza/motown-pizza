@@ -12,7 +12,6 @@ import { ProductVariantGet } from '@repo/types/models/product-variant';
 import { capitalizeWords } from '@repo/utilities/string';
 import React from 'react';
 import ModalCrudProductVariant from '../modals/crud/product-variant';
-import classes from './product-variant.module.scss';
 import {
   ICON_SIZE,
   ICON_STROKE_WIDTH,
@@ -48,7 +47,11 @@ export default function ProductVariant({
   };
 
   return (
-    <Card padding={'xs'} radius={0} className={classes.card}>
+    <Card
+      padding={'xs'}
+      // radius={0}
+      bg={'var(--mantine-color-body'}
+    >
       <Group justify="space-between" align="start">
         <Stack gap={'xs'}>
           <Title order={3} fz={'sm'} fw={500}>

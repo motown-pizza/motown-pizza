@@ -47,6 +47,7 @@ import CheckboxTable from '@repo/components/common/checkboxes/table';
 import ButtonPublish from '@repo/components/common/buttons/publish';
 import ButtonActivate from '@repo/components/common/buttons/activate';
 import ButtonDelete from '@repo/components/common/buttons/delete';
+import Link from 'next/link';
 
 export default function Products({
   props,
@@ -202,15 +203,18 @@ export default function Products({
               </ModalConfirm>
             )}
 
-            <ModalCrudProduct props={{ defaultValues: p }}>
-              <Group>
-                <Tooltip label={'Edit Product'}>
-                  <ActionIcon size={ICON_WRAPPER_SIZE - 4} variant="light">
-                    <IconEdit size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
-                  </ActionIcon>
-                </Tooltip>
-              </Group>
-            </ModalCrudProduct>
+            <Group>
+              <Tooltip label={'Edit Product'}>
+                <ActionIcon
+                  size={ICON_WRAPPER_SIZE - 4}
+                  variant="light"
+                  component={Link}
+                  href={`/dashboard/products/${p.id}`}
+                >
+                  <IconEdit size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
 
             <ModalConfirm
               props={{
@@ -283,7 +287,13 @@ export default function Products({
   return (
     <div>
       <PartialTableHeader
-        props={{ list: filteredItems, selectedRows, search, setSearch }}
+        props={{
+          list: filteredItems,
+          selectedRows,
+          search,
+          setSearch,
+          options: { nested: true },
+        }}
       >
         {selectedRows.length && (
           <>

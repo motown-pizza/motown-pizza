@@ -7,6 +7,9 @@ import {
   ProductType,
   Status,
 } from '@repo/types/models/enums';
+import { useNotification } from '../notification';
+import { Variant } from '@repo/types/enums';
+import { useRouter } from 'next/navigation';
 
 export type FormProduct = UseFormReturnType<
   Partial<ProductGet>,
@@ -17,6 +20,8 @@ export const useFormProduct = (params?: {
   defaultValues?: Partial<ProductGet>;
 }) => {
   const { productCreate, productUpdate } = useProductActions();
+  const { showNotification } = useNotification();
+  const router = useRouter();
 
   const { form, submitted, handleSubmit } = useFormBase<Partial<ProductGet>>(
     {
@@ -31,31 +36,48 @@ export const useFormProduct = (params?: {
       status: params?.defaultValues?.status || Status.DRAFT,
     },
     {
+      title: hasLength({ min: 2, max: 96 }, 'Between 2 and 96 characters'),
       description: hasLength({ max: 255 }, 'Max 255 characters'),
       dietary_class: hasLength({ min: 1 }, 'Dietary class required'),
       type: hasLength({ min: 1 }, 'Product type required'),
       status: hasLength({ min: 1 }, 'User status required'),
     },
     {
-      resetOnSuccess: true,
+      resetOnSuccess: false,
       hideSuccessNotification: true,
       clientOnly: true,
 
       onSubmit: async (rawValues) => {
-        const submitObject: Partial<ProductGet> = {
-          ...rawValues,
-        };
+        if (form.isDirty()) {
+          if (!rawValues.image?.trim().length) {
+            showNotification({
+              variant: Variant.FAILED,
+              title: 'Product Image Required',
+              desc: 'Upload a product image to proceed',
+            });
 
-        if (!params?.defaultValues?.updated_at) {
-          productCreate({
-            ...submitObject,
-          });
-        } else {
-          productUpdate({
-            ...params?.defaultValues,
-            ...submitObject,
-          } as ProductGet);
+            return;
+          }
+
+          const submitObject: Partial<ProductGet> = {
+            ...rawValues,
+          };
+
+          if (!params?.defaultValues?.updated_at) {
+            productCreate({
+              ...submitObject,
+            });
+          } else {
+            productUpdate({
+              ...params?.defaultValues,
+              ...submitObject,
+            } as ProductGet);
+          }
+
+          form.reset();
         }
+
+        router.back();
       },
     }
   );

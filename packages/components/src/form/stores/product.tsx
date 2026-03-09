@@ -4,12 +4,16 @@ import React from 'react';
 import { useFormProduct } from '@repo/hooks/form/product';
 import {
   Button,
+  Card,
   Center,
   Divider,
+  Fieldset,
   Grid,
   GridCol,
   Group,
   Loader,
+  Radio,
+  RadioGroup,
   ScrollAreaAutosize,
   Select,
   Stack,
@@ -19,15 +23,22 @@ import {
 } from '@mantine/core';
 import {
   IconAlignJustified,
+  IconDeviceFloppy,
   IconLetterCase,
+  IconPencilCheck,
   IconPlus,
   IconSalad,
+  IconSend,
   IconToolsKitchen,
 } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
 import { ProductGet } from '@repo/types/models/product';
 import { useMediaQuery } from '@mantine/hooks';
-import { ProductDietaryType, ProductType } from '@repo/types/models/enums';
+import {
+  ProductDietaryType,
+  ProductType,
+  Status,
+} from '@repo/types/models/enums';
 import { capitalizeWords } from '@repo/utilities/string';
 import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
 import ModalCrudProductVariant from '@repo/components/common/modals/crud/product-variant';
@@ -35,15 +46,17 @@ import CardProductVariant from '@repo/components/common/cards/product-variant';
 import DropzoneImage from '@repo/components/common/dropzones/image';
 import { sortArray } from '@repo/utilities/array';
 import { Order } from '@repo/types/enums';
+import { useRouter } from 'next/navigation';
 
 export default function Product({
   props,
 }: {
   props?: {
     defaultValues?: Partial<ProductGet>;
-    close?: () => void;
   };
 }) {
+  const router = useRouter();
+
   const { form, submitted, handleSubmit } = useFormProduct({
     defaultValues: props?.defaultValues,
   });
@@ -60,198 +73,274 @@ export default function Product({
     <form
       onSubmit={form.onSubmit(() => {
         handleSubmit();
-        if (props?.close) props.close();
       })}
       noValidate
     >
-      <ScrollAreaAutosize mah={520} scrollbars={'y'}>
-        <Grid gutter={mobile ? 5 : undefined} pr={'xs'}>
-          <GridCol span={12}>
-            <DropzoneImage props={{ form }} />
+      <Card bg={'var(--mantine-color-body)'} shadow="xs" pt={'xs'}>
+        <Grid gutter={mobile ? 5 : undefined}>
+          <GridCol span={8}>
+            <Stack>
+              <Fieldset legend="Basic product information">
+                <Grid>
+                  <GridCol span={12}>
+                    <TextInput
+                      required
+                      label="Title"
+                      placeholder="Title"
+                      data-autofocus={
+                        !props?.defaultValues?.updated_at ? true : undefined
+                      }
+                      leftSection={
+                        <IconLetterCase
+                          size={ICON_SIZE}
+                          stroke={ICON_STROKE_WIDTH}
+                        />
+                      }
+                      {...form.getInputProps('title')}
+                    />
+                  </GridCol>
+
+                  <GridCol span={{ base: 12, xs: 6 }}>
+                    <Select
+                      required
+                      label="Type"
+                      placeholder="Type"
+                      allowDeselect={false}
+                      checkIconPosition="right"
+                      leftSection={
+                        <IconSalad
+                          size={ICON_SIZE}
+                          stroke={ICON_STROKE_WIDTH}
+                        />
+                      }
+                      data={[
+                        {
+                          value: ProductType.PIZZA,
+                          label: capitalizeWords(ProductType.PIZZA),
+                        },
+                        {
+                          value: ProductType.SIDE,
+                          label: capitalizeWords(ProductType.SIDE),
+                        },
+                        {
+                          value: ProductType.DRINK,
+                          label: capitalizeWords(ProductType.DRINK),
+                        },
+                      ]}
+                      {...form.getInputProps('type')}
+                    />
+                  </GridCol>
+
+                  <GridCol span={{ base: 12, xs: 6 }}>
+                    <Select
+                      required
+                      label="Dietary Class"
+                      placeholder="Dietary Class"
+                      allowDeselect={false}
+                      checkIconPosition="right"
+                      leftSection={
+                        <IconToolsKitchen
+                          size={ICON_SIZE}
+                          stroke={ICON_STROKE_WIDTH}
+                        />
+                      }
+                      data={[
+                        {
+                          value: ProductDietaryType.MEATY,
+                          label: capitalizeWords(ProductDietaryType.MEATY),
+                        },
+                        {
+                          value: ProductDietaryType.VEGGIE,
+                          label: capitalizeWords(ProductDietaryType.VEGGIE),
+                        },
+                        {
+                          value: ProductDietaryType.VEGAN,
+                          label: capitalizeWords(ProductDietaryType.VEGAN),
+                        },
+                        {
+                          value: ProductDietaryType.NEUTRAL,
+                          label: capitalizeWords(ProductDietaryType.NEUTRAL),
+                        },
+                      ]}
+                      {...form.getInputProps('dietary_class')}
+                    />
+                  </GridCol>
+
+                  <GridCol span={12}>
+                    <Textarea
+                      required
+                      label="Description"
+                      placeholder="Description"
+                      autosize
+                      minRows={1}
+                      maxRows={5}
+                      leftSection={
+                        <IconAlignJustified
+                          size={ICON_SIZE}
+                          stroke={ICON_STROKE_WIDTH}
+                        />
+                      }
+                      {...form.getInputProps('description')}
+                    />
+                  </GridCol>
+                </Grid>
+              </Fieldset>
+
+              {props?.defaultValues?.updated_at && (
+                <Fieldset legend="Product variants">
+                  <Grid>
+                    <GridCol span={12}>
+                      {productVariants === undefined ? (
+                        <Center mih={100}>
+                          <Loader size={'xs'} />
+                        </Center>
+                      ) : (
+                        <Stack gap={0}>
+                          {!productVarintsCurrent?.length ? (
+                            <Stack align="center" mih={100} py={'xl'}>
+                              <Text fz={'sm'} ta={'center'} c={'dimmed'}>
+                                No product variants found.
+                              </Text>
+                            </Stack>
+                          ) : (
+                            <Stack gap={'xs'}>
+                              {sortArray(
+                                productVarintsCurrent,
+                                (i) => i.created_at,
+                                Order.DESCENDING
+                              ).map((pv2, i) => (
+                                <div key={i}>
+                                  {/* {i > 0 && <Divider />} */}
+                                  <CardProductVariant props={pv2} />
+                                </div>
+                              ))}
+                            </Stack>
+                          )}
+
+                          <Divider my={'md'} />
+
+                          <Group justify="space-between" align="end">
+                            <ModalCrudProductVariant
+                              props={{
+                                defaultValues: {
+                                  product_id: props.defaultValues.id || '',
+                                },
+                              }}
+                            >
+                              <Button
+                                size="xs"
+                                variant="default"
+                                leftSection={
+                                  <IconPlus
+                                    size={ICON_SIZE - 4}
+                                    stroke={ICON_STROKE_WIDTH}
+                                  />
+                                }
+                              >
+                                Add Variant
+                              </Button>
+                            </ModalCrudProductVariant>
+                          </Group>
+                        </Stack>
+                      )}
+                    </GridCol>
+                  </Grid>
+                </Fieldset>
+              )}
+            </Stack>
           </GridCol>
 
-          <GridCol span={12}>
-            <TextInput
-              required
-              label={mobile ? 'Title' : undefined}
-              aria-label="Title"
-              placeholder="Title"
-              data-autofocus={
-                !props?.defaultValues?.updated_at ? true : undefined
-              }
-              leftSection={
-                <IconLetterCase size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-              }
-              {...form.getInputProps('title')}
-            />
+          <GridCol span={4}>
+            <Stack>
+              <Fieldset legend="Product status">
+                <RadioGroup
+                  name="product-status"
+                  label="Select the product's current status"
+                  description="This determines the product's visibility to users"
+                  required
+                  {...form.getInputProps('status')}
+                >
+                  <Group mt="xs">
+                    <Radio
+                      value={Status.DRAFT}
+                      label={capitalizeWords(Status.DRAFT)}
+                    />
+                    <Radio
+                      value={Status.INACTIVE}
+                      label={capitalizeWords(Status.INACTIVE)}
+                    />
+                    <Radio
+                      value={Status.ACTIVE}
+                      label={capitalizeWords(Status.ACTIVE)}
+                    />
+                  </Group>
+                </RadioGroup>
+              </Fieldset>
+
+              <Fieldset legend="Product visuals">
+                <DropzoneImage props={{ form }} />
+              </Fieldset>
+            </Stack>
           </GridCol>
 
-          <GridCol span={{ base: 12, xs: 6 }}>
-            <Select
-              required
-              label={mobile ? 'Type' : undefined}
-              aria-label="Type"
-              placeholder="Type"
-              allowDeselect={false}
-              checkIconPosition="right"
-              leftSection={
-                <IconSalad size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-              }
-              data={[
-                {
-                  value: ProductType.PIZZA,
-                  label: capitalizeWords(ProductType.PIZZA),
-                },
-                {
-                  value: ProductType.SIDE,
-                  label: capitalizeWords(ProductType.SIDE),
-                },
-                {
-                  value: ProductType.DRINK,
-                  label: capitalizeWords(ProductType.DRINK),
-                },
-              ]}
-              {...form.getInputProps('type')}
-            />
-          </GridCol>
-
-          <GridCol span={{ base: 12, xs: 6 }}>
-            <Select
-              required
-              label={mobile ? 'Dietary Class' : undefined}
-              aria-label="Dietary Class"
-              placeholder="Dietary Class"
-              allowDeselect={false}
-              checkIconPosition="right"
-              leftSection={
-                <IconToolsKitchen size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-              }
-              data={[
-                {
-                  value: ProductDietaryType.MEATY,
-                  label: capitalizeWords(ProductDietaryType.MEATY),
-                },
-                {
-                  value: ProductDietaryType.VEGGIE,
-                  label: capitalizeWords(ProductDietaryType.VEGGIE),
-                },
-                {
-                  value: ProductDietaryType.VEGAN,
-                  label: capitalizeWords(ProductDietaryType.VEGAN),
-                },
-                {
-                  value: ProductDietaryType.NEUTRAL,
-                  label: capitalizeWords(ProductDietaryType.NEUTRAL),
-                },
-              ]}
-              {...form.getInputProps('dietary_class')}
-            />
-          </GridCol>
-
-          <GridCol span={12}>
-            <Textarea
-              required
-              label={mobile ? 'Description' : undefined}
-              aria-label="Description"
-              placeholder="Description"
-              autosize
-              minRows={1}
-              maxRows={5}
-              leftSection={
-                <IconAlignJustified
-                  size={ICON_SIZE}
-                  stroke={ICON_STROKE_WIDTH}
-                />
-              }
-              {...form.getInputProps('description')}
-            />
-          </GridCol>
-
-          {props?.defaultValues?.updated_at && (
-            <GridCol span={12}>
-              <ScrollAreaAutosize mah={200} scrollbars={'y'}>
-                {productVariants === undefined ? (
-                  <Center mih={100}>
-                    <Loader size={'xs'} />
-                  </Center>
-                ) : (
-                  <Stack gap={0}>
-                    <Group
-                      justify="space-between"
-                      align="end"
-                      pt={5}
-                      pb={'xs'}
-                      pr={5}
-                      style={{
-                        position: 'sticky',
-                        top: 0,
-                        backgroundColor: 'var(--mantine-color-body)',
-                        zIndex: 10,
-                      }}
-                    >
-                      <Text fz={'sm'} fw={500} c={'blue'}>
-                        Product Variants
-                      </Text>
-
-                      <ModalCrudProductVariant
-                        props={{
-                          defaultValues: {
-                            product_id: props.defaultValues.id || '',
-                          },
-                        }}
-                      >
-                        <Button
-                          size="xs"
-                          variant="default"
-                          leftSection={
-                            <IconPlus
-                              size={ICON_SIZE - 4}
-                              stroke={ICON_STROKE_WIDTH}
-                            />
-                          }
-                        >
-                          Add Variant
-                        </Button>
-                      </ModalCrudProductVariant>
-                    </Group>
-
-                    <Divider />
-
-                    {!productVarintsCurrent?.length ? (
-                      <Stack align="center" mih={100} py={'xl'}>
-                        <Text fz={'sm'} ta={'center'} c={'dimmed'}>
-                          No product variants found.
-                        </Text>
-                      </Stack>
-                    ) : (
-                      <Stack gap={0}>
-                        {sortArray(
-                          productVarintsCurrent,
-                          (i) => i.created_at,
-                          Order.DESCENDING
-                        ).map((pv2, i) => (
-                          <div key={i}>
-                            {i > 0 && <Divider />}
-                            <CardProductVariant props={pv2} />
-                          </div>
-                        ))}
-                      </Stack>
-                    )}
-                  </Stack>
-                )}
-              </ScrollAreaAutosize>
-            </GridCol>
-          )}
-
-          <GridCol span={12}>
-            <Group justify="end" mt={mobile ? 'xs' : undefined}>
-              <Button fullWidth type="submit" loading={submitted}>
-                {!props?.defaultValues?.updated_at ? 'Add' : 'Save'}
+          <GridCol span={12} mt={'md'}>
+            <Group justify="start" mt={mobile ? 'xs' : undefined}>
+              <Button
+                color="dark"
+                loading={submitted}
+                onClick={() => {
+                  router.back();
+                }}
+              >
+                Cancel
               </Button>
+
+              <Divider orientation="vertical" h={24} my={'auto'} />
+
+              <Button
+                type="submit"
+                loading={submitted}
+                leftSection={
+                  !props?.defaultValues?.updated_at ? (
+                    <IconDeviceFloppy
+                      size={ICON_SIZE}
+                      stroke={ICON_STROKE_WIDTH}
+                    />
+                  ) : (
+                    <IconPencilCheck
+                      size={ICON_SIZE}
+                      stroke={ICON_STROKE_WIDTH}
+                    />
+                  )
+                }
+              >
+                {!props?.defaultValues?.updated_at ? 'Save Draft' : 'Update'}
+              </Button>
+
+              {(!props?.defaultValues?.updated_at ||
+                props.defaultValues.status != Status.ACTIVE) && (
+                <Button
+                  type="submit"
+                  loading={submitted}
+                  color="blue"
+                  leftSection={
+                    <IconSend size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+                  }
+                  onClick={() => {
+                    form.setValues({ ...form.values, status: Status.ACTIVE });
+
+                    handleSubmit({
+                      values: { ...form.values, status: Status.ACTIVE },
+                    });
+                  }}
+                >
+                  Publish
+                </Button>
+              )}
             </Group>
           </GridCol>
         </Grid>
-      </ScrollAreaAutosize>
+      </Card>
     </form>
   );
 }
