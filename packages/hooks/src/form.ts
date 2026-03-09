@@ -44,7 +44,7 @@ export function useFormBase<TValues extends Record<string, any>>(
 
   const { showNotification } = useNotification();
 
-  const handleSubmit = async (params?: { options?: any }) => {
+  const handleSubmit = async (params?: { values?: any; options?: any }) => {
     if (!form.isValid()) {
       showNotification({
         variant: Variant.WARNING,
@@ -65,7 +65,10 @@ export function useFormBase<TValues extends Record<string, any>>(
 
     setSubmitted(true);
     try {
-      const submit = await options?.onSubmit(form.values, params?.options);
+      const submit = await options?.onSubmit(
+        params?.values || form.values,
+        params?.options
+      );
 
       if (options?.resetOnSuccess) form.reset();
 

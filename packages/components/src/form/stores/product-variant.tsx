@@ -78,8 +78,7 @@ export default function ProductVariant({
         <GridCol span={12}>
           <TextInput
             required
-            label={mobile ? 'Title' : undefined}
-            aria-label="Title"
+            label="Title"
             placeholder={`eg. ${capitalizeWords(Size.MEDIUM)} ${product?.title}`}
             data-autofocus={
               !props?.defaultValues?.updated_at ? true : undefined
@@ -137,11 +136,10 @@ export default function ProductVariant({
           />
         </GridCol> */}
 
-        <GridCol span={12}>
+        <GridCol span={6}>
           <NumberInput
             required
-            label={mobile ? 'Price' : undefined}
-            aria-label="Price"
+            label="Price"
             placeholder="Price"
             min={0}
             leftSection={
