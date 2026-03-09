@@ -11,7 +11,7 @@ import { Metadata } from 'next';
 import { APP_NAME } from '@repo/constants/app';
 
 export type typeParams = Promise<{
-  productId: string;
+  ingredientId: string;
 }>;
 
 export const metadata: Metadata = {

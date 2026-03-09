@@ -3,11 +3,13 @@ import { useIngredientActions } from '@repo/hooks/actions/ingredient';
 import { useFormBase } from '../form';
 import { IngredientGet } from '@repo/types/models/ingredient';
 import { Status } from '@repo/types/models/enums';
+import { useRouter } from 'next/navigation';
 
 export const useFormIngredient = (params?: {
   defaultValues?: Partial<IngredientGet>;
 }) => {
   const { ingredientCreate, ingredientUpdate } = useIngredientActions();
+  const router = useRouter();
 
   const { form, submitted, handleSubmit } = useFormBase<Partial<IngredientGet>>(
     {
@@ -44,6 +46,9 @@ export const useFormIngredient = (params?: {
             ...submitObject,
           } as IngredientGet);
         }
+
+        form.reset();
+        router.back();
       },
     }
   );

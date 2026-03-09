@@ -2,25 +2,26 @@ import React from 'react';
 import LayoutBody from '@repo/components/layout/body';
 import { typeParams } from '../layout';
 import { Metadata } from 'next';
-import { productsGet } from '@repo/handlers/requests/database/products';
-import { ProductGet } from '@repo/types/models/product';
+import { ingredientsGet } from '@repo/handlers/requests/database/ingredients';
+import { IngredientGet } from '@repo/types/models/ingredient';
 
 export const generateMetadata = async ({
   params,
 }: {
   params: typeParams;
 }): Promise<Metadata> => {
-  const productId = (await params).productId;
+  const ingredientId = (await params).ingredientId;
 
-  const { items: products }: { items: ProductGet[] } = await productsGet();
-  const product = products.find((p) => p.id == productId);
+  const { items: ingredients }: { items: IngredientGet[] } =
+    await ingredientsGet();
+  const ingredient = ingredients.find((p) => p.id == ingredientId);
 
   return {
-    title: product?.title || 'New Product',
+    title: ingredient?.name || 'New Ingredient',
   };
 };
 
-export default function LayoutProduct({
+export default function LayoutIngredient({
   children, // will be a page or nested layout
   // params,
 }: {

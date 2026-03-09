@@ -47,6 +47,7 @@ import DropzoneImage from '@repo/components/common/dropzones/image';
 import { sortArray } from '@repo/utilities/array';
 import { Order } from '@repo/types/enums';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Product({
   props,
@@ -55,8 +56,6 @@ export default function Product({
     defaultValues?: Partial<ProductGet>;
   };
 }) {
-  const router = useRouter();
-
   const { form, submitted, handleSubmit } = useFormProduct({
     defaultValues: props?.defaultValues,
   });
@@ -284,47 +283,32 @@ export default function Product({
           </GridCol>
 
           <GridCol span={12} mt={'md'}>
-            <Group justify="start" mt={mobile ? 'xs' : undefined}>
+            <Group mt={mobile ? 'xs' : undefined}>
               <Button
                 color="dark"
                 loading={submitted}
-                onClick={() => {
-                  router.back();
-                }}
+                component={Link}
+                href={`/dashboard/products/${form.values.type?.toLowerCase()}s`}
               >
                 Cancel
               </Button>
 
-              <Divider orientation="vertical" h={24} my={'auto'} />
+              <Group display={form.isDirty() ? undefined : 'none'}>
+                <Divider orientation="vertical" h={24} my={'auto'} />
 
-              <Button
-                type="submit"
-                loading={submitted}
-                leftSection={
-                  !props?.defaultValues?.updated_at ? (
-                    <IconDeviceFloppy
-                      size={ICON_SIZE}
-                      stroke={ICON_STROKE_WIDTH}
-                    />
-                  ) : (
-                    <IconPencilCheck
-                      size={ICON_SIZE}
-                      stroke={ICON_STROKE_WIDTH}
-                    />
-                  )
-                }
-              >
-                {!props?.defaultValues?.updated_at ? 'Save Draft' : 'Update'}
-              </Button>
+                <Button type="submit" loading={submitted}>
+                  {!props?.defaultValues?.updated_at ? 'Save Draft' : 'Update'}
+                </Button>
 
-              {(!props?.defaultValues?.updated_at ||
-                props.defaultValues.status != Status.ACTIVE) && (
                 <Button
                   type="submit"
                   loading={submitted}
                   color="blue"
-                  leftSection={
-                    <IconSend size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+                  display={
+                    !props?.defaultValues?.updated_at ||
+                    props.defaultValues.status != Status.ACTIVE
+                      ? undefined
+                      : 'none'
                   }
                   onClick={() => {
                     form.setValues({ ...form.values, status: Status.ACTIVE });
@@ -336,7 +320,7 @@ export default function Product({
                 >
                   Publish
                 </Button>
-              )}
+              </Group>
             </Group>
           </GridCol>
         </Grid>
