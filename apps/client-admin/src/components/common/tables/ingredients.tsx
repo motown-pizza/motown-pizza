@@ -291,7 +291,13 @@ export default function Ingredients({
   return (
     <div>
       <PartialTableHeader
-        props={{ list: filteredItems, selectedRows, search, setSearch }}
+        props={{
+          list: filteredItems,
+          selectedRows,
+          search,
+          setSearch,
+          options: { nested: true },
+        }}
       >
         {selectedRows.length && (
           <>

@@ -8,7 +8,7 @@
 import React from 'react';
 import LayoutBody from '@repo/components/layout/body';
 import PartialFooterDashboard from '@/components/partial/footer/dashboard';
-import { Box } from '@mantine/core';
+import PartialPageLayoutDashboard from '@/components/partial/page/layout/dashboard';
 
 export default async function LayoutDashboard({
   children, // will be a page or nested layout
@@ -17,14 +17,7 @@ export default async function LayoutDashboard({
 }) {
   return (
     <LayoutBody>
-      <Box
-        bg={
-          'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-8))'
-        }
-      >
-        {children}
-      </Box>
-
+      <PartialPageLayoutDashboard>{children}</PartialPageLayoutDashboard>
       <PartialFooterDashboard />
     </LayoutBody>
   );

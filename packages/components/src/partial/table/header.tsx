@@ -10,6 +10,8 @@ import {
 import InputTextSearch from '../../common/inputs/text/search';
 import { IconEdit, IconPlus } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants/sizes';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function Header({
   children,
@@ -21,8 +23,11 @@ export default function Header({
     selectedRows: any[];
     search: string;
     setSearch: Dispatch<SetStateAction<string>>;
+    options?: { nested?: boolean };
   };
 }) {
+  const pathname = usePathname();
+
   return (
     <Stack py={'md'} px={'xs'}>
       <Group justify="space-between">
@@ -36,6 +41,8 @@ export default function Header({
         <Button
           size="xs"
           leftSection={<IconPlus size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
+          component={Link}
+          href={`${props.options?.nested ? '' : `${pathname}/`}new`}
         >
           Add New
         </Button>
@@ -70,6 +77,8 @@ export default function Header({
               leftSection={
                 <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
               }
+              component={Link}
+              href={`${props.options?.nested ? '' : `${pathname}/`}itemId`}
             >
               Edit Item
             </Button>
