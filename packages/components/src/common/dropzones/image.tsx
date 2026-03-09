@@ -98,7 +98,12 @@ export default function Image({
   }, [props.form.values.image]);
 
   return (
-    <Card padding={0} withBorder bg={'transparent'}>
+    <Card
+      padding={'md'}
+      bg={
+        'light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-7))'
+      }
+    >
       <Dropzone
         onDrop={async (files) => {
           if (status === 'loading') return; // only block when uploading
@@ -150,6 +155,7 @@ export default function Image({
                 onClick={() => openRef.current?.()}
                 style={{ pointerEvents: 'all' }}
                 variant="light"
+                color="blue.6"
               >
                 Upload{status == 'accept' ? ' New' : ''}
               </Button>
