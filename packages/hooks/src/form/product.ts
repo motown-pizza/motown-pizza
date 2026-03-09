@@ -48,35 +48,32 @@ export const useFormProduct = (params?: {
       clientOnly: true,
 
       onSubmit: async (rawValues) => {
-        if (form.isDirty()) {
-          if (!rawValues.image?.trim().length) {
-            showNotification({
-              variant: Variant.FAILED,
-              title: 'Product Image Required',
-              desc: 'Upload a product image to proceed',
-            });
+        if (!rawValues.image?.trim().length) {
+          showNotification({
+            variant: Variant.FAILED,
+            title: 'Product Image Required',
+            desc: 'Upload a product image to proceed',
+          });
 
-            return;
-          }
-
-          const submitObject: Partial<ProductGet> = {
-            ...rawValues,
-          };
-
-          if (!params?.defaultValues?.updated_at) {
-            productCreate({
-              ...submitObject,
-            });
-          } else {
-            productUpdate({
-              ...params?.defaultValues,
-              ...submitObject,
-            } as ProductGet);
-          }
-
-          form.reset();
+          return;
         }
 
+        const submitObject: Partial<ProductGet> = {
+          ...rawValues,
+        };
+
+        if (!params?.defaultValues?.updated_at) {
+          productCreate({
+            ...submitObject,
+          });
+        } else {
+          productUpdate({
+            ...params?.defaultValues,
+            ...submitObject,
+          } as ProductGet);
+        }
+
+        form.reset();
         router.back();
       },
     }

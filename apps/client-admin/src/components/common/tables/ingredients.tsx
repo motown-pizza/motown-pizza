@@ -48,6 +48,7 @@ import CheckboxTable from '@repo/components/common/checkboxes/table';
 import ButtonPublish from '@repo/components/common/buttons/publish';
 import ButtonActivate from '@repo/components/common/buttons/activate';
 import ButtonDelete from '@repo/components/common/buttons/delete';
+import Link from 'next/link';
 
 export default function Ingredients({
   props,
@@ -195,30 +196,34 @@ export default function Ingredients({
               </ModalConfirm>
             )}
 
-            <ModalCrudIngredient
-              props={{ defaultValues: p, options: { stockup: true } }}
-            >
-              <Group>
-                <Tooltip label={`Stock up on ${p.name}`}>
-                  <ActionIcon size={ICON_WRAPPER_SIZE - 4} variant="light">
-                    <IconStackPop
-                      size={ICON_SIZE - 4}
-                      stroke={ICON_STROKE_WIDTH}
-                    />
-                  </ActionIcon>
-                </Tooltip>
-              </Group>
-            </ModalCrudIngredient>
+            <Group>
+              <Tooltip label={`Stock up on ${p.name}`}>
+                <ActionIcon
+                  size={ICON_WRAPPER_SIZE - 4}
+                  variant="light"
+                  component={Link}
+                  href={`/dashboard/ingredients/${p.id}?stockup=${true}`}
+                >
+                  <IconStackPop
+                    size={ICON_SIZE - 4}
+                    stroke={ICON_STROKE_WIDTH}
+                  />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
 
-            <ModalCrudIngredient props={{ defaultValues: p }}>
-              <Group>
-                <Tooltip label={'Edit Ingredient'}>
-                  <ActionIcon size={ICON_WRAPPER_SIZE - 4} variant="light">
-                    <IconEdit size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
-                  </ActionIcon>
-                </Tooltip>
-              </Group>
-            </ModalCrudIngredient>
+            <Group>
+              <Tooltip label={'Edit Ingredient'}>
+                <ActionIcon
+                  size={ICON_WRAPPER_SIZE - 4}
+                  variant="light"
+                  component={Link}
+                  href={`/dashboard/ingredients/${p.id}`}
+                >
+                  <IconEdit size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
 
             <ModalConfirm
               props={{
