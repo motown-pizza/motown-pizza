@@ -13,13 +13,18 @@ import {
   createTheme,
   Divider,
   Drawer,
+  Fieldset,
   Loader,
   MantineThemeOverride,
   Menu,
   Modal,
   Notification,
   NumberFormatter,
+  NumberInput,
   ScrollArea,
+  Select,
+  Textarea,
+  TextInput,
   Tooltip,
 } from '@mantine/core';
 import cx from 'clsx';
@@ -191,6 +196,57 @@ export const getAppTheme = (params?: AppThemeProps) => {
           overlayProps: {
             backgroundOpacity: 0.55,
             blur: 3,
+          },
+        },
+      }),
+
+      Fieldset: Fieldset.extend({
+        styles: {
+          root: {
+            borderWidth: 1,
+            backgroundColor:
+              'light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))',
+            boxShadow: 'var(--mantine-shadow-xs)',
+          },
+        },
+      }),
+
+      TextInput: TextInput.extend({
+        defaultProps: { variant: 'filled' },
+        styles: {
+          input: {
+            backgroundColor:
+              'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-7))',
+          },
+        },
+      }),
+
+      NumberInput: NumberInput.extend({
+        defaultProps: { variant: 'filled' },
+        styles: {
+          input: {
+            backgroundColor:
+              'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-7))',
+          },
+        },
+      }),
+
+      Textarea: Textarea.extend({
+        defaultProps: { variant: 'filled' },
+        styles: {
+          input: {
+            backgroundColor:
+              'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-7))',
+          },
+        },
+      }),
+
+      Select: Select.extend({
+        defaultProps: { variant: 'filled' },
+        styles: {
+          input: {
+            backgroundColor:
+              'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-7))',
           },
         },
       }),
