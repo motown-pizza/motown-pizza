@@ -10,14 +10,18 @@ import LayoutBody from '@repo/components/layout/body';
 import { Metadata } from 'next';
 import { APP_NAME } from '@repo/constants/app';
 
+export type typeParams = Promise<{
+  productId: string;
+}>;
+
 export const metadata: Metadata = {
   title: {
-    default: 'People',
-    template: `%s - People - Dashboard - ${APP_NAME.ADMIN}`,
+    default: 'Ingredients',
+    template: `%s - Ingredients - Dashboard - ${APP_NAME.ADMIN}`,
   },
 };
 
-export default async function LayoutPeople({
+export default async function LayoutIngredients({
   children, // will be a page or nested layout
 }: {
   children: React.ReactNode;

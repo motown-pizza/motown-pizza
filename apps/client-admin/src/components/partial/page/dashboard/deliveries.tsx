@@ -3,14 +3,13 @@
 import React from 'react';
 import LayoutSection from '@repo/components/layout/section';
 import TableDeliveries from '@/components/common/tables/deliveries';
-import PartialPageLayout from '../layout';
 import PartialPageIntro from '../intro';
 import { Card } from '@mantine/core';
 import CardTable from '@/components/common/cards/table';
 
 export default function Deliveries() {
   return (
-    <PartialPageLayout>
+    <>
       <PartialPageIntro />
 
       <LayoutSection id="pizza-content" containerized={false}>
@@ -18,6 +17,6 @@ export default function Deliveries() {
           <TableDeliveries />
         </CardTable>
       </LayoutSection>
-    </PartialPageLayout>
+    </>
   );
 }

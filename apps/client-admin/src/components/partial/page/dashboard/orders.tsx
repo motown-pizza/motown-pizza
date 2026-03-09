@@ -3,14 +3,13 @@
 import React from 'react';
 import LayoutSection from '@repo/components/layout/section';
 import TableOrders from '@/components/common/tables/orders';
-import PartialPageLayout from '../layout';
 import PartialPageIntro from '../intro';
 import { Card } from '@mantine/core';
 import CardTable from '@/components/common/cards/table';
 
 export default function Orders() {
   return (
-    <PartialPageLayout>
+    <>
       <PartialPageIntro />
 
       <LayoutSection id="pizza-content" containerized={false}>
@@ -18,6 +17,6 @@ export default function Orders() {
           <TableOrders />
         </CardTable>
       </LayoutSection>
-    </PartialPageLayout>
+    </>
   );
 }
