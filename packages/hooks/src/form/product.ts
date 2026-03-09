@@ -74,7 +74,9 @@ export const useFormProduct = (params?: {
         }
 
         form.reset();
-        router.back();
+        router.push(
+          `/dashboard/products/${form.values.type?.toLocaleLowerCase()}s`
+        );
       },
     }
   );

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 
 export const useFormIngredient = (params?: {
   defaultValues?: Partial<IngredientGet>;
+  options?: { stockup?: boolean };
 }) => {
   const { ingredientCreate, ingredientUpdate } = useIngredientActions();
   const router = useRouter();
@@ -27,7 +28,7 @@ export const useFormIngredient = (params?: {
       status: hasLength({ min: 1 }, 'User status required'),
     },
     {
-      resetOnSuccess: true,
+      resetOnSuccess: false,
       hideSuccessNotification: true,
       clientOnly: true,
 
@@ -48,7 +49,9 @@ export const useFormIngredient = (params?: {
         }
 
         form.reset();
-        router.back();
+        router.push(
+          `/dashboard/ingredients/${params?.options?.stockup ? 'stock-movements' : 'stock'}`
+        );
       },
     }
   );
