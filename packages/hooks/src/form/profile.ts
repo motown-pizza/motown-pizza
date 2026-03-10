@@ -4,11 +4,13 @@ import { useFormBase } from '../form';
 import { ProfileGet } from '@repo/types/models/profile';
 import { Role, Status } from '@repo/types/models/enums';
 import { validators } from '@repo/utilities/validation';
+import { useRouter } from 'next/navigation';
 
 export const useFormProfile = (params?: {
   defaultValues?: Partial<ProfileGet>;
 }) => {
   const { profileCreate, profileUpdate } = useProfileActions();
+  const router = useRouter();
 
   const { form, submitted, handleSubmit } = useFormBase<Partial<ProfileGet>>(
     {
@@ -55,6 +57,11 @@ export const useFormProfile = (params?: {
             ...submitObject,
           } as ProfileGet);
         }
+
+        form.reset();
+        router.push(
+          `/dashboard/people/${form.values.role?.toLocaleLowerCase()}s`
+        );
       },
     }
   );
