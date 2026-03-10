@@ -4,6 +4,7 @@ import React from 'react';
 import {
   ActionIcon,
   Badge,
+  Button,
   Group,
   NumberFormatter,
   Stack,
@@ -33,6 +34,7 @@ import {
   IconArrowDown,
   IconArrowUp,
   IconEdit,
+  IconPlus,
   IconTrash,
 } from '@tabler/icons-react';
 // import ModalCrudStockMovement from '../modals/crud/stock-movement';
@@ -48,6 +50,7 @@ import PartialTableFooter from '@repo/components/partial/table/footer';
 import CheckboxTable from '@repo/components/common/checkboxes/table';
 import ButtonPublish from '@repo/components/common/buttons/publish';
 import ButtonDelete from '@repo/components/common/buttons/delete';
+import Link from 'next/link';
 
 export default function StockMovements({
   props,
@@ -231,6 +234,20 @@ export default function StockMovements({
       >
         {selectedRows.length && (
           <>
+            {selectedRows.length == 1 && (
+              <Button
+                size="xs"
+                color="blue"
+                leftSection={
+                  <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+                }
+                component={Link}
+                href={``}
+              >
+                Edit Item
+              </Button>
+            )}
+
             <ButtonPublish
               props={{
                 anyDraft,

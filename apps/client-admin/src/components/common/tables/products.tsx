@@ -4,6 +4,7 @@ import React from 'react';
 import {
   ActionIcon,
   Avatar,
+  Button,
   Divider,
   Group,
   NumberFormatter,
@@ -29,6 +30,7 @@ import {
   IconEdit,
   IconMilk,
   IconMilkOff,
+  IconPlus,
   IconTrash,
 } from '@tabler/icons-react';
 import ModalCrudProduct from '@repo/components/common/modals/crud/product';
@@ -295,8 +297,31 @@ export default function Products({
           options: { nested: true },
         }}
       >
+        <Button
+          size="xs"
+          leftSection={<IconPlus size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
+          component={Link}
+          href={`/dashboard/products/new`}
+        >
+          Add New
+        </Button>
+
         {selectedRows.length && (
           <>
+            {selectedRows.length == 1 && (
+              <Button
+                size="xs"
+                color="blue"
+                leftSection={
+                  <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+                }
+                component={Link}
+                href={``}
+              >
+                Edit Item
+              </Button>
+            )}
+
             <ButtonPublish
               props={{
                 anyDraft,

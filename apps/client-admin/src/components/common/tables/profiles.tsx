@@ -37,6 +37,7 @@ import { ProfileGet } from '@repo/types/models/profile';
 import { Role, Status, SyncStatus } from '@repo/types/models/enums';
 import {
   IconEdit,
+  IconPlus,
   IconTrash,
   IconUser,
   IconUserEdit,
@@ -57,6 +58,7 @@ import PartialTableFooter from '@repo/components/partial/table/footer';
 import CheckboxTable from '@repo/components/common/checkboxes/table';
 import ButtonPublish from '@repo/components/common/buttons/publish';
 import ButtonActivate from '@repo/components/common/buttons/activate';
+import Link from 'next/link';
 
 export default function Profiles({
   props,
@@ -234,8 +236,31 @@ export default function Profiles({
           options: { nested: true },
         }}
       >
+        <Button
+          size="xs"
+          leftSection={<IconPlus size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
+          component={Link}
+          href={`/dashboard/people/new`}
+        >
+          Add New
+        </Button>
+
         {selectedRows.length && (
           <>
+            {selectedRows.length == 1 && (
+              <Button
+                size="xs"
+                color="blue"
+                leftSection={
+                  <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+                }
+                component={Link}
+                href={``}
+              >
+                Edit Item
+              </Button>
+            )}
+
             <ButtonActivate
               props={{
                 anyActive,
