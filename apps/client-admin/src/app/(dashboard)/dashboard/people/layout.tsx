@@ -10,6 +10,10 @@ import LayoutBody from '@repo/components/layout/body';
 import { Metadata } from 'next';
 import { APP_NAME } from '@repo/constants/app';
 
+export type typeParams = Promise<{
+  profileId: string;
+}>;
+
 export const metadata: Metadata = {
   title: {
     default: 'People',

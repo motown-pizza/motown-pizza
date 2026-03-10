@@ -171,7 +171,7 @@ const navlinks = [
         label: 'Supervisors',
       },
       {
-        link: '/dashboard/people/staff',
+        link: '/dashboard/people/employees',
         label: 'Staff',
       },
       {

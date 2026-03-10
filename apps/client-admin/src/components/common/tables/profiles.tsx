@@ -150,15 +150,18 @@ export default function Profiles({
 
         <TableTd w={widths.actions}>
           <Group gap={'xs'} justify="end" wrap="nowrap">
-            <ModalCrudProfile props={{ defaultValues: p }}>
-              <Group>
-                <Tooltip label={'Edit User'}>
-                  <ActionIcon size={ICON_WRAPPER_SIZE - 4} variant="light">
-                    <IconEdit size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
-                  </ActionIcon>
-                </Tooltip>
-              </Group>
-            </ModalCrudProfile>
+            <Group>
+              <Tooltip label={'Edit User'}>
+                <ActionIcon
+                  size={ICON_WRAPPER_SIZE - 4}
+                  variant="light"
+                  component={Link}
+                  href={`/dashboard/people/${p.id}`}
+                >
+                  <IconEdit size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
 
             <ModalConfirm
               props={{

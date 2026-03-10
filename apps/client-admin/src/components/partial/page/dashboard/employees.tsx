@@ -9,14 +9,14 @@ import PartialPageIntro from '../intro';
 import { Card } from '@mantine/core';
 import CardTable from '@/components/common/cards/table';
 
-export default function Staff() {
+export default function Employees() {
   const { profiles } = useStoreProfile();
 
   return (
     <>
       <PartialPageIntro />
 
-      <LayoutSection id="staff-content" containerized={false}>
+      <LayoutSection id="employees-content" containerized={false}>
         <CardTable>
           <TableProfiles
             props={{
