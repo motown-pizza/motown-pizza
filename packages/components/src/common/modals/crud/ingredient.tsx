@@ -39,7 +39,7 @@ export default function Ingredient({
           <FormIngredient
             props={{
               defaultValues: props?.defaultValues,
-              options: { stockup: props?.options?.stockup },
+              // options: { stockup: props?.options?.stockup },
               close,
             }}
           />

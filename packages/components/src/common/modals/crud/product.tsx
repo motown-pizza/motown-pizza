@@ -31,7 +31,7 @@ export default function Product({
             close,
           }}
         >
-          <FormProduct props={{ defaultValues: props?.defaultValues, close }} />
+          <FormProduct props={{ defaultValues: props?.defaultValues }} />
         </LayoutModal>
       </Modal>
 
