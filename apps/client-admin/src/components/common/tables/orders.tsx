@@ -136,15 +136,18 @@ export default function Orders() {
 
         <TableTd w={widths.actions}>
           <Group gap={'xs'} justify="end" wrap="nowrap">
-            {/* <ModalCrudProduct props={{ defaultValues: p }}>
-              <Group>
-                <Tooltip label={'Edit Product'}>
-                  <ActionIcon size={ICON_WRAPPER_SIZE - 4} variant="light">
-                    <IconEdit size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
-                  </ActionIcon>
-                </Tooltip>
-              </Group>
-            </ModalCrudProduct> */}
+            <Group>
+              <Tooltip label={'Edit Order'}>
+                <ActionIcon
+                  size={ICON_WRAPPER_SIZE - 4}
+                  variant="light"
+                  component={Link}
+                  href={`/dashboard/orders/${p.id}`}
+                >
+                  <IconEdit size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
 
             <ModalConfirm
               props={{

@@ -44,8 +44,7 @@ export const useFormProduct = (params?: {
     },
     {
       resetOnSuccess: false,
-      hideSuccessNotification: true,
-      clientOnly: true,
+      hideSuccessNotification: false,
 
       onSubmit: async (rawValues) => {
         if (!rawValues.image?.trim().length) {

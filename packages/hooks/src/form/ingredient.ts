@@ -29,8 +29,7 @@ export const useFormIngredient = (params?: {
     },
     {
       resetOnSuccess: false,
-      hideSuccessNotification: true,
-      clientOnly: true,
+      hideSuccessNotification: false,
 
       onSubmit: async (rawValues) => {
         const submitObject: Partial<IngredientGet> = {
