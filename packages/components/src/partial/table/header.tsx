@@ -31,21 +31,14 @@ export default function Header({
   return (
     <Stack py={'md'} px={'xs'}>
       <Group justify="space-between">
-        <InputTextSearch
-          props={{ value: props.search, setValue: props.setSearch }}
-          aria-label="Search items"
-          placeholder="Search items"
-          w={320}
-        />
-
-        <Button
-          size="xs"
-          leftSection={<IconPlus size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
-          component={Link}
-          href={`${props.options?.nested ? '' : `${pathname}/`}new`}
-        >
-          Add New
-        </Button>
+        <Group>
+          <InputTextSearch
+            props={{ value: props.search, setValue: props.setSearch }}
+            aria-label="Search items"
+            placeholder="Search items"
+            w={320}
+          />
+        </Group>
       </Group>
 
       <Group justify="space-between" mih={30}>
@@ -69,23 +62,7 @@ export default function Header({
           )}
         </Group>
 
-        <Group justify="end">
-          {props.selectedRows.length == 1 && (
-            <Button
-              size="xs"
-              color="blue"
-              leftSection={
-                <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-              }
-              component={Link}
-              href={`${props.options?.nested ? '' : `${pathname}/`}itemId`}
-            >
-              Edit Item
-            </Button>
-          )}
-
-          {children}
-        </Group>
+        <Group justify="end">{children}</Group>
       </Group>
     </Stack>
   );

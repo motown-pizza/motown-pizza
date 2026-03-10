@@ -3,6 +3,7 @@
 import React from 'react';
 import {
   ActionIcon,
+  Button,
   Center,
   Group,
   NumberFormatter,
@@ -28,6 +29,7 @@ import {
   IconEdit,
   IconMilk,
   IconMilkOff,
+  IconPlus,
   IconTrash,
 } from '@tabler/icons-react';
 import ModalCrudRecipieItem from '@repo/components/common/modals/crud/recipie-item';
@@ -273,8 +275,31 @@ export default function RecipieItems({
       <PartialTableHeader
         props={{ list: filteredItems, selectedRows, search, setSearch }}
       >
+        <Button
+          size="xs"
+          leftSection={<IconPlus size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
+          component={Link}
+          href={`/dashboard/recipie-items/new`}
+        >
+          Add New
+        </Button>
+
         {selectedRows.length && (
           <>
+            {selectedRows.length == 1 && (
+              <Button
+                size="xs"
+                color="blue"
+                leftSection={
+                  <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+                }
+                component={Link}
+                href={``}
+              >
+                Edit Item
+              </Button>
+            )}
+
             <ButtonPublish
               props={{
                 anyDraft,

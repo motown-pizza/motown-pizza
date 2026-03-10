@@ -21,7 +21,13 @@ import {
   ICON_STROKE_WIDTH,
   ICON_WRAPPER_SIZE,
 } from '@repo/constants/sizes';
-import { IconAsterisk, IconEye, IconTrash } from '@tabler/icons-react';
+import {
+  IconAsterisk,
+  IconEdit,
+  IconEye,
+  IconPlus,
+  IconTrash,
+} from '@tabler/icons-react';
 import ModalConfirm from '@repo/components/common/modals/confirm';
 import { useDeliveryActions } from '@repo/hooks/actions/delivery';
 import { useStoreDelivery } from '@repo/libraries/zustand/stores/delivery';
@@ -35,6 +41,7 @@ import PartialTableMain from '@repo/components/partial/table/main';
 import PartialTableFooter from '@repo/components/partial/table/footer';
 import CheckboxTable from '@repo/components/common/checkboxes/table';
 import ButtonDelete from '@repo/components/common/buttons/delete';
+import Link from 'next/link';
 
 export default function Deliveries() {
   const { deliveries } = useStoreDelivery();
@@ -185,6 +192,20 @@ export default function Deliveries() {
       >
         {selectedRows.length && (
           <>
+            {selectedRows.length == 1 && (
+              <Button
+                size="xs"
+                color="blue"
+                leftSection={
+                  <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+                }
+                component={Link}
+                href={``}
+              >
+                Edit Item
+              </Button>
+            )}
+
             {selectedRows.length > 0 && (
               <ButtonDelete
                 props={{

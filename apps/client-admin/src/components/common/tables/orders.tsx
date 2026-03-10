@@ -27,7 +27,7 @@ import {
   OrderSource,
   OrderStatus,
 } from '@repo/types/models/enums';
-import { IconTrash } from '@tabler/icons-react';
+import { IconEdit, IconPlus, IconTrash } from '@tabler/icons-react';
 import ModalConfirm from '@repo/components/common/modals/confirm';
 import { useOrderActions } from '@repo/hooks/actions/order';
 import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
@@ -38,6 +38,7 @@ import PartialTableMain from '@repo/components/partial/table/main';
 import PartialTableFooter from '@repo/components/partial/table/footer';
 import CheckboxTable from '@repo/components/common/checkboxes/table';
 import ButtonDelete from '@repo/components/common/buttons/delete';
+import Link from 'next/link';
 
 export default function Orders() {
   const { orders } = useStoreOrder();
@@ -181,6 +182,20 @@ export default function Orders() {
       >
         {selectedRows.length && (
           <>
+            {selectedRows.length == 1 && (
+              <Button
+                size="xs"
+                color="blue"
+                leftSection={
+                  <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+                }
+                component={Link}
+                href={``}
+              >
+                Edit Item
+              </Button>
+            )}
+
             {selectedRows.length > 0 && (
               <ButtonDelete
                 props={{

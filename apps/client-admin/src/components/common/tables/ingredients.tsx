@@ -4,6 +4,7 @@ import React from 'react';
 import {
   ActionIcon,
   Badge,
+  Button,
   Group,
   NumberFormatter,
   Progress,
@@ -33,6 +34,7 @@ import {
   IconEdit,
   IconMilk,
   IconMilkOff,
+  IconPlus,
   IconStackPop,
   IconTrash,
 } from '@tabler/icons-react';
@@ -304,8 +306,31 @@ export default function Ingredients({
           options: { nested: true },
         }}
       >
+        <Button
+          size="xs"
+          leftSection={<IconPlus size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
+          component={Link}
+          href={`/dashboard/ingredients/new`}
+        >
+          Add New
+        </Button>
+
         {selectedRows.length && (
           <>
+            {selectedRows.length == 1 && (
+              <Button
+                size="xs"
+                color="blue"
+                leftSection={
+                  <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+                }
+                component={Link}
+                href={``}
+              >
+                Edit Item
+              </Button>
+            )}
+
             <ButtonPublish
               props={{
                 anyDraft,
