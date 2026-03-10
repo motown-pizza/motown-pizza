@@ -28,9 +28,8 @@ export const useFormProductVariant = (params?: {
       status: hasLength({ min: 1 }, 'Variant status required'),
     },
     {
-      resetOnSuccess: true,
-      hideSuccessNotification: true,
-      clientOnly: true,
+      resetOnSuccess: false,
+      hideSuccessNotification: false,
 
       onSubmit: async (rawValues) => {
         const submitObject: Partial<ProductVariantGet> = {
