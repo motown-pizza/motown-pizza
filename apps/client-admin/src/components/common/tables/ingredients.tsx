@@ -325,7 +325,7 @@ export default function Ingredients({
                   <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
                 }
                 component={Link}
-                href={``}
+                href={`/dashboard/ingredients/${selectedRows[0]}`}
               >
                 Edit Item
               </Button>

@@ -56,7 +56,8 @@ export default function RecipieItems({
 }) {
   const { ingredients } = useStoreIngredient();
   const { productVariants } = useStoreProductVariant();
-  const { recipieItems, setRecipieItems } = useStoreRecipieItem();
+  const { recipieItems, setRecipieItems, deleteRecipieItems } =
+    useStoreRecipieItem();
   const { recipieItemUpdate, recipieItemDelete } = useRecipieItemActions();
 
   const filteredItems = props?.recipieItems || recipieItems;
@@ -294,7 +295,7 @@ export default function RecipieItems({
                   <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
                 }
                 component={Link}
-                href={``}
+                href={`/dashboard/recipie-items/${selectedRows[0]}`}
               >
                 Edit Item
               </Button>
@@ -345,17 +346,11 @@ export default function RecipieItems({
             <ButtonDelete
               props={{
                 onConfirm: () => {
-                  if (selectedRows.length == 1) {
-                    const recipieItem = recipieItems?.find(
-                      (i) => i.id == selectedRows[0]
-                    );
-
-                    if (recipieItem) recipieItemDelete(recipieItem);
-                  } else {
-                    const filteredRecipieItems = recipieItems?.filter(
-                      (i) => !selectedRows.includes(i.id)
-                    );
-                  }
+                  deleteRecipieItems(
+                    (recipieItems || []).filter((i) =>
+                      selectedRows.includes(i.id)
+                    )
+                  );
                 },
               }}
             />

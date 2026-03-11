@@ -258,7 +258,7 @@ export default function Profiles({
                   <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
                 }
                 component={Link}
-                href={``}
+                href={`/dashboard/people/${selectedRows[0]}`}
               >
                 Edit Item
               </Button>

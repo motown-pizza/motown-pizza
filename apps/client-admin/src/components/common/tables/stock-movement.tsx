@@ -188,15 +188,18 @@ export default function StockMovements({
 
         <TableTd w={widths.actions}>
           <Group gap={'xs'} justify="end" wrap="nowrap">
-            {/* <ModalCrudStockMovement props={{ defaultValues: p }}> */}
-            {/* <Group>
+            <Group>
               <Tooltip label={'Edit Stock Movement'}>
-                <ActionIcon size={ICON_WRAPPER_SIZE - 4} variant="light">
+                <ActionIcon
+                  size={ICON_WRAPPER_SIZE - 4}
+                  variant="light"
+                  component={Link}
+                  href={`/dashboard/ingredients/stock-movements/${p.id}`}
+                >
                   <IconEdit size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
                 </ActionIcon>
               </Tooltip>
-            </Group> */}
-            {/* </ModalCrudStockMovement> */}
+            </Group>
 
             <ModalConfirm
               props={{
@@ -242,32 +245,11 @@ export default function StockMovements({
                   <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
                 }
                 component={Link}
-                href={``}
+                href={`/dashboard/ingredients/stock-movements/${selectedRows[0]}`}
               >
                 Edit Item
               </Button>
             )}
-
-            <ButtonPublish
-              props={{
-                anyDraft,
-                onConfirm: () => {
-                  setStockMovements(
-                    stockMovements?.map((p) => {
-                      if (!selectedRows.includes(p.id)) return p;
-
-                      return {
-                        ...p,
-                        sync_status: SyncStatus.PENDING,
-                        status: anyDraft ? Status.ACTIVE : Status.DRAFT,
-                      };
-                    })
-                  );
-
-                  setSelectedRows([]);
-                },
-              }}
-            />
 
             <ButtonDelete
               props={{

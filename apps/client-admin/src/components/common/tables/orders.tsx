@@ -42,7 +42,7 @@ import Link from 'next/link';
 import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
 
 export default function Orders() {
-  const { orders } = useStoreOrder();
+  const { orders, deleteOrders } = useStoreOrder();
   const { orderItems } = useStoreOrderItem();
   const { orderDelete } = useOrderActions();
 
@@ -196,7 +196,7 @@ export default function Orders() {
                   <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
                 }
                 component={Link}
-                href={``}
+                href={`/dashboard/orders/${selectedRows[0]}`}
               >
                 Edit Item
               </Button>
@@ -206,17 +206,9 @@ export default function Orders() {
               <ButtonDelete
                 props={{
                   onConfirm: () => {
-                    if (selectedRows.length == 1) {
-                      const order = orders?.find(
-                        (i) => i.id == selectedRows[0]
-                      );
-
-                      if (order) orderDelete(order);
-                    } else {
-                      const filteredOrder = orders?.filter(
-                        (i) => !selectedRows.includes(i.id)
-                      );
-                    }
+                    deleteOrders(
+                      (orders || []).filter((i) => selectedRows.includes(i.id))
+                    );
                   },
                 }}
               />

@@ -56,7 +56,7 @@ export default function Products({
 }: {
   props?: { products?: ProductGet[] };
 }) {
-  const { products, setProducts } = useStoreProduct();
+  const { products, setProducts, deleteProducts } = useStoreProduct();
   const { productVariants } = useStoreProductVariant();
   const { productUpdate, productDelete } = useProductActions();
   const { recipieItems } = useStoreRecipieItem();
@@ -316,7 +316,7 @@ export default function Products({
                   <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
                 }
                 component={Link}
-                href={``}
+                href={`/dashboard/products/${selectedRows[0]}`}
               >
                 Edit Item
               </Button>
@@ -367,17 +367,9 @@ export default function Products({
             <ButtonDelete
               props={{
                 onConfirm: () => {
-                  if (selectedRows.length == 1) {
-                    const product = products?.find(
-                      (i) => i.id == selectedRows[0]
-                    );
-
-                    if (product) productDelete(product);
-                  } else {
-                    const filteredProduct = products?.filter(
-                      (i) => !selectedRows.includes(i.id)
-                    );
-                  }
+                  deleteProducts(
+                    (products || []).filter((i) => selectedRows.includes(i.id))
+                  );
                 },
               }}
             />
