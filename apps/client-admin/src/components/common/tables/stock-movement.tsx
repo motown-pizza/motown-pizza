@@ -189,13 +189,13 @@ export default function StockMovements({
         <TableTd w={widths.actions}>
           <Group gap={'xs'} justify="end" wrap="nowrap">
             {/* <ModalCrudStockMovement props={{ defaultValues: p }}> */}
-            <Group>
+            {/* <Group>
               <Tooltip label={'Edit Stock Movement'}>
                 <ActionIcon size={ICON_WRAPPER_SIZE - 4} variant="light">
                   <IconEdit size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
                 </ActionIcon>
               </Tooltip>
-            </Group>
+            </Group> */}
             {/* </ModalCrudStockMovement> */}
 
             <ModalConfirm

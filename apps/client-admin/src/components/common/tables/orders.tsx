@@ -39,9 +39,11 @@ import PartialTableFooter from '@repo/components/partial/table/footer';
 import CheckboxTable from '@repo/components/common/checkboxes/table';
 import ButtonDelete from '@repo/components/common/buttons/delete';
 import Link from 'next/link';
+import { useStoreOrderItem } from '@repo/libraries/zustand/stores/order-item';
 
 export default function Orders() {
   const { orders } = useStoreOrder();
+  const { orderItems } = useStoreOrderItem();
   const { orderDelete } = useOrderActions();
 
   const filteredItems = orders?.filter(
@@ -62,6 +64,7 @@ export default function Orders() {
 
   const rows = items.map((p) => {
     const createdAt = getRegionalDate(p.created_at);
+    const orderItemsCurrent = orderItems?.filter((oi) => oi.order_id == p.id);
 
     return (
       <TableTr
@@ -90,7 +93,7 @@ export default function Orders() {
             </Title>
 
             <Text c={'dimmed'} fz={'sm'} lineClamp={1}>
-              <Text component="span">{2} items</Text>
+              <Text component="span">{orderItemsCurrent?.length} items</Text>
             </Text>
           </Stack>
         </TableTd>

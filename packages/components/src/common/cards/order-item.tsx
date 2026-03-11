@@ -81,7 +81,7 @@ export default function OrderItem({
                   Kshs.{' '}
                   <Text component="span" inherit fz={'md'} fw={500} c={'sec'}>
                     <NumberFormatter
-                      value={(variant.price || 0) * props.quantity}
+                      value={(props.price_at_sale || 0) * props.quantity}
                     />
                   </Text>
                 </Text>
