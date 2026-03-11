@@ -204,7 +204,7 @@ export default function Ingredients({
                   size={ICON_WRAPPER_SIZE - 4}
                   variant="light"
                   component={Link}
-                  href={`/dashboard/ingredients/${p.id}?stockup=${true}`}
+                  href={`/dashboard/ingredients/stock-movements/${p.id}`}
                 >
                   <IconStackPop
                     size={ICON_SIZE - 4}
@@ -220,7 +220,7 @@ export default function Ingredients({
                   size={ICON_WRAPPER_SIZE - 4}
                   variant="light"
                   component={Link}
-                  href={`/dashboard/ingredients/${p.id}`}
+                  href={`/dashboard/ingredients/stock/${p.id}`}
                 >
                   <IconEdit size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
                 </ActionIcon>
@@ -310,7 +310,7 @@ export default function Ingredients({
           size="xs"
           leftSection={<IconPlus size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
           component={Link}
-          href={`/dashboard/ingredients/new`}
+          href={`/dashboard/ingredients/stock/new`}
         >
           Add New
         </Button>
@@ -325,7 +325,7 @@ export default function Ingredients({
                   <IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
                 }
                 component={Link}
-                href={`/dashboard/ingredients/${selectedRows[0]}`}
+                href={`/dashboard/ingredients/stock/${selectedRows[0]}`}
               >
                 Edit Item
               </Button>

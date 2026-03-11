@@ -57,7 +57,8 @@ export default function StockMovements({
 }: {
   props?: { stockMovements?: StockMovementGet[] };
 }) {
-  const { stockMovements, setStockMovements } = useStoreStockMovement();
+  const { stockMovements, setStockMovements, deleteStockMovements } =
+    useStoreStockMovement();
   const { ingredients } = useStoreIngredient();
   const { orders } = useStoreOrder();
   const { stockMovementDelete } = useStockMovementActions();
@@ -254,17 +255,11 @@ export default function StockMovements({
             <ButtonDelete
               props={{
                 onConfirm: () => {
-                  if (selectedRows.length == 1) {
-                    const stockMovement = stockMovements?.find(
-                      (i) => i.id == selectedRows[0]
-                    );
-
-                    if (stockMovement) stockMovementDelete(stockMovement);
-                  } else {
-                    const filteredStockMovement = stockMovements?.filter(
-                      (i) => !selectedRows.includes(i.id)
-                    );
-                  }
+                  deleteStockMovements(
+                    (stockMovements || []).filter((i) =>
+                      selectedRows.includes(i.id)
+                    )
+                  );
                 },
               }}
             />

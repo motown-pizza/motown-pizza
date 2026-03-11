@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 
 export const useFormIngredient = (params?: {
   defaultValues?: Partial<IngredientGet>;
-  options?: { stockup?: boolean };
 }) => {
   const { ingredientCreate, ingredientUpdate } = useIngredientActions();
   const router = useRouter();
@@ -48,9 +47,7 @@ export const useFormIngredient = (params?: {
         }
 
         form.reset();
-        router.push(
-          `/dashboard/ingredients/${params?.options?.stockup ? 'stock-movements' : 'stock'}`
-        );
+        router.push(`/dashboard/ingredients/stock`);
       },
     }
   );

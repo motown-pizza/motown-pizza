@@ -48,52 +48,18 @@ export default function Ingredient({
     close?: () => void;
   };
 }) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const stockup = searchParams.get('stockup');
-
   const { stockMovementCreate } = useStockMovementActions();
 
   const { form, submitted, handleSubmit } = useFormIngredient({
     defaultValues: props?.defaultValues,
-    options: { stockup: !!stockup },
   });
 
-  const [stockQuantity, setStockQuantity] = useState(0);
-  const [stockUp, setStockUp] = useState<string | number>('');
-
   const mobile = useMediaQuery('(max-width: 36em)');
-
-  useEffect(() => {
-    if (form.values.stock_quantity)
-      setStockQuantity(form.values.stock_quantity);
-  }, []);
-
-  const handleupdate = useDebouncedCallback(() => {
-    if (!stockUp) {
-      form.reset();
-    } else {
-      form.setFieldValue('stock_quantity', stockQuantity + Number(stockUp));
-    }
-  }, 250);
-
-  useEffect(() => {
-    handleupdate();
-  }, [stockUp]);
 
   return (
     <form
       onSubmit={form.onSubmit(() => {
         handleSubmit();
-
-        if (props?.defaultValues?.updated_at && stockup) {
-          stockMovementCreate({
-            ingredient_id: props.defaultValues.id,
-            quantity: Number(stockUp),
-            type: StockMovementType.PURCHASE,
-          });
-        }
-
         if (props?.close) props.close();
       })}
       noValidate
@@ -117,7 +83,6 @@ export default function Ingredient({
                         stroke={ICON_STROKE_WIDTH}
                       />
                     }
-                    disabled={!!stockup}
                     {...form.getInputProps('name')}
                   />
                 </GridCol>
@@ -131,83 +96,51 @@ export default function Ingredient({
                     leftSection={
                       <IconStack3 size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
                     }
-                    disabled={!!stockup}
                     {...form.getInputProps('stock_quantity')}
                   />
                 </GridCol>
 
-                {!!stockup && (
-                  <GridCol span={{ base: 12, xs: 6 }}>
-                    <NumberInput
-                      required
-                      label="Stock-up Quantity"
-                      placeholder="Stock-up Quantity"
-                      min={0}
-                      leftSection={
-                        <IconStack3
-                          size={ICON_SIZE}
-                          stroke={ICON_STROKE_WIDTH}
-                        />
-                      }
-                      value={stockUp}
-                      onChange={setStockUp}
-                    />
-                  </GridCol>
-                )}
+                <GridCol span={{ base: 12, xs: 6 }}>
+                  <NumberInput
+                    required
+                    label="Low Stock Margin"
+                    placeholder="Low Stock Margin"
+                    min={0}
+                    leftSection={
+                      <IconStack2 size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+                    }
+                    {...form.getInputProps('low_stock_margin')}
+                  />
+                </GridCol>
 
-                {!!!stockup && (
-                  <GridCol span={{ base: 12, xs: 6 }}>
-                    <NumberInput
-                      required
-                      label="Low Stock Margin"
-                      placeholder="Low Stock Margin"
-                      min={0}
-                      leftSection={
-                        <IconStack2
-                          size={ICON_SIZE}
-                          stroke={ICON_STROKE_WIDTH}
-                        />
-                      }
-                      {...form.getInputProps('low_stock_margin')}
-                    />
-                  </GridCol>
-                )}
+                <GridCol span={{ base: 12, xs: 6 }}>
+                  <NumberInput
+                    required
+                    label="Stockout Margin"
+                    placeholder="Stockout Margin"
+                    min={0}
+                    leftSection={
+                      <IconStack size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+                    }
+                    {...form.getInputProps('stockout_margin')}
+                  />
+                </GridCol>
 
-                {!!!stockup && (
-                  <GridCol span={{ base: 12, xs: 6 }}>
-                    <NumberInput
-                      required
-                      label="Stockout Margin"
-                      placeholder="Stockout Margin"
-                      min={0}
-                      leftSection={
-                        <IconStack
-                          size={ICON_SIZE}
-                          stroke={ICON_STROKE_WIDTH}
-                        />
-                      }
-                      {...form.getInputProps('stockout_margin')}
-                    />
-                  </GridCol>
-                )}
-
-                {!!!stockup && (
-                  <GridCol span={{ base: 12, xs: 6 }}>
-                    <NumberInput
-                      required
-                      label="Stock Capacity"
-                      placeholder="Stock Capacity"
-                      min={0}
-                      leftSection={
-                        <IconContainer
-                          size={ICON_SIZE}
-                          stroke={ICON_STROKE_WIDTH}
-                        />
-                      }
-                      {...form.getInputProps('stock_capacity')}
-                    />
-                  </GridCol>
-                )}
+                <GridCol span={{ base: 12, xs: 6 }}>
+                  <NumberInput
+                    required
+                    label="Stock Capacity"
+                    placeholder="Stock Capacity"
+                    min={0}
+                    leftSection={
+                      <IconContainer
+                        size={ICON_SIZE}
+                        stroke={ICON_STROKE_WIDTH}
+                      />
+                    }
+                    {...form.getInputProps('stock_capacity')}
+                  />
+                </GridCol>
 
                 <GridCol span={{ base: 12, xs: 6 }}>
                   <Select
@@ -232,7 +165,6 @@ export default function Ingredient({
                         label: capitalizeWords(MeasurementUnitType.MILLILITRES),
                       },
                     ]}
-                    disabled={!!stockup}
                     {...form.getInputProps('unit')}
                   />
                 </GridCol>
@@ -242,32 +174,30 @@ export default function Ingredient({
 
           <GridCol span={4}>
             <Stack>
-              {!stockup && (
-                <Fieldset legend="Ingredient status">
-                  <RadioGroup
-                    name="ingredient-status"
-                    label="Select the ingredient's current status"
-                    description="This determines the ingredient's visibility to users"
-                    required
-                    {...form.getInputProps('status')}
-                  >
-                    <Group mt="xs">
-                      <Radio
-                        value={Status.DRAFT}
-                        label={capitalizeWords(Status.DRAFT)}
-                      />
-                      <Radio
-                        value={Status.INACTIVE}
-                        label={capitalizeWords(Status.INACTIVE)}
-                      />
-                      <Radio
-                        value={Status.ACTIVE}
-                        label={capitalizeWords(Status.ACTIVE)}
-                      />
-                    </Group>
-                  </RadioGroup>
-                </Fieldset>
-              )}
+              <Fieldset legend="Ingredient status">
+                <RadioGroup
+                  name="ingredient-status"
+                  label="Select the ingredient's current status"
+                  description="This determines the ingredient's visibility to users"
+                  required
+                  {...form.getInputProps('status')}
+                >
+                  <Group mt="xs">
+                    <Radio
+                      value={Status.DRAFT}
+                      label={capitalizeWords(Status.DRAFT)}
+                    />
+                    <Radio
+                      value={Status.INACTIVE}
+                      label={capitalizeWords(Status.INACTIVE)}
+                    />
+                    <Radio
+                      value={Status.ACTIVE}
+                      label={capitalizeWords(Status.ACTIVE)}
+                    />
+                  </Group>
+                </RadioGroup>
+              </Fieldset>
             </Stack>
           </GridCol>
 
@@ -277,7 +207,7 @@ export default function Ingredient({
                 color="dark"
                 loading={submitted}
                 component={Link}
-                href={`/dashboard/ingredients/${stockup ? 'stock-movements' : 'stock'}`}
+                href={`/dashboard/ingredients/stock`}
               >
                 Cancel
               </Button>
@@ -295,9 +225,8 @@ export default function Ingredient({
                 loading={submitted}
                 color="blue"
                 display={
-                  !stockup &&
-                  (!props?.defaultValues?.updated_at ||
-                    props.defaultValues.status != Status.ACTIVE)
+                  !props?.defaultValues?.updated_at ||
+                  props.defaultValues.status != Status.ACTIVE
                     ? undefined
                     : 'none'
                 }

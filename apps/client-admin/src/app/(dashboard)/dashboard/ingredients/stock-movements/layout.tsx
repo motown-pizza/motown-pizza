@@ -11,17 +11,17 @@ import { Metadata } from 'next';
 import { APP_NAME } from '@repo/constants/app';
 
 export type typeParams = Promise<{
-  ingredientId: string;
+  stockMovementId: string;
 }>;
 
 export const metadata: Metadata = {
   title: {
-    default: 'Ingredients',
-    template: `%s - Ingredients - Dashboard - ${APP_NAME.ADMIN}`,
+    default: 'Stock Movements',
+    template: `%s - Stock Movements - Ingredients - Dashboard - ${APP_NAME.ADMIN}`,
   },
 };
 
-export default async function LayoutIngredients({
+export default async function LayoutStockMovements({
   children, // will be a page or nested layout
 }: {
   children: React.ReactNode;

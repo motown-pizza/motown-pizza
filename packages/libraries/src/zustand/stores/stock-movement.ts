@@ -13,6 +13,7 @@ interface StockMovementState {
   addStockMovement: (data: StockMovementGet) => void;
   updateStockMovement: (data: StockMovementGet) => void;
   deleteStockMovement: (data: StockMovementGet) => void;
+  deleteStockMovements: (data: StockMovementGet[]) => void;
 }
 
 export const useStoreStockMovement = create<StockMovementState>((set) => ({
@@ -56,5 +57,20 @@ export const useStoreStockMovement = create<StockMovementState>((set) => ({
       stockMovements:
         state.stockMovements?.filter((i) => i.id !== data.id) ?? undefined,
     }));
+  },
+
+  deleteStockMovements: (data) => {
+    set((state) => {
+      if (!state.stockMovements) return {};
+
+      const idsToDelete = new Set(data.map((i) => i.id));
+
+      return {
+        deleted: [...state.deleted, ...data],
+        stockMovements: state.stockMovements.filter(
+          (i) => !idsToDelete.has(i.id)
+        ),
+      };
+    });
   },
 }));
