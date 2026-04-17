@@ -19,6 +19,8 @@ import { useMediaQuery } from '@mantine/hooks';
 import ModalSignIn from '@/components/common/modal/sign-in';
 import DrawerCart from '@/components/common/drawer/cart';
 import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
+import AvatarMain from '@repo/components/common/avatars/main';
+import MenuUser from '@repo/components/common/menu/user';
 
 export default function Main() {
   const tablet = useMediaQuery('(min-width: 62em)');
@@ -61,11 +63,11 @@ export default function Main() {
         </Group>
 
         <Group>
-          <ModalSignIn>
-            <Group c={'white'} style={{ cursor: 'pointer' }}>
-              <IconUser size={ICON_SIZE + 4} stroke={ICON_STROKE_WIDTH} />
-            </Group>
-          </ModalSignIn>
+          <Group c={'white'} style={{ cursor: 'pointer' }}>
+            <MenuUser>
+              <AvatarMain />
+            </MenuUser>
+          </Group>
 
           <DrawerCart>
             <div style={{ cursor: 'pointer' }}>
