@@ -40,9 +40,5 @@ export default function Store({
     },
   });
 
-  return (
-    <div>
-      <ProviderSync>{children}</ProviderSync>
-    </div>
-  );
+  return <div>{children}</div>;
 }

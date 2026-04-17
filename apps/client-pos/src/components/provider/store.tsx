@@ -8,7 +8,11 @@
  */
 
 import React from 'react';
-import { useSessionStore, useLoadAppData } from '@repo/hooks/store';
+import {
+  useSessionStore,
+  useLoadAppData,
+  useAppshellStore,
+} from '@repo/hooks/store';
 import ProviderSync from './sync';
 import { User } from '@supabase/supabase-js';
 
@@ -20,6 +24,8 @@ export default function Store({
   children: React.ReactNode;
 }) {
   // initialize stores
+
+  useAppshellStore();
 
   useSessionStore({
     sessionUser: props?.sessionUser || null,
@@ -40,9 +46,5 @@ export default function Store({
     },
   });
 
-  return (
-    <div>
-      <ProviderSync>{children}</ProviderSync>
-    </div>
-  );
+  return <div>{children}</div>;
 }
