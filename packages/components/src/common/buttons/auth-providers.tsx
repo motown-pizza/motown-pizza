@@ -19,6 +19,20 @@ export default function Providers({ props }: { props: { baseUrl: string } }) {
     const handleClick = async () => {
       setLoading(providerDetails.provider);
 
+      // Clear storage
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // clear client cookies
+      document.cookie.split(';').forEach((c) => {
+        document.cookie = c
+          .replace(/^ +/, '')
+          .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+      });
+
+      // hard reset local auth state
+      await supabase.auth.signOut({ scope: 'local' });
+
       await supabase.auth.signInWithOAuth({
         provider: providerDetails.provider.toLocaleLowerCase() as any,
         options: {
