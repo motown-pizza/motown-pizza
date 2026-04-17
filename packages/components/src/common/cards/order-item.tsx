@@ -46,8 +46,8 @@ export default function OrderItem({
       <Grid gutter={0}>
         <GridCol span={1.5}>
           <ImageDefault
-            src={product?.image || ''}
-            alt={product?.title || ''}
+            src={product?.image || 'loading'}
+            alt={product?.title || 'loading'}
             height={80}
             fit={'contain'}
             radius={'lg'}

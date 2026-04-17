@@ -38,7 +38,7 @@ export const useDeliveryActions = () => {
       failed_at: params.failed_at || null,
       order_id: params.order_id || '',
       previous_delivery_id: params.previous_delivery_id || '',
-      profile_id: session.id || '',
+      profile_id: session.email ? session.id : null,
       scheduled_date: params.scheduled_date || null,
       scheduled_window_start: params.scheduled_window_start || null,
       status_reason: params.status_reason || '',

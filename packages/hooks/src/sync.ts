@@ -365,7 +365,7 @@ export const useMergedSync = (params: {
   syncStatus: SyncStatusValue;
 }) => {
   const { online, storesToSync, handleSync } = params;
-  const idle = useIdle(2000, { events: ['keypress', 'click'] });
+  const idle = useIdle(0, { events: ['keypress', 'click'] });
   const { noSession } = useSessionCheck();
 
   // Call all hooks at the top level (Required by Hook Rules)
@@ -529,6 +529,7 @@ export const syncToServerDBMerged = async (payload: MergedSyncPayload) => {
   (Object.keys(payload) as SyncStoreKey[]).forEach((key) => {
     const data = (payload as any)[key];
     if (data && (data.items.length > 0 || data.deleted.length > 0)) {
+      // This now contains { upserts: [...], deletedIds: [...] }
       finalPayload[key] = prepareStorePayload(key, data, now);
       activeStores.push(key);
     }
@@ -565,30 +566,27 @@ const prepareStorePayload = (
 ) => {
   if (!data) return null;
 
-  // const { items, deleted } = data;
-
-  // Filter for items that aren't already synced
-  const unsyncedItems = data.items
-    .filter((i) => i.sync_status !== SyncStatus.SYNCED)
+  // 1. Get items that need saving/updating
+  const upserts = data.items
+    .filter(
+      (i) =>
+        i.sync_status !== SyncStatus.SYNCED &&
+        i.sync_status !== SyncStatus.DELETED
+    )
+    // ... rest of map
     .map((item) => ({
       ...item,
       updated_at: now.toISOString(),
       sync_status: SyncStatus.SYNCED,
     }));
 
-  // 2. Map pending/saved items to SYNCED status for the server
-  const upserts = unsyncedItems.map((item) => ({
-    ...item,
-    updated_at: now.toISOString(),
-    sync_status: SyncStatus.SYNCED,
-  }));
-
-  // Extract just the IDs for deletion
+  // 2. Get the IDs of items marked for deletion
+  // This is where your cart items live after orderUpdate runs
   const deletedIds = data.deleted.map((i) => i.id);
 
   return {
-    [key]: upserts, // e.g., "posts": [...]
-    deletedIds: deletedIds,
+    upserts, // Changed from [key] to a fixed key for easier API parsing
+    deletedIds,
   };
 };
 

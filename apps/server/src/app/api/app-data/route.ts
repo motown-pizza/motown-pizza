@@ -36,12 +36,12 @@ export async function GET(request: NextRequest) {
         }),
       cartItems: () =>
         prisma.cartItem.findMany({
-          where: { profile_id: userId },
+          // where: { profile_id: userId },
           orderBy: { created_at: 'desc' },
         }),
       deliveries: () =>
         prisma.delivery.findMany({
-          where: { profile_id: userId },
+          // where: { profile_id: userId },
           orderBy: { created_at: 'desc' },
         }),
       ingredients: () =>
@@ -50,12 +50,12 @@ export async function GET(request: NextRequest) {
         }),
       orders: () =>
         prisma.order.findMany({
-          where: { profile_id: userId },
+          // where: { profile_id: userId },
           orderBy: { created_at: 'desc' },
         }),
       orderItems: () =>
         prisma.orderItem.findMany({
-          where: { profile_id: userId },
+          // where: { profile_id: userId },
           orderBy: { created_at: 'desc' },
         }),
       products: () =>
@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
         }),
       wishlistItems: () =>
         prisma.wishlistItem.findMany({
-          where: { profile_id: userId },
+          // where: { profile_id: userId },
           orderBy: { created_at: 'desc' },
         }),
     };
@@ -179,7 +179,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Handle Upserts
-      const upserts = data[key].map((item: any) =>
+      const upserts = (data.upserts || []).map((item: any) =>
         model.upsert({
           where: { id: item.id },
           update: { ...item, updated_at: new Date(item.updated_at) },

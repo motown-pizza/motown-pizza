@@ -8,7 +8,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import LayoutBody from '@repo/components/layout/body';
-import AffixNavbar from '@repo/components/common/affixi/navbar';
+// import AffixNavbar from '@repo/components/common/affixi/navbar';
 import { APP_NAME } from '@repo/constants/app';
 import HeaderMain from '@/components/layout/header/main';
 import NavbarMain from '@/components/layout/navbar/main';
@@ -31,9 +31,9 @@ export default async function LayoutMarketing({
     >
       <main>{children}</main>
 
-      <AffixNavbar>
+      {/* <AffixNavbar>
         <NavbarMain />
-      </AffixNavbar>
+      </AffixNavbar> */}
     </LayoutBody>
   );
 }

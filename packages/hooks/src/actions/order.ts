@@ -20,14 +20,20 @@ import { generateTrackingCode } from '@repo/services/logic/generators/order-code
 import { StoreGet } from '@repo/constants/stores';
 import { useDeliveryActions } from './delivery';
 import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-placement';
+import { useRouter } from 'next/navigation';
+import { useNotification } from '../notification';
+import { Variant } from '@repo/types/enums';
 
 export const useOrderActions = () => {
+  const router = useRouter();
   const { session } = useStoreSession();
   const { addOrder, updateOrder, deleteOrder } = useStoreOrder();
   const { orderItems, setOrderItems } = useStoreOrderItem();
   const { productVariants } = useStoreProductVariant();
   const { cartItems, deleteCartItems } = useStoreCartItem();
+  const { orders } = useStoreOrder();
   const { deliveryCreate } = useDeliveryActions();
+  const { showNotification } = useNotification();
 
   const orderCreate = async (
     params: Partial<OrderGet>,
@@ -50,7 +56,7 @@ export const useOrderActions = () => {
       order_status: params.order_status || OrderStatus.PROCESSING,
       order_time: params.order_time || OrderTime.NOW,
       payment_method: params.payment_method || OrderPaymentMethod.ONLINE,
-      profile_id: session.id || null,
+      profile_id: session.email ? session.id : null,
       source: params.source || OrderSource.POS,
       store_id: params.store_id || null,
       tracking_code: params.tracking_code || '',
@@ -84,11 +90,35 @@ export const useOrderActions = () => {
 
     const now = new Date();
 
-    const newOrder: OrderGet = {
+    let newOrder: OrderGet = {
       ...params,
       sync_status: SyncStatus.PENDING,
       updated_at: now.toISOString() as any,
     };
+
+    if (newOrder.id == 'new') {
+      const draftOrders = orders?.filter(
+        (oi) => oi.order_status == OrderStatus.DRAFT
+      );
+
+      if (!draftOrders) {
+        showNotification({
+          variant: Variant.WARNING,
+          title: 'Order Not Found',
+          desc: 'Please place your order again',
+        });
+
+        router.replace('/order/select-store');
+        return { cartToOrderItems: [] };
+      }
+
+      const latestDraftOrder = draftOrders.sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      )[0];
+
+      newOrder = { ...newOrder, id: latestDraftOrder?.id };
+    }
 
     updateOrder(newOrder);
 
@@ -103,7 +133,7 @@ export const useOrderActions = () => {
           order_id: newOrder.id,
           price_at_sale: (productVariant?.price || 0) * ci.quantity,
           product_variant_id: productVariant?.id || '',
-          profile_id: session.id || null,
+          profile_id: session.email ? session.id : null,
           quantity: ci.quantity,
           status: ci.status || Status.ACTIVE,
           sync_status: SyncStatus.PENDING,
@@ -114,10 +144,6 @@ export const useOrderActions = () => {
 
       setOrderItems([...(orderItems || []), ...cartToOrderItems]);
 
-      if (newOrder.fulfillment_type == OrderFulfilmentType.DELIVERY) {
-        deliveryCreate({ order_id: newOrder.id });
-      }
-
       deleteCartItems(
         (cartItems || []).map((ci) => {
           return {
@@ -127,6 +153,10 @@ export const useOrderActions = () => {
           };
         })
       );
+
+      if (newOrder.fulfillment_type == OrderFulfilmentType.DELIVERY) {
+        deliveryCreate({ order_id: newOrder.id });
+      }
 
       return { cartToOrderItems };
     }

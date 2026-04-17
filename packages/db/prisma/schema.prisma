@@ -375,9 +375,9 @@ model Delivery {
   failed_at            DateTime? // when it failed
   previous_delivery_id String? // link to previous failed/cancelled attempt
 
-  profile    Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id String // courier
-  order      Order   @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  profile    Profile? @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id String? // courier
+  order      Order    @relation(fields: [order_id], references: [id], onDelete: Cascade)
   order_id   String // order being delivered
 
   status      Status     @default(DRAFT)

@@ -24,7 +24,7 @@ export const defaultOrderDetails: OrderGet = {
   order_status: OrderStatus.DRAFT,
   order_time: OrderTime.NOW,
   payment_method: OrderPaymentMethod.ONLINE,
-  profile_id: '',
+  profile_id: null,
   source: OrderSource.WEBSITE,
   store_id: stores[0].id,
   tracking_code: '',

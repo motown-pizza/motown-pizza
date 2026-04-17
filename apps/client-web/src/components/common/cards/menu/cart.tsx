@@ -51,8 +51,8 @@ export default function Cart({
       <Grid gutter={0}>
         <GridCol span={options?.checkout ? 1.5 : 3}>
           <ImageDefault
-            src={product?.image || ''}
-            alt={product?.title || ''}
+            src={product?.image || 'loading'}
+            alt={product?.title || 'loading'}
             height={80}
             fit={'contain'}
             radius={'lg'}
