@@ -25,13 +25,13 @@ export const createClient = async () => {
         async setAll(cookiesToSet) {
           const host = (await headers()).get('host') ?? '';
           const isLocalhost = host.includes('localhost');
-          const isProdDomain = host.endsWith('vercel.app');
+          // const isProdDomain = host.endsWith('vercel.app');
 
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, {
                 ...options,
-                domain: isProdDomain ? '.vercel.app' : undefined,
+                // domain: isProdDomain ? '.vercel.app' : undefined,
                 secure: !isLocalhost,
                 sameSite: 'lax',
                 path: '/',
