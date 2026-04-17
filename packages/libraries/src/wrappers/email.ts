@@ -62,7 +62,7 @@ export const emailSendInquiry = async (params: FormValuesInquiry) => {
     replyTo: params.email,
     fromType: 'delivery',
     template: {
-      id: 'inquiry',
+      id: 'inquiry-1',
       variables: {
         MESSAGE_PREVIEW: params.message,
         SUBJECT: `${params.subject} (From ${params.name})`,

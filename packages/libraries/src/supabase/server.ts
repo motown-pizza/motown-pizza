@@ -25,15 +25,15 @@ export const createClient = async () => {
         async setAll(cookiesToSet) {
           const host = (await headers()).get('host') ?? '';
           const isLocalhost = host.includes('localhost');
-          const isProdDomain = host.endsWith('motownpizza.co.ke');
+          const isProdDomain = host.endsWith('vercel.app');
 
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, {
                 ...options,
-                domain: isProdDomain ? '.motownpizza.co.ke' : undefined,
+                domain: isProdDomain ? '.vercel.app' : undefined,
                 secure: !isLocalhost,
-                sameSite: isProdDomain ? 'none' : 'lax',
+                sameSite: 'lax',
                 path: '/',
               })
             );

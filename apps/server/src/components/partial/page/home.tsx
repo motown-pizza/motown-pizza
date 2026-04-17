@@ -23,7 +23,7 @@ export default function Home() {
   const apiStatus = 'online'; // could be dynamic in future
   const version = 'v1.0';
   const lastDeployment = '2026-02-17 10:00 UTC';
-  const rootSiteLink = 'motownpizza.co.ke';
+  const rootSiteLink = 'motown-pizza-client-web.vercel.app';
 
   const statusColor = apiStatus === 'online' ? 'green' : 'red';
 
