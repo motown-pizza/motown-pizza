@@ -8,11 +8,7 @@
  */
 
 import React from 'react';
-import {
-  useSessionStore,
-  useThemeStore,
-  useLoadStores,
-} from '@repo/hooks/store';
+import { useSessionStore, useLoadStores } from '@repo/hooks/store';
 import ProviderSync from './sync';
 import { User } from '@supabase/supabase-js';
 
@@ -29,8 +25,6 @@ export default function Store({
     sessionUser: props?.sessionUser || null,
     options: { clientOnly: false },
   });
-
-  useThemeStore();
 
   useLoadStores({
     options: {

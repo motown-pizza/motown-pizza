@@ -74,6 +74,7 @@ import { ColorScheme } from '@repo/types/enums';
 import { DEFAULT_COLOR_SCHEME } from '@repo/constants/other';
 import { useMediaQuery } from '@mantine/hooks';
 import { User } from '@supabase/supabase-js';
+import { API_URL } from '@repo/constants/paths';
 
 export const useSessionStore = (params?: {
   sessionUser: User | null;
@@ -183,85 +184,57 @@ export const useUserRoleStore = () => {
   }, [setRole, pathname, router, session]);
 };
 
-export const useAppshellStore = () => {
+export const useAppshellStore = (params?: { cookie?: AppShellValue }) => {
   const desktop = useMediaQuery('(min-width: 62em)');
 
-  const appShell = useStoreAppShell((s) => s.appshell);
+  const appshell = useStoreAppShell((s) => s.appshell);
   const setAppShell = useStoreAppShell((s) => s.setAppShell);
 
+  const cookie: AppShellValue = getCookieClient(COOKIE_NAME.APP_SHELL);
+
   useEffect(() => {
-    const initializeAppShell = () => {
-      let defaultValue: AppShellValue = {
+    // 1. Establish base defaults
+    const base = params?.cookie ??
+      cookie ?? {
         navbar: true,
         aside: false,
-        child: { navbar: desktop ? true : false, aside: false },
+        child: { navbar: true, aside: false },
       };
 
-      const appShellCookie = getCookieClient<AppShellValue>(
-        COOKIE_NAME.APP_SHELL
-      );
-
-      if (!appShellCookie) {
-        setCookieClient(COOKIE_NAME.APP_SHELL, defaultValue, {
-          expiryInSeconds: WEEK,
-        });
-      } else {
-        defaultValue = appShellCookie;
-      }
-
-      setAppShell(defaultValue);
+    // 2. Apply Mobile Constraints (Override if !desktop)
+    const resolvedChild = {
+      navbar: desktop ? base.child.navbar : false,
+      aside: desktop ? base.child.aside : false,
     };
 
-    initializeAppShell();
-  }, []);
+    const resolvedShell = {
+      ...base,
+      child: resolvedChild,
+    };
+
+    setTimeout(() => {
+      setCookieClient(COOKIE_NAME.APP_SHELL, resolvedShell, {
+        expiryInSeconds: WEEK,
+      });
+    }, 100);
+
+    setAppShell(resolvedShell);
+  }, [desktop, setAppShell]);
 
   useEffect(() => {
-    if (appShell === undefined) return;
-    if (appShell === null) return;
+    if (appshell === undefined) return;
 
-    const newAppshell: AppShellValue = {
-      ...appShell,
-      child: { navbar: desktop ? appShell.child.navbar : false, aside: false },
-    };
-
-    setAppShell(newAppshell);
-
-    setCookieClient(COOKIE_NAME.APP_SHELL, newAppshell, {
-      expiryInSeconds: WEEK,
-    });
-  }, [desktop]);
-};
-
-export const useThemeStore = () => {
-  const setTheme = useStoreTheme((s) => s.setTheme);
-
-  useEffect(() => {
-    const initializeTheme = () => {
-      let defaultValue: ColorScheme = DEFAULT_COLOR_SCHEME;
-
-      const themeCookie = getCookieClient<ThemeValue>(
-        COOKIE_NAME.COLOR_SCHEME_STATE
-      );
-
-      if (!themeCookie) {
-        setCookieClient(COOKIE_NAME.COLOR_SCHEME_STATE, defaultValue, {
-          expiryInSeconds: WEEK,
-        });
-      } else {
-        defaultValue = themeCookie;
-      }
-
-      setTheme(defaultValue);
-    };
-
-    initializeTheme();
-  }, [setTheme]);
+    setTimeout(() => {
+      setCookieClient(COOKIE_NAME.APP_SHELL, appshell, {
+        expiryInSeconds: WEEK,
+      });
+    }, 100);
+  }, [appshell]);
 };
 
 type LoadStoreConfig<TItems = any, THookReturn = any> = {
   dataStore: (typeof STORE_NAME)[keyof typeof STORE_NAME];
   useStoreHook: () => THookReturn;
-  fetchItems: (id?: string) => Promise<{ items: TItems[] }>;
   setState: (store: THookReturn, items: TItems[]) => void;
 };
 
@@ -269,143 +242,146 @@ export const LOAD_STORES: Record<string, LoadStoreConfig> = {
   cartItems: {
     dataStore: STORE_NAME.CART_ITEMS,
     useStoreHook: useStoreCartItem,
-    fetchItems: (id) => cartItemsGet({ userId: id }),
     setState: (store, items) => store.setCartItems(items),
   },
   deliveries: {
     dataStore: STORE_NAME.DELIVERIES,
     useStoreHook: useStoreDelivery,
-    fetchItems: (id) => deliveriesGet({ userId: id }),
     setState: (store, items) => store.setDeliveries(items),
   },
   ingredients: {
     dataStore: STORE_NAME.INGREDIENTS,
     useStoreHook: useStoreIngredient,
-    fetchItems: ingredientsGet,
     setState: (store, items) => store.setIngredients(items),
   },
   orders: {
     dataStore: STORE_NAME.ORDERS,
     useStoreHook: useStoreOrder,
-    fetchItems: (id) => ordersGet({ userId: id }),
     setState: (store, items) => store.setOrders(items),
   },
   orderItems: {
     dataStore: STORE_NAME.ORDER_ITEMS,
     useStoreHook: useStoreOrderItem,
-    fetchItems: (id) => orderItemsGet({ userId: id }),
     setState: (store, items) => store.setOrderItems(items),
   },
   products: {
     dataStore: STORE_NAME.PRODUCTS,
     useStoreHook: useStoreProduct,
-    fetchItems: productsGet,
     setState: (store, items) => store.setProducts(items),
   },
   productVariants: {
     dataStore: STORE_NAME.PRODUCT_VARIANTS,
     useStoreHook: useStoreProductVariant,
-    fetchItems: productVariantsGet,
     setState: (store, items) => store.setProductVariants(items),
   },
   profiles: {
     dataStore: STORE_NAME.PROFILES,
     useStoreHook: useStoreProfile,
-    fetchItems: profilesGet,
     setState: (store, items) => store.setProfiles(items),
   },
   recipieItems: {
     dataStore: STORE_NAME.RECIPIE_ITEMS,
     useStoreHook: useStoreRecipieItem,
-    fetchItems: recipieItemsGet,
     setState: (store, items) => store.setRecipieItems(items),
   },
   stockMovements: {
     dataStore: STORE_NAME.STOCK_MOVEMENTS,
     useStoreHook: useStoreStockMovement,
-    fetchItems: stockMovementsGet,
     setState: (store, items) => store.setStockMovements(items),
   },
   tables: {
     dataStore: STORE_NAME.TABLES,
     useStoreHook: useStoreTable,
-    fetchItems: (id) => tablesGet({ userId: id }),
     setState: (store, items) => store.setTables(items),
   },
   tableBookings: {
     dataStore: STORE_NAME.TABLE_BOOKINGS,
     useStoreHook: useStoreTableBooking,
-    fetchItems: (id) => tableBookingsGet({ userId: id }),
     setState: (store, items) => store.setTableBookings(items),
   },
   wishlistItems: {
     dataStore: STORE_NAME.WISHLIST_ITEMS,
     useStoreHook: useStoreWishlistItem,
-    fetchItems: (id) => wishlistItemsGet({ userId: id }),
-    setState: (store, items) => store.setWishlistItem(items),
+    setState: (store, items) => store.setWishlistItems(items),
+  },
+  categories: {
+    dataStore: STORE_NAME.CATEGORIES,
+    useStoreHook: useStoreCategory,
+    setState: (store, items) => store.setCategories(items),
   },
 } as const;
 
 type LoadStoreKey = keyof typeof LOAD_STORES;
 
-const useGenericLoader = <K extends LoadStoreKey>(params: {
-  storeKey: K;
+export const useLoadAppData = (options: {
+  storesToLoad: Partial<Record<LoadStoreKey, boolean>>;
   clientOnly?: boolean;
 }) => {
-  const { storeKey, clientOnly } = params;
-  const prevItemsRef = useRef<any[]>([]);
-
-  const config = LOAD_STORES[storeKey];
-  const store = config.useStoreHook();
-
   const session = useStoreSession((s) => s.session);
 
+  const stores = {
+    categories: useStoreCategory(),
+    cartItems: useStoreCartItem(),
+    deliveries: useStoreDelivery(),
+    ingredients: useStoreIngredient(),
+    orders: useStoreOrder(),
+    orderItems: useStoreOrderItem(),
+    products: useStoreProduct(),
+    productVariants: useStoreProductVariant(),
+    profiles: useStoreProfile(),
+    recipieItems: useStoreRecipieItem(),
+    stockMovements: useStoreStockMovement(),
+    tables: useStoreTable(),
+    tableBookings: useStoreTableBooking(),
+    wishlistItem: useStoreWishlistItem(),
+  };
+
   useEffect(() => {
-    if (session === undefined) return;
+    if (!session?.id) return;
 
-    const noSession = !session || !session?.id;
+    const syncAll = async () => {
+      try {
+        // 1. Identify which keys are set to 'true'
+        const activeStoreKeys = (
+          Object.keys(options.storesToLoad) as LoadStoreKey[]
+        ).filter((key) => options.storesToLoad[key]);
 
-    const load = async () => {
-      if (prevItemsRef.current.length) return;
+        if (activeStoreKeys.length === 0) return;
 
-      const data =
-        clientOnly || noSession
-          ? { items: [] }
-          : await config.fetchItems(session.id);
+        // 2. Fetch only the required data
+        // Pass the requested stores as a query param so the server can optimize
+        const storeQuery = activeStoreKeys.join(',');
+        const res = await fetch(
+          `${API_URL}/app-data?userId=${session.id}&stores=${storeQuery}`
+        );
+        if (!res.ok) throw new Error('Failed to fetch app data');
 
-      await loadInitialData({
-        prevItemsRef,
-        dataStore: config.dataStore,
-        session,
-        options: { clientOnly },
-        dataFetchFunction: async () => data,
-        stateUpdateFunction: (items: any[]) => config.setState(store, items),
-      });
+        const fullPayload = await res.json();
+
+        // 2. Process each store in parallel (only the active stores)
+        const syncPromises = activeStoreKeys.map(async (key) => {
+          const config = LOAD_STORES[key];
+          const serverData = fullPayload[key] || [];
+          const storeInstance = stores[key as keyof typeof stores];
+
+          if (!config || !storeInstance) return;
+
+          return loadInitialData({
+            dataStore: config.dataStore,
+            session,
+            options: { clientOnly: options.clientOnly },
+            serverItems: serverData,
+            stateUpdateFunction: (items) =>
+              config.setState(storeInstance, items),
+          });
+        });
+
+        await Promise.all(syncPromises);
+      } catch (e) {
+        console.error('Data initialization failed:', e);
+      }
     };
 
-    load();
-  }, [store, clientOnly, session]);
-};
-
-export const useLoadStores = (params?: {
-  options?: {
-    clientOnly?: boolean;
-    storesToLoad: Partial<Record<LoadStoreKey, boolean>>;
-  };
-}) => {
-  const { options } = params || {};
-  const { clientOnly, storesToLoad = {} } = options || {};
-
-  const results = {} as Record<string, void>;
-
-  (Object.keys(storesToLoad) as LoadStoreKey[]).forEach((key) => {
-    if (!storesToLoad[key]) return;
-
-    results[key] = useGenericLoader({
-      storeKey: key,
-      clientOnly,
-    });
-  });
-
-  return results;
+    syncAll();
+  }, [session?.id, JSON.stringify(options.storesToLoad), options.clientOnly]);
 };

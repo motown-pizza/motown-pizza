@@ -12,179 +12,115 @@ import { FileSyncAdapter } from '@repo/types/fsa';
 import { SessionValue } from '@repo/libraries/zustand/stores/session';
 import { RefObject } from 'react';
 
-// Helper function to merge local and server items
 export const mergeItems = async (
   dataStore: string,
   clientItems: any[],
   serverItems: any[]
 ): Promise<any[]> => {
-  // get items with DELETED sync status from server items
-  const deletedServerItems = serverItems.filter(
-    (item) => item.sync_status == SyncStatus.DELETED
-  );
+  const db = await openDatabase(config);
 
-  let deletedItems: string[] = [];
+  // 1. Identify items the server says are deleted
+  const serverDeletedItems = serverItems
+    .filter((item) => item.sync_status === SyncStatus.DELETED)
+    .map((item) => ({ id: item.id })); // Wrap in object to satisfy your helper's 'item[actualKeyPath]'
 
-  if (deletedServerItems.length) {
-    deletedItems = clientItems
-      .map((item) => item.id)
-      .filter((id) => deletedServerItems.some((item) => item.id === id));
+  const serverDeletedIds = serverDeletedItems.map((i) => i.id);
 
-    if (deletedItems.length) {
-      const db = await openDatabase(config);
-      await db.delete(
-        dataStore,
-        clientItems.filter((i) => deletedItems.includes(i.id))
-      );
-    }
+  // 2. Remove those IDs from IndexedDB immediately to ensure consistency
+  if (serverDeletedItems.length > 0) {
+    await db.delete(dataStore, serverDeletedItems);
   }
 
-  // filter out items with DELETED sync status from client items
-  const filteredClientItems = clientItems.filter((item) => {
-    const isNotDeletedOnServer = !deletedItems.includes(item.id);
-    const isNotDeletedOnClient = item.sync_status != SyncStatus.DELETED;
-    return isNotDeletedOnServer && isNotDeletedOnClient;
-  });
-
-  const mergedItems = [...filteredClientItems];
-
-  // filter out items with DELETED sync status from server items
-  const filteredServerItems = serverItems.filter(
-    (item) => item.sync_status != SyncStatus.DELETED
+  // 3. Filter client items: remove what server deleted + what client marked deleted
+  const activeClientItems = clientItems.filter(
+    (item) =>
+      !serverDeletedIds.includes(item.id) &&
+      item.sync_status !== SyncStatus.DELETED
   );
 
-  const now = new Date();
+  const mergedMap = new Map(activeClientItems.map((item) => [item.id, item]));
 
-  filteredServerItems.forEach((serverItem) => {
-    const localIndex = mergedItems.findIndex((i) => i.id === serverItem.id);
-    const localItem = localIndex !== -1 ? mergedItems[localIndex] : null;
+  // 4. Merge Server updates
+  serverItems.forEach((serverItem) => {
+    if (serverItem.sync_status === SyncStatus.DELETED) return;
 
-    const serverItemLastUpdated = new Date(serverItem.updated_at);
-    const localItemLastUpdated = new Date(localItem?.updated_at || now);
+    const localItem = mergedMap.get(serverItem.id);
+    const serverTime = new Date(serverItem.updated_at).getTime();
+    const localTime = localItem ? new Date(localItem.updated_at).getTime() : 0;
 
-    if (
-      !localItem ||
-      serverItemLastUpdated.getTime() > localItemLastUpdated.getTime()
-    ) {
-      const updatedItem = {
+    // Update if local doesn't exist OR server is strictly newer
+    if (!localItem || serverTime > localTime) {
+      mergedMap.set(serverItem.id, {
         ...serverItem,
         sync_status: SyncStatus.SYNCED,
-        updated_at: serverItemLastUpdated.toISOString(),
-      };
-
-      if (localIndex !== -1) {
-        mergedItems[localIndex] = updatedItem;
-      } else {
-        mergedItems.push(updatedItem);
-      }
+        updated_at: new Date(serverItem.updated_at).toISOString(),
+      });
     }
   });
 
-  return mergedItems;
+  return Array.from(mergedMap.values());
 };
 
 export const loadInitialData = async (params: {
-  prevItemsRef: RefObject<any[]>;
   dataStore: string;
   session: SessionValue;
-  fileSyncAdapter?: FileSyncAdapter;
-  options?: { clientOnly?: boolean };
-  dataFetchFunction: (items?: any[]) => Promise<{ items: any[] }>;
+  serverItems: any[];
+  options?: { clientOnly?: boolean; fileSyncAdapter?: FileSyncAdapter };
   stateUpdateFunction: (items: any[]) => void;
-  // deletedStateUpdateFunction?: (items: any[]) => void;
 }) => {
-  const { clientOnly } = params.options || {};
-
-  let combinedItems: any[] = [];
-
-  const db = await openDatabase(config);
-  let clientItems: any[] = [];
-
-  clientItems = await db.get(params.dataStore);
-
-  // reconcile possible case of multiple temporary user ids
-  const { session } = params;
-
-  if (session) {
-    clientItems.map((i) => {
-      return { ...i, profile_id: session.id || null };
-    });
-  }
+  const { clientOnly, fileSyncAdapter } = params.options || {};
+  const { session, dataStore, serverItems, stateUpdateFunction } = params;
 
   try {
-    let serverItems: any[] = [];
+    const db = await openDatabase(config);
+    let clientItems: any[] = (await db.get(dataStore)) || [];
 
-    const fetchedServerItems: { items: any[]; deletedItems?: any[] } =
-      await params.dataFetchFunction();
-
-    serverItems = fetchedServerItems.items;
-
-    if (!clientOnly && !clientItems?.length) {
-      // filter out items with DELETED sync status from server items
-      const filteredServerItems = serverItems.filter(
-        (item) => item.sync_status !== SyncStatus.DELETED
-      );
-
-      if (filteredServerItems.length) {
-        const indexedServerItems = filteredServerItems.map((item) => ({
-          ...item,
-          // sync_status: SyncStatus.SYNCED,
-          updated_at: new Date(item.updated_at).toISOString(),
-        }));
-
-        await db.add(params.dataStore, indexedServerItems);
-
-        combinedItems = indexedServerItems as any[];
-
-        // Initialize prevItemsRef with indexed items
-        params.prevItemsRef.current = indexedServerItems as any[];
-      }
-    } else {
-      let mergedItems: any[] = [];
-      let fsItems: any[] = [];
-
-      if (clientOnly && params.fileSyncAdapter) {
-        const bundle = await params.fileSyncAdapter.readBackup();
-        fsItems = bundle?.[params.dataStore.toLowerCase()] || [];
-      }
-
-      const source = clientItems?.length ? clientItems : fsItems;
-
-      const filteredItems = source.filter(
-        (item) => item.sync_status != SyncStatus.DELETED
-      );
-
-      let lengthComparison;
-      let serialComparison;
-
-      if (!serverItems.length) {
-        mergedItems = filteredItems;
-        lengthComparison = mergedItems.length !== filteredItems.length;
-        serialComparison =
-          JSON.stringify(mergedItems) !== JSON.stringify(filteredItems);
-      } else {
-        mergedItems = await mergeItems(
-          params.dataStore,
-          clientItems,
-          serverItems
-        );
-        lengthComparison = mergedItems.length !== clientItems.length;
-        serialComparison =
-          JSON.stringify(mergedItems) !== JSON.stringify(clientItems);
-      }
-
-      if (lengthComparison || serialComparison) {
-        await db.put(params.dataStore, mergedItems);
-      }
-
-      combinedItems = mergedItems;
-
-      // Initialize prevItemsRef with indexed items
-      params.prevItemsRef.current = mergedItems;
+    // 1. Attach profile_id for offline-created items if session exists
+    if (session?.id) {
+      clientItems = clientItems.map((i) => ({
+        ...i,
+        profile_id: i.profile_id || session.id,
+      }));
     }
-  } catch (error) {
-    console.error('Initial data load error: ', (error as Error).message);
-  }
 
-  params.stateUpdateFunction(combinedItems);
+    let combinedItems: any[] = [];
+
+    // 2. Scenario A: Local-Only Mode (Filesystem Backup or Pure Local)
+    if (clientOnly) {
+      let source = clientItems;
+      if (fileSyncAdapter) {
+        const bundle = await fileSyncAdapter.readBackup();
+        source = bundle?.[dataStore.toLowerCase()] || clientItems;
+      }
+      // Filter out items the user deleted locally while offline
+      combinedItems = source.filter(
+        (i) => i.sync_status !== SyncStatus.DELETED
+      );
+    }
+
+    // 3. Scenario B: Server-Sync Mode
+    else {
+      if (clientItems.length === 0 && serverItems.length > 0) {
+        // First-time sync (Cold start)
+        combinedItems = serverItems
+          .filter((item) => item.sync_status !== SyncStatus.DELETED)
+          .map((item) => ({
+            ...item,
+            updated_at: new Date(item.updated_at).toISOString(),
+          }));
+      } else {
+        // Standard Reconcile (The logic that fixes your multi-device lag)
+        combinedItems = await mergeItems(dataStore, clientItems, serverItems);
+      }
+    }
+
+    // 4. Persistence: Sync the Merged State back to IndexedDB
+    // We use .put to ensure the local DB is an exact mirror of our merged logic
+    await db.put(dataStore, combinedItems);
+
+    // 5. Update UI State (Zustand)
+    stateUpdateFunction(combinedItems);
+  } catch (error) {
+    console.error(`Sync error for ${dataStore}:`, error);
+  }
 };
