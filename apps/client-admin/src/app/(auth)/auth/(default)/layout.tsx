@@ -47,11 +47,12 @@ export default function LayoutDefault({
               <Group justify="center">
                 <AnchorNextLink href={'/'}>
                   <ImageDefault
-                    src={images.brand.icon.dark}
+                    src={images.brand.logo.landscape.meta}
                     alt={COMPANY_NAME}
-                    height={48}
-                    width={48}
-                    fit="contain"
+                    height={80}
+                    width={160}
+                    // fit="contain"
+                    mode="grid"
                   />
                 </AnchorNextLink>
               </Group>
