@@ -15,7 +15,11 @@ import '../styles/globals.scss';
 
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
+import {
+  ColorSchemeScript,
+  MantineColorScheme,
+  mantineHtmlProps,
+} from '@mantine/core';
 import ProviderMantine from '@repo/components/provider/mantine';
 import ProviderStore from '@/components/provider/store';
 import ProviderSync from '@/components/provider/sync';
@@ -23,6 +27,8 @@ import { APP_NAME } from '@repo/constants/app';
 import { mantine } from '@/data/styles';
 import { DEFAULT_COLOR_SCHEME } from '@repo/constants/other';
 import { createClient } from '@repo/libraries/supabase/server';
+import { getCookieServer } from '@repo/utilities/cookie-server';
+import { COOKIE_NAME } from '@repo/constants/names';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -47,24 +53,29 @@ export default async function RootLayout({
   const supabase = await createClient();
   const { data: session } = await supabase.auth.getUser();
 
+  // 1. Get the CALCULATED theme from middleware (not the 'auto' state)
+  const theme =
+    (await getCookieServer(COOKIE_NAME.COLOR_SCHEME)) || DEFAULT_COLOR_SCHEME;
+  const resolvedTheme = (theme || DEFAULT_COLOR_SCHEME) as MantineColorScheme;
+
   return (
     <html
       lang="en"
       {...mantineHtmlProps}
-      data-mantine-color-scheme={DEFAULT_COLOR_SCHEME}
+      data-mantine-color-scheme={resolvedTheme}
     >
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <ColorSchemeScript defaultColorScheme={DEFAULT_COLOR_SCHEME} />
+        <ColorSchemeScript defaultColorScheme={resolvedTheme} />
       </head>
 
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ProviderMantine
           options={{ withNotifications: true }}
           appThemeProps={{ styleSheets: { ...mantine } }}
-          colorScheme={DEFAULT_COLOR_SCHEME}
+          colorScheme={resolvedTheme}
         >
           <ProviderStore props={{ sessionUser: session.user }}>
             <ProviderSync>{children}</ProviderSync>

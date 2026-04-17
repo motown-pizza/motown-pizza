@@ -70,13 +70,7 @@ export default function Pos() {
         <Group justify="end">
           <IndicatorNetworkStatus props={{ syncStatus: syncStatus }} />
 
-          {/* {theme === undefined ? (
-          <Skeleton h={ICON_WRAPPER_SIZE} w={ICON_WRAPPER_SIZE} />
-        ) : !theme ? null : (
-          <IndicatorTheme
-            props={{ colorScheme: theme, setColorScheme: setTheme }}
-          />
-        )} */}
+          <IndicatorTheme />
 
           <MenuUser>
             <AvatarMain />

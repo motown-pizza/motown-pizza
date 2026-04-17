@@ -55,13 +55,7 @@ export default function Dashboard() {
 
         {/* <ButtonNotifications /> */}
 
-        {theme === undefined ? (
-          <Skeleton h={ICON_WRAPPER_SIZE} w={ICON_WRAPPER_SIZE} />
-        ) : !theme ? null : (
-          <IndicatorTheme
-            props={{ colorScheme: theme, setColorScheme: setTheme }}
-          />
-        )}
+        <IndicatorTheme />
 
         <ButtonNotifications />
 
