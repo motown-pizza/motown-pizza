@@ -8,11 +8,7 @@
  */
 
 import React from 'react';
-import {
-  useSessionStore,
-  useAppshellStore,
-  useLoadStores,
-} from '@repo/hooks/store';
+import { useSessionStore, useLoadAppData } from '@repo/hooks/store';
 import ProviderSync from './sync';
 import { User } from '@supabase/supabase-js';
 
@@ -27,27 +23,23 @@ export default function Store({
 
   useSessionStore({
     sessionUser: props?.sessionUser || null,
-    options: { clientOnly: false },
+    options: { clientOnly: true },
   });
 
-  useAppshellStore();
-
-  useLoadStores({
-    options: {
-      clientOnly: false,
-      storesToLoad: {
-        profiles: true,
-        products: true,
-        productVariants: true,
-        ingredients: true,
-        recipieItems: true,
-        orders: true,
-        orderItems: true,
-        stockMovements: true,
-        deliveries: true,
-        tables: true,
-        tableBookings: true,
-      },
+  useLoadAppData({
+    clientOnly: false,
+    storesToLoad: {
+      profiles: true,
+      products: true,
+      productVariants: true,
+      ingredients: true,
+      recipieItems: true,
+      orders: true,
+      orderItems: true,
+      stockMovements: true,
+      deliveries: true,
+      tables: true,
+      tableBookings: true,
     },
   });
 

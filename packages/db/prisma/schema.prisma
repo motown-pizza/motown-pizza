@@ -42,6 +42,7 @@ enum Status {
 enum SyncStatus {
   PENDING
   SYNCED
+  SYNCED_CLIENT
   SAVED
   ERROR
   DELETED

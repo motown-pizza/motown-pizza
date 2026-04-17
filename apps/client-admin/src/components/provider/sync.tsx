@@ -11,10 +11,13 @@ import React from 'react';
 import { useDebouncedCallback, useNetwork } from '@mantine/hooks';
 import { useStoreSession } from '@repo/libraries/zustand/stores/session';
 import { useStoreSyncStatus } from '@repo/libraries/zustand/stores/sync-status';
-import { handleSync, syncToServerAfterDelay } from '@repo/libraries/sync';
-import { useSyncStores } from '@repo/hooks/sync';
-import { SyncParams } from '@repo/types/sync';
-import { useSyncQueue } from '@repo/libraries/sync';
+import {
+  handleMergedSync,
+  MergedSyncPayload,
+  syncToServerAfterDelay,
+  useMergedSync,
+} from '@repo/hooks/sync';
+import { STORE_NAME } from '@repo/constants/names';
 
 export default function Sync({ children }: { children: React.ReactNode }) {
   const networkStatus = useNetwork();
@@ -23,9 +26,8 @@ export default function Sync({ children }: { children: React.ReactNode }) {
   const syncStatus = useStoreSyncStatus((s) => s.syncStatus);
   const setSyncStatus = useStoreSyncStatus((s) => s.setSyncStatus);
 
-  const enqueueSync = useSyncQueue({ syncFunction: handleSync });
-
-  const debounceSyncToServer = useDebouncedCallback(
+  // This now handles a MergedSyncPayload rather than one store's SyncParams
+  const debounceMergedSyncToServer = useDebouncedCallback(
     syncToServerAfterDelay,
     500
   );
@@ -35,26 +37,29 @@ export default function Sync({ children }: { children: React.ReactNode }) {
     session,
     networkStatus,
     syncStatus,
-    debounceSyncToServer,
+    debounceMergedSyncToServer,
     clientOnly: false,
   };
 
-  useSyncStores({
-    syncFunction: (i: SyncParams) => enqueueSync({ ...i, ...restProps }),
+  useMergedSync({
+    syncStatus: restProps.syncStatus,
     online: networkStatus.online,
-    storesToSync: {
-      profiles: true,
-      products: true,
-      productVariants: true,
-      ingredients: true,
-      recipieItems: true,
-      orders: true,
-      orderItems: true,
-      stockMovements: true,
-      deliveries: true,
-      tables: true,
-      tableBookings: true,
-    },
+    // Use an array of keys for stability in the hook's dependency array
+    storesToSync: [
+      STORE_NAME.PROFILES,
+      STORE_NAME.PRODUCTS,
+      STORE_NAME.PRODUCT_VARIANTS,
+      STORE_NAME.INGREDIENTS,
+      STORE_NAME.RECIPIE_ITEMS,
+      STORE_NAME.ORDERS,
+      STORE_NAME.ORDER_ITEMS,
+      STORE_NAME.STOCK_MOVEMENTS,
+      STORE_NAME.DELIVERIES,
+      STORE_NAME.TABLES,
+    ],
+    // The payload (i) passed here is now the MergedSyncPayload { notes, categories }
+    handleSync: (payload: MergedSyncPayload) =>
+      handleMergedSync({ payload, ...restProps }),
   });
 
   return <div>{children}</div>;
