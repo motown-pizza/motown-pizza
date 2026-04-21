@@ -8,6 +8,7 @@
 import prisma from '@repo/libraries/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { SyncStatus } from '@repo/types/models/enums';
+import { STORE_NAME } from '@repo/constants/names';
 
 export const dynamic = 'force-dynamic';
 // export const revalidate = 3600;
@@ -30,63 +31,63 @@ export async function GET(request: NextRequest) {
     // 2. Define the Query Map
     // This maps the URL string to the actual Prisma call
     const queryMap: Record<string, () => any> = {
-      categories: () =>
+      [STORE_NAME.CATEGORIES]: () =>
         prisma.category.findMany({
           orderBy: { created_at: 'desc' },
         }),
-      cartItems: () =>
+      [STORE_NAME.CART_ITEMS]: () =>
         prisma.cartItem.findMany({
           // where: { profile_id: userId },
           orderBy: { created_at: 'desc' },
         }),
-      deliveries: () =>
+      [STORE_NAME.DELIVERIES]: () =>
         prisma.delivery.findMany({
           // where: { profile_id: userId },
           orderBy: { created_at: 'desc' },
         }),
-      ingredients: () =>
+      [STORE_NAME.INGREDIENTS]: () =>
         prisma.ingredient.findMany({
           orderBy: { created_at: 'desc' },
         }),
-      orders: () =>
+      [STORE_NAME.ORDERS]: () =>
         prisma.order.findMany({
           // where: { profile_id: userId },
           orderBy: { created_at: 'desc' },
         }),
-      orderItems: () =>
+      [STORE_NAME.ORDER_ITEMS]: () =>
         prisma.orderItem.findMany({
           // where: { profile_id: userId },
           orderBy: { created_at: 'desc' },
         }),
-      products: () =>
+      [STORE_NAME.PRODUCTS]: () =>
         prisma.product.findMany({
           orderBy: { created_at: 'desc' },
         }),
-      productVariants: () =>
+      [STORE_NAME.PRODUCT_VARIANTS]: () =>
         prisma.productVariant.findMany({
           orderBy: { created_at: 'desc' },
         }),
-      profiles: () =>
+      [STORE_NAME.PROFILES]: () =>
         prisma.profile.findMany({
           orderBy: { created_at: 'desc' },
         }),
-      recipieItems: () =>
+      [STORE_NAME.RECIPIE_ITEMS]: () =>
         prisma.recipieItem.findMany({
           orderBy: { created_at: 'desc' },
         }),
-      stockMovements: () =>
+      [STORE_NAME.STOCK_MOVEMENTS]: () =>
         prisma.stockMovement.findMany({
           orderBy: { created_at: 'desc' },
         }),
-      tables: () =>
+      [STORE_NAME.TABLES]: () =>
         prisma.table.findMany({
           orderBy: { created_at: 'desc' },
         }),
-      tableBookings: () =>
+      [STORE_NAME.TABLE_BOOKINGS]: () =>
         prisma.tableBooking.findMany({
           orderBy: { created_at: 'desc' },
         }),
-      wishlistItems: () =>
+      [STORE_NAME.WISHLIST_ITEMS]: () =>
         prisma.wishlistItem.findMany({
           // where: { profile_id: userId },
           orderBy: { created_at: 'desc' },
@@ -125,20 +126,20 @@ export async function GET(request: NextRequest) {
 }
 
 const PRISMA_MODEL_MAP: Record<string, any> = {
-  categories: prisma.category,
-  cartItems: prisma.cartItem,
-  deliveries: prisma.delivery,
-  ingredients: prisma.ingredient,
-  orders: prisma.order,
-  orderItems: prisma.orderItem,
-  products: prisma.product,
-  productVariants: prisma.productVariant,
-  profiles: prisma.profile,
-  recipieItems: prisma.recipieItem,
-  stockMovements: prisma.stockMovement,
-  tables: prisma.table,
-  tableBookings: prisma.tableBooking,
-  wishlistItems: prisma.wishlistItem,
+  [STORE_NAME.CATEGORIES]: prisma.category,
+  [STORE_NAME.CART_ITEMS]: prisma.cartItem,
+  [STORE_NAME.DELIVERIES]: prisma.delivery,
+  [STORE_NAME.INGREDIENTS]: prisma.ingredient,
+  [STORE_NAME.ORDERS]: prisma.order,
+  [STORE_NAME.ORDER_ITEMS]: prisma.orderItem,
+  [STORE_NAME.PRODUCTS]: prisma.product,
+  [STORE_NAME.PRODUCT_VARIANTS]: prisma.productVariant,
+  [STORE_NAME.PROFILES]: prisma.profile,
+  [STORE_NAME.RECIPIE_ITEMS]: prisma.recipieItem,
+  [STORE_NAME.STOCK_MOVEMENTS]: prisma.stockMovement,
+  [STORE_NAME.TABLES]: prisma.table,
+  [STORE_NAME.TABLE_BOOKINGS]: prisma.tableBooking,
+  [STORE_NAME.WISHLIST_ITEMS]: prisma.wishlistItem,
 };
 
 export async function POST(request: NextRequest) {
@@ -157,6 +158,7 @@ export async function POST(request: NextRequest) {
     requestedStores.forEach((key) => {
       const model = PRISMA_MODEL_MAP[key]; // Get the correct model accessor
       const data = fullPayload[key];
+      const { upserts: itemsToUpsert = [], deletedIds = [] } = data;
 
       if (!data || !model) {
         console.error(`No model found for key: ${key}`);
@@ -166,10 +168,10 @@ export async function POST(request: NextRequest) {
       const startIdx = allOperations.length;
 
       // Handle Soft Deletions
-      if (data.deletedIds?.length) {
+      if (deletedIds?.length) {
         allOperations.push(
           model.updateMany({
-            where: { id: { in: data.deletedIds } },
+            where: { id: { in: deletedIds } },
             data: {
               sync_status: SyncStatus.DELETED, // Ensure this matches your SyncStatus enum string
               updated_at: new Date(), // Critical: must be "now" to override other devices
@@ -179,7 +181,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Handle Upserts
-      const upserts = (data.upserts || []).map((item: any) =>
+      const upserts = (itemsToUpsert || []).map((item: any) =>
         model.upsert({
           where: { id: item.id },
           update: { ...item, updated_at: new Date(item.updated_at) },
@@ -203,7 +205,13 @@ export async function POST(request: NextRequest) {
       (acc, key) => {
         const range = storeRanges[key];
         if (range) {
-          acc[key] = flatResults.slice(range.start, range.end);
+          const rawResults = flatResults.slice(range.start, range.end);
+          // Filter out the 'updateMany' result (which is usually { count: x })
+          // and keep the upsert results
+          acc[key] = rawResults.filter(
+            (res) =>
+              res && typeof res === 'object' && !res.hasOwnProperty('count')
+          );
         }
         return acc;
       },
