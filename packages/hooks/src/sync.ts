@@ -365,7 +365,7 @@ export const useMergedSync = (params: {
   syncStatus: SyncStatusValue;
 }) => {
   const { online, storesToSync, handleSync } = params;
-  const idle = useIdle(0, { events: ['keypress', 'click'] });
+  const idle = useIdle(2000, { events: ['keypress', 'click'] });
   const { noSession } = useSessionCheck();
 
   // Call all hooks at the top level (Required by Hook Rules)

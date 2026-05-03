@@ -24,6 +24,7 @@ export default function RecipieItem({
         withCloseButton={false}
         centered
         padding={0}
+        size={'xl'}
       >
         <LayoutModal
           props={{

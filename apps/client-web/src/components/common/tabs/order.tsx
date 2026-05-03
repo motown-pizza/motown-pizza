@@ -35,6 +35,7 @@ export default function Order() {
     <Tabs
       defaultValue={tab}
       value={tab}
+      keepMounted={false}
       onChange={(value) => {
         setTab(value as string);
         setUrlParam({ orderType: value });

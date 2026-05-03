@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 
 export const useFormRecipieItem = (params?: {
   defaultValues?: Partial<RecipieItemGet>;
+  options?: { close?: () => void };
 }) => {
   const { recipieItemCreate, recipieItemUpdate } = useRecipieItemActions();
   const router = useRouter();
@@ -48,7 +49,8 @@ export const useFormRecipieItem = (params?: {
         }
 
         form.reset();
-        router.push(`/dashboard/recipie-items`);
+        // router.push(`/dashboard/recipie-items`);
+        if (params?.options?.close) params?.options?.close();
       },
     }
   );

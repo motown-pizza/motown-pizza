@@ -167,7 +167,7 @@ export default function Product({
 
                   <GridCol span={12}>
                     <Textarea
-                      required
+                      // required
                       label="Description"
                       placeholder="Description"
                       autosize
@@ -297,11 +297,11 @@ export default function Product({
                 Cancel
               </Button>
 
-              <Group display={form.isDirty() ? undefined : 'none'}>
+              <Group>
                 <Divider orientation="vertical" h={24} my={'auto'} />
 
                 <Button type="submit" loading={submitted}>
-                  {!props?.defaultValues?.updated_at ? 'Save Draft' : 'Update'}
+                  {!props?.defaultValues?.updated_at ? 'Save Draft' : 'Done'}
                 </Button>
               </Group>
 

@@ -47,6 +47,7 @@ export default function RecipieItem({
 }) {
   const { form, submitted, handleSubmit } = useFormRecipieItem({
     defaultValues: props?.defaultValues,
+    options: { close: props?.close },
   });
 
   const { products } = useStoreProduct();

@@ -44,7 +44,7 @@ export const useFormProduct = (params?: {
     },
     {
       resetOnSuccess: false,
-      hideSuccessNotification: false,
+      hideSuccessNotification: true,
 
       onSubmit: async (rawValues) => {
         if (!rawValues.image?.trim().length) {
@@ -61,18 +61,20 @@ export const useFormProduct = (params?: {
           ...rawValues,
         };
 
-        if (!params?.defaultValues?.updated_at) {
-          productCreate({
-            ...submitObject,
-          });
-        } else {
-          productUpdate({
-            ...params?.defaultValues,
-            ...submitObject,
-          } as ProductGet);
+        if (form.isDirty()) {
+          if (!params?.defaultValues?.updated_at) {
+            productCreate({
+              ...submitObject,
+            });
+          } else {
+            productUpdate({
+              ...params?.defaultValues,
+              ...submitObject,
+            } as ProductGet);
+          }
         }
 
-        form.reset();
+        // form.reset();
         router.push(
           `/dashboard/products/${form.values.type?.toLocaleLowerCase()}s`
         );

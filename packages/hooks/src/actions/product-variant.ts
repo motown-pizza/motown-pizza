@@ -5,9 +5,11 @@ import { Size, Status, SyncStatus } from '@repo/types/models/enums';
 import { generateUUID } from '@repo/utilities/generators';
 import { useNotification } from '@repo/hooks/notification';
 import { Variant } from '@repo/types/enums';
+import { useStoreRecipieItem } from '@repo/libraries/zustand/stores/recipie-item';
 
 export const useProductVariantActions = () => {
   const { session } = useStoreSession();
+  const { recipieItems, setRecipieItems } = useStoreRecipieItem();
   const { addProductVariant, updateProductVariant, deleteProductVariant } =
     useStoreProductVariant();
   const { showNotification } = useNotification();
@@ -62,6 +64,22 @@ export const useProductVariantActions = () => {
     if (!session) return;
 
     const now = new Date();
+
+    if (recipieItems?.length) {
+      setRecipieItems(
+        recipieItems.map((ri) => {
+          if (ri.product_variant_id != params.id) {
+            return ri;
+          } else {
+            return {
+              ...ri,
+              sync_status: SyncStatus.DELETED,
+              updated_at: now.toISOString() as any,
+            };
+          }
+        })
+      );
+    }
 
     deleteProductVariant({
       ...params,

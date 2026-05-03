@@ -79,7 +79,7 @@ export default function ProductVariant({
           <TextInput
             required
             label="Title"
-            placeholder={`eg. ${capitalizeWords(Size.MEDIUM)} ${product?.title}`}
+            placeholder={`eg. ${capitalizeWords(Size.MEDIUM)} ${product?.title} (11")`}
             data-autofocus={
               !props?.defaultValues?.updated_at ? true : undefined
             }

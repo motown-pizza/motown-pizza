@@ -3,10 +3,16 @@ import { useProductVariantActions } from '@repo/hooks/actions/product-variant';
 import { useFormBase } from '../form';
 import { ProductVariantGet } from '@repo/types/models/product-variant';
 import { Size, Status } from '@repo/types/models/enums';
+import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
 
 export const useFormProductVariant = (params?: {
   defaultValues?: Partial<ProductVariantGet>;
 }) => {
+  const { products } = useStoreProduct();
+  const product = products?.find(
+    (pi) => pi.id == params?.defaultValues?.product_id
+  );
+
   const { productVariantCreate, productVariantUpdate } =
     useProductVariantActions();
 
@@ -18,7 +24,7 @@ export const useFormProductVariant = (params?: {
       price: params?.defaultValues?.price || 0,
       product_id: params?.defaultValues?.product_id || '',
       size: params?.defaultValues?.size || Size.MEDIUM,
-      title: params?.defaultValues?.title || '',
+      title: `${params?.defaultValues?.title || ''}${!product || params?.defaultValues?.title?.includes(product.title) ? '' : ` ${product.title}`}`,
       status: params?.defaultValues?.status || Status.ACTIVE,
     },
     {
