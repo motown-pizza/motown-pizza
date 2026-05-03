@@ -36,7 +36,7 @@ export default function Main() {
       containerized={false}
       pt={SECTION_SPACING}
       pb={'md'}
-      bg={'var(--mantine-color-blue-6)'}
+      bg={'var(--mantine-color-pri-6)'}
     >
       <LayoutSection id={'footer-main'}>
         <Grid gutter={{ base: 'xl' }}>
@@ -46,14 +46,14 @@ export default function Main() {
                 <GridCol key={i} span={{ base: 12, xs: 6, sm: 4 }}>
                   <Title
                     order={2}
-                    fz={'md'}
+                    fz={'lg'}
                     c={'white'}
                     ta={{ base: 'center', md: 'start' }}
                   >
                     {lg.title}
                   </Title>
 
-                  <Stack gap={5} mt={'xs'}>
+                  <Stack gap={5} mt={'xs'} align="start">
                     {lg.links.map((l, i) => (
                       <NextLink
                         key={i}
@@ -80,11 +80,11 @@ export default function Main() {
 
                 <Group justify="center">
                   {social.map((si, i) => (
-                    <a key={i}>
+                    <a key={i} href={'#'}>
                       <ActionIcon
-                        size={ICON_WRAPPER_SIZE}
+                        size={ICON_WRAPPER_SIZE + 4}
                         variant="white"
-                        c={'dark.9'}
+                        c={'dark'}
                       >
                         <si.icon size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
                       </ActionIcon>
@@ -97,9 +97,9 @@ export default function Main() {
         </Grid>
       </LayoutSection>
 
-      <Divider color="white" mt={'xl'} mb={'md'} />
-
       <LayoutSection id={'footer-main-fine'}>
+        <Divider color="yellow.6" mt={'xl'} mb={'xl'} />
+
         <Group justify="center" fz={'sm'} c={'white'}>
           <Text inherit>
             © {new Date().getFullYear()} {APP_NAME.WEB}. All rights reserved.

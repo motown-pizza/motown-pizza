@@ -17,7 +17,7 @@ export default function Home() {
     <HomeLayout>
       <LayoutSection id="home">
         <Center mih={'100vh'}>
-          <NextLink href={'/dashboard'}>home page</NextLink>
+          <NextLink href={'/dashboard'}>dashboard</NextLink>
         </Center>
       </LayoutSection>
     </HomeLayout>
