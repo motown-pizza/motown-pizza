@@ -116,8 +116,8 @@ export default function Checkout() {
       </Stack>
 
       <Stack gap={'xl'} mt={'xl'}>
-        <Card bg={'var(--mantine-color-dark-7)'} padding={0}>
-          <CardSection p={'md'} bg={'var(--mantine-color-dark-6)'}>
+        <Card bg={'var(--mantine-color-dark-8)'} padding={0}>
+          <CardSection p={'md'} bg={'var(--mantine-color-dark-7)'}>
             <Title order={3} c={'blue'}>
               Order Items Summary
             </Title>
@@ -150,8 +150,8 @@ export default function Checkout() {
           </ScrollArea>
         </Card>
 
-        <Card bg={'var(--mantine-color-dark-7)'}>
-          <CardSection p={'md'} bg={'var(--mantine-color-dark-6)'}>
+        <Card bg={'var(--mantine-color-dark-8)'}>
+          <CardSection p={'md'} bg={'var(--mantine-color-dark-7)'}>
             <Title order={3} c={'blue'}>
               Step 1: Contact Info
             </Title>
@@ -180,8 +180,8 @@ export default function Checkout() {
           </Stack>
         </Card>
 
-        <Card bg={'var(--mantine-color-dark-7)'}>
-          <CardSection p={'md'} bg={'var(--mantine-color-dark-6)'}>
+        <Card bg={'var(--mantine-color-dark-8)'}>
+          <CardSection p={'md'} bg={'var(--mantine-color-dark-7)'}>
             <Title order={3} c={'blue'}>
               Step 2: Select Payment Method
             </Title>
@@ -220,7 +220,7 @@ export default function Checkout() {
                     (orderDetails || defaultOrderDetails).fulfillment_type ==
                     OrderFulfilmentType.COLLECTION
                       ? 'Pay in store upon collection (Cash)'
-                      : 'Pay on delivery (Cash)'
+                      : 'Pay on delivery/collection (Cash)'
                   }
                 />
 

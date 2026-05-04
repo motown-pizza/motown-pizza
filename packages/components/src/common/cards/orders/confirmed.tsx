@@ -21,7 +21,7 @@ import { StoreGet } from '@repo/constants/stores';
 import { OrderGet } from '@repo/types/models/order';
 import { getRegionalDate } from '@repo/utilities/date-time';
 import { capitalizeWords } from '@repo/utilities/string';
-import { IconCopy } from '@tabler/icons-react';
+import { IconCheck, IconCopy } from '@tabler/icons-react';
 import React from 'react';
 
 export default function Confirmed({
@@ -35,6 +35,7 @@ export default function Confirmed({
 } & CardProps) {
   const { order, store } = props;
   const clipboard = useClipboard({ timeout: 1000 });
+  const copyProps = { icon: clipboard.copied ? IconCheck : IconCopy };
 
   return (
     <Card
@@ -65,7 +66,10 @@ export default function Confirmed({
                 }}
                 visibleFrom="xs"
               >
-                <IconCopy size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
+                <copyProps.icon
+                  size={ICON_SIZE - 4}
+                  stroke={ICON_STROKE_WIDTH}
+                />
               </ActionIcon>
             </Tooltip>
 

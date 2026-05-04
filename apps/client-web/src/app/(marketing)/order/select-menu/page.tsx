@@ -19,11 +19,11 @@ export default function SelectMenu() {
         />
 
         <Grid gutter={'xl'} mt={'xl'}>
-          <GridCol span={{ base: 12, md: 8.5 }}>
+          <GridCol span={{ base: 12, md: 8 }}>
             <TabsMenu options={{ withAside: true, ordering: true }} />
           </GridCol>
 
-          <GridCol span={{ base: 12, md: 3.5 }}>
+          <GridCol span={{ base: 12, md: 4 }}>
             <AsideOrder />
           </GridCol>
         </Grid>

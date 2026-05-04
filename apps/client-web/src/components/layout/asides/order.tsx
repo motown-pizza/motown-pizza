@@ -91,7 +91,7 @@ export default function Order() {
             {store && <CardStoreAside props={store} />}
           </Stack>
 
-          <Divider />
+          <Divider variant="dashed" />
 
           <Stack gap={'xs'} mb={'xs'}>
             <Title order={3} fz={'md'} fw={500} c={'sec'}>
@@ -124,9 +124,9 @@ export default function Order() {
             </RadioGroup>
           </Stack>
 
-          <Divider />
+          {/* <Divider /> */}
 
-          <Stack gap={'xs'} mb={'xs'}>
+          {/* <Stack gap={'xs'} mb={'xs'}>
             <Title order={3} fz={'md'} fw={500} c={'sec'}>
               Order Time
             </Title>
@@ -167,11 +167,11 @@ export default function Order() {
                 }
               />
             )}
-          </Stack>
+          </Stack> */}
         </Stack>
 
         {!isStoreSelection && (
-          <CardSection p={'md'} mt={'md'} bg={'var(--mantine-color-dark-6)'}>
+          <CardSection p={'md'} mt={'md'} bg={'var(--mantine-color-dark-7)'}>
             <Group justify="space-between">
               <Text>Total:</Text>
 

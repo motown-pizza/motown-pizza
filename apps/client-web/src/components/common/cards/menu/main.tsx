@@ -103,7 +103,7 @@ export default function Main({
             <ImageDefault
               src={props.image}
               alt={props.title}
-              height={240}
+              height={{ base: 240, md: 280, xl: 240 }}
               fit={'contain'}
             />
           </CardSection>
@@ -113,8 +113,11 @@ export default function Main({
               {props.title}
             </Title>
 
-            {/* {props.description && <Text fz={'sm'}>{props.description}</Text>} */}
-            {content && <Text fz={'sm'}>{content}</Text>}
+            {props.description ? (
+              <Text fz={'sm'}>{props.description}</Text>
+            ) : (
+              content && <Text fz={'sm'}>{content}</Text>
+            )}
           </Stack>
         </div>
 
@@ -190,16 +193,25 @@ export default function Main({
           {productVariantsCurrent && (
             <Select
               w={'100%'}
-              placeholder="Pick size"
-              radius={'lg'}
-              size="xs"
+              aria-label="Pick variant"
+              placeholder="Pick variant"
               checkIconPosition="right"
               allowDeselect={false}
-              data={productVariantsCurrent.map((pv) => ({
+              data={sortArray(
+                productVariantsCurrent,
+                (i) => i.title,
+                Order.ASCENDING
+              ).map((pv) => ({
                 value: pv.id,
                 label: pv.title || pv.size,
               }))}
               value={variantId}
+              comboboxProps={{ width: 'fit-content', position: 'bottom-start' }}
+              styles={{
+                dropdown: {
+                  minWidth: 220,
+                },
+              }}
               onChange={(v) => {
                 setSelectedVariantId(v as string);
                 const variant = productVariantsCurrent.find((va) => va.id == v);

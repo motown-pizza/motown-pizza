@@ -3,7 +3,13 @@ import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-pla
 import { getUrlParam } from '@repo/utilities/url';
 import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
 import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { generateUUID } from '@repo/utilities/generators';
+import { useRouter } from 'next/navigation';
+import { useOrderActions } from './actions/order';
+import { defaultOrderDetails } from '@repo/constants/orders';
+import { OrderFulfilmentType, SyncStatus } from '@repo/types/models/enums';
+import { OrderGet } from '@repo/types/models/order';
 
 export const useOrderPlacementData = () => {
   const { orders } = useStoreOrder();
@@ -96,4 +102,39 @@ export const useGetSum = () => {
   };
 
   return { getSum };
+};
+
+export const useOrderStart = (params: { storeId: string; stores: any[] }) => {
+  const orderIdRef = useRef(generateUUID());
+  const router = useRouter();
+
+  const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
+  const { orderCreate } = useOrderActions();
+
+  const handleStart = async (startParams?: {
+    fulfillmentType?: OrderFulfilmentType;
+  }) => {
+    const orderObject: Partial<OrderGet> = {
+      ...(orderDetails || defaultOrderDetails),
+      store_id: params.storeId,
+      fulfillment_type:
+        startParams?.fulfillmentType ||
+        (orderDetails || defaultOrderDetails).fulfillment_type,
+      id: orderIdRef.current,
+      sync_status: SyncStatus.PENDING,
+    };
+
+    const newOrder = await orderCreate(orderObject, { stores: params.stores });
+    setOrderDetails({ ...orderObject, ...newOrder } as OrderGet);
+
+    router.push('/order/select-menu?menuTab=pizzas');
+  };
+
+  return {
+    orderIdRef,
+    orderDetails,
+    setOrderDetails,
+    orderCreate,
+    handleStart,
+  };
 };

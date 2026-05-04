@@ -31,6 +31,7 @@ export default function Store({
     storesToLoad: {
       products: true,
       productVariants: true,
+      ingredients: true,
       recipieItems: true,
       cartItems: true,
       wishlistItems: true,

@@ -44,10 +44,10 @@ export default function CheckoutReview() {
       />
 
       <Grid gutter={'xl'} mt={'xl'}>
-        <GridCol span={{ base: 12, md: 8.5 }}>
+        <GridCol span={{ base: 12, md: 8 }}>
           <Stack gap={'xl'}>
-            <Card bg={'var(--mantine-color-dark-7)'} padding={0}>
-              <CardSection p={'md'} bg={'var(--mantine-color-dark-6)'}>
+            <Card bg={'var(--mantine-color-dark-8)'} padding={0}>
+              <CardSection p={'md'} bg={'var(--mantine-color-dark-7)'}>
                 <Group justify="space-between">
                   <Title order={3}>Review and Modify Your Items</Title>
 
@@ -103,8 +103,8 @@ export default function CheckoutReview() {
               </Stack> */}
             </Card>
 
-            <Card bg={'var(--mantine-color-dark-7)'}>
-              <CardSection p={'md'} bg={'var(--mantine-color-dark-6)'}>
+            <Card bg={'var(--mantine-color-dark-8)'}>
+              <CardSection p={'md'} bg={'var(--mantine-color-dark-7)'}>
                 <Title order={3}>Choose Your Sides</Title>
               </CardSection>
 
@@ -113,8 +113,8 @@ export default function CheckoutReview() {
                   ?.filter((p) => p.type == ProductType.SIDE)
                   .map(
                     (pi, i) =>
-                      i < 3 && (
-                        <GridCol key={i} span={{ base: 12, md: 3 }}>
+                      i < 6 && (
+                        <GridCol key={i} span={{ base: 12, md: 6, xl: 4 }}>
                           <CardMenuMain props={pi} options={{ small: true }} />
                         </GridCol>
                       )
@@ -122,8 +122,8 @@ export default function CheckoutReview() {
               </Grid>
             </Card>
 
-            <Card bg={'var(--mantine-color-dark-7)'}>
-              <CardSection p={'md'} bg={'var(--mantine-color-dark-6)'}>
+            <Card bg={'var(--mantine-color-dark-8)'}>
+              <CardSection p={'md'} bg={'var(--mantine-color-dark-7)'}>
                 <Title order={3}>Choose Your Drinks</Title>
               </CardSection>
 
@@ -132,8 +132,8 @@ export default function CheckoutReview() {
                   ?.filter((p) => p.type == ProductType.DRINK)
                   .map(
                     (pi, i) =>
-                      i < 3 && (
-                        <GridCol key={i} span={{ base: 12, md: 3 }}>
+                      i < 6 && (
+                        <GridCol key={i} span={{ base: 12, md: 6, xl: 4 }}>
                           <CardMenuMain props={pi} options={{ small: true }} />
                         </GridCol>
                       )
@@ -143,7 +143,7 @@ export default function CheckoutReview() {
           </Stack>
         </GridCol>
 
-        <GridCol span={{ base: 12, md: 3.5 }}>
+        <GridCol span={{ base: 12, md: 4 }}>
           <AsideOrder />
         </GridCol>
       </Grid>

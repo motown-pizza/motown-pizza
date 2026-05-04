@@ -6,7 +6,7 @@ import { StoreGet } from '@repo/constants/stores';
 
 export default function Aside({ props }: { props: StoreGet }) {
   return (
-    <Card bg={'var(--mantine-color-dark-6)'}>
+    <Card bg={'var(--mantine-color-dark-7)'} withBorder>
       {/* <Box
         component="iframe"
         src={props.iframe}

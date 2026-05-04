@@ -29,71 +29,60 @@ import { OrderFulfilmentType } from '@repo/types/models/enums';
 import ImageDefault from '@repo/components/common/images/default';
 import { images } from '@repo/constants/images';
 import { SECTION_SPACING } from '@repo/constants/sizes';
+import TabDeliveryType from '@/components/common/tabs/order-type';
+import { APP_NAME } from '@repo/constants/app';
 
 export default function Home() {
   return (
     <HomeLayout>
-      <LayoutSection id="home-page-intro" padded={'xl'} containerized={'md'}>
-        <Group grow preventGrowOverflow={false}>
-          <Divider color="ter" />
+      <LayoutSection
+        id="home-page-intro"
+        pt={SECTION_SPACING}
+        mb={SECTION_SPACING * 2}
+        containerized={'sm'}
+      >
+        <Stack gap={'xl'} px={SECTION_SPACING}>
+          <Group justify="center">
+            <ImageDefault
+              src={images.brand.logo.landscape.meta}
+              alt={APP_NAME.WEB}
+              height={90}
+              width={200}
+              mode="grid"
+              style={{ transform: 'scale(1.3)' }}
+            />
+          </Group>
 
-          <Text
-            ta={'center'}
-            fz={24}
-            w={'fit-coontent'}
-            lh={{ base: 2, xs: 1 }}
+          <Group
+            grow
+            preventGrowOverflow={false}
+            gap={'xs'}
+            px={SECTION_SPACING}
           >
-            Is your order for{' '}
-            <NextLink
-              href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-              underline="never"
-            >
-              <Text
-                component="span"
-                inherit
-                tt={'uppercase'}
-                fz={{ base: 16, lg: 24 }}
-                style={{
-                  fontWeight: 'bold',
-                  backgroundColor: 'var(--mantine-color-sec-6)',
-                  color: 'var(--mantine-color-red-7)',
-                  padding:
-                    'var(--mantine-spacing-xs) var(--mantine-spacing-sm)',
-                  borderRadius: 'var(--mantine-radius-lg)',
-                }}
-              >
-                delivery
-              </Text>
-            </NextLink>{' '}
-            or{' '}
-            <NextLink
-              href={`/order/select-store?orderType=${OrderFulfilmentType.COLLECTION.toLowerCase()}`}
-              underline="never"
-            >
-              <Text
-                component="span"
-                inherit
-                tt={'uppercase'}
-                fz={{ base: 16, lg: 24 }}
-                style={{
-                  fontWeight: 'bold',
-                  backgroundColor: 'var(--mantine-color-blue-6)',
-                  color: 'var(--mantine-color-white)',
-                  padding:
-                    'var(--mantine-spacing-xs) var(--mantine-spacing-sm)',
-                  borderRadius: 'var(--mantine-radius-lg)',
-                }}
-              >
-                collection
-              </Text>
-            </NextLink>
-          </Text>
+            <Divider color="ter" />
 
-          <Divider color="ter" />
-        </Group>
+            <Text
+              ta={'center'}
+              fz={'xl'}
+              w={'fit-coontent'}
+              lh={{ base: 2, xs: 1 }}
+            >
+              Select your order type
+            </Text>
+
+            <Divider color="ter" />
+          </Group>
+
+          <TabDeliveryType />
+        </Stack>
       </LayoutSection>
 
-      <LayoutSection id="home-page-intro" padded={'xl'} containerized={'md'}>
+      <LayoutSection
+        id="home-page-intro"
+        mt={SECTION_SPACING * 2}
+        pb={SECTION_SPACING * 2}
+        containerized={'md'}
+      >
         <Grid>
           <GridCol span={{ base: 12, md: 9 }}>
             <NextLink

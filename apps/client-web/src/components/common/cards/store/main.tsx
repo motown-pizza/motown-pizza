@@ -10,13 +10,10 @@ import { useOrderActions } from '@repo/hooks/actions/order';
 import { generateUUID } from '@repo/utilities/generators';
 import { SyncStatus } from '@repo/types/models/enums';
 import { stores } from '@repo/constants/stores';
+import { useOrderStart } from '@repo/hooks/order';
 
 export default function Main({ props }: { props: StoreGet }) {
-  const orderIdRef = useRef(generateUUID());
-  const router = useRouter();
-
-  const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
-  const { orderCreate } = useOrderActions();
+  const { handleStart } = useOrderStart({ storeId: props.id, stores });
 
   return (
     <Card bg={'var(--mantine-color-dark-6)'}>
@@ -49,23 +46,7 @@ export default function Main({ props }: { props: StoreGet }) {
       </Stack>
 
       <Group justify="end">
-        <Button
-          onClick={async () => {
-            const orderObject = {
-              ...(orderDetails || defaultOrderDetails),
-              store_id: props.id,
-              id: orderIdRef.current,
-              sync_status: SyncStatus.PENDING,
-            };
-
-            const newOrder = await orderCreate(orderObject, { stores });
-            setOrderDetails({ ...orderObject, ...newOrder });
-
-            router.push('/order/select-menu?menuTab=pizzas');
-          }}
-        >
-          Select Store
-        </Button>
+        <Button onClick={() => handleStart()}>Select Store</Button>
       </Group>
     </Card>
   );
