@@ -1,135 +1,142 @@
-# Turborepo starter
+# 🍕 Pizza Platform Suite
 
-This Turborepo starter is maintained by the Turborepo core team.
+An integrated set of web platforms powering a modern pizza business — from operations to customer experience.
 
-## Using this example
+This monorepo contains all core systems required to run and scale a pizza shop, designed to work seamlessly together.
 
-Run the following command:
+---
 
-```sh
-npx create-turbo@latest
-```
+## 🧩 Overview
 
-## What's inside?
+The suite is composed of four main applications:
 
-This Turborepo includes the following packages/apps:
+- **Back Office** — business management (inventory, staff, reporting, configuration)
+- **POS (Point of Sale)** — order taking, payments, in-store operations
+- **KDS (Kitchen Display System)** — real-time order tracking and kitchen workflow
+- **Website** — marketing pages, menu browsing, and online ordering
 
-### Apps and Packages
+Each system is independently deployable but shares a common foundation.
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+---
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## 🎯 Goals
 
-### Utilities
+- Single source of truth across all business operations
+- Real-time synchronization between systems
+- Modular architecture for independent development and scaling
+- Consistent UI/UX across all touchpoints
+- Extensible for future platforms (mobile apps, analytics, etc.)
 
-This Turborepo has some additional tools already setup for you:
+---
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+## 🏗️ Architecture
 
-### Build
+- **Monorepo** for shared code and unified tooling
+- **Shared packages** for:
+  - UI components
+  - Types / schemas
+  - API clients
+  - Business logic
 
-To build all apps and packages, run the following command:
+- **App-specific layers** for domain concerns
+- **Centralized backend services** (auth, orders, payments, inventory)
 
-```
-cd my-turborepo
+---
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## 📦 Apps
 
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+apps/
+  admin/   # Admin dashboard
+  pos/     # Point of sale system
+  kds/     # Kitchen display system
+  web/     # Customer-facing website
 ```
 
-### Develop
+---
 
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## 📚 Packages
 
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+packages/
+  ui/           # Shared UI components
+  db/           # Database schema + ORM
+  api/          # API layer / client
+  config/       # Shared configs (eslint, tsconfig, etc.)
+  utils/        # Shared utilities
 ```
 
-### Remote Caching
+---
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+## 🔗 System Flow
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+1. Orders originate from **POS** or **Website**
+2. Orders are stored and processed via backend services
+3. **KDS** receives and displays orders in real time
+4. **Back Office** provides visibility and control (reports, inventory, etc.)
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+---
 
-```
-cd my-turborepo
+## ⚙️ Tech Stack (example)
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
+- **Frontend:** Next.js / React
+- **Backend:** Node.js / API routes / services
+- **Database:** PostgreSQL
+- **ORM:** Prisma
+- **State:** Zustand / Redux
+- **Styling:** Tailwind / Mantine
+- **Tooling:** pnpm, Turborepo, ESLint, Prettier
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
+---
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+## 🚀 Getting Started
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+### Install dependencies
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+```bash
+pnpm install
 ```
 
-## Useful Links
+### Run all apps
 
-Learn more about the power of Turborepo:
+```bash
+pnpm dev
+```
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+### Run a specific app
+
+```bash
+pnpm --filter <app-name> dev
+```
+
+---
+
+## 🔐 Environment Variables
+
+Each app may require its own `.env` file. See individual app directories for details.
+
+---
+
+## 🧪 Development Principles
+
+- Keep business logic in shared packages where possible
+- Avoid duplication across apps
+- Prefer composition over tight coupling
+- Design for offline tolerance (especially POS/KDS)
+- Optimize for real-time updates
+
+---
+
+## 📈 Future Scope
+
+- Mobile apps (staff + customer)
+- Delivery management
+- Analytics and forecasting
+- Loyalty and rewards system
+- Multi-branch support
+
+---
+
+## 📄 License
+
+Private / Proprietary
