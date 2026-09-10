@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useState } from 'react';
 import {
   Stepper,
@@ -17,30 +17,19 @@ import { useCountdown } from '@repo/hooks';
 import { IconCheck } from '@tabler/icons-react';
 import { LayoutIntroSection } from '@repo/ui';
 
-const now = new Date();
-
 export default function OrderTracker() {
   const [active, setActive] = useState(1);
   const nextStep = () => setActive((current) => (current < 4 ? current + 1 : current));
-  // const prevStep = () =>
-  //   setActive((current) => (current > 1 ? current - 1 : current));
 
-  const [targetDate, setTargetDate] = useState<Date>(new Date(now.getTime() + 1000 * 60 * 2));
+  const [targetDate, setTargetDate] = useState<Date>(() => new Date(Date.now() + 1000 * 60 * 2));
 
-  const { percentElapsed } = useCountdown(targetDate, 2);
-
-  useEffect(() => {
-    const handleSetNextStep = () => {
-      if (percentElapsed == 100) {
-        if (active < 4) {
-          nextStep();
-          setTargetDate(new Date(new Date().getTime() + 1000 * 60 * 2));
-        }
-      }
-    };
-
-    handleSetNextStep();
-  }, [percentElapsed]);
+  // Pass the transition logic directly into the hook
+  const { percentElapsed } = useCountdown(targetDate, 2, () => {
+    if (active < 4) {
+      nextStep();
+      setTargetDate(new Date(Date.now() + 1000 * 60 * 2));
+    }
+  });
 
   return (
     <>
