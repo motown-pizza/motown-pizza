@@ -1,0 +1,14 @@
+.card {
+  max-width: 480px;
+  background-color: var(--mantine-color-body) !important;
+  color: var(--mantine-color-text) !important;
+  box-shadow: var(--mantine-shadow-xs) !important;
+  border: 1px solid var(--mantine-color-default-border);
+  width: 90%;
+}
+
+@media (min-width: 36em) {
+  .card {
+    width: 100%;
+  }
+}

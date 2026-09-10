@@ -1,15 +1,10 @@
-/**
- * @template-source next-template
- * @template-sync auto
- * @description This file originates from the base template repository.
- * Do not modify unless you intend to backport changes to the template.
- */
+'use client';
 
-import { Variant } from '@repo/types/enums';
-import { validators } from '@repo/utilities/validation';
-import { contactAdd } from '@repo/handlers/requests/contact';
+import { Variant } from '@repo/types';
+import { validators } from '@repo/utils';
+import { contactAdd } from '@repo/handlers';
 import { useFormBase } from '../form';
-import { useNotification } from '@repo/hooks/notification';
+import { useNotification } from '@repo/notifications';
 
 export const useFormNewsletter = () => {
   const { showNotification } = useNotification();
@@ -42,7 +37,7 @@ export const useFormNewsletter = () => {
       onError: (error) => {
         console.error('Newsletter error:', error);
       },
-    }
+    },
   );
 
   return { form, submitted, handleSubmit };

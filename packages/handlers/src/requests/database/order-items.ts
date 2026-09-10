@@ -1,142 +1,48 @@
-/**
- * @template-source next-template
- * @template-sync auto
- * @description This file originates from the base template repository.
- * Do not modify unless you intend to backport changes to the template.
- */
+import { OrderItemCreate, OrderItemGet, OrderItemUpdate } from '@repo/types';
+import { apiCall } from './fetch';
 
-import { API_URL } from '@repo/constants/paths';
-import { HEADERS } from '@repo/constants/other';
-import {
-  OrderItemCreate,
-  OrderItemGet,
-  OrderItemUpdate,
-} from '@repo/types/models/order-item';
+const segment = 'order-items';
 
-const baseRequestUrl = `${API_URL}/order-items`;
-
-export const orderItemsGet = async (params?: { userId?: string }) => {
-  try {
-    const request = new Request(
-      baseRequestUrl + `${!params?.userId ? '' : `?userId=${params.userId}`}`,
-      {
-        method: 'GET',
-        headers: HEADERS.WITHOUT_BODY,
-      }
-    );
-
-    const response = await fetch(request);
-
-    const result = await response.json();
-
-    return result;
-  } catch (error) {
-    console.error('---> handler error - (get order items):', error);
-    throw error;
-  }
+export const orderItemsGet = (params: { apiUrl: string; userId?: string }) => {
+  const query = params?.userId ? `?userId=${params.userId}` : '';
+  return apiCall(segment + query, 'GET', params.apiUrl);
 };
 
 let currentController: AbortController | null = null;
 
 export const orderItemsUpdate = async (
+  apiUrl: string,
   orderItems: OrderItemGet[],
-  deletedIds?: string[]
+  deletedIds?: string[],
 ) => {
-  // Cancel previous request if still in-flight
   if (currentController) currentController.abort();
-
-  // New controller for this request
   currentController = new AbortController();
 
   try {
-    const request = new Request(baseRequestUrl, {
-      method: 'PUT',
-      headers: HEADERS.WITH_BODY,
-      body: JSON.stringify({ orderItems, deletedIds }),
-    });
-
-    const response = await fetch(request);
-
-    if (!response.ok) {
-      throw new Error(`${response.status}: ${response.statusText}`);
-    }
-
-    const result = await response.json();
-
-    return result;
-  } catch (error) {
-    console.error('---> handler error - (update order items):', error);
-    throw error;
+    return await apiCall(
+      segment + '',
+      'PUT',
+      apiUrl,
+      { orderItems, deletedIds },
+      currentController.signal,
+    );
   } finally {
-    // Clear controller once done (important for GC)
     currentController = null;
   }
 };
 
-export const orderItemGet = async (params: { orderItemId: string }) => {
-  try {
-    const request = new Request(`${baseRequestUrl}/${params.orderItemId}`, {
-      method: 'GET',
-      headers: HEADERS.WITHOUT_BODY,
-    });
-
-    const response = await fetch(request);
-
-    const result = await response.json();
-
-    return result;
-  } catch (error) {
-    console.error('---> handler error - (get order item):', error);
-    throw error;
-  }
+export const orderItemGet = (params: { apiUrl: string; orderItemId: string }) => {
+  return apiCall(segment + `/${params.orderItemId}`, 'GET', params.apiUrl);
 };
 
-export const orderItemCreate = async (orderItem: OrderItemCreate) => {
-  try {
-    const request = new Request(`${baseRequestUrl}/create`, {
-      method: 'POST',
-      headers: HEADERS.WITH_BODY,
-      body: JSON.stringify(orderItem),
-    });
-
-    const response = await fetch(request);
-
-    return response;
-  } catch (error) {
-    console.error('---> handler error - (create order item):', error);
-    throw error;
-  }
+export const orderItemCreate = (apiUrl: string, orderItem: OrderItemCreate) => {
+  return apiCall(segment + '/create', 'POST', apiUrl, orderItem);
 };
 
-export const orderItemUpdate = async (orderItem: OrderItemUpdate) => {
-  try {
-    const request = new Request(`${baseRequestUrl}/${orderItem.id}`, {
-      method: 'PUT',
-      headers: HEADERS.WITH_BODY,
-      body: JSON.stringify(orderItem),
-    });
-
-    const response = await fetch(request);
-
-    return response;
-  } catch (error) {
-    console.error('---> handler error - (update order item):', error);
-    throw error;
-  }
+export const orderItemUpdate = (apiUrl: string, orderItem: OrderItemUpdate) => {
+  return apiCall(segment + `/${orderItem.id}`, 'PUT', apiUrl, orderItem);
 };
 
-export const orderItemDelete = async (orderItemId: string) => {
-  try {
-    const request = new Request(`${baseRequestUrl}/${orderItemId}`, {
-      method: 'DELETE',
-      headers: HEADERS.WITHOUT_BODY,
-    });
-
-    const response = await fetch(request);
-
-    return response;
-  } catch (error) {
-    console.error('---> handler error - (delete order item):', error);
-    throw error;
-  }
+export const orderItemDelete = (apiUrl: string, orderItemId: string) => {
+  return apiCall(segment + `/${orderItemId}`, 'DELETE', apiUrl);
 };

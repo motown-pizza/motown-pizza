@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect } from 'react';
 
 export function useBeforeUnload({
@@ -16,8 +18,7 @@ export function useBeforeUnload({
         return;
       }
 
-      const message =
-        'You have unsaved changes. Are you sure you want to leave?';
+      const message = 'You have unsaved changes. Are you sure you want to leave?';
       e.preventDefault();
       e.returnValue = message;
       return message;

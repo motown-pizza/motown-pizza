@@ -1,3 +1,6 @@
+/// <reference lib="dom" />
+/// <reference lib="dom.iterable" />
+
 export interface DBStoreConfig {
   name: string;
   keyPath: string;

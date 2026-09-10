@@ -1,61 +1,67 @@
-/**
- * @template-source next-template
- * @template-sync auto
- * @description This file originates from the base template repository.
- * Do not modify unless you intend to backport changes to the template.
- */
+export const SHARED_VERCEL_SUBSTRING = 'motown-pizza';
+const VERCEL_TEAM_SLUG = SHARED_VERCEL_SUBSTRING + '-team';
+const vercelEnv = process.env.NEXT_PUBLIC_VERCEL_ENV;
+const vercelUrl = process.env.NEXT_PUBLIC_VERCEL_URL;
+const gitBranch = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF;
 
-const isProduction = process.env.NODE_ENV === 'production';
-const useRemoteServer = process.env.NEXT_PUBLIC_USE_REMOTE_SERVER === 'true';
+export const isVercelPreview = vercelEnv === 'preview' && !!vercelUrl;
+export const isProduction = vercelEnv
+  ? vercelEnv === 'production'
+  : process.env.NODE_ENV === 'production';
 
-// Select client admin host
-export const HOSTNAME_CLIENT_ADMIN = isProduction
-  ? process.env.NEXT_PUBLIC_HOST_CLIENT_ADMIN_PROD
-  : process.env.NEXT_PUBLIC_HOST_CLIENT_ADMIN_DEV;
+const cleanHost = (host?: string) => host?.replace(/^https?:\/\//, '') || '';
 
-// Select client pos host
-export const HOSTNAME_CLIENT_POS = isProduction
-  ? process.env.NEXT_PUBLIC_HOST_CLIENT_POS_PROD
-  : process.env.NEXT_PUBLIC_HOST_CLIENT_POS_DEV;
+const sanitizeBranch = (branch?: string) =>
+  branch ? branch.toLowerCase().replace(/[^a-z0-9-]/g, '-') : '';
 
-// Select client kds host
-export const HOSTNAME_CLIENT_KDS = isProduction
-  ? process.env.NEXT_PUBLIC_HOST_CLIENT_KDS_PROD
-  : process.env.NEXT_PUBLIC_HOST_CLIENT_KDS_DEV;
+const getPreviewUrl = (projectName: string) => {
+  if (!gitBranch) return cleanHost(vercelUrl); // Fallback if no git ref exists
+  const branchSlug = sanitizeBranch(gitBranch);
+  return `${projectName}-git-${branchSlug}-${VERCEL_TEAM_SLUG}.vercel.app`;
+};
 
-// Select client web host
-export const HOSTNAME_CLIENT_WEB = isProduction
-  ? process.env.NEXT_PUBLIC_HOST_CLIENT_WEB_PROD
-  : process.env.NEXT_PUBLIC_HOST_CLIENT_WEB_DEV;
+// API Host
+export const HOSTNAME_API = isVercelPreview
+  ? getPreviewUrl(`${SHARED_VERCEL_SUBSTRING}-api`)
+  : isProduction
+    ? cleanHost(process.env.NEXT_PUBLIC_HOST_API_PROD)
+    : cleanHost(process.env.NEXT_PUBLIC_HOST_API_DEV);
 
-// Select server host
-const HOSTNAME_SERVER = isProduction
-  ? process.env.NEXT_PUBLIC_HOST_SERVER_PROD
-  : useRemoteServer
-    ? process.env.NEXT_PUBLIC_HOST_SERVER_PROD
-    : process.env.NEXT_PUBLIC_HOST_SERVER_DEV;
+// ADMIN Host
+export const HOSTNAME_ADMIN = isVercelPreview
+  ? getPreviewUrl(`${SHARED_VERCEL_SUBSTRING}-admin`)
+  : isProduction
+    ? cleanHost(process.env.NEXT_PUBLIC_HOST_ADMIN_PROD)
+    : cleanHost(process.env.NEXT_PUBLIC_HOST_ADMIN_DEV);
 
-export const getUrlPrefix = (host: string | undefined) => {
+// WEB Host
+export const HOSTNAME_WEB = isVercelPreview
+  ? getPreviewUrl(`${SHARED_VERCEL_SUBSTRING}-web`)
+  : isProduction
+    ? cleanHost(process.env.NEXT_PUBLIC_HOST_WEB_PROD)
+    : cleanHost(process.env.NEXT_PUBLIC_HOST_WEB_DEV);
+
+// POS Host
+export const HOSTNAME_POS = isVercelPreview
+  ? getPreviewUrl(`${SHARED_VERCEL_SUBSTRING}-pos`)
+  : isProduction
+    ? cleanHost(process.env.NEXT_PUBLIC_HOST_POS_PROD)
+    : cleanHost(process.env.NEXT_PUBLIC_HOST_POS_DEV);
+
+// Protocol & Base URLs
+export const getUrlPrefix = (host?: string) => {
   if (!host) return 'http://';
-  return host.includes('localhost') ? 'http://' : 'https://';
+  return host.includes('localhost') || host.includes('127.0.0.1') ? 'http://' : 'https://';
 };
 
-export const BASE_URL_SERVER = `${getUrlPrefix(HOSTNAME_SERVER)}${HOSTNAME_SERVER}`;
-
-export const HOSTED_BASE_URL = {
-  CLIENT_WEB: process.env.NEXT_PUBLIC_HOST_CLIENT_WEB_PROD || '',
-  SERVER: process.env.NEXT_PUBLIC_HOST_SERVER_PROD || '',
+export const BASE_URL = {
+  API: `${getUrlPrefix(HOSTNAME_API)}${HOSTNAME_API}`,
+  ADMIN: `${getUrlPrefix(HOSTNAME_ADMIN)}${HOSTNAME_ADMIN}`,
+  WEB: `${getUrlPrefix(HOSTNAME_WEB)}${HOSTNAME_WEB}`,
+  POS: `${getUrlPrefix(HOSTNAME_POS)}${HOSTNAME_POS}`,
 };
 
-export const PRODUCTION_BASE_URL_CLIENT_WEB = {
-  DEFAULT: `https://template-next.com`,
-};
-
-export const API_URL = `${BASE_URL_SERVER}/api`;
-
-export const GEO_DATA_URL = {
-  COUNTRIES: `${process.env.NEXT_PUBLIC_REST_COUNTRIES_API_URL}`,
-};
+export const API_URL = `${BASE_URL.API}/api`;
 
 export const AUTH_URLS = {
   SIGN_IN: `/auth/sign-in`,
@@ -63,14 +69,8 @@ export const AUTH_URLS = {
   CHECK_EMAIL: `/auth/check-email`,
   ERROR: `/auth/error`,
   SIGN_OUT: `/auth/sign-out`,
+  SIGNED_OUT: `/auth/signed-out`,
   REDIRECT: {
     DEFAULT: '/',
   },
-};
-
-export const BASE_URL_CLIENT = {
-  ADMIN: `${getUrlPrefix(HOSTNAME_CLIENT_ADMIN)}${HOSTNAME_CLIENT_ADMIN}`,
-  POS: `${getUrlPrefix(HOSTNAME_CLIENT_POS)}${HOSTNAME_CLIENT_POS}`,
-  KDS: `${getUrlPrefix(HOSTNAME_CLIENT_KDS)}${HOSTNAME_CLIENT_KDS}`,
-  WEB: `${getUrlPrefix(HOSTNAME_CLIENT_WEB)}${HOSTNAME_CLIENT_WEB}`,
 };

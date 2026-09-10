@@ -1,10 +1,3 @@
-/**
- * @template-source next-template
- * @template-sync auto
- * @description This file originates from the base template repository.
- * Do not modify unless you intend to backport changes to the template.
- */
-
 export const COOKIE_NAME = {
   USER_ROLE: 'user.role',
   APP_SHELL: 'appshell',
@@ -19,14 +12,21 @@ export const LOCAL_STORAGE_NAME = {
   TEMPID: 'temp-id',
   COUNTRY: 'country',
   COUNTRIES: 'countries',
+  ACTIVE_WORKSPACE: 'active-workspace',
   MANTINE_COLOR_SCHEME_VALUE: 'mantine-color-scheme-value',
 };
 
+export const SESSION_STORAGE_NAME = {
+  VIEW: 'view',
+};
+
 export const PARAM_NAME = {
+  TEMPORARY: 'temporary_chat',
+  CHAT_ID: 'chat_id',
   REDIRECT: 'redirect',
-  MENU_TAB: 'menuTab',
-  ORDER_TYPE: 'orderType',
-  ORDER_CONFIRMED: 'confirmedOrder',
+  MENU_TAB: 'menu_tab',
+  ORDER_TYPE: 'order_type',
+  ORDER_CONFIRMED: 'order_confirmed',
 };
 
 export const BUCKET_NAME = {
@@ -52,6 +52,7 @@ export const STORE_NAME = {
   RECIPIE_ITEMS: 'recipieItems',
   ORDERS: 'orders',
   ORDER_ITEMS: 'orderItems',
+  ORDER_PLACEMENTS: 'orderPlacements',
   DELIVERIES: 'deliveries',
   STOCK_MOVEMENTS: 'stockMovements',
   TABLE_BOOKINGS: 'tableBookings',

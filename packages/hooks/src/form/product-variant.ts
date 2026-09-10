@@ -1,28 +1,23 @@
+'use client';
+
 import { hasLength } from '@mantine/form';
-import { useProductVariantActions } from '@repo/hooks/actions/product-variant';
+import { useProductVariantActions } from '@repo/store';
 import { useFormBase } from '../form';
-import { ProductVariantGet } from '@repo/types/models/product-variant';
-import { Size, Status } from '@repo/types/models/enums';
-import { useStoreProduct } from '@repo/libraries/zustand/stores/product';
+import { ProductVariantGet } from '@repo/types';
+import { Size, Status } from '@repo/types';
+import { useStoreProduct } from '@repo/store';
 
-export const useFormProductVariant = (params?: {
-  defaultValues?: Partial<ProductVariantGet>;
-}) => {
+export const useFormProductVariant = (params?: { defaultValues?: Partial<ProductVariantGet> }) => {
   const { products } = useStoreProduct();
-  const product = products?.find(
-    (pi) => pi.id == params?.defaultValues?.product_id
-  );
+  const product = products?.find((pi) => pi.id == params?.defaultValues?.productId);
 
-  const { productVariantCreate, productVariantUpdate } =
-    useProductVariantActions();
+  const { productVariantCreate, productVariantUpdate } = useProductVariantActions();
 
-  const { form, submitted, handleSubmit } = useFormBase<
-    Partial<ProductVariantGet>
-  >(
+  const { form, submitted, handleSubmit } = useFormBase<Partial<ProductVariantGet>>(
     {
       measurement: params?.defaultValues?.measurement || '',
       price: params?.defaultValues?.price || 0,
-      product_id: params?.defaultValues?.product_id || '',
+      productId: params?.defaultValues?.productId || '',
       size: params?.defaultValues?.size || Size.MEDIUM,
       title: `${params?.defaultValues?.title || ''}${!product || params?.defaultValues?.title?.includes(product.title) ? '' : ` ${product.title}`}`,
       status: params?.defaultValues?.status || Status.ACTIVE,
@@ -42,7 +37,7 @@ export const useFormProductVariant = (params?: {
           ...rawValues,
         };
 
-        if (!params?.defaultValues?.updated_at) {
+        if (!params?.defaultValues?.updatedAt) {
           productVariantCreate({
             ...submitObject,
           });
@@ -53,7 +48,7 @@ export const useFormProductVariant = (params?: {
           } as ProductVariantGet);
         }
       },
-    }
+    },
   );
 
   return {

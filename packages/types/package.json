@@ -1,24 +1,26 @@
 {
   "name": "@repo/types",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
   "exports": {
-    "./*": "./src/*.ts"
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
   },
   "scripts": {
-    "lint": "eslint .",
-    "check-types": "tsc --noEmit",
-    "build": "tsc"
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@mantine/form": "^9.4.2",
+    "@tabler/icons-react": "^3.44.0",
     "@repo/db": "workspace:*",
-    "@mantine/form": "^8.3.6",
-    "@tabler/icons-react": "^3.35.0",
-    "react": "^19.2.0"
+    "@supabase/supabase-js": "^2.89.0"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
-    "typescript": "5.9.2",
-    "@types/react": "^19"
+    "@repo/config": "workspace:*",
+    "typescript": "^5.6.2"
   }
 }

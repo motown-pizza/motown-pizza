@@ -1,4 +1,4 @@
-import { Prisma, CartItem } from '@repo/db/generated/prisma/client.js';
+import { Prisma, CartItem } from '@repo/db';
 
 // Type for creating a item (without id and relations)
 export type CartItemCreate = Prisma.CartItemCreateInput;
@@ -12,6 +12,6 @@ export type CartItemGet = CartItem;
 // Type for fetched item with relations
 export type CartItemRelations = Prisma.CartItemGetPayload<{
   include: {
-    product_variant: true;
+    productVariant: true;
   };
 }>;

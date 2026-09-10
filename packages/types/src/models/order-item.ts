@@ -1,4 +1,4 @@
-import { Prisma, OrderItem } from '@repo/db/generated/prisma/client.js';
+import { Prisma, OrderItem } from '@repo/db';
 
 // Type for creating a item (without id and relations)
 export type OrderItemCreate = Prisma.OrderItemCreateInput;

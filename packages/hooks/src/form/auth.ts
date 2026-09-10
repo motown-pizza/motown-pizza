@@ -1,25 +1,15 @@
 'use client';
 
-/**
- * @template-source next-template
- * @template-sync auto
- * @description This file originates from the base template repository.
- * Do not modify unless you intend to backport changes to the template.
- */
-
-import { validators } from '@repo/utilities/validation';
-import { signIn } from '@repo/handlers/requests/auth';
-import { AuthAction } from '@repo/types/enums';
-import { getUrlParam } from '@repo/utilities/url';
-import { AUTH_URLS } from '@repo/constants/paths';
-import { COOKIE_NAME, PARAM_NAME } from '@repo/constants/names';
+import { validators } from '@repo/utils';
+import { signIn } from '@repo/handlers';
+import { AuthAction } from '@repo/types';
+import { getUrlParam } from '@repo/utils';
+import { AUTH_URLS } from '@repo/constants';
+import { COOKIE_NAME, PARAM_NAME } from '@repo/constants';
 import { useFormBase } from '../form';
 import { useEffect, useState } from 'react';
-import {
-  getCookieClient,
-  setCookieClient,
-} from '@repo/utilities/cookie-client';
-import { WEEK } from '@repo/constants/sizes';
+import { getCookieClient, setCookieClient } from '@repo/utils';
+import { WEEK } from '@repo/constants';
 
 type FormValuesAuth = {
   email: string;
@@ -27,10 +17,7 @@ type FormValuesAuth = {
   otp?: string;
 };
 
-export const useFormAuth = (params: {
-  action: AuthAction;
-  baseUrl: string;
-}) => {
+export const useFormAuth = (params: { action: AuthAction; baseUrl: string }) => {
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [error, setError] = useState<string | undefined>(undefined);
   const [resent, setResent] = useState(false);
@@ -66,7 +53,7 @@ export const useFormAuth = (params: {
           if (options?.resent) setResent(false);
         }
       },
-    }
+    },
   );
 
   useEffect(() => {

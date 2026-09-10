@@ -1,23 +1,23 @@
+'use client';
+
 import { hasLength } from '@mantine/form';
-import { useIngredientActions } from '@repo/hooks/actions/ingredient';
+import { useIngredientActions } from '@repo/store';
 import { useFormBase } from '../form';
-import { IngredientGet } from '@repo/types/models/ingredient';
-import { Status } from '@repo/types/models/enums';
+import { IngredientGet } from '@repo/types';
+import { Status } from '@repo/types';
 import { useRouter } from 'next/navigation';
 
-export const useFormIngredient = (params?: {
-  defaultValues?: Partial<IngredientGet>;
-}) => {
+export const useFormIngredient = (params?: { defaultValues?: Partial<IngredientGet> }) => {
   const { ingredientCreate, ingredientUpdate } = useIngredientActions();
   const router = useRouter();
 
   const { form, submitted, handleSubmit } = useFormBase<Partial<IngredientGet>>(
     {
       name: params?.defaultValues?.name || '',
-      stock_quantity: params?.defaultValues?.stock_quantity || 0,
-      low_stock_margin: params?.defaultValues?.low_stock_margin || 0,
-      stockout_margin: params?.defaultValues?.stockout_margin || 0,
-      stock_capacity: params?.defaultValues?.stock_capacity || 0,
+      stockQuantity: params?.defaultValues?.stockQuantity || 0,
+      lowStockMargin: params?.defaultValues?.lowStockMargin || 0,
+      stockoutMargin: params?.defaultValues?.stockoutMargin || 0,
+      stockCapacity: params?.defaultValues?.stockCapacity || 0,
       unit: (params?.defaultValues?.unit || '') as any,
       status: params?.defaultValues?.status || Status.DRAFT,
     },
@@ -35,7 +35,7 @@ export const useFormIngredient = (params?: {
           ...rawValues,
         };
 
-        if (!params?.defaultValues?.updated_at) {
+        if (!params?.defaultValues?.updatedAt) {
           ingredientCreate({
             ...submitObject,
           });
@@ -49,7 +49,7 @@ export const useFormIngredient = (params?: {
         form.reset();
         router.push(`/dashboard/ingredients/stock`);
       },
-    }
+    },
   );
 
   return {

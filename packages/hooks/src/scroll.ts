@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useMemo, useState } from 'react';
 import { useScrollArea } from './contexts/scroll';
 import { CSSProperties } from 'react';

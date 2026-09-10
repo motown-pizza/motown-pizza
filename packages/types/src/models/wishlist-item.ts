@@ -1,4 +1,4 @@
-import { Prisma, WishlistItem } from '@repo/db/generated/prisma/client.js';
+import { Prisma, WishlistItem } from '@repo/db';
 
 // Type for creating a item (without id and relations)
 export type WishlistItemCreate = Prisma.WishlistItemCreateInput;
@@ -12,6 +12,6 @@ export type WishlistItemGet = WishlistItem;
 // Type for fetched item with relations
 export type WishlistItemRelations = Prisma.WishlistItemGetPayload<{
   include: {
-    product_variant: true;
+    productVariant: true;
   };
 }>;

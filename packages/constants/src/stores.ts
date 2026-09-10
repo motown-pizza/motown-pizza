@@ -1,4 +1,4 @@
-import { Status, SyncStatus } from '@repo/types/models/enums';
+import { Status, SyncStatus } from '@repo/types';
 
 export type StoreGet = {
   id: string;
@@ -8,9 +8,9 @@ export type StoreGet = {
   location: string;
   phone: string;
   status: Status;
-  sync_status: SyncStatus;
-  created_at: Date;
-  updated_at: Date;
+  syncStatus: SyncStatus;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 const now = new Date();
@@ -24,9 +24,9 @@ export const stores: StoreGet[] = [
   //   location: '73 Westlands Road',
   //   phone: '0707 000 014',
   //   status: Status.ACTIVE,
-  //   sync_status: SyncStatus.SYNCED,
-  //   created_at: now,
-  //   updated_at: now,
+  //   syncStatus: SyncStatus.SYNCED,
+  //   createdAt: now,
+  //   updatedAt: now,
   // },
   {
     id: '2',
@@ -37,9 +37,9 @@ export const stores: StoreGet[] = [
     location: "G's Arcade, Kieni Road, Kileleshwa",
     phone: '+254 707 000-015',
     status: Status.ACTIVE,
-    sync_status: SyncStatus.SYNCED,
-    created_at: now,
-    updated_at: now,
+    syncStatus: SyncStatus.SYNCED,
+    createdAt: now,
+    updatedAt: now,
   },
   {
     id: '3',
@@ -50,8 +50,8 @@ export const stores: StoreGet[] = [
     location: "G's Arcade, Kieni Road, Kileleshwa",
     phone: '+254 707 000-016',
     status: Status.ACTIVE,
-    sync_status: SyncStatus.SYNCED,
-    created_at: now,
-    updated_at: now,
+    syncStatus: SyncStatus.SYNCED,
+    createdAt: now,
+    updatedAt: now,
   },
 ];

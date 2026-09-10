@@ -1,143 +1,48 @@
-/**
- * @template-source next-template
- * @template-sync auto
- * @description This file originates from the base template repository.
- * Do not modify unless you intend to backport changes to the template.
- */
+import { StockMovementCreate, StockMovementGet, StockMovementUpdate } from '@repo/types';
+import { apiCall } from './fetch';
 
-import { API_URL } from '@repo/constants/paths';
-import { HEADERS } from '@repo/constants/other';
-import {
-  StockMovementCreate,
-  StockMovementGet,
-  StockMovementUpdate,
-} from '@repo/types/models/stock-movement';
+const segment = 'stock-movements';
 
-const baseRequestUrl = `${API_URL}/stock-movements`;
-
-export const stockMovementsGet = async () => {
-  try {
-    const request = new Request(baseRequestUrl, {
-      method: 'GET',
-      headers: HEADERS.WITHOUT_BODY,
-    });
-
-    const response = await fetch(request);
-
-    const result = await response.json();
-
-    return result;
-  } catch (error) {
-    console.error('---> handler error - (get stock movements):', error);
-    throw error;
-  }
+export const stockMovementsGet = (params: { apiUrl: string; userId?: string }) => {
+  const query = params?.userId ? `?userId=${params.userId}` : '';
+  return apiCall(segment + query, 'GET', params.apiUrl);
 };
 
 let currentController: AbortController | null = null;
 
 export const stockMovementsUpdate = async (
+  apiUrl: string,
   stockMovements: StockMovementGet[],
-  deletedIds?: string[]
+  deletedIds?: string[],
 ) => {
-  // Cancel previous request if still in-flight
   if (currentController) currentController.abort();
-
-  // New controller for this request
   currentController = new AbortController();
 
   try {
-    const request = new Request(baseRequestUrl, {
-      method: 'PUT',
-      headers: HEADERS.WITH_BODY,
-      body: JSON.stringify({ stockMovements, deletedIds }),
-    });
-
-    const response = await fetch(request);
-
-    if (!response.ok) {
-      throw new Error(`${response.status}: ${response.statusText}`);
-    }
-
-    const result = await response.json();
-
-    return result;
-  } catch (error) {
-    console.error('---> handler error - (update stock movements):', error);
-    throw error;
+    return await apiCall(
+      segment + '',
+      'PUT',
+      apiUrl,
+      { stockMovements, deletedIds },
+      currentController.signal,
+    );
   } finally {
-    // Clear controller once done (important for GC)
     currentController = null;
   }
 };
 
-export const stockMovementGet = async (params: { stockMovementId: string }) => {
-  try {
-    const request = new Request(`${baseRequestUrl}/${params.stockMovementId}`, {
-      method: 'GET',
-      headers: HEADERS.WITHOUT_BODY,
-    });
-
-    const response = await fetch(request);
-
-    const result = await response.json();
-
-    return result;
-  } catch (error) {
-    console.error('---> handler error - (get stock movement):', error);
-    throw error;
-  }
+export const stockMovementGet = (params: { apiUrl: string; stockMovementId: string }) => {
+  return apiCall(segment + `/${params.stockMovementId}`, 'GET', params.apiUrl);
 };
 
-export const stockMovementCreate = async (
-  stockMovement: StockMovementCreate
-) => {
-  try {
-    const request = new Request(`${baseRequestUrl}/create`, {
-      method: 'POST',
-      headers: HEADERS.WITH_BODY,
-      body: JSON.stringify(stockMovement),
-    });
-
-    const response = await fetch(request);
-
-    return response;
-  } catch (error) {
-    console.error('---> handler error - (create stock movement):', error);
-    throw error;
-  }
+export const stockMovementCreate = (apiUrl: string, stockMovement: StockMovementCreate) => {
+  return apiCall(segment + '/create', 'POST', apiUrl, stockMovement);
 };
 
-export const stockMovementUpdate = async (
-  stockMovement: StockMovementUpdate
-) => {
-  try {
-    const request = new Request(`${baseRequestUrl}/${stockMovement.id}`, {
-      method: 'PUT',
-      headers: HEADERS.WITH_BODY,
-      body: JSON.stringify(stockMovement),
-    });
-
-    const response = await fetch(request);
-
-    return response;
-  } catch (error) {
-    console.error('---> handler error - (update stock movement):', error);
-    throw error;
-  }
+export const stockMovementUpdate = (apiUrl: string, stockMovement: StockMovementUpdate) => {
+  return apiCall(segment + `/${stockMovement.id}`, 'PUT', apiUrl, stockMovement);
 };
 
-export const stockMovementDelete = async (stockMovementId: string) => {
-  try {
-    const request = new Request(`${baseRequestUrl}/${stockMovementId}`, {
-      method: 'DELETE',
-      headers: HEADERS.WITHOUT_BODY,
-    });
-
-    const response = await fetch(request);
-
-    return response;
-  } catch (error) {
-    console.error('---> handler error - (delete stock movement):', error);
-    throw error;
-  }
+export const stockMovementDelete = (apiUrl: string, stockMovementId: string) => {
+  return apiCall(segment + `/${stockMovementId}`, 'DELETE', apiUrl);
 };

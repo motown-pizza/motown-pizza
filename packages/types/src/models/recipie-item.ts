@@ -1,4 +1,4 @@
-import { Prisma, RecipieItem } from '@repo/db/generated/prisma/client.js';
+import { Prisma, RecipieItem } from '@repo/db';
 
 // Type for creating a item (without id and relations)
 export type RecipieItemCreate = Prisma.RecipieItemCreateInput;

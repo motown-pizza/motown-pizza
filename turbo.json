@@ -1,13 +1,12 @@
 {
-  "$schema": "https://turborepo.com/schema.json",
-  "ui": "tui",
+  "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "generate": {
-      "cache": false
+      "cache": true,
+      "env": ["DATABASE_URL", "DIRECT_URL"]
     },
     "build": {
       "dependsOn": ["^build", "@repo/db#generate"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "env": [
         "TURBO_TELEMETRY_DISABLED=1",
 
@@ -16,64 +15,52 @@
         "DATABASE_URL",
         "DIRECT_URL",
 
-        "NEXT_PUBLIC_HOST_SERVER_DEV",
-        "NEXT_PUBLIC_HOST_SERVER_PROD",
-        "NEXT_PUBLIC_HOST_CLIENT_ADMIN_DEV",
-        "NEXT_PUBLIC_HOST_CLIENT_ADMIN_PROD",
-        "NEXT_PUBLIC_HOST_CLIENT_POS_DEV",
-        "NEXT_PUBLIC_HOST_CLIENT_POS_PROD",
-        "NEXT_PUBLIC_HOST_CLIENT_KDS_DEV",
-        "NEXT_PUBLIC_HOST_CLIENT_KDS_PROD",
-        "NEXT_PUBLIC_HOST_CLIENT_WEB_DEV",
-        "NEXT_PUBLIC_HOST_CLIENT_WEB_PROD",
+        "NEXT_PUBLIC_HOST_API_DEV",
+        "NEXT_PUBLIC_HOST_ADMIN_DEV",
+        "NEXT_PUBLIC_HOST_WEB_DEV",
+        "NEXT_PUBLIC_HOST_POS_DEV",
+        "NEXT_PUBLIC_HOST_KDS_DEV",
 
-        "NEXT_PUBLIC_USE_REMOTE_SERVER",
+        "NEXT_PUBLIC_HOST_API_PROD",
+        "NEXT_PUBLIC_HOST_ADMIN_PROD",
+        "NEXT_PUBLIC_HOST_WEB_PROD",
+        "NEXT_PUBLIC_HOST_POS_PROD",
+        "NEXT_PUBLIC_HOST_KDS_PROD",
 
         "NEXT_PUBLIC_EMAIL_DEV",
         "NEXT_PUBLIC_EMAIL_DELIVERY",
-        "NEXT_PUBLIC_EMAIL_INFO",
         "NEXT_PUBLIC_EMAIL_NOREPLY",
+        "NEXT_PUBLIC_EMAIL_INFO",
         "NEXT_PUBLIC_EMAIL_SUPPORT",
         "NEXT_PUBLIC_EMAIL_NEWSLETTER",
 
         "NEXT_PUBLIC_SUPABASE_URL",
         "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY",
 
-        "NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY",
-        "NEXT_IMAGEKIT_PRIVATE_KEY",
-        "NEXT_PUBLIC_IMAGEKIT_URL",
-
         "NEXT_RESEND_AUDIENCE_ID_GENERAL",
         "NEXT_RESEND_KEY_GENERAL",
+        "NEXT_RESEND_KEY_AUTH",
+        "NEXT_RESEND_EMAIL",
 
-        "NEXT_PUBLIC_REST_COUNTRIES_API_URL"
+        "NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY",
+        "NEXT_PUBLIC_IMAGEKIT_URL",
+        "NEXT_IMAGEKIT_PRIVATE_KEY",
+
+        "NEXT_PUBLIC_VERCEL_ENV",
+        "NEXT_PUBLIC_VERCEL_URL",
+        "NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF"
       ],
-      "outputs": [
-        "src/generated/prisma/**",
-        "dist/**",
-        ".next/**",
-        "!.next/cache/**"
-      ]
+      "outputs": ["dist/**", ".next/**"]
     },
-
-    "client-admin#build": {
-      "dependsOn": ["server#build"]
-    },
-    "client-pos#build": {
-      "dependsOn": ["server#build"]
-    },
-    "client-web#build": {
-      "dependsOn": ["server#build"]
+    "dev": {
+      "cache": false,
+      "persistent": true
     },
     "lint": {
       "dependsOn": ["^lint"]
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
+      "dependsOn": ["^check-types", "@repo/db#generate"]
     }
   }
 }
