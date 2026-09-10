@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: 'Authentication Error' };
 export default function Error() {
   return (
     <div>
-      <PartialNotifyError props={{ baseUrl: BASE_URL.ADMIN }} />
+      <PartialNotifyError props={{ baseUrl: BASE_URL.POS }} />
     </div>
   );
 }

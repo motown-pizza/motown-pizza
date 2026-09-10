@@ -17,7 +17,7 @@ export default function SignIn() {
           title: 'Welcome Back!',
           desc: 'Sign in to access your personalized experience.',
         }}
-        baseUrl={BASE_URL.ADMIN}
+        baseUrl={BASE_URL.POS}
       />
     </div>
   );
