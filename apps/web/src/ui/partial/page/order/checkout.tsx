@@ -14,7 +14,7 @@ import {
   NumberFormatter,
   Radio,
   RadioGroup,
-  ScrollArea,
+  ScrollAreaAutosize,
   Stack,
   Text,
   Title,
@@ -109,7 +109,7 @@ export default function Checkout() {
             </Title>
           </CardSection>
 
-          <ScrollArea scrollbars={'y'} h={400}>
+          <ScrollAreaAutosize scrollbars={'y'} mah={1080}>
             {cartItems === undefined ? (
               <Center py={SECTION_SPACING * 2}>
                 <Loader />
@@ -133,7 +133,7 @@ export default function Checkout() {
                 </Stack>
               ))
             )}
-          </ScrollArea>
+          </ScrollAreaAutosize>
         </Card>
 
         <Card bg={'var(--mantine-color-dark-8)'}>
