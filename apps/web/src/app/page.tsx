@@ -4,6 +4,8 @@ import { LayoutSection } from '@repo/ui';
 import {
   BackgroundImage,
   Box,
+  Card,
+  Center,
   Divider,
   Grid,
   GridCol,
@@ -27,25 +29,195 @@ import { APP_NAME } from '@repo/constants';
 export default function Home() {
   return (
     <HomeLayout>
-      <LayoutSection
-        id="home-page-intro"
-        pt={SECTION_SPACING}
-        mb={SECTION_SPACING * 2}
-        containerized={'sm'}
-      >
-        <Stack gap={'xl'} px={SECTION_SPACING}>
-          <Group justify="center">
+      <LayoutSection id="home-page-intro" margined={SECTION_SPACING} containerized={'xl'}>
+        <Grid gap={0} pos={'relative'}>
+          <GridCol span={{ base: 12, md: 2 }} visibleFrom="md">
+            <Box pos={'sticky'} top={SECTION_SPACING * 1.5}>
+              <ImageCard>
+                <AnchorNextLink
+                  href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
+                  underline="never"
+                >
+                  <ImageDefault
+                    src={images.theme.vibes}
+                    alt="Double Offer"
+                    height={{ base: 290 }}
+                    width={'100%'}
+                    // fit="contain"
+                  />
+                </AnchorNextLink>
+              </ImageCard>
+            </Box>
+          </GridCol>
+
+          <GridCol span={{ md: 0.5 }} visibleFrom="md">
+            <Center py={'xl'} h={'100%'}>
+              <Divider orientation="vertical" color="sec" h={'100%'} />
+            </Center>
+          </GridCol>
+
+          <GridCol span={{ base: 12, md: 7 }}>
             <ImageDefault
-              src={images.brand.logo.landscape.meta}
+              src={images.theme.menu.tuesday}
               alt={APP_NAME.WEB}
-              height={90}
-              width={100}
+              height={{ base: 140, xs: 240, sm: 320, md: 240, lg: 320 }}
+              width={'100%'}
               fit="contain"
               mode="grid"
-              style={{ transform: 'scale(1.3)' }}
             />
-          </Group>
 
+            <Box px={'xl'}>
+              <Divider color="pri" mt={'md'} mb={'md'} />
+            </Box>
+
+            <ImageDefault
+              src={images.theme.menu.thursday}
+              alt={APP_NAME.WEB}
+              height={{ base: 100, xs: 160, sm: 200, md: 160, lg: 200 }}
+              width={'100%'}
+              fit="contain"
+              mode="grid"
+            />
+
+            <Box px={'xl'}>
+              <Divider color="ter" mt={'md'} mb={'lg'} />
+            </Box>
+
+            <ImageDefault
+              src={images.theme.menu.sunday}
+              alt={APP_NAME.WEB}
+              height={{ base: 90, xs: 140, sm: 190, md: 140, lg: 190 }}
+              width={'100%'}
+              fit="contain"
+              mode="grid"
+            />
+
+            <Box px={'xl'}>
+              <Divider color="sec" mt={'md'} mb={'xl'} />
+            </Box>
+
+            <Grid>
+              <GridCol span={{ base: 12, md: 6 }}>
+                <Grid>
+                  <GridCol span={{ base: 12, xs: 6, md: 12 }}>
+                    <ImageCard>
+                      <ImageDefault
+                        src={images.theme.menu.beefPizza}
+                        alt="Double Offer"
+                        height={{ base: 300, xs: 240, sm: 280, md: 240, lg: 280 }}
+                        width={'100%'}
+                        // fit="contain"
+                      />
+                    </ImageCard>
+                  </GridCol>
+
+                  <GridCol span={{ base: 12 }} visibleFrom="md">
+                    <Box px={'xl'}>
+                      <Divider color="pri" mt={'xl'} mb={'xl'} />
+                    </Box>
+                  </GridCol>
+
+                  <GridCol span={{ base: 12, xs: 6, md: 12 }}>
+                    <ImageCard>
+                      <ImageDefault
+                        src={images.theme.menu.veggiePizza}
+                        alt="Double Offer"
+                        height={{ base: 250, xs: 200, sm: 260, md: 200, lg: 245 }}
+                        width={'100%'}
+                        // fit="contain"
+                      />
+                    </ImageCard>
+                  </GridCol>
+                </Grid>
+              </GridCol>
+
+              <GridCol span={{ base: 12, md: 6 }}>
+                <Grid>
+                  <GridCol span={{ base: 12, xs: 6, md: 12 }}>
+                    <ImageCard>
+                      <ImageDefault
+                        src={images.theme.menu.chickenPizza}
+                        alt="Double Offer"
+                        height={{ base: 220, xs: 180, sm: 240, md: 180, lg: 225 }}
+                        width={'100%'}
+                        // fit="contain"
+                      />
+                    </ImageCard>
+                  </GridCol>
+
+                  <GridCol span={{ base: 12 }} visibleFrom="md">
+                    <Box px={'xl'}>
+                      <Divider color="ter" mt={'xl'} mb={'xl'} />
+                    </Box>
+                  </GridCol>
+
+                  <GridCol span={{ base: 12, xs: 6, md: 12 }}>
+                    <ImageCard>
+                      <ImageDefault
+                        src={images.theme.menu.addons}
+                        alt="Double Offer"
+                        height={{ base: 260, xs: 210, sm: 280, md: 210, lg: 265 }}
+                        width={'100%'}
+                        // fit="contain"
+                      />
+                    </ImageCard>
+                  </GridCol>
+                </Grid>
+              </GridCol>
+
+              <GridCol span={{ base: 12 }}>
+                <Box px={'xl'}>
+                  <Divider color="ter" my={'xs'} />
+                </Box>
+              </GridCol>
+
+              <GridCol span={{ base: 12 }}>
+                <Grid>
+                  <GridCol span={{ base: 12, xs: 8, sm: 6, md: 8 }}>
+                    <ImageCard>
+                      <ImageDefault
+                        src={images.theme.menu.prices}
+                        alt="Double Offer"
+                        height={{ base: 100, lg: 140 }}
+                        width={'100%'}
+                        fit="contain"
+                      />
+                    </ImageCard>
+                  </GridCol>
+                </Grid>
+              </GridCol>
+            </Grid>
+          </GridCol>
+
+          <GridCol span={{ md: 0.5 }} visibleFrom="md">
+            <Center py={'xl'} h={'100%'}>
+              <Divider orientation="vertical" color="sec" h={'100%'} />
+            </Center>
+          </GridCol>
+
+          <GridCol span={{ base: 12, md: 2 }} visibleFrom="md">
+            <Box pos={'sticky'} top={SECTION_SPACING * 1.5}>
+              <ImageCard>
+                <AnchorNextLink
+                  href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
+                  underline="never"
+                >
+                  <ImageDefault
+                    src={images.theme.deals}
+                    alt="Tuesday Special"
+                    height={{ base: 220 }}
+                    width={'100%'}
+                    // fit="contain"
+                  />
+                </AnchorNextLink>
+              </ImageCard>
+            </Box>
+          </GridCol>
+        </Grid>
+      </LayoutSection>
+
+      <LayoutSection id="home-page-intro" margined={SECTION_SPACING * 2} containerized={'sm'}>
+        <Stack gap={'xl'} px={{ sm: SECTION_SPACING }}>
           <Group grow preventGrowOverflow={false} gap={'xs'} px={SECTION_SPACING}>
             <Divider color="ter" />
 
@@ -56,80 +228,31 @@ export default function Home() {
             <Divider color="ter" />
           </Group>
 
+          <ImageDefault
+            src={images.theme.footer}
+            alt={APP_NAME.WEB}
+            height={33}
+            width={'100%'}
+            fit="contain"
+            mode="grid"
+          />
+
           <TabDeliveryType />
         </Stack>
       </LayoutSection>
 
-      <LayoutSection
-        id="home-page-intro"
-        mt={SECTION_SPACING * 2}
-        pb={SECTION_SPACING * 2}
-        containerized={'md'}
-      >
-        <Grid>
-          <GridCol span={{ base: 12, md: 9 }}>
-            <AnchorNextLink
-              href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-              underline="never"
-            >
-              <BackgroundImage
-                src={images.home.main}
-                style={{ position: 'relative' }}
-                h={'100%'}
-                c={'white'}
-              >
-                <Overlay backgroundOpacity={0.4} style={{ zIndex: 0 }} />
+      <Divider />
 
-                <Box style={{ position: 'relative', zIndex: 1 }}>
-                  <Stack align="center" gap={0} py={SECTION_SPACING}>
-                    <Title order={1} ta={'center'}>
-                      Motown Deal
-                    </Title>
-
-                    <Text fz={'md'} fw={500} ta={'center'}>
-                      Any large Pizza + 6 Pcs Wings + 1.25L Drink
-                    </Text>
-
-                    <Title order={1} ta={'center'}>
-                      1,800/-
-                    </Title>
-                  </Stack>
-                </Box>
-              </BackgroundImage>
-            </AnchorNextLink>
-          </GridCol>
-
-          <GridCol span={{ base: 12, md: 3 }}>
-            <Stack gap={'sm'} h={'100%'} justify="space-between">
-              <AnchorNextLink
-                href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-                underline="never"
-              >
-                <ImageDefault
-                  src={images.home.tuesday}
-                  alt="Tuesday Special"
-                  height={{ base: 260 }}
-                  width={'100%'}
-                  fit="contain"
-                />
-              </AnchorNextLink>
-
-              <AnchorNextLink
-                href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-                underline="never"
-              >
-                <ImageDefault
-                  src={images.home.double}
-                  alt="Double Offer"
-                  height={{ base: 260 }}
-                  width={'100%'}
-                  fit="contain"
-                />
-              </AnchorNextLink>
-            </Stack>
-          </GridCol>
-        </Grid>
-      </LayoutSection>
+      <Group justify="center">
+        <ImageDefault
+          src={images.theme.footer2}
+          alt={APP_NAME.WEB}
+          height={{ base: 60, xs: 90, sm: 120, md: 160, lg: 190, xl: 230 }}
+          width={'100%'}
+          // fit="contain"
+          mode="grid"
+        />
+      </Group>
     </HomeLayout>
   );
 }
@@ -145,5 +268,13 @@ async function HomeLayout({ children }: { children: React.ReactNode }) {
         </AffixNavbar>
       </div>
     </LayoutMain>
+  );
+}
+
+function ImageCard({ children }: { children: React.ReactNode }) {
+  return (
+    <Card padding={0} bg={'transparent'} withBorder style={{ borderStyle: 'dashed' }}>
+      {children}
+    </Card>
   );
 }
