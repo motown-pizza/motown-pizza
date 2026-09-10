@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button, Group, Stack, ThemeIcon } from '@mantine/core';
 import { useStoreOrder } from '@repo/store';
-import { StoreGet, stores } from '@repo/constants';
+import { stores } from '@repo/constants';
 import { getUrlParam } from '@repo/utils';
 import { PARAM_NAME } from '@repo/constants';
-import { OrderGet } from '@repo/types';
 import { CardOrderConfirmed } from '@repo/ui';
 import { LayoutSection } from '@repo/ui';
 import { LayoutIntroSection } from '@repo/ui';
@@ -16,28 +15,14 @@ import { IconCheck } from '@tabler/icons-react';
 export default function Orders() {
   const { orders } = useStoreOrder();
 
-  const [order, setOrder] = useState<OrderGet | null>(null);
-  const [store, setStore] = useState<StoreGet | null>(null);
+  // 1. Derive the order ID from the URL
+  const orderID = getUrlParam(PARAM_NAME.ORDER_CONFIRMED);
 
-  useEffect(() => {
-    if (orders === undefined) return;
-    if (!orders) return;
+  // 2. Derive the order and store items directly during render
+  const orderItem = orders && orderID ? orders.find((o) => o.id == orderID) : undefined;
+  const storeItem = orderItem ? stores.find((s) => s.id == orderItem.storeId) : undefined;
 
-    const handleSetOrder = () => {
-      const orderID = getUrlParam(PARAM_NAME.ORDER_CONFIRMED);
-      const orderItem = orders?.find((o) => o.id == orderID);
-
-      if (orderItem) {
-        setOrder(orderItem);
-
-        // const orderItem = (orders || [])[0];
-        const storeItem = stores.find((s) => s.id == orderItem?.storeId);
-        if (storeItem) setStore(storeItem);
-      }
-    };
-
-    handleSetOrder();
-  }, [orders]);
+  // You can now use `orderItem` and `storeItem` directly in your markup!
 
   return (
     <LayoutSection id={'order-confirmed'} containerized={'xs'} padded={'xl'}>
@@ -55,9 +40,12 @@ export default function Orders() {
           }}
         />
 
-        {order && (
+        {orderItem && (
           <>
-            <CardOrderConfirmed props={{ order, store }} bg={'var(--mantine-color-dark-9)'} />
+            <CardOrderConfirmed
+              props={{ order: orderItem, store: storeItem || null }}
+              bg={'var(--mantine-color-dark-9)'}
+            />
 
             <Group justify="center">
               <Button
