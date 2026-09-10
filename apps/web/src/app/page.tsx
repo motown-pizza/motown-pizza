@@ -33,11 +33,11 @@ export default function Home() {
         <Grid gap={0} pos={'relative'}>
           <GridCol span={{ base: 12, md: 2 }} visibleFrom="md">
             <Box pos={'sticky'} top={SECTION_SPACING * 1.5}>
-              <ImageCard>
-                <AnchorNextLink
-                  href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-                  underline="never"
-                >
+              <AnchorNextLink
+                href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
+                underline="never"
+              >
+                <ImageCard>
                   <ImageDefault
                     src={images.theme.vibes}
                     alt="Double Offer"
@@ -45,8 +45,8 @@ export default function Home() {
                     width={'100%'}
                     // fit="contain"
                   />
-                </AnchorNextLink>
-              </ImageCard>
+                </ImageCard>
+              </AnchorNextLink>
             </Box>
           </GridCol>
 
@@ -57,40 +57,55 @@ export default function Home() {
           </GridCol>
 
           <GridCol span={{ base: 12, md: 7 }}>
-            <ImageDefault
-              src={images.theme.menu.tuesday}
-              alt={APP_NAME.WEB}
-              height={{ base: 140, xs: 240, sm: 320, md: 240, lg: 320 }}
-              width={'100%'}
-              fit="contain"
-              mode="grid"
-            />
+            <AnchorNextLink
+              href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
+              underline="never"
+            >
+              <ImageDefault
+                src={images.theme.menu.tuesday}
+                alt={APP_NAME.WEB}
+                height={{ base: 140, xs: 240, sm: 320, md: 240, lg: 320 }}
+                width={'100%'}
+                fit="contain"
+                mode="grid"
+              />
+            </AnchorNextLink>
 
             <Box px={'xl'}>
               <Divider color="pri" mt={'md'} mb={'md'} />
             </Box>
 
-            <ImageDefault
-              src={images.theme.menu.thursday}
-              alt={APP_NAME.WEB}
-              height={{ base: 100, xs: 160, sm: 200, md: 160, lg: 200 }}
-              width={'100%'}
-              fit="contain"
-              mode="grid"
-            />
+            <AnchorNextLink
+              href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
+              underline="never"
+            >
+              <ImageDefault
+                src={images.theme.menu.thursday}
+                alt={APP_NAME.WEB}
+                height={{ base: 100, xs: 160, sm: 200, md: 160, lg: 200 }}
+                width={'100%'}
+                fit="contain"
+                mode="grid"
+              />
+            </AnchorNextLink>
 
             <Box px={'xl'}>
               <Divider color="ter" mt={'md'} mb={'lg'} />
             </Box>
 
-            <ImageDefault
-              src={images.theme.menu.sunday}
-              alt={APP_NAME.WEB}
-              height={{ base: 90, xs: 140, sm: 190, md: 140, lg: 190 }}
-              width={'100%'}
-              fit="contain"
-              mode="grid"
-            />
+            <AnchorNextLink
+              href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
+              underline="never"
+            >
+              <ImageDefault
+                src={images.theme.menu.sunday}
+                alt={APP_NAME.WEB}
+                height={{ base: 90, xs: 140, sm: 190, md: 140, lg: 190 }}
+                width={'100%'}
+                fit="contain"
+                mode="grid"
+              />
+            </AnchorNextLink>
 
             <Box px={'xl'}>
               <Divider color="sec" mt={'md'} mb={'xl'} />
@@ -100,15 +115,20 @@ export default function Home() {
               <GridCol span={{ base: 12, md: 6 }}>
                 <Grid>
                   <GridCol span={{ base: 12, xs: 6, md: 12 }}>
-                    <ImageCard>
-                      <ImageDefault
-                        src={images.theme.menu.beefPizza}
-                        alt="Double Offer"
-                        height={{ base: 300, xs: 240, sm: 280, md: 240, lg: 280 }}
-                        width={'100%'}
-                        // fit="contain"
-                      />
-                    </ImageCard>
+                    <AnchorNextLink
+                      href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
+                      underline="never"
+                    >
+                      <ImageCard>
+                        <ImageDefault
+                          src={images.theme.menu.beefPizza}
+                          alt="Double Offer"
+                          height={{ base: 300, xs: 240, sm: 280, md: 240, lg: 280 }}
+                          width={'100%'}
+                          // fit="contain"
+                        />
+                      </ImageCard>
+                    </AnchorNextLink>
                   </GridCol>
 
                   <GridCol span={{ base: 12 }} visibleFrom="md">
@@ -118,15 +138,20 @@ export default function Home() {
                   </GridCol>
 
                   <GridCol span={{ base: 12, xs: 6, md: 12 }}>
-                    <ImageCard>
-                      <ImageDefault
-                        src={images.theme.menu.veggiePizza}
-                        alt="Double Offer"
-                        height={{ base: 250, xs: 200, sm: 260, md: 200, lg: 245 }}
-                        width={'100%'}
-                        // fit="contain"
-                      />
-                    </ImageCard>
+                    <AnchorNextLink
+                      href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
+                      underline="never"
+                    >
+                      <ImageCard>
+                        <ImageDefault
+                          src={images.theme.menu.veggiePizza}
+                          alt="Double Offer"
+                          height={{ base: 250, xs: 200, sm: 260, md: 200, lg: 245 }}
+                          width={'100%'}
+                          // fit="contain"
+                        />
+                      </ImageCard>
+                    </AnchorNextLink>
                   </GridCol>
                 </Grid>
               </GridCol>
@@ -134,15 +159,20 @@ export default function Home() {
               <GridCol span={{ base: 12, md: 6 }}>
                 <Grid>
                   <GridCol span={{ base: 12, xs: 6, md: 12 }}>
-                    <ImageCard>
-                      <ImageDefault
-                        src={images.theme.menu.chickenPizza}
-                        alt="Double Offer"
-                        height={{ base: 220, xs: 180, sm: 240, md: 180, lg: 225 }}
-                        width={'100%'}
-                        // fit="contain"
-                      />
-                    </ImageCard>
+                    <AnchorNextLink
+                      href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
+                      underline="never"
+                    >
+                      <ImageCard>
+                        <ImageDefault
+                          src={images.theme.menu.chickenPizza}
+                          alt="Double Offer"
+                          height={{ base: 220, xs: 180, sm: 240, md: 180, lg: 225 }}
+                          width={'100%'}
+                          // fit="contain"
+                        />
+                      </ImageCard>
+                    </AnchorNextLink>
                   </GridCol>
 
                   <GridCol span={{ base: 12 }} visibleFrom="md">
@@ -152,15 +182,20 @@ export default function Home() {
                   </GridCol>
 
                   <GridCol span={{ base: 12, xs: 6, md: 12 }}>
-                    <ImageCard>
-                      <ImageDefault
-                        src={images.theme.menu.addons}
-                        alt="Double Offer"
-                        height={{ base: 260, xs: 210, sm: 280, md: 210, lg: 265 }}
-                        width={'100%'}
-                        // fit="contain"
-                      />
-                    </ImageCard>
+                    <AnchorNextLink
+                      href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
+                      underline="never"
+                    >
+                      <ImageCard>
+                        <ImageDefault
+                          src={images.theme.menu.addons}
+                          alt="Double Offer"
+                          height={{ base: 260, xs: 210, sm: 280, md: 210, lg: 265 }}
+                          width={'100%'}
+                          // fit="contain"
+                        />
+                      </ImageCard>
+                    </AnchorNextLink>
                   </GridCol>
                 </Grid>
               </GridCol>
@@ -174,15 +209,20 @@ export default function Home() {
               <GridCol span={{ base: 12 }}>
                 <Grid>
                   <GridCol span={{ base: 12, xs: 8, sm: 6, md: 8 }}>
-                    <ImageCard>
-                      <ImageDefault
-                        src={images.theme.menu.prices}
-                        alt="Double Offer"
-                        height={{ base: 100, lg: 140 }}
-                        width={'100%'}
-                        fit="contain"
-                      />
-                    </ImageCard>
+                    <AnchorNextLink
+                      href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
+                      underline="never"
+                    >
+                      <ImageCard>
+                        <ImageDefault
+                          src={images.theme.menu.prices}
+                          alt="Double Offer"
+                          height={{ base: 100, lg: 140 }}
+                          width={'100%'}
+                          fit="contain"
+                        />
+                      </ImageCard>
+                    </AnchorNextLink>
                   </GridCol>
                 </Grid>
               </GridCol>
@@ -197,11 +237,11 @@ export default function Home() {
 
           <GridCol span={{ base: 12, md: 2 }} visibleFrom="md">
             <Box pos={'sticky'} top={SECTION_SPACING * 1.5}>
-              <ImageCard>
-                <AnchorNextLink
-                  href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-                  underline="never"
-                >
+              <AnchorNextLink
+                href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
+                underline="never"
+              >
+                <ImageCard>
                   <ImageDefault
                     src={images.theme.deals}
                     alt="Tuesday Special"
@@ -209,8 +249,8 @@ export default function Home() {
                     width={'100%'}
                     // fit="contain"
                   />
-                </AnchorNextLink>
-              </ImageCard>
+                </ImageCard>
+              </AnchorNextLink>
             </Box>
           </GridCol>
         </Grid>
