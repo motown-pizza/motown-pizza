@@ -30,13 +30,13 @@ export function LayoutModal({
 
   switch (variant) {
     case Alert.INFO:
-      options = { icon: IconInfoCircle, color: 'blue.6' };
+      options = { icon: IconInfoCircle, color: 'blue' };
       break;
     case Alert.WARNING:
-      options = { icon: IconAlertTriangle, color: 'yellow.6' };
+      options = { icon: IconAlertTriangle, color: 'yellow' };
       break;
     case Alert.DANGER:
-      options = { icon: IconAlertCircle, color: 'red.6' };
+      options = { icon: IconAlertCircle, color: 'red' };
       break;
     default:
       break;

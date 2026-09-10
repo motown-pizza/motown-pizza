@@ -55,14 +55,14 @@ export default function Cart({
 
         <GridCol span={options?.checkout ? 10.5 : 9} pl={'xs'}>
           <Group justify="space-between">
-            <Title order={3} fz={'md'} fw={500} c={'blue.6'} lineClamp={1}>
+            <Title order={3} fz={'md'} fw={500} c={'blue'} lineClamp={1}>
               {product?.title}
             </Title>
 
             <Tooltip label={`Remove item (${product?.title}) from cart`} multiline w={240}>
               <ActionIcon
                 size={ICON_WRAPPER_SIZE}
-                color="pri.6"
+                color="pri"
                 onClick={() => {
                   cartItemDelete(props);
                   showNotification({

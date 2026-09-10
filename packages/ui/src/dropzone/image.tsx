@@ -140,7 +140,7 @@ export function DropzoneImage({
                 onClick={() => openRef.current?.()}
                 style={{ pointerEvents: 'all' }}
                 variant="light"
-                color="blue.6"
+                color="blue"
               >
                 Upload{status == 'accept' ? ' New' : ''}
               </Button>

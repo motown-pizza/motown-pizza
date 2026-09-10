@@ -80,7 +80,7 @@ export default function Cart({ children }: { children: React.ReactNode }) {
               <Stack gap={'xs'} p={'xs'}>
                 <div>
                   <Group justify="space-between" align="start">
-                    <Title order={4} fz={'md'} c={'blue.6'}>
+                    <Title order={4} fz={'md'} c={'blue'}>
                       Subtotal:
                     </Title>
 

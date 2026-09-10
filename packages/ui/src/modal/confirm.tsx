@@ -55,7 +55,7 @@ export function ModalConfirm({
 
           <Group justify="end" mt={'md'}>
             <Button
-              color="red.6"
+              color="red"
               variant="outline"
               onClick={() => {
                 if (props?.onCancel) props.onCancel();

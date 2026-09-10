@@ -72,7 +72,7 @@ export function IndicatorNetworkStatus({
               <ThemeIcon
                 size={ICON_WRAPPER_SIZE}
                 variant="light"
-                color={!networkStatus.online ? 'yellow.6' : 'green.6'}
+                color={!networkStatus.online ? 'yellow' : 'green'}
               >
                 {!networkStatus.online ? (
                   <IconWifiOff size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />

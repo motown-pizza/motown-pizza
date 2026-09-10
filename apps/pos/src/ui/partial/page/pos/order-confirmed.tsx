@@ -43,7 +43,7 @@ export default function Orders() {
     <LayoutSection id={'order-confirmed'} containerized={'xs'} padded={'xl'}>
       <Stack>
         <Group justify="center">
-          <ThemeIcon size={ICON_WRAPPER_SIZE * 2} color="ter.6" radius={999}>
+          <ThemeIcon size={ICON_WRAPPER_SIZE * 2} color="ter" radius={999}>
             <IconCheck size={ICON_SIZE * 2} stroke={ICON_STROKE_WIDTH} />
           </ThemeIcon>
         </Group>

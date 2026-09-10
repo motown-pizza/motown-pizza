@@ -31,7 +31,7 @@ export function LayoutIntroPage({ props, options }: PageHeaderProps) {
 
   const pathContent =
     typeof props.path === 'string' ? (
-      <Text fw="bold" ta="center" c="pri.6" tt="uppercase" fz="sm">
+      <Text fw="bold" ta="center" c="pri" tt="uppercase" fz="sm">
         {props.path || fallbackLabel}
       </Text>
     ) : (

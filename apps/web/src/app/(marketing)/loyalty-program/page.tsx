@@ -86,7 +86,7 @@ export default function LoyaltyProgram() {
 
             <Text>
               Collect 12 points of the same size and you’ll receive:{' '}
-              <Text component="span" inherit fw={'bold'} c={'ter.6'}>
+              <Text component="span" inherit fw={'bold'} c={'ter'}>
                 1 FREE pizza of that same size
               </Text>
               .
@@ -94,7 +94,7 @@ export default function LoyaltyProgram() {
 
             <Text>
               Example:{' '}
-              <Text component="span" inherit fw={'bold'} c={'sec.6'}>
+              <Text component="span" inherit fw={'bold'} c={'sec'}>
                 12 Medium pizza points = 1 FREE Medium pizza
               </Text>
               .
@@ -171,7 +171,7 @@ export default function LoyaltyProgram() {
 
                 <Stack gap={'xs'}>
                   <Group>
-                    <ThemeIcon size={ICON_WRAPPER_SIZE - 4} color="sec.6" c={'pri.6'}>
+                    <ThemeIcon size={ICON_WRAPPER_SIZE - 4} color="sec" c={'pri'}>
                       <IconCheck size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
                     </ThemeIcon>
 
@@ -181,7 +181,7 @@ export default function LoyaltyProgram() {
                   </Group>
 
                   <Group>
-                    <ThemeIcon size={ICON_WRAPPER_SIZE - 4} color="sec.6" c={'pri.6'}>
+                    <ThemeIcon size={ICON_WRAPPER_SIZE - 4} color="sec" c={'pri'}>
                       <IconCheck size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
                     </ThemeIcon>
 
@@ -191,7 +191,7 @@ export default function LoyaltyProgram() {
                   </Group>
 
                   <Group>
-                    <ThemeIcon size={ICON_WRAPPER_SIZE - 4} color="sec.6" c={'pri.6'}>
+                    <ThemeIcon size={ICON_WRAPPER_SIZE - 4} color="sec" c={'pri'}>
                       <IconCheck size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
                     </ThemeIcon>
 

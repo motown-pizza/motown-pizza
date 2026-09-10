@@ -39,7 +39,7 @@ export function ButtonNotifications({ children }: { children?: React.ReactNode }
     <NotificationDrawer>
       <Indicator
         offset={2}
-        color="pri.6"
+        color="pri"
         size={18}
         label={3}
         // styles={{ indicator: { color: 'black' } }}
@@ -77,12 +77,7 @@ function NotificationDrawer({ children }: { children: React.ReactNode }) {
                 Notification Area
               </Title>
 
-              <ActionIcon
-                variant={'light'}
-                size={ICON_WRAPPER_SIZE}
-                color={'pri.6'}
-                onClick={close}
-              >
+              <ActionIcon variant={'light'} size={ICON_WRAPPER_SIZE} color={'pri'} onClick={close}>
                 <IconX size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
               </ActionIcon>
             </Group>
@@ -104,7 +99,7 @@ function NotificationTabs() {
     return (
       <Center py={SECTION_SPACING}>
         <Stack align="center" ta={'center'}>
-          <ThemeIcon variant={'light'} size={ICON_WRAPPER_SIZE * 2} color={'ter.6'} onClick={close}>
+          <ThemeIcon variant={'light'} size={ICON_WRAPPER_SIZE * 2} color={'ter'} onClick={close}>
             <IconBellCheck size={ICON_SIZE * 2} stroke={ICON_STROKE_WIDTH} />
           </ThemeIcon>
 

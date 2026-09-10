@@ -52,7 +52,7 @@ export default function Order() {
               <Text component={'span'} fz={'xs'}>
                 Deliver from store
               </Text>
-              <Text component={'span'} fz={'sm'} fw={500} c={'ter.6'}>
+              <Text component={'span'} fz={'sm'} fw={500} c={'ter'}>
                 Delivery
               </Text>
             </Stack>
@@ -66,7 +66,7 @@ export default function Order() {
               <Text component={'span'} fz={'xs'}>
                 Collect from store
               </Text>
-              <Text component={'span'} fz={'sm'} fw={500} c={'ter.6'}>
+              <Text component={'span'} fz={'sm'} fw={500} c={'ter'}>
                 Collection
               </Text>
             </Stack>

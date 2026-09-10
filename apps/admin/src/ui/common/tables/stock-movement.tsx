@@ -101,7 +101,7 @@ export default function StockMovements({
             <ThemeIcon
               size={ICON_WRAPPER_SIZE - 8}
               variant="transparent"
-              color={p.type == StockMovementType.PURCHASE ? 'green.6' : 'red.6'}
+              color={p.type == StockMovementType.PURCHASE ? 'green' : 'red'}
             >
               {p.type == StockMovementType.PURCHASE ? (
                 <IconArrowUp size={ICON_WRAPPER_SIZE - 8} stroke={ICON_STROKE_WIDTH} />
@@ -184,7 +184,7 @@ export default function StockMovements({
             >
               <Group>
                 <Tooltip label={'Delete Stock Movement'}>
-                  <ActionIcon size={ICON_WRAPPER_SIZE - 4} variant="light" color="red.6">
+                  <ActionIcon size={ICON_WRAPPER_SIZE - 4} variant="light" color="red">
                     <IconTrash size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
                   </ActionIcon>
                 </Tooltip>

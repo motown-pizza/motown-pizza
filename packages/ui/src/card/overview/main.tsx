@@ -51,7 +51,7 @@ export function CardOverviewMain({ props, ...restProps }: { props: OverviewProps
               component="span"
               inherit
               fw={500}
-              c={props.analytics.changeType == 'down' ? 'red.6' : 'green.6'}
+              c={props.analytics.changeType == 'down' ? 'red' : 'green'}
             >
               <NumberFormatter value={props.analytics.change} /> %
             </Text>{' '}

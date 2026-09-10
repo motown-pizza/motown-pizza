@@ -92,7 +92,7 @@ export default function OrderTracker() {
         <StepperCompleted>
           <Stack gap={'xl'} align="center" justify="center" py={SECTION_SPACING}>
             <Group justify="center">
-              <ThemeIcon size={ICON_WRAPPER_SIZE * 2} color="ter.6" radius={999}>
+              <ThemeIcon size={ICON_WRAPPER_SIZE * 2} color="ter" radius={999}>
                 <IconCheck size={ICON_SIZE * 2} stroke={ICON_STROKE_WIDTH} />
               </ThemeIcon>
             </Group>

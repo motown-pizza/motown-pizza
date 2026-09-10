@@ -45,7 +45,7 @@ export default function Main() {
                   <Text component={'span'} fz={'xs'}>
                     {hl.subLabel}
                   </Text>
-                  <Text component={'span'} fz={'sm'} fw={500} c={'ter.6'}>
+                  <Text component={'span'} fz={'sm'} fw={500} c={'ter'}>
                     {hl.label}
                   </Text>
                 </Stack>

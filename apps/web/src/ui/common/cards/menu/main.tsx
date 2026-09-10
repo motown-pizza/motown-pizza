@@ -96,7 +96,7 @@ export default function Main({
           </CardSection>
 
           <Stack mt={'md'}>
-            <Title order={3} fz={'md'} fw={500} c={'blue.6'}>
+            <Title order={3} fz={'md'} fw={500} c={'blue'}>
               {props.title}
             </Title>
 
@@ -135,7 +135,7 @@ export default function Main({
                     <ActionIcon
                       size={ICON_WRAPPER_SIZE}
                       variant={inCart ? 'light' : 'subtle'}
-                      color="ter.6"
+                      color="ter"
                       onClick={handleAddCart}
                     >
                       <IconShoppingCart size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />

@@ -407,7 +407,7 @@ function CardOrderDetails() {
               <Button
                 disabled={!cartItems?.length}
                 leftSection={<IconTrash size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
-                color="pri.6"
+                color="pri"
                 loading={loadingCancel}
                 onClick={handleCancelOrder}
               >

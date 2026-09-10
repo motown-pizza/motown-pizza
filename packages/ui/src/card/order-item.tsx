@@ -35,7 +35,7 @@ export function CardOrderItem({
 
         <GridCol span={10.5} pl={'xs'}>
           <Group justify="space-between">
-            <Title order={3} fz={'md'} fw={500} c={'blue.6'} lineClamp={1}>
+            <Title order={3} fz={'md'} fw={500} c={'blue'} lineClamp={1}>
               {product?.title}
             </Title>
           </Group>

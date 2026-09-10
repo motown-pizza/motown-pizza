@@ -49,7 +49,7 @@ export function CardOrderConfirmed({
             <Tooltip label={clipboard.copied ? 'Coppied' : 'Copy Code'} visibleFrom="xs">
               <ActionIcon
                 size={ICON_WRAPPER_SIZE - 4}
-                color={clipboard.copied ? 'ter.6' : 'gray'}
+                color={clipboard.copied ? 'ter' : 'gray'}
                 onClick={() => {
                   clipboard.copy(order?.trackingCode);
                 }}
@@ -61,7 +61,7 @@ export function CardOrderConfirmed({
 
             <Button
               size="xs"
-              color={clipboard.copied ? 'ter.6' : 'gray'}
+              color={clipboard.copied ? 'ter' : 'gray'}
               onClick={() => {
                 clipboard.copy(order?.trackingCode);
               }}

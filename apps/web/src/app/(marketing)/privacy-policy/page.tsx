@@ -106,7 +106,7 @@ export default function TermsConditions() {
             </Text>
 
             <Text>
-              <Text component="span" inherit c={'sec.6'} fw={500}>
+              <Text component="span" inherit c={'sec'} fw={500}>
                 Note
               </Text>
               : Opting out of marketing communications may limit the Program’s ability to send point

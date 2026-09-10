@@ -82,7 +82,7 @@ export default function MenuItem({ props }: { props: ProductGet }) {
             <ActionIcon
               size={ICON_WRAPPER_SIZE * 1.2}
               onClick={handleAddCart}
-              color="ter.6"
+              color="ter"
               c={inCart ? 'var(--mantine-color-black)' : undefined}
               variant={inCart ? undefined : 'light'}
               disabled={!orderDetails}

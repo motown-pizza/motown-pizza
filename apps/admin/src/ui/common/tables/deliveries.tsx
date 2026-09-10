@@ -150,7 +150,7 @@ export default function Deliveries() {
             >
               <Group>
                 <Tooltip label={'Delete Delivery'}>
-                  <ActionIcon size={ICON_WRAPPER_SIZE - 4} variant="light" color="red.6">
+                  <ActionIcon size={ICON_WRAPPER_SIZE - 4} variant="light" color="red">
                     <IconTrash size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
                   </ActionIcon>
                 </Tooltip>

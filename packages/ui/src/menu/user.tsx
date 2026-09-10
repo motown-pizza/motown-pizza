@@ -60,7 +60,7 @@ export function MenuUser({ children }: { children: React.ReactNode }) {
             leftSection={<item.icon size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
             component={Link}
             href={item.link}
-            color="red.6"
+            color="red"
           >
             {item.label}
           </MenuItem>

@@ -100,7 +100,7 @@ export function FormAuth({
                 rightSection={
                   <Tooltip label={'Clear email'} disabled={!formAuth.values.email?.trim().length}>
                     <ActionIcon
-                      color="red.6"
+                      color="red"
                       variant="subtle"
                       size={ICON_WRAPPER_SIZE}
                       onClick={() => {
@@ -157,7 +157,7 @@ export function FormAuth({
                     rightSection={
                       <Tooltip label={'Clear OTP'} disabled={!formAuth.values.otp?.trim().length}>
                         <ActionIcon
-                          color="red.6"
+                          color="red"
                           variant="subtle"
                           size={ICON_WRAPPER_SIZE}
                           onClick={() => {
@@ -263,7 +263,7 @@ export function FormAuth({
         <>
           <Alert
             variant="light"
-            color={errorAuth ? 'red.6' : 'blue.6'}
+            color={errorAuth ? 'red' : 'blue'}
             title={errorAuth ? 'Error' : 'OTP Sent'}
             icon={
               errorAuth ? (

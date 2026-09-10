@@ -116,7 +116,7 @@ export default function About() {
             <Group justify="center">
               <AnchorNextLink href="/order/select-store?orderType=delivery">
                 <Button
-                  color="ter.6"
+                  color="ter"
                   size="md"
                   leftSection={<IconMoped size={ICON_SIZE + 4} stroke={ICON_STROKE_WIDTH} />}
                 >

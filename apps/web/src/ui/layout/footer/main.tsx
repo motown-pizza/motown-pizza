@@ -75,7 +75,7 @@ export default function Main() {
       </LayoutSection>
 
       <LayoutSection id={'footer-main-fine'}>
-        <Divider color="yellow.6" mt={'xl'} mb={'xl'} />
+        <Divider color="yellow" mt={'xl'} mb={'xl'} />
 
         <Group justify="center" fz={'sm'} c={'white'}>
           <Text inherit>

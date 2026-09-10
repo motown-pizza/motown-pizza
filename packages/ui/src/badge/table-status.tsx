@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 
 export function BadgeTableStatus({ props }: { props: TableGet }) {
   const [badgeProps, setBadgeProps] = useState({
-    color: 'green.6',
+    color: 'green',
     label: capitalizeWords(EnumTableStatus.AVAILABLE),
   });
 
@@ -19,13 +19,13 @@ export function BadgeTableStatus({ props }: { props: TableGet }) {
     if (isOccupied) {
       setBadgeProps({
         ...badgeProps,
-        color: 'yellow.6',
+        color: 'yellow',
         label: capitalizeWords(EnumTableStatus.OCCUPIED),
       });
     } else if (isBooked) {
       setBadgeProps({
         ...badgeProps,
-        color: 'blue.6',
+        color: 'blue',
         label: capitalizeWords(EnumTableStatus.BOOKED),
       });
     }
