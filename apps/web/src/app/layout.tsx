@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { Montserrat, Geist_Mono } from 'next/font/google';
-import { APP_DESC, APP_NAME } from '@repo/constants';
+import { API_URL, APP_DESC, APP_NAME } from '@repo/constants';
 import { ProviderMantine } from '@repo/ui';
+import { ProviderInitialize } from '@web/ui/provider/initialize';
+import { ProviderSync } from '@web/ui/provider/sync';
 import { ColorSchemeScript, MantineColorScheme, mantineHtmlProps } from '@mantine/core';
 import { getAppTheme } from '@repo/constants';
 import { getAppResolver } from '@web/resolver';
@@ -32,7 +34,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const resolvedTheme = ColorScheme.LIGHT as MantineColorScheme;
+  const resolvedTheme = ColorScheme.DARK as MantineColorScheme;
 
   return (
     <html
@@ -60,7 +62,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           theme={getAppTheme}
           cssVariablesResolver={getAppResolver}
         >
-          {children}
+          <ProviderInitialize props={{ baseUrl: API_URL, sessionUser: null }}>
+            <ProviderSync>{children}</ProviderSync>
+          </ProviderInitialize>
         </ProviderMantine>
       </body>
     </html>
