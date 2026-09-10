@@ -16,24 +16,14 @@ export default function Menu({
 }) {
   const searchparams = useSearchParams();
 
-  const [tab, setTab] = useState('');
-
-  useEffect(() => {
-    const tabName = getUrlParam(PARAM_NAME.MENU_TAB);
-
-    if (!tabName) {
-      setUrlParam({ menuTab: 'pizzas' });
-    } else {
-      setTab(tabName as string);
-    }
-  }, [searchparams]);
+  const tab = searchparams.get(PARAM_NAME.MENU_TAB) ?? 'pizzas';
 
   return (
     <Tabs
       defaultValue={tab}
       value={tab}
       onChange={(value) => {
-        setTab(value as string);
+        // setTab(value as string);
         setUrlParam({ menuTab: value });
       }}
       styles={{

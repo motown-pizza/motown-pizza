@@ -21,12 +21,12 @@ export const SESSION_STORAGE_NAME = {
 };
 
 export const PARAM_NAME = {
-  TEMPORARY: 'temporary_chat',
-  CHAT_ID: 'chat_id',
+  TEMPORARY: 'temporaryChat',
+  CHAT_ID: 'chatId',
   REDIRECT: 'redirect',
-  MENU_TAB: 'menu_tab',
-  ORDER_TYPE: 'order_type',
-  ORDER_CONFIRMED: 'order_confirmed',
+  MENU_TAB: 'menuTab',
+  ORDER_TYPE: 'orderType',
+  ORDER_CONFIRMED: 'confirmedOrder',
 };
 
 export const BUCKET_NAME = {
