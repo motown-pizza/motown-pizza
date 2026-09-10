@@ -2,10 +2,17 @@
 
 import React from 'react';
 import { LayoutSection } from '@repo/ui';
-import { ActionIcon, Divider, Grid, GridCol, Group, Stack, Text, Title } from '@mantine/core';
+import { ActionIcon, Divider, Flex, Grid, GridCol, Group, Stack, Text, Title } from '@mantine/core';
 import { AnchorNextLink } from '@repo/ui';
 import classes from './main.module.css';
-import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE, SECTION_SPACING } from '@repo/constants';
+import {
+  EMAILS,
+  ICON_SIZE,
+  ICON_STROKE_WIDTH,
+  ICON_WRAPPER_SIZE,
+  PHONES,
+  SECTION_SPACING,
+} from '@repo/constants';
 import { SOCIALS } from '@repo/constants';
 import { APP_NAME } from '@repo/constants';
 import {
@@ -20,21 +27,20 @@ export default function Main() {
     <LayoutSection
       id={'footer-main'}
       containerized={false}
-      pt={SECTION_SPACING}
-      pb={'md'}
-      bg={'var(--mantine-color-pri-6)'}
+      padded={SECTION_SPACING}
+      bg={'var(--mantine-color-dark-9)'}
     >
       <LayoutSection id={'footer-main'}>
-        <Grid gap={{ base: 'xl' }}>
+        <Grid gap={{ base: 'xl' }} pb={SECTION_SPACING}>
           <GridCol span={{ base: 12, md: 8 }}>
             <Grid justify="center" gap={{ base: 'xl', xs: 'md' }}>
               {linkGroups.map((lg, i) => (
-                <GridCol key={i} span={{ base: 12, xs: 6, sm: 4 }}>
-                  <Title order={2} fz={'lg'} c={'white'} ta={{ base: 'center', md: 'start' }}>
+                <GridCol key={i} span={{ base: 12, sm: 4 }}>
+                  <Title order={2} fz={'lg'} c={'ter'}>
                     {lg.title}
                   </Title>
 
-                  <Stack gap={5} mt={'xs'} align="start">
+                  <Stack gap={'xs'} mt={'xl'} align="start">
                     {lg.links.map((l, i) => (
                       <AnchorNextLink
                         key={i}
@@ -53,35 +59,66 @@ export default function Main() {
           </GridCol>
 
           <GridCol span={{ base: 12, md: 4 }}>
-            <Group justify="center">
-              <Stack align="center">
-                <Title order={2} fz={'md'} c={'white'} ta={'center'}>
-                  Socials
-                </Title>
+            <div>
+              <Title order={2} fz={'md'} c={'ter'}>
+                {contact.title}
+              </Title>
 
-                <Group justify="center">
-                  {social.map((si, i) => (
-                    <a key={i} href={'#'}>
-                      <ActionIcon size={ICON_WRAPPER_SIZE + 4} variant="white" c={'gray'}>
-                        <si.icon size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-                      </ActionIcon>
-                    </a>
-                  ))}
-                </Group>
+              <Stack gap={'xs'} mt={'xl'}>
+                {contact.links.map((l) => (
+                  <AnchorNextLink
+                    key={l.link}
+                    href={l.link}
+                    underline="never"
+                    className={classes.link}
+                    ta={{ base: 'center', md: 'start' }}
+                  >
+                    <Group wrap="nowrap">
+                      {l.location && (
+                        <Text component="span" inherit miw={100}>
+                          {l.location}:
+                        </Text>
+                      )}
+
+                      <span>{l.label}</span>
+                    </Group>
+                  </AnchorNextLink>
+                ))}
               </Stack>
-            </Group>
+            </div>
           </GridCol>
         </Grid>
       </LayoutSection>
 
       <LayoutSection id={'footer-main-fine'}>
-        <Divider color="yellow" mt={'xl'} mb={'xl'} />
+        <Divider color="sec" mb={'xl'} />
 
-        <Group justify="center" fz={'sm'} c={'white'}>
+        <Flex
+          gap={'md'}
+          align={'center'}
+          direction={{ base: 'column', sm: 'row' }}
+          justify={{ sm: 'space-between' }}
+          fz={'sm'}
+          c={'white'}
+        >
           <Text inherit>
             © {new Date().getFullYear()} {APP_NAME.WEB}. All rights reserved.
           </Text>
-        </Group>
+
+          <Group justify="center" gap={'xs'}>
+            {social.map((si, i) => (
+              <a key={i} href={'#'}>
+                <ActionIcon
+                  size={ICON_WRAPPER_SIZE + 4}
+                  color={'pri'}
+                  c={'var(--mantine-color-white'}
+                >
+                  <si.icon size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+                </ActionIcon>
+              </a>
+            ))}
+          </Group>
+        </Flex>
       </LayoutSection>
     </LayoutSection>
   );
@@ -115,6 +152,16 @@ const linkGroups = [
     ],
   },
 ];
+
+const contact = {
+  title: 'Contact',
+  links: [
+    { label: EMAILS.INFO, link: `mailto:${EMAILS.INFO}` },
+    { location: 'Westlands', label: `${PHONES.PHONE1}`, link: `tel:${PHONES.PHONE1}` },
+    { location: 'Valley Arcade', label: `${PHONES.PHONE2}`, link: `tel:${PHONES.PHONE2}` },
+    { location: 'Kileleshwa', label: `${PHONES.PHONE3}`, link: `tel:${PHONES.PHONE3}` },
+  ],
+};
 
 const social = [
   {

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { LayoutSection } from '@repo/ui';
-import { Group, Stack, Text } from '@mantine/core';
+import { Box, Group, Stack, Text } from '@mantine/core';
 import { IconMoped, IconPizza } from '@tabler/icons-react';
 import { PHONES } from '@repo/constants';
 import { APP_NAME } from '@repo/constants';
@@ -18,20 +18,24 @@ export default function Main() {
 
   return (
     <LayoutSection id={'header-main'} padded={'xs'}>
-      <Group justify={tablet ? 'space-between' : 'center'} py={'xs'}>
-        <AnchorNextLink href="/" underline="never">
-          <ImageDefault
-            src={images.brand.logo.landscape.meta}
-            alt={APP_NAME.WEB}
-            height={60}
-            width={70}
-            fit="contain"
-            mode="grid"
-            style={{ transform: 'scale(1.3)' }}
-          />
-        </AnchorNextLink>
+      <Group justify={tablet ? 'space-between' : 'center'} wrap="nowrap">
+        <Box w={{ md: '40%' }} visibleFrom="md"></Box>
 
-        <Group gap={'xl'} visibleFrom="sm">
+        <Group w={{ md: '30%' }} justify="center" py={'md'}>
+          <AnchorNextLink href="/" underline="never">
+            <ImageDefault
+              src={images.brand.logo.landscape.meta}
+              alt={APP_NAME.WEB}
+              height={{ base: 50, sm: 70, md: 90 }}
+              width={{ base: 60, sm: 80, md: 100 }}
+              fit="contain"
+              mode="grid"
+              style={{ transform: 'scale(1.3)' }}
+            />
+          </AnchorNextLink>
+        </Group>
+
+        <Group gap={'xl'} visibleFrom="sm" w={{ md: '40%' }} justify="end">
           {headerLinks.map((hl, i) => (
             <AnchorNextLink
               key={i}
@@ -68,8 +72,8 @@ const headerLinks = [
   },
   {
     icon: IconMoped,
-    link: `tel:${PHONES.MAIN}`,
-    label: PHONES.MAIN,
+    link: `tel:${PHONES.PHONES}`,
+    label: PHONES.PHONES,
     subLabel: 'Call and Order In',
   },
 ];
