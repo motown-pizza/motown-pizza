@@ -39,7 +39,8 @@ export default function Home() {
               src={images.brand.logo.landscape.meta}
               alt={APP_NAME.WEB}
               height={90}
-              width={200}
+              width={100}
+              fit="contain"
               mode="grid"
               style={{ transform: 'scale(1.3)' }}
             />

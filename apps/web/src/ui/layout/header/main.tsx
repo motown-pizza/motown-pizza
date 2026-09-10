@@ -18,13 +18,14 @@ export default function Main() {
 
   return (
     <LayoutSection id={'header-main'} padded={'xs'}>
-      <Group justify={tablet ? 'space-between' : 'center'}>
+      <Group justify={tablet ? 'space-between' : 'center'} py={'xs'}>
         <AnchorNextLink href="/" underline="never">
           <ImageDefault
             src={images.brand.logo.landscape.meta}
             alt={APP_NAME.WEB}
-            height={80}
-            width={160}
+            height={60}
+            width={70}
+            fit="contain"
             mode="grid"
             style={{ transform: 'scale(1.3)' }}
           />

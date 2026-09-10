@@ -43,7 +43,8 @@ export default function Dashboard() {
         {/* <ImageDefault
           src={images.brand.logo.landscape.meta}
           height={40}
-          width={120}
+          width={50}
+          fit={'cont'}
           alt={APP_NAME.ADMIN}
         /> */}
       </Group>

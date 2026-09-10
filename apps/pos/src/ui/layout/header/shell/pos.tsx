@@ -13,6 +13,7 @@ import { useStoreSyncStatus } from '@repo/store';
 import { ButtonFullscreen } from '@repo/ui';
 import { IndicatorTheme } from '@repo/ui';
 import { InputTextSearch } from '@repo/ui';
+import { APP_SHELL } from '@pos/data/constants';
 
 export default function Pos() {
   const { appshell, setAppShell } = useStoreAppShell();
@@ -43,8 +44,9 @@ export default function Pos() {
 
           <ImageDefault
             src={images.brand.logo.landscape.meta}
-            height={60}
-            width={120}
+            height={APP_SHELL.HEADER_HEIGHT - 20}
+            width={APP_SHELL.HEADER_HEIGHT - 10}
+            fit="contain"
             alt={APP_NAME.POS}
             style={{ transform: 'scale(1.2)' }}
           />
