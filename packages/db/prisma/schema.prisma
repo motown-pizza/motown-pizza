@@ -307,7 +307,7 @@ model Ingredient {
 
 model RecipieItem {
   id             String              @id @default(uuid())
-  quantityNeeded Float
+  quantityNeeded Float               @map("quantity_needed")
   unit           MeasurementUnitType
 
   productVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
