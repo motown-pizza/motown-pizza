@@ -22,7 +22,16 @@ export default function Sides({ options }: { options?: { withAside?: boolean } }
   ) : (
     <Grid>
       {sortArray(sides, (i) => i.updatedAt, Order.DESCENDING)?.map((p, i) => (
-        <GridCol key={i} span={{ base: 12, xs: 6, sm: 4, md: options?.withAside ? 6 : 4 }}>
+        <GridCol
+          key={i}
+          span={{
+            base: 12,
+            xs: 6,
+            sm: 4,
+            md: options?.withAside ? 6 : 4,
+            xl: options?.withAside ? 4 : 3,
+          }}
+        >
           <CardMenuMain props={p} />
         </GridCol>
       ))}

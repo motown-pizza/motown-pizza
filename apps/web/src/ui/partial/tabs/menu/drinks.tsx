@@ -48,6 +48,7 @@ export default function Drinks({ options }: { options?: { withAside?: boolean } 
                   xs: 6,
                   sm: 4,
                   md: options?.withAside ? 6 : 4,
+                  xl: options?.withAside ? 4 : 3,
                 }}
               >
                 <CardMenuMain props={p} />
@@ -82,6 +83,7 @@ export default function Drinks({ options }: { options?: { withAside?: boolean } 
                   xs: 6,
                   sm: 4,
                   md: options?.withAside ? 6 : 4,
+                  xl: options?.withAside ? 4 : 3,
                 }}
               >
                 <CardMenuMain props={p} />
