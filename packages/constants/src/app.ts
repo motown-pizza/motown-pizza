@@ -1,10 +1,10 @@
 export const COMPANY_NAME = 'MoTown Pizza';
 
 export const PHONES = {
-  PHONES: '07070000 14/15/16',
-  PHONE1: '0707000014',
-  PHONE2: '0707000015',
-  PHONE3: '0707000016',
+  PHONES: '0707 000 014/15/16',
+  PHONE1: '0707 000 014',
+  PHONE2: '0707 000 015',
+  PHONE3: '0707 000 016',
 };
 
 export const EMAILS = {
