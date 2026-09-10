@@ -84,7 +84,7 @@ export function WrapperActionSignOut({
       <LoadingOverlay
         visible={clicked}
         zIndex={1000}
-        overlayProps={{ radius: 'md', blur: 2 }}
+        overlayProps={{ radius: 'lg', blur: 2 }}
         loaderProps={{ size: 'xs' }}
       />
       <Box p={2}>{children}</Box>

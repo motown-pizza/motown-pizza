@@ -4,12 +4,13 @@ import React, { useState } from 'react';
 import { Grid, GridCol, Group } from '@mantine/core';
 import { useStoreAppShell } from '@repo/store';
 import { ImageDefault } from '@repo/ui';
-import { images } from '@repo/constants';
+import { ICON_WRAPPER_SIZE, images } from '@repo/constants';
 import { APP_NAME } from '@repo/constants';
 import { MenuUser } from '@repo/ui';
 import { AvatarMain } from '@repo/ui';
 import { IndicatorNetworkStatus } from '@repo/ui';
 import { useStoreSyncStatus } from '@repo/store';
+import { ButtonFullscreen } from '@repo/ui';
 import { IndicatorTheme } from '@repo/ui';
 import { InputTextSearch } from '@repo/ui';
 
@@ -69,8 +70,10 @@ export default function Pos() {
 
           <IndicatorTheme />
 
+          <ButtonFullscreen />
+
           <MenuUser>
-            <AvatarMain />
+            <AvatarMain size={ICON_WRAPPER_SIZE + 4} />
           </MenuUser>
         </Group>
       </GridCol>
