@@ -21,7 +21,7 @@ import {
 } from '@mantine/core';
 import { LayoutIntroSection } from '@repo/ui';
 import { useStoreOrderPlacement } from '@repo/store';
-import { defaultOrderDetails } from '@repo/constants';
+import { defaultOrderDetails, PARAM_NAME } from '@repo/constants';
 import { OrderFulfilmentType, OrderPaymentMethod, OrderStatus, OrderTime } from '@repo/types';
 import { stores } from '@repo/constants';
 import { FormContact } from '@repo/ui';
@@ -228,7 +228,7 @@ export default function Checkout() {
 
         <Group justify="end">
           <AnchorNextLink
-            href={`/order/confirmed?confirmedOrder=${orderDetails?.id}`}
+            href={`/order/confirmed?${PARAM_NAME.ORDER_CONFIRMED}=${orderDetails?.id}`}
             onClick={async (e) => {
               if (!isReadyForConfirmation) {
                 e.preventDefault();

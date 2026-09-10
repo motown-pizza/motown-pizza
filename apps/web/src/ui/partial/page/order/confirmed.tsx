@@ -1,62 +1,33 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { LayoutSection } from '@repo/ui';
 import { LayoutIntroSection } from '@repo/ui';
 import { useStoreOrder } from '@repo/store';
-import { getUrlParam } from '@repo/utils';
 import { PARAM_NAME } from '@repo/constants';
-import {
-  ActionIcon,
-  Badge,
-  Button,
-  Card,
-  Divider,
-  Group,
-  Stack,
-  Text,
-  ThemeIcon,
-  Title,
-  Tooltip,
-} from '@mantine/core';
+import { Button, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE, SECTION_SPACING } from '@repo/constants';
 import { IconCheck } from '@tabler/icons-react';
-import { OrderGet } from '@repo/types';
 import { stores } from '@repo/constants';
-import { StoreGet } from '@repo/constants';
 import { AnchorNextLink } from '@repo/ui';
 import { useStoreDelivery } from '@repo/store';
 import { OrderFulfilmentType } from '@repo/types';
 import { CardOrderConfirmed } from '@repo/ui';
+import { useSearchParams } from 'next/navigation';
 
 export default function Confirmed() {
   const { orders } = useStoreOrder();
   const { deliveries } = useStoreDelivery();
 
-  const [order, setOrder] = useState<OrderGet | null>(null);
-  const [store, setStore] = useState<StoreGet | null>(null);
+  const searchParams = useSearchParams();
 
-  const delivery = deliveries?.find((d) => d.orderId == order?.id);
+  const orderID = searchParams.get(PARAM_NAME.ORDER_CONFIRMED);
 
-  useEffect(() => {
-    if (orders === undefined) return;
-    if (!orders) return;
+  const order = orders?.find((o) => o.id === orderID) ?? null;
 
-    const handleSetOrderAndStore = () => {
-      const orderID = getUrlParam(PARAM_NAME.ORDER_CONFIRMED);
-      const orderItem = orders?.find((o) => o.id == orderID);
+  const store = order ? (stores.find((s) => s.id === order.storeId) ?? null) : null;
 
-      if (orderItem) {
-        setOrder(orderItem);
-
-        // const orderItem = (orders || [])[0];
-        const storeItem = stores.find((s) => s.id == orderItem?.storeId);
-        if (storeItem) setStore(storeItem);
-      }
-    };
-
-    handleSetOrderAndStore();
-  }, [orders]);
+  const delivery = deliveries?.find((d) => d.orderId === order?.id);
 
   return (
     <LayoutSection
