@@ -27,6 +27,7 @@ export const useProductActions = () => {
       description: params.description || '',
       type: params.type || ProductType.PIZZA,
       dietaryClass: params.dietaryClass || ProductDietaryType.MEATY,
+      dietarySubClass: params.dietarySubClass || null,
       status: params.status || Status.ACTIVE,
       syncStatus: SyncStatus.PENDING,
       createdAt: now.toISOString() as any,
@@ -49,6 +50,7 @@ export const useProductActions = () => {
 
     const newProduct: ProductGet = {
       ...params,
+      dietarySubClass: params.dietarySubClass || null,
       syncStatus: SyncStatus.PENDING,
       updatedAt: now.toISOString() as any,
     };

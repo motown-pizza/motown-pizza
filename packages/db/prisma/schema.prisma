@@ -68,6 +68,12 @@ enum ProductDietaryType {
   NEUTRAL
 }
 
+enum ProductDietarySubType {
+  BEEF
+  CHICKEN
+  SAUCE
+}
+
 enum OrderSource {
   WEBSITE
   POS
@@ -241,13 +247,14 @@ model Comment {
 }
 
 model Product {
-  id           String              @id @default(uuid())
-  image        String
-  imageId      String?             @map("image_id")
-  title        String
-  description  String
-  type         ProductType
-  dietaryClass ProductDietaryType? @map("dietary_class")
+  id              String                 @id @default(uuid())
+  image           String
+  imageId         String?                @map("image_id")
+  title           String
+  description     String
+  type            ProductType
+  dietaryClass    ProductDietaryType?    @map("dietary_class")
+  dietarySubClass ProductDietarySubType? @map("dietary_sub_class")
 
   productVariants ProductVariant[]
 

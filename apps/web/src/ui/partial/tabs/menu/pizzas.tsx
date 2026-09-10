@@ -1,7 +1,7 @@
 import React from 'react';
 import { Center, Divider, Grid, GridCol, Loader, Text } from '@mantine/core';
 import CardMenuMain from '@web/ui/common/cards/menu/main';
-import { ProductDietaryType, ProductType } from '@repo/types';
+import { ProductDietarySubType, ProductDietaryType, ProductType } from '@repo/types';
 import { useStoreProduct } from '@repo/store';
 import { SECTION_SPACING } from '@repo/constants';
 import { sortArray } from '@repo/utils';
@@ -18,17 +18,22 @@ export default function Pizzas({ options }: { options?: { withAside?: boolean } 
     Order.DESCENDING,
   );
 
-  // 2. Group by Dietary Type
-  // If your environment doesn't support Object.groupBy yet,
-  // you can use a simple reduce or lodash.groupBy
+  type CustomGroup = 'BEEF' | 'CHICKEN' | 'VEGGIE';
+
   const groupedPizzas = pizzas.reduce(
     (acc, pizza) => {
-      const type = pizza.dietaryClass || ProductDietaryType.NEUTRAL;
-      if (!acc[type]) acc[type] = [];
-      acc[type].push(pizza);
+      let key: CustomGroup = 'VEGGIE';
+
+      if (pizza.dietarySubClass === ProductDietarySubType.BEEF) {
+        key = 'BEEF';
+      } else if (pizza.dietarySubClass === ProductDietarySubType.CHICKEN) {
+        key = 'CHICKEN';
+      }
+
+      acc[key].push(pizza);
       return acc;
     },
-    {} as Record<ProductDietaryType, typeof pizzas>,
+    { BEEF: [], CHICKEN: [], VEGGIE: [] } as Record<CustomGroup, typeof pizzas>,
   );
 
   return products === undefined ? (

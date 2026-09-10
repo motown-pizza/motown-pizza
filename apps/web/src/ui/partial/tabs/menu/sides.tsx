@@ -1,40 +1,105 @@
 import React from 'react';
-import { Center, Grid, GridCol, Loader, Text } from '@mantine/core';
+import { Center, Divider, Grid, GridCol, Loader, Stack, Text, Title } from '@mantine/core';
 import CardMenuMain from '@web/ui/common/cards/menu/main';
-import { ProductType } from '@repo/types';
+import { ProductDietarySubType, ProductType } from '@repo/types';
 import { useStoreProduct } from '@repo/store';
 import { SECTION_SPACING } from '@repo/constants';
-import { sortArray } from '@repo/utils';
+import { capitalizeWords, sortArray } from '@repo/utils';
 import { Order } from '@repo/types';
 
 export default function Sides({ options }: { options?: { withAside?: boolean } }) {
   const { products } = useStoreProduct();
-  const sides = products?.filter((p) => p.type == ProductType.SIDE);
 
-  return products === undefined ? (
-    <Center py={SECTION_SPACING} mih={400}>
-      <Loader />
-    </Center>
-  ) : !sides?.length ? (
-    <Center py={SECTION_SPACING} mih={400}>
-      <Text>No sides found.</Text>
-    </Center>
-  ) : (
-    <Grid>
-      {sortArray(sides, (i) => i.updatedAt, Order.DESCENDING)?.map((p, i) => (
-        <GridCol
-          key={i}
-          span={{
-            base: 12,
-            xs: 6,
-            sm: 4,
-            md: options?.withAside ? 6 : 4,
-            xl: options?.withAside ? 4 : 3,
-          }}
-        >
-          <CardMenuMain props={p} />
-        </GridCol>
-      ))}
-    </Grid>
+  // Filter products by type
+  const allSides = products?.filter((p) => p.type === ProductType.SIDE);
+
+  // Sauces are strictly identified by dietarySubClass === SAUCE
+  const sauces = allSides?.filter((p) => p.dietarySubClass === ProductDietarySubType.SAUCE);
+
+  // Sides are everything else under ProductType.SIDE
+  const sides = allSides?.filter((p) => p.dietarySubClass !== ProductDietarySubType.SAUCE);
+
+  const spanConfig = {
+    base: 12,
+    xs: 6,
+    sm: 4,
+    md: options?.withAside ? 6 : 4,
+    xl: options?.withAside ? 4 : 3,
+  };
+
+  if (products === undefined) {
+    return (
+      <Center py={SECTION_SPACING} mih={400}>
+        <Loader />
+      </Center>
+    );
+  }
+
+  if (!allSides?.length) {
+    return (
+      <Center py={SECTION_SPACING} mih={400}>
+        <Text>No sides or sauces found.</Text>
+      </Center>
+    );
+  }
+
+  return (
+    <Stack gap="xl">
+      {/* Sides Section */}
+      {!!sides?.length && (
+        <Stack gap="md">
+          <Divider
+            label={capitalizeWords(`Sides`)}
+            my={SECTION_SPACING}
+            w={{ base: '100%', md: '60%' }}
+            mx={'auto'}
+            color="sec"
+            styles={{
+              label: {
+                color: 'var(--mantine-color-sec-6)',
+                fontSize: 'var(--mantine-font-size-lg)',
+                fontWeight: 500,
+              },
+            }}
+          />
+
+          <Grid>
+            {sortArray(sides, (i) => i.updatedAt, Order.DESCENDING)?.map((p) => (
+              <GridCol key={p.id} span={spanConfig}>
+                <CardMenuMain props={p} />
+              </GridCol>
+            ))}
+          </Grid>
+        </Stack>
+      )}
+
+      {/* Sauces Section */}
+      {!!sauces?.length && (
+        <Stack gap="md">
+          <Divider
+            label={capitalizeWords(`Sauces`)}
+            my={SECTION_SPACING}
+            w={{ base: '100%', md: '60%' }}
+            mx={'auto'}
+            color="sec"
+            styles={{
+              label: {
+                color: 'var(--mantine-color-sec-6)',
+                fontSize: 'var(--mantine-font-size-lg)',
+                fontWeight: 500,
+              },
+            }}
+          />
+
+          <Grid>
+            {sortArray(sauces, (i) => i.updatedAt, Order.DESCENDING)?.map((p) => (
+              <GridCol key={p.id} span={spanConfig}>
+                <CardMenuMain props={p} />
+              </GridCol>
+            ))}
+          </Grid>
+        </Stack>
+      )}
+    </Stack>
   );
 }

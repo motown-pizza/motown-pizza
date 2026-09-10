@@ -28,7 +28,7 @@ import {
   IconToolsKitchen,
 } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants';
-import { ProductGet } from '@repo/types';
+import { ProductDietarySubType, ProductGet } from '@repo/types';
 import { useMediaQuery } from '@mantine/hooks';
 import { ProductDietaryType, ProductType, Status } from '@repo/types';
 import { capitalizeWords } from '@repo/utils';
@@ -85,7 +85,6 @@ export function FormStoresProduct({
 
                   <GridCol span={{ base: 12, xs: 6 }}>
                     <Select
-                      required
                       label="Type"
                       placeholder="Type"
                       allowDeselect={false}
@@ -111,7 +110,6 @@ export function FormStoresProduct({
 
                   <GridCol span={{ base: 12, xs: 6 }}>
                     <Select
-                      required
                       label="Dietary Class"
                       placeholder="Dietary Class"
                       allowDeselect={false}
@@ -136,6 +134,31 @@ export function FormStoresProduct({
                         },
                       ]}
                       {...form.getInputProps('dietaryClass')}
+                    />
+                  </GridCol>
+
+                  <GridCol span={{ base: 12, xs: 6 }}>
+                    <Select
+                      label="Dietary SubClass"
+                      placeholder="Dietary SubClass"
+                      allowDeselect={false}
+                      checkIconPosition="right"
+                      leftSection={<IconToolsKitchen size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
+                      data={[
+                        {
+                          value: ProductDietarySubType.BEEF,
+                          label: capitalizeWords(ProductDietarySubType.BEEF),
+                        },
+                        {
+                          value: ProductDietarySubType.CHICKEN,
+                          label: capitalizeWords(ProductDietarySubType.CHICKEN),
+                        },
+                        {
+                          value: ProductDietarySubType.SAUCE,
+                          label: capitalizeWords(ProductDietarySubType.SAUCE),
+                        },
+                      ]}
+                      {...form.getInputProps('dietarySubClass')}
                     />
                   </GridCol>
 

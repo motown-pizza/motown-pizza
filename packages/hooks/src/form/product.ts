@@ -3,7 +3,7 @@
 import { hasLength, UseFormReturnType } from '@mantine/form';
 import { useProductActions } from '@repo/store';
 import { useFormBase } from '../form';
-import { ProductGet } from '@repo/types';
+import { ProductDietarySubType, ProductGet } from '@repo/types';
 import { ProductDietaryType, ProductType, Status } from '@repo/types';
 import { useNotification } from '@repo/notifications';
 import { Variant } from '@repo/types';
@@ -21,6 +21,7 @@ export const useFormProduct = (params?: { defaultValues?: Partial<ProductGet> })
       id: params?.defaultValues?.id || '',
       description: params?.defaultValues?.description || '',
       dietaryClass: params?.defaultValues?.dietaryClass || ProductDietaryType.NEUTRAL,
+      dietarySubClass: (params?.defaultValues?.dietarySubClass || '') as any,
       image: params?.defaultValues?.image || '',
       imageId: params?.defaultValues?.imageId || '',
       type: params?.defaultValues?.type || ProductType.PIZZA,
