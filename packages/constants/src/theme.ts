@@ -139,7 +139,7 @@ export const getAppTheme = (params?: AppThemeProps) => {
 
       Divider: Divider.extend({
         defaultProps: {
-          color: 'light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-8))',
+          color: 'var(--mantine-color-default-border)',
         },
       }),
 
@@ -332,7 +332,7 @@ export const getAppTheme = (params?: AppThemeProps) => {
           },
           itemLabel: { fontSize: 'var(--mantine-font-size-sm)' },
           divider: {
-            borderColor: 'light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-8))',
+            borderColor: 'light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-7))',
           },
         },
       }),

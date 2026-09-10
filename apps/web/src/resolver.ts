@@ -13,9 +13,9 @@ export const getAppResolver = (params?: { cssVars?: ConvertCSSVariablesInput }) 
       },
 
       dark: {
-        '--mantine-color-body': `${theme.black}`,
+        '--mantine-color-body': `var(--mantine-color-dark-9)`,
         '--mantine-color-text': `var(--mantine-color-dark-0)`,
-        '--mantine-color-default-border': `light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-8))`,
+        '--mantine-color-default-border': `light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-6))`,
       },
     };
 

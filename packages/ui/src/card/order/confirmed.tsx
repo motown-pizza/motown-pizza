@@ -49,7 +49,7 @@ export function CardOrderConfirmed({
             <Tooltip label={clipboard.copied ? 'Coppied' : 'Copy Code'} visibleFrom="xs">
               <ActionIcon
                 size={ICON_WRAPPER_SIZE - 4}
-                color={clipboard.copied ? 'ter' : 'gray'}
+                color={clipboard.copied ? 'ter' : 'blue'}
                 onClick={() => {
                   clipboard.copy(order?.trackingCode);
                 }}
@@ -61,7 +61,7 @@ export function CardOrderConfirmed({
 
             <Button
               size="xs"
-              color={clipboard.copied ? 'ter' : 'gray'}
+              color={clipboard.copied ? 'ter' : 'blue'}
               onClick={() => {
                 clipboard.copy(order?.trackingCode);
               }}
@@ -90,7 +90,7 @@ export function CardOrderConfirmed({
           <Title order={3} fz={'sm'} fw={500}>
             Payment Option
           </Title>
-          <Badge ta={'end'} color="gray">
+          <Badge ta={'end'} color="blue">
             {order?.paymentMethod}
           </Badge>
         </Group>
