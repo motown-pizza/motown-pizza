@@ -13,7 +13,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
   return (
     <AppShell
       layout="alt"
-      withBorder={false}
+      withBorder={true}
       header={{ height: APPSHELL.HEADER_HEIGHT }}
       navbar={{
         width: APPSHELL.NAVBAR_WIDTH,
@@ -28,7 +28,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
         <HeaderShellDashboard />
       </AppShellHeader>
 
-      <AppShellNavbar bg={'light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-7))'}>
+      <AppShellNavbar>
         <ScrollArea h={`calc(100vh)`} type="auto" scrollbars={'y'}>
           <NavbarShellDashboard />
         </ScrollArea>

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Group, NavLink, Stack } from '@mantine/core';
+import { Box, Divider, Group, NavLink, Stack } from '@mantine/core';
 import {
   IconCheese,
   IconChefHat,
@@ -75,17 +75,19 @@ export default function Dashboard() {
           position: 'sticky',
           top: 0,
           zIndex: 10,
-          backgroundColor: 'light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-7))',
+          // backgroundColor: 'light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-7))',
         }}
       >
-        <Group justify="center" mih={APPSHELL.HEADER_HEIGHT} px={'sm'}>
+        <Group justify="center" mih={APPSHELL.HEADER_HEIGHT - 1} px={'sm'}>
           <ImageDefault
             src={images.brand.logo.landscape.meta}
-            height={60}
+            height={APPSHELL.HEADER_HEIGHT - 5}
             width={160}
             alt={APP_NAME.ADMIN}
           />
         </Group>
+
+        <Divider />
       </Box>
 
       <Stack p={'xs'} pl={5} gap={4}>
