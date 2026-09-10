@@ -39,7 +39,7 @@ export function MenuUser({ children }: { children: React.ReactNode }) {
           <PartialUser />
         </Box>
 
-        <MenuDivider />
+        {/* <MenuDivider />
 
         {navLinkItems.user.account.map((item) => (
           <MenuItem
@@ -50,7 +50,7 @@ export function MenuUser({ children }: { children: React.ReactNode }) {
           >
             {item.label}
           </MenuItem>
-        ))}
+        ))} */}
 
         <MenuDivider />
 
