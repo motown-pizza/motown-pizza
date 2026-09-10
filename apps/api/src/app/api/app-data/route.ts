@@ -18,85 +18,40 @@ export async function GET(request: NextRequest) {
     const requestedStores = stores ? stores.split(',') : [];
 
     // 2. Define the Query Map
-    // This maps the URL string to the actual Prisma call
     const queryMap: Record<string, () => any> = {
-      [STORE_NAME.CATEGORIES]: () =>
-        db.category.findMany({
-          orderBy: { createdAt: 'desc' },
-        }),
-      [STORE_NAME.CART_ITEMS]: () =>
-        db.cartItem.findMany({
-          // where: { profileId: userId },
-          orderBy: { createdAt: 'desc' },
-        }),
-      [STORE_NAME.DELIVERIES]: () =>
-        db.delivery.findMany({
-          // where: { profileId: userId },
-          orderBy: { createdAt: 'desc' },
-        }),
-      [STORE_NAME.INGREDIENTS]: () =>
-        db.ingredient.findMany({
-          orderBy: { createdAt: 'desc' },
-        }),
-      [STORE_NAME.ORDERS]: () =>
-        db.order.findMany({
-          // where: { profileId: userId },
-          orderBy: { createdAt: 'desc' },
-        }),
-      [STORE_NAME.ORDER_ITEMS]: () =>
-        db.orderItem.findMany({
-          // where: { profileId: userId },
-          orderBy: { createdAt: 'desc' },
-        }),
-      [STORE_NAME.PRODUCTS]: () =>
-        db.product.findMany({
-          orderBy: { createdAt: 'desc' },
-        }),
+      [STORE_NAME.CATEGORIES]: () => db.category.findMany({ orderBy: { createdAt: 'desc' } }),
+      [STORE_NAME.CART_ITEMS]: () => db.cartItem.findMany({ orderBy: { createdAt: 'desc' } }),
+      [STORE_NAME.DELIVERIES]: () => db.delivery.findMany({ orderBy: { createdAt: 'desc' } }),
+      [STORE_NAME.INGREDIENTS]: () => db.ingredient.findMany({ orderBy: { createdAt: 'desc' } }),
+      [STORE_NAME.ORDERS]: () => db.order.findMany({ orderBy: { createdAt: 'desc' } }),
+      [STORE_NAME.ORDER_ITEMS]: () => db.orderItem.findMany({ orderBy: { createdAt: 'desc' } }),
+      [STORE_NAME.PRODUCTS]: () => db.product.findMany({ orderBy: { createdAt: 'desc' } }),
       [STORE_NAME.PRODUCT_VARIANTS]: () =>
-        db.productVariant.findMany({
-          orderBy: { createdAt: 'desc' },
-        }),
-      [STORE_NAME.PROFILES]: () =>
-        db.profile.findMany({
-          orderBy: { createdAt: 'desc' },
-        }),
-      [STORE_NAME.RECIPIE_ITEMS]: () =>
-        db.recipieItem.findMany({
-          orderBy: { createdAt: 'desc' },
-        }),
+        db.productVariant.findMany({ orderBy: { createdAt: 'desc' } }),
+      [STORE_NAME.PROFILES]: () => db.profile.findMany({ orderBy: { createdAt: 'desc' } }),
+      [STORE_NAME.RECIPIE_ITEMS]: () => db.recipieItem.findMany({ orderBy: { createdAt: 'desc' } }),
       [STORE_NAME.STOCK_MOVEMENTS]: () =>
-        db.stockMovement.findMany({
-          orderBy: { createdAt: 'desc' },
-        }),
-      [STORE_NAME.TABLES]: () =>
-        db.table.findMany({
-          orderBy: { createdAt: 'desc' },
-        }),
+        db.stockMovement.findMany({ orderBy: { createdAt: 'desc' } }),
+      [STORE_NAME.TABLES]: () => db.table.findMany({ orderBy: { createdAt: 'desc' } }),
       [STORE_NAME.TABLE_BOOKINGS]: () =>
-        db.tableBooking.findMany({
-          orderBy: { createdAt: 'desc' },
-        }),
+        db.tableBooking.findMany({ orderBy: { createdAt: 'desc' } }),
       [STORE_NAME.WISHLIST_ITEMS]: () =>
-        db.wishlistItem.findMany({
-          // where: { profileId: userId },
-          orderBy: { createdAt: 'desc' },
-        }),
+        db.wishlistItem.findMany({ orderBy: { createdAt: 'desc' } }),
     };
 
-    // 3. Filter the map to only include requested stores
-    const activeQueries = requestedStores
-      .filter((key) => !!queryMap[key]) // Ignore invalid keys
-      .map((key) => queryMap[key]());
+    // 3. Extract only valid keys and keep their execution functions paired
+    const validQueries = requestedStores.filter((key) => !!queryMap[key]);
 
-    // 3. Execute the transaction
+    const activeQueries = validQueries.map((key) => queryMap[key]());
+
+    // 4. Execute the transaction
     const results = await db.$transaction(activeQueries, {
-      maxWait: 10000, // Wait up to 10s to acquire a connection (default: 2000ms - 5000ms)
-      timeout: 15000, // Allow the transaction to run for up to 15s (default: 5000ms)
+      maxWait: 10000,
+      timeout: 15000,
     });
 
-    // 5. Format into a clean object: { tasks: [...], categories: [...] }
-    // Map the results back to their keys
-    const responsePayload = requestedStores.reduce(
+    // 5. Format into a clean object using the VALID keys array so indices match 1:1
+    const responsePayload = validQueries.reduce(
       (acc, key, index) => {
         acc[key] = results[index];
         return acc;
