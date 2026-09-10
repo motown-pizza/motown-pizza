@@ -1,8 +1,7 @@
-import { imagekit } from '@repo/uploads';
+import { uploadToImageKit, deleteFromImageKit } from '@repo/uploads';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
-// export const revalidate = 3600;
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,26 +18,25 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Construct custom filename
     const fileExt = file.name.split('.').pop();
     const fileName = `${imageId}.${fileExt}`;
-    const fileSize = file.size; // in bytes
+    const fileSize = file.size;
 
-    const uploadResponse = await imagekit.upload({
+    // Use the exported async function
+    const uploadResponse = await uploadToImageKit({
       file: buffer,
       fileName: fileName,
-      folder: folderPath, // optional
-      useUniqueFileName: false, // ✅ ensures overwrites
+      folder: folderPath,
+      useUniqueFileName: false,
     });
 
-    // ✅ Append ?size=xxx to the returned URL
     const urlWithSize = new URL(uploadResponse.url);
     urlWithSize.searchParams.set('fileSize', fileSize.toString());
 
     return NextResponse.json({
-      url: bustCache == 'true' ? urlWithSize.toString() : uploadResponse.url,
+      url: bustCache === 'true' ? urlWithSize.toString() : uploadResponse.url,
       size: uploadResponse.size,
-      imageId: uploadResponse.fileId, // ✅ store this
+      imageId: uploadResponse.fileId,
     });
   } catch (err) {
     console.error('upload error:', err);
@@ -54,7 +52,8 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Missing image id' }, { status: 400 });
     }
 
-    await imagekit.deleteFile(imageId); // ✅ ImageKit deletion
+    // Use the exported async function
+    await deleteFromImageKit(imageId);
 
     return NextResponse.json({ success: true });
   } catch (e) {
