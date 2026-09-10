@@ -60,7 +60,7 @@ export function IndicatorTheme() {
         <ActionIcon
           variant={'subtle'}
           size={ICON_WRAPPER_SIZE}
-          color="dark"
+          color="gray"
           onClick={() => {
             startTransition(() => {
               setColorScheme(buttonProps.label as MantineColorScheme);

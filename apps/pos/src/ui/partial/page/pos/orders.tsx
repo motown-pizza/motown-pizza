@@ -61,7 +61,7 @@ export default function Orders() {
             <Button
               key={i}
               size="xs"
-              color={currentType === s ? 'pri' : 'dark'}
+              color={currentType === s ? 'pri' : 'gray'}
               tt={'uppercase'}
               onClick={() => setCurrentStatus(s)}
             >

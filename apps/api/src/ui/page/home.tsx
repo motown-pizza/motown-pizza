@@ -59,7 +59,7 @@ export default function Home() {
                 Version: {version}
               </Badge>
 
-              <Badge color="dark">Last deployment: {lastDeployment}</Badge>
+              <Badge color="gray">Last deployment: {lastDeployment}</Badge>
             </Stack>
 
             <Text inherit size="sm" mt="xl" c="dimmed">

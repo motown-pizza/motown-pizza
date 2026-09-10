@@ -17,7 +17,7 @@ export function ButtonFullscreen() {
   return (
     <Group>
       <Tooltip label={buttonProps.label}>
-        <ActionIcon size={ICON_WRAPPER_SIZE} onClick={toggle} variant="subtle" color={'dark'}>
+        <ActionIcon size={ICON_WRAPPER_SIZE} onClick={toggle} variant="subtle" color={'gray'}>
           <buttonProps.icon size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
         </ActionIcon>
       </Tooltip>

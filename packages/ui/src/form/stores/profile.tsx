@@ -149,7 +149,7 @@ export function FormStoresProfile({
           <GridCol span={12} mt={'md'}>
             <Group mt={mobile ? 'xs' : undefined}>
               <Button
-                color="dark"
+                color="gray"
                 loading={submitted}
                 component={Link}
                 href={`/dashboard/people/${form.values.role?.toLowerCase()}s`}

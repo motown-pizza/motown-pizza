@@ -167,7 +167,7 @@ export function FormStoresIngredient({
           <GridCol span={12} mt={'md'}>
             <Group mt={mobile ? 'xs' : undefined}>
               <Button
-                color="dark"
+                color="gray"
                 loading={submitted}
                 component={Link}
                 href={`/dashboard/ingredients/stock`}

@@ -52,7 +52,7 @@ export function ButtonAuthProviders({ props }: { props: { baseUrl: string } }) {
       <Button
         key={providerDetails.provider}
         fullWidth
-        color="dark"
+        color="gray"
         variant="light"
         onClick={handleClick}
         loading={loading == providerDetails.provider}

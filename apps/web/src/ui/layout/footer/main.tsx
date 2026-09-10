@@ -62,7 +62,7 @@ export default function Main() {
                 <Group justify="center">
                   {social.map((si, i) => (
                     <a key={i} href={'#'}>
-                      <ActionIcon size={ICON_WRAPPER_SIZE + 4} variant="white" c={'dark'}>
+                      <ActionIcon size={ICON_WRAPPER_SIZE + 4} variant="white" c={'gray'}>
                         <si.icon size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
                       </ActionIcon>
                     </a>

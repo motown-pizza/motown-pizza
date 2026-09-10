@@ -380,7 +380,7 @@ function CardOrderDetails() {
             ) : (
               <Button
                 disabled={!cartItems?.length}
-                color="dark"
+                color="gray"
                 leftSection={<IconCash size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
               >
                 Cash
@@ -392,7 +392,7 @@ function CardOrderDetails() {
             ) : (
               <Button
                 disabled={!cartItems?.length}
-                color="dark"
+                color="gray"
                 leftSection={<IconCreditCard size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
               >
                 Online

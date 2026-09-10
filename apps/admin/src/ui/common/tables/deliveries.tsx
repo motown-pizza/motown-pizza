@@ -264,7 +264,7 @@ function CodeComponent({ props }: { props: DeliveryGet }) {
         <Tooltip label={'Reveal code'}>
           <ActionIcon
             size={ICON_WRAPPER_SIZE}
-            color={'dark'}
+            color={'gray'}
             variant="subtle"
             onClick={() => clipboard.copy(props.verficationCode)}
           >

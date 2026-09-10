@@ -28,7 +28,7 @@ export function ButtonNotifications({ children }: { children?: React.ReactNode }
   const icon = (
     <Tooltip label={'Open notifications'}>
       <Group>
-        <ActionIcon variant={'light'} size={ICON_WRAPPER_SIZE} color={'dark'}>
+        <ActionIcon variant={'light'} size={ICON_WRAPPER_SIZE} color={'gray'}>
           <IconBell size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
         </ActionIcon>
       </Group>

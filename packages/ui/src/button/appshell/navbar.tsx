@@ -22,7 +22,7 @@ export function ButtonAppshellNavbar() {
         <Group>
           <ActionIcon
             variant="subtle"
-            color={'dark'}
+            color={'gray'}
             aria-label={appshell?.navbar ? 'Collapse' : 'Expand'}
             onClick={() => {
               if (!appshell) return;

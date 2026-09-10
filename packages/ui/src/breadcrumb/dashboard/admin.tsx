@@ -22,7 +22,7 @@ export function BreadcrumbDashboardAdmin({
 
           const sharedProps = {
             size: 'compact-sm',
-            color: 'dark',
+            color: 'gray',
             fw: 'normal',
             variant: 'subtle',
           };

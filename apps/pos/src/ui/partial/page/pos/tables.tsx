@@ -107,7 +107,7 @@ export default function Tables() {
             <Button
               key={i}
               size="xs"
-              color={currentStatus === s ? 'pri' : 'dark'}
+              color={currentStatus === s ? 'pri' : 'gray'}
               tt={'uppercase'}
               onClick={() => setCurrentStatus(s)}
             >

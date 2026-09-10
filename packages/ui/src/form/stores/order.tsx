@@ -252,7 +252,7 @@ export function FormStoresOrder({
 
           <GridCol span={12} mt={'md'}>
             <Group>
-              <Button color="dark" loading={submitted} component={Link} href={`/dashboard/orders`}>
+              <Button color="gray" loading={submitted} component={Link} href={`/dashboard/orders`}>
                 Cancel
               </Button>
 

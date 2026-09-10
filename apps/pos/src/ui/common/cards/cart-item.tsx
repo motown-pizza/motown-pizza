@@ -39,7 +39,7 @@ export default function CartItem({ props }: { props: CartItemGet }) {
 
         <Group align="start" justify="space-between" wrap="nowrap">
           <Group justify="end">
-            <ActionIcon size={ICON_WRAPPER_SIZE} color="dark" onClick={() => cartItemDelete(props)}>
+            <ActionIcon size={ICON_WRAPPER_SIZE} color="gray" onClick={() => cartItemDelete(props)}>
               <IconTrash size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
             </ActionIcon>
           </Group>
