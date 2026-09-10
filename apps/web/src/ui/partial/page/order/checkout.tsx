@@ -34,7 +34,7 @@ import { useGetSum } from '@repo/hooks';
 import { useStoreCartItem } from '@repo/store';
 import CardMenuCart from '@web/ui/common/cards/menu/cart';
 import { SECTION_SPACING } from '@repo/constants';
-import { getRegionalDate } from '@repo/utils';
+import { getRegionalDate, validators } from '@repo/utils';
 import { useNotification } from '@repo/notifications';
 import { Variant } from '@repo/types';
 
@@ -47,9 +47,14 @@ export default function Checkout() {
   const store = stores.find((s) => s.id == orderDetails?.storeId);
   const { orderUpdate } = useOrderActions();
 
-  const formIsValid = !!orderDetails?.customerName.length && !!orderDetails?.customerPhone?.length;
-
-  const isReadyForConfirmation = formIsValid && !!cartItems?.length;
+  const isReadyForConfirmation =
+    !!cartItems?.length &&
+    (!orderDetails
+      ? false
+      : orderDetails.customerName.length > 1 &&
+        (!orderDetails.customerPhone
+          ? false
+          : validators.phone(orderDetails.customerPhone) == false));
 
   const readyDate = getRegionalDate(new Date(), {
     locale: 'en-GB',
@@ -242,10 +247,12 @@ export default function Checkout() {
                 return;
               }
 
-              orderUpdate(
-                { ...orderDetails, orderStatus: OrderStatus.PREPARING },
-                { placement: true },
-              );
+              if (orderDetails) {
+                orderUpdate(
+                  { ...orderDetails, orderStatus: OrderStatus.PREPARING },
+                  { placement: true },
+                );
+              }
 
               setOrderDetails(defaultOrderDetails);
             }}

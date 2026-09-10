@@ -88,6 +88,25 @@ export const validators = {
    */
   pattern: (val: string, re: RegExp, errorMsg: string): string | false =>
     !re.test(val) ? errorMsg : false,
+
+  /**
+   * Phone number validator
+   * Validates common formats (e.g., +1 123 456 7890, 123-456-7890, (123) 456-7890)
+   */
+  phone: (val: string): string | false => {
+    // This regex allows: optional +, digits, spaces, dashes, and parentheses
+    // Adjust the {7,15} range based on the specific lengths you want to support
+    const phoneRegex = /^\+?(\d[\d-. ]+)?(\([\d-. ]+\))?[\d-. ]+\d$/;
+
+    // Ensure it contains at least 7 digits to be considered a real number
+    const digitCount = val.replace(/\D/g, '').length;
+
+    if (!phoneRegex.test(val.trim()) || digitCount < 10 || digitCount > 15) {
+      return errors.isInvalid('phone number');
+    }
+
+    return false;
+  },
 };
 
 /**
