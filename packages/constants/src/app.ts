@@ -46,7 +46,7 @@ export const SOCIALS = {
 
 export const APP_NAME = {
   API: `${COMPANY_NAME} Server`,
-  ADMIN: `${COMPANY_NAME} ADMIN`,
+  ADMIN: `${COMPANY_NAME} Admin`,
   WEB: COMPANY_NAME,
   POS: `${COMPANY_NAME} POS`,
   KDS: `${COMPANY_NAME} KDS`,
