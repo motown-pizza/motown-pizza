@@ -1,8 +1,7 @@
-'use client';
-
-import { Box, BoxProps, Container, rem, useMantineTheme } from '@mantine/core';
+import { Box, BoxProps, Container } from '@mantine/core';
 import { SECTION_SPACING } from '@repo/constants';
 import { SectionProps } from '@repo/types';
+import classes from './section.module.css';
 
 export function LayoutSection({
   containerized = 'responsive',
@@ -15,8 +14,6 @@ export function LayoutSection({
   id,
   ...rest
 }: SectionProps & BoxProps) {
-  const theme = useMantineTheme();
-
   const py =
     typeof padded === 'boolean'
       ? SECTION_SPACING * 2
@@ -50,21 +47,7 @@ export function LayoutSection({
         <Container
           size={isResponsive || containerized === true ? undefined : containerized}
           h={'100%'}
-          styles={{
-            root: {
-              ...(containerized === 'responsive' && {
-                maxWidth: 'var(--mantine-breakpoint-xl) !important',
-
-                [`@media (min-width: ${theme.breakpoints.sm})`]: {
-                  paddingInline: 'var(--mantine-spacing-xl) !important',
-                },
-
-                [`@media (min-width: ${theme.breakpoints.xl})`]: {
-                  paddingInline: 'calc(var(--mantine-spacing-xl) * 2) !important',
-                },
-              }),
-            },
-          }}
+          className={containerized === 'responsive' ? classes.responsiveContainer : undefined}
         >
           {children}
         </Container>
