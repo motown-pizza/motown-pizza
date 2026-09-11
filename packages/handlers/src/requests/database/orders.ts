@@ -3,8 +3,10 @@ import { apiCall } from './fetch';
 
 const segment = 'orders';
 
-export const ordersGet = (params: { apiUrl: string; userId?: string }) => {
-  const query = params?.userId ? `?userId=${params.userId}` : '';
+export const ordersGet = (params: { sourceSite?: string; apiUrl: string; userId?: string }) => {
+  const query = params?.userId
+    ? `?userId=${params.userId}&sourceSite=${params.sourceSite || 'not-provided'}`
+    : '';
   return apiCall(segment + query, 'GET', params.apiUrl);
 };
 

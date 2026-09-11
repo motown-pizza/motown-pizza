@@ -29,6 +29,7 @@ export function ProviderInitialize({
   useAppshellInitialize();
 
   useLoadAppData({
+    sourceSite: 'admin',
     apiUrl: props.baseUrl,
     clientOnly: false,
     storesToLoad: STORES_TO_LOAD,

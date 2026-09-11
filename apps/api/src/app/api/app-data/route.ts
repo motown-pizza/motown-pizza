@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
   try {
     const userId = request.nextUrl.searchParams.get('userId');
     const stores = request.nextUrl.searchParams.get('stores');
+    const sourceSite = request.nextUrl.searchParams.get('sourceSite');
 
     if (!userId) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
@@ -20,11 +21,23 @@ export async function GET(request: NextRequest) {
     // 2. Define the Query Map
     const queryMap: Record<string, () => any> = {
       [STORE_NAME.CATEGORIES]: () => db.category.findMany({ orderBy: { createdAt: 'desc' } }),
-      [STORE_NAME.CART_ITEMS]: () => db.cartItem.findMany({ orderBy: { createdAt: 'desc' } }),
+      [STORE_NAME.CART_ITEMS]: () =>
+        db.cartItem.findMany({
+          where: { profileId: sourceSite != 'web' ? undefined : userId },
+          orderBy: { createdAt: 'desc' },
+        }),
       [STORE_NAME.DELIVERIES]: () => db.delivery.findMany({ orderBy: { createdAt: 'desc' } }),
       [STORE_NAME.INGREDIENTS]: () => db.ingredient.findMany({ orderBy: { createdAt: 'desc' } }),
-      [STORE_NAME.ORDERS]: () => db.order.findMany({ orderBy: { createdAt: 'desc' } }),
-      [STORE_NAME.ORDER_ITEMS]: () => db.orderItem.findMany({ orderBy: { createdAt: 'desc' } }),
+      [STORE_NAME.ORDERS]: () =>
+        db.order.findMany({
+          where: { profileId: sourceSite != 'web' ? undefined : userId },
+          orderBy: { createdAt: 'desc' },
+        }),
+      [STORE_NAME.ORDER_ITEMS]: () =>
+        db.orderItem.findMany({
+          where: { profileId: sourceSite != 'web' ? undefined : userId },
+          orderBy: { createdAt: 'desc' },
+        }),
       [STORE_NAME.PRODUCTS]: () => db.product.findMany({ orderBy: { createdAt: 'desc' } }),
       [STORE_NAME.PRODUCT_VARIANTS]: () =>
         db.productVariant.findMany({ orderBy: { createdAt: 'desc' } }),
@@ -36,7 +49,10 @@ export async function GET(request: NextRequest) {
       [STORE_NAME.TABLE_BOOKINGS]: () =>
         db.tableBooking.findMany({ orderBy: { createdAt: 'desc' } }),
       [STORE_NAME.WISHLIST_ITEMS]: () =>
-        db.wishlistItem.findMany({ orderBy: { createdAt: 'desc' } }),
+        db.wishlistItem.findMany({
+          where: { profileId: sourceSite != 'web' ? undefined : userId },
+          orderBy: { createdAt: 'desc' },
+        }),
     };
 
     // 3. Extract only valid keys and keep their execution functions paired
