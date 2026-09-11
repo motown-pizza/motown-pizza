@@ -87,7 +87,7 @@ export function FormContact({
               <GridCol span={12}>
                 <Text fz={'sm'} c={'dimmed'}>
                   By submitting this form, I agree to the{' '}
-                  <AnchorNextLink href="#pp" inherit fw={500}>
+                  <AnchorNextLink href="/privacy-policy" inherit fw={500}>
                     privacy policy
                   </AnchorNextLink>
                   .
