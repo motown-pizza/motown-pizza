@@ -24,103 +24,107 @@ import {
 
 export default function Main() {
   return (
-    <LayoutSection
-      id={'footer-main'}
-      containerized={false}
-      padded={SECTION_SPACING}
-      bg={'var(--mantine-color-dark-9)'}
-    >
-      <LayoutSection id={'footer-main'}>
-        <Grid gap={{ base: 'xl' }} pb={SECTION_SPACING}>
-          <GridCol span={{ base: 12, md: 8 }}>
-            <Grid justify="center" gap={{ base: 'xl', xs: 'md' }}>
-              {linkGroups.map((lg, i) => (
-                <GridCol key={i} span={{ base: 12, sm: 4 }}>
-                  <Title order={2} fz={'lg'} c={'sec'}>
-                    {lg.title}
-                  </Title>
+    <>
+      <Divider />
 
-                  <Stack gap={'xs'} mt={'xl'} align="start">
-                    {lg.links.map((l, i) => (
-                      <AnchorNextLink
-                        key={i}
-                        href={l.link}
-                        underline="never"
-                        className={classes.link}
-                        ta={{ base: 'center', md: 'start' }}
-                      >
-                        {l.label}
-                      </AnchorNextLink>
-                    ))}
-                  </Stack>
-                </GridCol>
-              ))}
-            </Grid>
-          </GridCol>
+      <LayoutSection
+        id={'footer-main'}
+        containerized={false}
+        padded={SECTION_SPACING}
+        bg={'var(--mantine-color-dark-9)'}
+      >
+        <LayoutSection id={'footer-main'}>
+          <Grid gap={{ base: 'xl' }} pb={SECTION_SPACING}>
+            <GridCol span={{ base: 12, md: 8 }}>
+              <Grid justify="center" gap={{ base: 'xl', xs: 'md' }}>
+                {linkGroups.map((lg, i) => (
+                  <GridCol key={i} span={{ base: 12, sm: 4 }}>
+                    <Title order={2} fz={'lg'} c={'sec'}>
+                      {lg.title}
+                    </Title>
 
-          <GridCol span={{ base: 12, md: 4 }}>
-            <div>
-              <Title order={2} fz={'md'} c={'sec'}>
-                {contact.title}
-              </Title>
-
-              <Stack gap={'xs'} mt={'xl'}>
-                {contact.links.map((l) => (
-                  <AnchorNextLink
-                    key={l.link}
-                    href={l.link}
-                    underline="never"
-                    className={classes.link}
-                    ta={{ base: 'center', md: 'start' }}
-                  >
-                    <Group wrap="nowrap">
-                      {l.location && (
-                        <Text component="span" inherit miw={100}>
-                          {l.location}:
-                        </Text>
-                      )}
-
-                      <span>{l.label}</span>
-                    </Group>
-                  </AnchorNextLink>
+                    <Stack gap={'xs'} mt={'xl'} align="start">
+                      {lg.links.map((l, i) => (
+                        <AnchorNextLink
+                          key={i}
+                          href={l.link}
+                          underline="never"
+                          className={classes.link}
+                          ta={{ base: 'center', md: 'start' }}
+                        >
+                          {l.label}
+                        </AnchorNextLink>
+                      ))}
+                    </Stack>
+                  </GridCol>
                 ))}
-              </Stack>
-            </div>
-          </GridCol>
-        </Grid>
+              </Grid>
+            </GridCol>
+
+            <GridCol span={{ base: 12, md: 4 }}>
+              <div>
+                <Title order={2} fz={'md'} c={'sec'}>
+                  {contact.title}
+                </Title>
+
+                <Stack gap={'xs'} mt={'xl'}>
+                  {contact.links.map((l) => (
+                    <AnchorNextLink
+                      key={l.link}
+                      href={l.link}
+                      underline="never"
+                      className={classes.link}
+                      ta={{ base: 'center', md: 'start' }}
+                    >
+                      <Group wrap="nowrap">
+                        {l.location && (
+                          <Text component="span" inherit miw={100}>
+                            {l.location}:
+                          </Text>
+                        )}
+
+                        <span>{l.label}</span>
+                      </Group>
+                    </AnchorNextLink>
+                  ))}
+                </Stack>
+              </div>
+            </GridCol>
+          </Grid>
+        </LayoutSection>
+
+        <LayoutSection id={'footer-main-fine'}>
+          <Divider color="pri" mb={'xl'} />
+
+          <Flex
+            gap={'md'}
+            align={'center'}
+            direction={{ base: 'column', sm: 'row' }}
+            justify={{ sm: 'space-between' }}
+            fz={'sm'}
+            c={'white'}
+          >
+            <Text inherit>
+              © {new Date().getFullYear()} {APP_NAME.WEB}. All rights reserved.
+            </Text>
+
+            <Group justify="center" gap={'xs'}>
+              {social.map((si, i) => (
+                <a key={i} href={'#'}>
+                  <ActionIcon
+                    size={ICON_WRAPPER_SIZE + 8}
+                    color={'pri'}
+                    c={'var(--mantine-color-white'}
+                  >
+                    <si.icon size={ICON_SIZE + 4} stroke={ICON_STROKE_WIDTH} />
+                  </ActionIcon>
+                </a>
+              ))}
+            </Group>
+          </Flex>
+        </LayoutSection>
       </LayoutSection>
-
-      <LayoutSection id={'footer-main-fine'}>
-        <Divider color="pri" mb={'xl'} />
-
-        <Flex
-          gap={'md'}
-          align={'center'}
-          direction={{ base: 'column', sm: 'row' }}
-          justify={{ sm: 'space-between' }}
-          fz={'sm'}
-          c={'white'}
-        >
-          <Text inherit>
-            © {new Date().getFullYear()} {APP_NAME.WEB}. All rights reserved.
-          </Text>
-
-          <Group justify="center" gap={'xs'}>
-            {social.map((si, i) => (
-              <a key={i} href={'#'}>
-                <ActionIcon
-                  size={ICON_WRAPPER_SIZE + 8}
-                  color={'pri'}
-                  c={'var(--mantine-color-white'}
-                >
-                  <si.icon size={ICON_SIZE + 4} stroke={ICON_STROKE_WIDTH} />
-                </ActionIcon>
-              </a>
-            ))}
-          </Group>
-        </Flex>
-      </LayoutSection>
-    </LayoutSection>
+    </>
   );
 }
 
@@ -138,6 +142,10 @@ const linkGroups = [
     links: [
       { label: 'About', link: '/about' },
       { label: 'Contact', link: '/contact' },
+      {
+        label: 'Loyalty Program',
+        link: '/loyalty-program',
+      },
       {
         label: "Loyalty FAQ's",
         link: '/loyalty-program#page-loyalty-program-faq',

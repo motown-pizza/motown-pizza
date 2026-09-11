@@ -43,7 +43,7 @@ export default function About() {
               <Title order={1}>About Us</Title>
 
               <Text>
-                Welcome to MOTOWN Pizza – Where Pizza Meets Passion! At MOTOWN, we’re not just
+                Welcome to MoTown Pizza – Where Pizza Meets Passion! At MoTown, we’re not just
                 serving Pizza; we’re crafting culinary experiences that ignite your taste buds and
                 warm your heart. We’re thrilled to invite you to join us on a delicious journey
                 that’s been a couple of years in the making.
@@ -53,7 +53,7 @@ export default function About() {
                 <Text component="span" inherit fw={'bold'} c={'sec'}>
                   Our Pizza
                 </Text>
-                : Handcrafted Perfection…Every Pizza at MOTOWN is an authentic experience. Our
+                : Handcrafted Perfection…Every Pizza at MoTown is an authentic experience. Our
                 talented and experienced chefs use only the freshest, locally- sourced ingredients
                 to create mouthwatering masterpieces that bursts with flavor. From our signature
                 MoTown Meltdown crust to our homemade sauces and premium toppings, we’re dedicated
@@ -74,7 +74,7 @@ export default function About() {
                 <Text component="span" inherit fw={'bold'} c={'sec'}>
                   Sustainability Matters
                 </Text>
-                : At MOTOWN, we take our responsibility to the environment seriously. We make
+                : At MoTown, we take our responsibility to the environment seriously. We make
                 eco-friendly choices wherever possible, from our sustainable sourcing practices to
                 our eco-conscious packaging. Together, we can enjoy great pizza while preserving our
                 planet for future generations
@@ -109,7 +109,7 @@ export default function About() {
             <Text fz={'sm'} ta={'center'} maw={{ md: '80%' }}>
               So, What are you waiting for? Gather your friends and family, or come as you are, and
               let us treat you to a memorable pizza experience. Join us in Westlands, Kileleshwa,
-              Riverside and discover why MOTOWN Pizza is more than just a Pizzeria; It’s a place
+              Valley Arcade and discover why MoTown Pizza is more than just a Pizzeria; It’s a place
               where flavors, fun and friendships come together.
             </Text>
 
@@ -143,7 +143,7 @@ export default function About() {
               </Text>
 
               <Text fz={'xs'}>
-                Thank you for choosing MOTOWN Pizza KENYA. We can’t wait to serve you.
+                Thank you for choosing MoTown Pizza KENYA. We can’t wait to serve you.
               </Text>
             </div>
           </Stack>
@@ -278,7 +278,7 @@ const brandItems = [
     image:
       'https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     title: 'Freshness',
-    desc: 'Our Pizzas are made with the freshest, locally sourced ingredients from a town in the mountain region of Kenya hence the name MOTOWN.',
+    desc: 'Our Pizzas are made with the freshest, locally sourced ingredients from a town in the mountain region of Kenya hence the name MoTown.',
   },
   {
     image:
@@ -296,6 +296,6 @@ const brandItems = [
     image:
       'https://images.unsplash.com/photo-1620374645466-dc3ff1558148?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     title: 'Delivery Timelines',
-    desc: 'Our pizzas are delivered Hot & Fresh to our customers in record time of 26 minutes. The delivery is within a radius of 3-5 Kilometers within any MOTOWN Pizza store.',
+    desc: 'Our pizzas are delivered Hot & Fresh to our customers in record time of 26 minutes. The delivery is within a radius of 3-5 Kilometers within any MoTown Pizza store.',
   },
 ];

@@ -9,6 +9,7 @@ import {
   Drawer,
   Fieldset,
   HoverCard,
+  List,
   Loader,
   MantineThemeOverride,
   Menu,
@@ -192,6 +193,14 @@ export const getAppTheme = (params?: AppThemeProps) => {
 
       NumberFormatter: NumberFormatter.extend({
         defaultProps: { thousandSeparator: true },
+      }),
+
+      List: List.extend({
+        defaultProps: {
+          withPadding: true,
+          spacing: 5,
+          listStyleType: 'disc',
+        },
       }),
 
       Fieldset: Fieldset.extend({
