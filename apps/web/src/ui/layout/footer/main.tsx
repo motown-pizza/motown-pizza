@@ -36,7 +36,7 @@ export default function Main() {
             <Grid justify="center" gap={{ base: 'xl', xs: 'md' }}>
               {linkGroups.map((lg, i) => (
                 <GridCol key={i} span={{ base: 12, sm: 4 }}>
-                  <Title order={2} fz={'lg'} c={'ter'}>
+                  <Title order={2} fz={'lg'} c={'sec'}>
                     {lg.title}
                   </Title>
 
@@ -60,7 +60,7 @@ export default function Main() {
 
           <GridCol span={{ base: 12, md: 4 }}>
             <div>
-              <Title order={2} fz={'md'} c={'ter'}>
+              <Title order={2} fz={'md'} c={'sec'}>
                 {contact.title}
               </Title>
 
@@ -91,7 +91,7 @@ export default function Main() {
       </LayoutSection>
 
       <LayoutSection id={'footer-main-fine'}>
-        <Divider color="sec" mb={'xl'} />
+        <Divider color="pri" mb={'xl'} />
 
         <Flex
           gap={'md'}
@@ -109,11 +109,11 @@ export default function Main() {
             {social.map((si, i) => (
               <a key={i} href={'#'}>
                 <ActionIcon
-                  size={ICON_WRAPPER_SIZE + 4}
+                  size={ICON_WRAPPER_SIZE + 8}
                   color={'pri'}
                   c={'var(--mantine-color-white'}
                 >
-                  <si.icon size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+                  <si.icon size={ICON_SIZE + 4} stroke={ICON_STROKE_WIDTH} />
                 </ActionIcon>
               </a>
             ))}

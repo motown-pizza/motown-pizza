@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { LayoutSection } from '@repo/ui';
-import { Box, Group, Stack, Text } from '@mantine/core';
+import { Box, Group, Stack, Text, Title } from '@mantine/core';
 import { IconMoped, IconPizza } from '@tabler/icons-react';
 import { PHONES } from '@repo/constants';
 import { APP_NAME } from '@repo/constants';
@@ -19,7 +19,11 @@ export default function Main() {
   return (
     <LayoutSection id={'header-main'} padded={'xs'}>
       <Group justify={tablet ? 'space-between' : 'center'} wrap="nowrap">
-        <Box w={{ md: '40%' }} visibleFrom="md"></Box>
+        <Box w={{ md: '40%' }} visibleFrom="md">
+          <Title order={1} c={'sec'} fz={'xl'}>
+            Authentic Taste that Rules!
+          </Title>
+        </Box>
 
         <Group w={{ md: '30%' }} justify="center" py={'md'}>
           <AnchorNextLink href="/" underline="never">

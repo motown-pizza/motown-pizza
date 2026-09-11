@@ -34,15 +34,15 @@ export function CardOrderConfirmed({
   const copyProps = { icon: clipboard.copied ? IconCheck : IconCopy };
 
   return (
-    <Card bg={'var(--mantine-color-dark-8)'} p={{ base: 'md', md: 'xl' }} {...restProps}>
+    <Card bg={'var(--mantine-color-dark-9)'} withBorder p={{ base: 'md', md: 'xl' }} {...restProps}>
       <Stack gap={'xs'}>
-        <Group justify="space-between">
-          <Title order={3} fz={'sm'} fw={500}>
+        <Group justify="space-between" align="end">
+          <Title order={3} fz={'sm'} fw={'normal'} c={'sec'}>
             Tracking Code
           </Title>
 
-          <Group wrap="nowrap">
-            <Text ta={'end'} fz={'sm'} visibleFrom="xs">
+          <Group wrap="nowrap" gap={'xs'}>
+            <Text ta={'end'} fz={'md'} fw={500} visibleFrom="xs">
               {order?.trackingCode}
             </Text>
 
@@ -73,72 +73,74 @@ export function CardOrderConfirmed({
           </Group>
         </Group>
 
-        <Divider variant="dashed" />
+        <Divider variant="dashed" color="dark.4" />
 
-        <Group justify="space-between" wrap="nowrap">
-          <Title order={3} fz={'sm'} fw={500}>
+        <Group justify="space-between" wrap="nowrap" align="end">
+          <Title order={3} fz={'sm'} fw={'normal'} c={'sec'}>
             Fulfilment Type
           </Title>
-          <Text ta={'end'} fz={'sm'}>
+
+          <Text ta={'end'} fz={'md'} fw={500}>
             {(order?.fulfillmentType || '').toUpperCase()}
           </Text>
         </Group>
 
-        <Divider variant="dashed" />
+        <Divider variant="dashed" color="dark.4" />
 
-        <Group justify="space-between" wrap="nowrap">
-          <Title order={3} fz={'sm'} fw={500}>
+        <Group justify="space-between" wrap="nowrap" align="end">
+          <Title order={3} fz={'sm'} fw={'normal'} c={'sec'}>
             Payment Option
           </Title>
+
           <Badge ta={'end'} color="blue">
             {order?.paymentMethod}
           </Badge>
         </Group>
 
-        <Divider variant="dashed" />
+        <Divider variant="dashed" color="dark.4" />
 
-        <Group justify="space-between" wrap="nowrap">
-          <Title order={3} fz={'sm'} fw={500}>
+        <Group justify="space-between" wrap="nowrap" align="end">
+          <Title order={3} fz={'sm'} fw={'normal'} c={'sec'}>
             Name
           </Title>
 
-          <Text ta={'end'} fz={'sm'}>
+          <Text ta={'end'} fz={'md'} fw={500}>
             {capitalizeWords(order?.customerName || '')}
           </Text>
         </Group>
 
-        <Divider variant="dashed" />
+        <Divider variant="dashed" color="dark.4" />
 
-        <Group justify="space-between" wrap="nowrap">
-          <Title order={3} fz={'sm'} fw={500}>
+        <Group justify="space-between" wrap="nowrap" align="end">
+          <Title order={3} fz={'sm'} fw={'normal'} c={'sec'}>
             Phone
           </Title>
 
-          <Text ta={'end'} fz={'sm'}>
+          <Text ta={'end'} fz={'md'} fw={500}>
             {order?.customerPhone}
           </Text>
         </Group>
 
-        <Divider variant="dashed" />
+        <Divider variant="dashed" color="dark.4" />
 
-        <Group justify="space-between" wrap="nowrap">
-          <Title order={3} fz={'sm'} fw={500}>
+        <Group justify="space-between" wrap="nowrap" align="end">
+          <Title order={3} fz={'sm'} fw={'normal'} c={'sec'}>
             Store
           </Title>
 
-          <Text ta={'end'} fz={'sm'} lineClamp={1}>
+          <Text ta={'end'} fz={'md'} fw={500} lineClamp={1}>
             {`${store?.title}, ${store?.location}`}
           </Text>
         </Group>
 
-        <Divider variant="dashed" />
+        <Divider variant="dashed" color="dark.4" />
 
-        <Group justify="space-between" wrap="nowrap">
-          <Title order={3} fz={'sm'} fw={500}>
+        <Group justify="space-between" wrap="nowrap" align="end">
+          <Title order={3} fz={'sm'} fw={'normal'} c={'sec'}>
             Created
           </Title>
 
-          <Text ta={'end'} fz={'sm'} lineClamp={1}>
+          <Text ta={'end'} fz={'md'} fw={500} lineClamp={1}>
             {getRegionalDate(order?.createdAt || new Date()).date}
           </Text>
         </Group>

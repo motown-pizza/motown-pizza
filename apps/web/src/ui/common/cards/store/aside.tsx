@@ -20,7 +20,8 @@ export default function Aside({ props }: { props: StoreGet }) {
 
       <Stack
         gap={5}
-        fz={'sm'}
+        // fz={'sm'}
+        fw={500}
         // mt={'md'}
       >
         <Group gap={5}>
@@ -33,7 +34,7 @@ export default function Aside({ props }: { props: StoreGet }) {
           <Text inherit>{props.location}</Text>
         </Group>
 
-        <Group gap={5}>
+        <Group gap={5} c={'ter'}>
           <IconPhone size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
           <Text inherit>{props.phone}</Text>
         </Group>

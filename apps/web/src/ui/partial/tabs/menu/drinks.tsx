@@ -27,12 +27,12 @@ export default function Drinks({ options }: { options?: { withAside?: boolean } 
         my={SECTION_SPACING}
         w={{ base: '100%', md: '60%' }}
         mx={'auto'}
-        color="sec"
+        color="pri"
         styles={{
           label: {
             color: 'var(--mantine-color-sec-6)',
-            fontSize: 'var(--mantine-font-size-lg)',
-            fontWeight: 500,
+            fontSize: 'var(--mantine-h2-font-size)',
+            fontWeight: 'bold',
           },
         }}
       />
@@ -62,12 +62,12 @@ export default function Drinks({ options }: { options?: { withAside?: boolean } 
         my={SECTION_SPACING}
         w={{ base: '100%', md: '60%' }}
         mx={'auto'}
-        color="sec"
+        color="pri"
         styles={{
           label: {
             color: 'var(--mantine-color-sec-6)',
-            fontSize: 'var(--mantine-font-size-lg)',
-            fontWeight: 500,
+            fontSize: 'var(--mantine-h2-font-size)',
+            fontWeight: 'bold',
           },
         }}
       />

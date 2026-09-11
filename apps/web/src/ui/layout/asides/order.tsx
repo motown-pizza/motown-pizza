@@ -23,10 +23,9 @@ import { capitalizeWords } from '@repo/utils';
 import { SECTION_SPACING } from '@repo/constants';
 import { usePathname } from 'next/navigation';
 import { stores } from '@repo/constants';
-import { OrderTime, OrderFulfilmentType } from '@repo/types';
+import { OrderFulfilmentType } from '@repo/types';
 import { getUrlParam } from '@repo/utils';
 import { PARAM_NAME } from '@repo/constants';
-import { DateTimePicker } from '@mantine/dates';
 import { useStoreCartItem } from '@repo/store';
 import { useGetSum } from '@repo/hooks';
 
@@ -58,9 +57,9 @@ export default function Order() {
 
   return (
     <Box pos={'sticky'} top={SECTION_SPACING}>
-      <Card bg={'var(--mantine-color-dark-8)'}>
+      <Card bg={'var(--mantine-color-dark-9)'} withBorder pb={0}>
         <CardSection p={'md'} bg={'var(--mantine-color-sec-6)'}>
-          <Title order={2} fz={'lg'} fw={'bold'} c={'blue.7'}>
+          <Title order={2} fz={'lg'} fw={'bold'} c={'var(--mantine-color-dark-9)'}>
             Order Details
           </Title>
         </CardSection>
@@ -73,8 +72,10 @@ export default function Order() {
               </Title>
 
               {!isStoreSelection && (
-                <AnchorNextLink href="/order/select-store?orderType=delivery" fz={'sm'} c={'blue'}>
-                  Change Store
+                <AnchorNextLink href="/order/select-store?orderType=delivery" fz={'sm'}>
+                  <Button size="xs" color={'pri'}>
+                    Change Store
+                  </Button>
                 </AnchorNextLink>
               )}
             </Group>
@@ -102,12 +103,12 @@ export default function Order() {
             >
               <Stack mt="xs">
                 <Radio
-                  size="xs"
+                  // size="xs"
                   value={OrderFulfilmentType.COLLECTION}
                   label={capitalizeWords(OrderFulfilmentType.COLLECTION)}
                 />
                 <Radio
-                  size="xs"
+                  // size="xs"
                   value={OrderFulfilmentType.DELIVERY}
                   label={capitalizeWords(OrderFulfilmentType.DELIVERY)}
                 />
@@ -162,18 +163,26 @@ export default function Order() {
         </Stack>
 
         {!isStoreSelection && (
-          <CardSection p={'md'} mt={'md'} bg={'var(--mantine-color-dark-7)'}>
-            <Group justify="space-between">
-              <Text>Total:</Text>
+          <>
+            <CardSection mt={'md'} bg={'var(--mantine-color-dark-8)'}>
+              <Divider />
 
-              <Text fz={'sm'}>
-                Kshs.{' '}
-                <Text component="span" inherit fz={'md'} fw={500} c={'sec'}>
-                  <NumberFormatter value={getSum()} />
-                </Text>
-              </Text>
-            </Group>
-          </CardSection>
+              <Box p={'md'}>
+                <Group justify="space-between" fz={'lg'}>
+                  <Text inherit c={'sec'} fw={500}>
+                    Total:
+                  </Text>
+
+                  <Text inherit>
+                    Kshs.{' '}
+                    <Text component="span" inherit fz={'xl'} fw={500} c={'ter'}>
+                      <NumberFormatter value={getSum()} />
+                    </Text>
+                  </Text>
+                </Group>
+              </Box>
+            </CardSection>
+          </>
         )}
       </Card>
 

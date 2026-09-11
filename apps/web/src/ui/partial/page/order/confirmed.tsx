@@ -36,9 +36,9 @@ export default function Confirmed() {
       containerized={'xs'}
     >
       <Stack>
-        <Group justify="center">
-          <ThemeIcon size={ICON_WRAPPER_SIZE * 2} color="ter" radius={999}>
-            <IconCheck size={ICON_SIZE * 2} stroke={ICON_STROKE_WIDTH} />
+        <Group justify="center" mb={'xl'}>
+          <ThemeIcon size={ICON_WRAPPER_SIZE * 4} color="ter" radius={999}>
+            <IconCheck size={ICON_SIZE * 4} stroke={ICON_STROKE_WIDTH} />
           </ThemeIcon>
         </Group>
 
@@ -50,17 +50,15 @@ export default function Confirmed() {
         />
 
         {order && (
-          <Stack gap={'xl'} mt={SECTION_SPACING}>
+          <Stack gap={SECTION_SPACING} mt={SECTION_SPACING}>
             <CardOrderConfirmed props={{ order, store }} />
 
-            <Stack ta={'center'}>
-              <Title order={3} fz={'lg'}>
-                Order Tracking
-              </Title>
+            <Stack ta={'center'} gap={'xl'}>
+              <Title order={3}>Order Tracking</Title>
 
               {order.fulfillmentType == OrderFulfilmentType.DELIVERY && delivery && (
-                <Stack gap={'xs'} fz={'sm'} c={'dimmed'}>
-                  <Text inherit>
+                <Stack gap={'xl'} c={'dimmed'}>
+                  <Text inherit fz={'xl'}>
                     Your verification pin is{' '}
                     <Text component={'span'} inherit fw={'bold'} c={'sec'}>
                       {delivery.verficationCode}

@@ -39,8 +39,8 @@ export default function CheckoutReview() {
       <Grid gap={'xl'} mt={'xl'}>
         <GridCol span={{ base: 12, md: 8 }}>
           <Stack gap={'xl'}>
-            <Card bg={'var(--mantine-color-dark-8)'} padding={0}>
-              <CardSection p={'md'} bg={'var(--mantine-color-dark-7)'}>
+            <Card bg={'var(--mantine-color-dark-9)'} padding={0} withBorder>
+              <CardSection p={'md'} bg={'var(--mantine-color-dark-8)'}>
                 <Group justify="space-between">
                   <Title order={3}>Review and Modify Your Items</Title>
 

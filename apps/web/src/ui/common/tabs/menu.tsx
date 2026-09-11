@@ -28,24 +28,23 @@ export default function Menu({
       }}
       styles={{
         tab: {
-          borderRadius: 0,
           padding: 'var(--mantine-spacing-lg) var(--mantine-spacing-xl)',
         },
-        tabLabel: { fontSize: 'var(--mantine-font-size-lg)' },
+        tabLabel: { fontSize: 'var(--mantine-font-size-xl)', fontWeight: 'bold' },
         panel: { padding: 'var(--mantine-spacing-lg) 0' },
         root: { minHeight: 500 },
       }}
     >
-      <TabsList>
-        <TabsTab value="pizzas" w={{ base: '33%', xs: 'inherit' }}>
+      <TabsList justify="center">
+        <TabsTab value="pizzas" w={{ base: '33%', xs: 'inherit', md: '33%' }}>
           Pizzas
         </TabsTab>
 
-        <TabsTab value="sides" w={{ base: '33%', xs: 'inherit' }}>
+        <TabsTab value="sides" w={{ base: '33%', xs: 'inherit', md: '33%' }}>
           Sides
         </TabsTab>
 
-        <TabsTab value="drinks" w={{ base: '33%', xs: 'inherit' }}>
+        <TabsTab value="drinks" w={{ base: '33%', xs: 'inherit', md: '33%' }}>
           Drinks
         </TabsTab>
       </TabsList>

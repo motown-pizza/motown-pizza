@@ -83,10 +83,10 @@ export default function Main({
   const isOrder = pathname.includes('order');
 
   return (
-    <Card radius={'lg'} h={'100%'} bg={'var(--mantine-color-dark-8)'} withBorder>
-      <Stack h={'100%'} justify="space-between" gap={'xs'}>
+    <Card radius={'lg'} h={'100%'} bg={'var(--mantine-color-dark-9)'} withBorder pt={0}>
+      <Stack h={'100%'} justify="space-between">
         <div>
-          <CardSection bg={'var(--mantine-color-dark-7)'} py={'xl'}>
+          <CardSection bg={'var(--mantine-color-dark-8)'} py={'xl'}>
             <ImageDefault
               src={props.image}
               alt={props.title}
@@ -96,24 +96,28 @@ export default function Main({
           </CardSection>
 
           <Stack mt={'md'}>
-            <Title order={3} fz={'md'} fw={500} c={'blue'}>
+            <Title order={3} fz={'lg'} fw={'bold'} c={'sec'}>
               {props.title}
             </Title>
 
             {props.description ? (
-              <Text fz={'sm'}>{props.description}</Text>
+              <Text fz={'md'} mih={75}>
+                {props.description}
+              </Text>
             ) : (
-              content && <Text fz={'sm'}>{content}</Text>
+              content && (
+                <Text fz={'md'} mih={75}>
+                  {content}
+                </Text>
+              )
             )}
           </Stack>
-        </div>
 
-        <div>
-          <Stack>
+          <Stack mt={'md'}>
             <Group justify="space-between">
-              <Text fz={'sm'}>
+              <Text>
                 Kshs.{' '}
-                <Text component="span" inherit fz={'md'} fw={'bold'} c={'sec'}>
+                <Text component="span" inherit fz={'xl'} fw={'bold'} c={'ter'}>
                   <NumberFormatter value={price} />
                 </Text>
               </Text>
@@ -170,35 +174,46 @@ export default function Main({
               </Tooltip>
             </Group>
           </Stack>
+        </div>
 
-          <Divider my={'xs'} label={'Select variant'} />
+        <div>
+          {productVariantsCurrent && productVariantsCurrent.length > 1 && (
+            <>
+              <Divider
+                my={'xs'}
+                label={'Select variant'}
+                styles={{ label: { fontSize: 'var(--mantine-font-size-sm)' } }}
+              />
 
-          {productVariantsCurrent && (
-            <Select
-              w={'100%'}
-              aria-label="Pick variant"
-              placeholder="Pick variant"
-              checkIconPosition="right"
-              allowDeselect={false}
-              data={sortArray(productVariantsCurrent, (i) => i.title, Order.ASCENDING).map(
-                (pv) => ({
-                  value: pv.id,
-                  label: pv.title || pv.size,
-                }),
-              )}
-              value={variantId}
-              comboboxProps={{ width: 'fit-content', position: 'bottom-start' }}
-              styles={{
-                dropdown: {
-                  minWidth: 220,
-                },
-              }}
-              onChange={(v) => {
-                setSelectedVariantId(v as string);
-                const variant = productVariantsCurrent.find((va) => va.id == v);
-                if (variant && variant.price) setPrice(variant.price);
-              }}
-            />
+              {
+                <Select
+                  w={'100%'}
+                  aria-label="Pick variant"
+                  placeholder="Pick variant"
+                  checkIconPosition="right"
+                  allowDeselect={false}
+                  data={sortArray(productVariantsCurrent, (i) => i.title, Order.ASCENDING).map(
+                    (pv) => ({
+                      value: pv.id,
+                      label: pv.title || pv.size,
+                    }),
+                  )}
+                  value={variantId}
+                  comboboxProps={{ width: 'fit-content', position: 'bottom-start' }}
+                  variant="default"
+                  // styles={{
+                  //   dropdown: {
+                  //     minWidth: 220,
+                  //   },
+                  // }}
+                  onChange={(v) => {
+                    setSelectedVariantId(v as string);
+                    const variant = productVariantsCurrent.find((va) => va.id == v);
+                    if (variant && variant.price) setPrice(variant.price);
+                  }}
+                />
+              }
+            </>
           )}
         </div>
       </Stack>

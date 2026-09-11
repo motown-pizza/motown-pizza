@@ -4,6 +4,7 @@ import React from 'react';
 import { LayoutSection } from '@repo/ui';
 import {
   Badge,
+  Box,
   Button,
   Card,
   CardSection,
@@ -66,11 +67,11 @@ export default function Checkout() {
       <LayoutIntroSection props={{ title: 'Checkout' }} options={{ alignment: 'start' }} />
 
       <Stack mt={'xl'}>
-        <div>
+        <Box fz={'lg'}>
           {store && (
-            <Text c={'dimmed'}>
+            <Text inherit c={'sec'}>
               Carryout from:{' '}
-              <Text component="span" inherit c={'var(--mantine-color-text)'}>
+              <Text component="span" inherit fw={500} c={'var(--mantine-color-text)'}>
                 {store.title}, {store.location}
               </Text>
               .
@@ -78,22 +79,22 @@ export default function Checkout() {
           )}
 
           {orderDetails?.orderTime == OrderTime.NOW && (
-            <Text c={'dimmed'}>
+            <Text inherit c={'sec'}>
               Your order will be ready on:{' '}
-              <Text component="span" inherit c={'var(--mantine-color-text)'}>
+              <Text component="span" inherit fw={500} c={'var(--mantine-color-text)'}>
                 {readyDate.date}, {readyDate.time.toUpperCase()}
               </Text>
               .
             </Text>
           )}
-        </div>
+        </Box>
 
-        <Badge size="xl" color="var(--mantine-color-dark-7)" tt={'capitalize'}>
-          <Text inherit c={'dimmed'} fz={'sm'}>
+        <Badge size="xl" color="pri" tt={'capitalize'} p={'lg'}>
+          <Text inherit>
             Total:{' '}
-            <Text component="span" inherit fz={'md'} c={'var(--mantine-color-text)'}>
+            <Text component="span" inherit c={'sec'} fz={'xl'}>
               Kshs.{' '}
-              <Text component="span" inherit c={'sec'} fz={'lg'}>
+              <Text component="span" inherit>
                 <NumberFormatter value={getSum()} />
               </Text>
             </Text>
@@ -102,9 +103,9 @@ export default function Checkout() {
       </Stack>
 
       <Stack gap={'xl'} mt={'xl'}>
-        <Card bg={'var(--mantine-color-dark-8)'} padding={0}>
-          <CardSection p={'md'} bg={'var(--mantine-color-dark-7)'}>
-            <Title order={3} c={'blue'}>
+        <Card bg={'var(--mantine-color-dark-9)'} padding={0} withBorder>
+          <CardSection p={'md'} bg={'var(--mantine-color-dark-8)'}>
+            <Title order={3} c={'sec'}>
               Order Items Summary
             </Title>
           </CardSection>
@@ -136,16 +137,16 @@ export default function Checkout() {
           </ScrollAreaAutosize>
         </Card>
 
-        <Card bg={'var(--mantine-color-dark-8)'}>
-          <CardSection p={'md'} bg={'var(--mantine-color-dark-7)'}>
-            <Title order={3} c={'blue'}>
+        <Card bg={'var(--mantine-color-dark-9)'} withBorder>
+          <CardSection p={'md'} bg={'var(--mantine-color-dark-8)'}>
+            <Title order={3} c={'sec'}>
               Step 1: Contact Info
             </Title>
           </CardSection>
 
           <Stack mt={'md'}>
             <div>
-              <Title order={4} fz={'lg'}>
+              <Title order={4} fz={'lg'} c={'sec'}>
                 Personal Information
               </Title>
 
@@ -164,9 +165,9 @@ export default function Checkout() {
           </Stack>
         </Card>
 
-        <Card bg={'var(--mantine-color-dark-8)'}>
-          <CardSection p={'md'} bg={'var(--mantine-color-dark-7)'}>
-            <Title order={3} c={'blue'}>
+        <Card bg={'var(--mantine-color-dark-9)'} withBorder>
+          <CardSection p={'md'} bg={'var(--mantine-color-dark-9)'}>
+            <Title order={3} c={'sec'}>
               Step 2: Select Payment Method
             </Title>
           </CardSection>

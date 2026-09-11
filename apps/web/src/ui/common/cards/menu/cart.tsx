@@ -55,7 +55,7 @@ export default function Cart({
 
         <GridCol span={options?.checkout ? 10.5 : 9} pl={'xs'}>
           <Group justify="space-between">
-            <Title order={3} fz={'md'} fw={500} c={'blue'} lineClamp={1}>
+            <Title order={3} fz={'lg'} fw={500} c={'pri'} lineClamp={1}>
               {product?.title}
             </Title>
 
@@ -79,13 +79,14 @@ export default function Cart({
 
           {variant && (
             <>
-              <Text inherit fz={'sm'}>
-                {capitalizeWords(variant.size)}
-              </Text>
+              {variant.title &&
+                product?.title.trim().toLowerCase() != variant.title.trim().toLowerCase() && (
+                  <Text inherit>{capitalizeWords(variant.title)}</Text>
+                )}
 
-              <Group justify="space-between" mt={'xs'}>
+              <Group justify="space-between" mt={'md'}>
                 <Group>
-                  <Text inherit fz={'xs'} c={'dimmed'}>
+                  <Text inherit c={'dimmed'}>
                     Qty:{' '}
                     <Text component={'span'} inherit fw={500} c={'ter'}>
                       <NumberFormatter value={props.quantity} />
@@ -125,9 +126,9 @@ export default function Cart({
                   </Group>
                 </Group>
 
-                <Text inherit fz={'sm'}>
+                <Text inherit>
                   Kshs.{' '}
-                  <Text component="span" inherit fz={'md'} fw={500} c={'sec'}>
+                  <Text component="span" inherit fz={'lg'} fw={500} c={'ter'}>
                     <NumberFormatter value={(variant.price || 0) * props.quantity} />
                   </Text>
                 </Text>

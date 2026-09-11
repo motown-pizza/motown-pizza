@@ -64,12 +64,12 @@ export default function Pizzas({ options }: { options?: { withAside?: boolean } 
             my={SECTION_SPACING}
             w={{ base: '100%', md: '60%' }}
             mx={'auto'}
-            color="sec"
+            color="pri"
             styles={{
               label: {
                 color: 'var(--mantine-color-sec-6)',
-                fontSize: 'var(--mantine-font-size-lg)',
-                fontWeight: 500,
+                fontSize: 'var(--mantine-h2-font-size)',
+                fontWeight: 'bold',
               },
             }}
           />
@@ -83,7 +83,7 @@ export default function Pizzas({ options }: { options?: { withAside?: boolean } 
                   xs: 6,
                   sm: 4,
                   md: options?.withAside ? 6 : 4,
-                  xl: options?.withAside ? 4 : 3,
+                  // xl: options?.withAside ? 4 : 3,
                 }}
               >
                 <CardMenuMain props={p} />

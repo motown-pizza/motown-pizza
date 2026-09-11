@@ -1,5 +1,5 @@
 import React from 'react';
-import { Center, Divider, Grid, GridCol, Loader, Stack, Text, Title } from '@mantine/core';
+import { Box, Center, Divider, Grid, GridCol, Loader, Stack, Text, Title } from '@mantine/core';
 import CardMenuMain from '@web/ui/common/cards/menu/main';
 import { ProductDietarySubType, ProductType } from '@repo/types';
 import { useStoreProduct } from '@repo/store';
@@ -44,62 +44,73 @@ export default function Sides({ options }: { options?: { withAside?: boolean } }
   }
 
   return (
-    <Stack gap="xl">
-      {/* Sides Section */}
-      {!!sides?.length && (
-        <Stack gap="md">
-          <Divider
-            label={capitalizeWords(`Sides`)}
-            my={SECTION_SPACING}
-            w={{ base: '100%', md: '60%' }}
-            mx={'auto'}
-            color="sec"
-            styles={{
-              label: {
-                color: 'var(--mantine-color-sec-6)',
-                fontSize: 'var(--mantine-font-size-lg)',
-                fontWeight: 500,
-              },
-            }}
-          />
+    <>
+      <Box mt={'md'}>
+        <Text inherit ta={'center'}>
+          <Text component="span" inherit c={'blue'} fw={500}>
+            Note:
+          </Text>{' '}
+          Chicken wings and nuggets are drizzled with either BBQ Sauce, Peri Peri or American Ranch.
+        </Text>
+      </Box>
 
-          <Grid>
-            {sortArray(sides, (i) => i.updatedAt, Order.DESCENDING)?.map((p) => (
-              <GridCol key={p.id} span={spanConfig}>
-                <CardMenuMain props={p} />
-              </GridCol>
-            ))}
-          </Grid>
-        </Stack>
-      )}
+      <Stack gap="xl">
+        {/* Sides Section */}
+        {!!sides?.length && (
+          <Stack gap="md">
+            <Divider
+              label={capitalizeWords(`Addons`)}
+              my={SECTION_SPACING}
+              w={{ base: '100%', md: '60%' }}
+              mx={'auto'}
+              color="pri"
+              styles={{
+                label: {
+                  color: 'var(--mantine-color-sec-6)',
+                  fontSize: 'var(--mantine-h2-font-size)',
+                  fontWeight: 'bold',
+                },
+              }}
+            />
 
-      {/* Sauces Section */}
-      {!!sauces?.length && (
-        <Stack gap="md">
-          <Divider
-            label={capitalizeWords(`Sauces`)}
-            my={SECTION_SPACING}
-            w={{ base: '100%', md: '60%' }}
-            mx={'auto'}
-            color="sec"
-            styles={{
-              label: {
-                color: 'var(--mantine-color-sec-6)',
-                fontSize: 'var(--mantine-font-size-lg)',
-                fontWeight: 500,
-              },
-            }}
-          />
+            <Grid>
+              {sortArray(sides, (i) => i.updatedAt, Order.DESCENDING)?.map((p) => (
+                <GridCol key={p.id} span={spanConfig}>
+                  <CardMenuMain props={p} />
+                </GridCol>
+              ))}
+            </Grid>
+          </Stack>
+        )}
 
-          <Grid>
-            {sortArray(sauces, (i) => i.updatedAt, Order.DESCENDING)?.map((p) => (
-              <GridCol key={p.id} span={spanConfig}>
-                <CardMenuMain props={p} />
-              </GridCol>
-            ))}
-          </Grid>
-        </Stack>
-      )}
-    </Stack>
+        {/* Sauces Section */}
+        {!!sauces?.length && (
+          <Stack gap="md">
+            <Divider
+              label={capitalizeWords(`Sauces`)}
+              my={SECTION_SPACING}
+              w={{ base: '100%', md: '60%' }}
+              mx={'auto'}
+              color="pri"
+              styles={{
+                label: {
+                  color: 'var(--mantine-color-sec-6)',
+                  fontSize: 'var(--mantine-h2-font-size)',
+                  fontWeight: 'bold',
+                },
+              }}
+            />
+
+            <Grid>
+              {sortArray(sauces, (i) => i.updatedAt, Order.DESCENDING)?.map((p) => (
+                <GridCol key={p.id} span={spanConfig}>
+                  <CardMenuMain props={p} />
+                </GridCol>
+              ))}
+            </Grid>
+          </Stack>
+        )}
+      </Stack>
+    </>
   );
 }
