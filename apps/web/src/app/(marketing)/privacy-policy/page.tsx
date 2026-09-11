@@ -35,9 +35,9 @@ export default function TermsConditions() {
             </Title>
 
             <Text>
-              By enrolling in the Program, customers consent to Mo Town Pizza collecting and
-              securely storing limited personal information, including name, mobile phone number,
-              and email address, for the purposes of administering and managing the loyalty program.
+              By enrolling in the Program, customers consent to MoTown Pizza collecting and securely
+              storing limited personal information, including name, mobile phone number, and email
+              address, for the purposes of administering and managing the loyalty program.
             </Text>
           </Stack>
 
@@ -47,7 +47,7 @@ export default function TermsConditions() {
             </Title>
 
             <Text>
-              Mo Town Pizza does not sell, rent, or disclose customer personal data to unrelated
+              MoTown Pizza does not sell, rent, or disclose customer personal data to unrelated
               third parties.
             </Text>
           </Stack>
@@ -60,7 +60,7 @@ export default function TermsConditions() {
             <Text>Customer information may be shared internally within:</Text>
 
             <List>
-              <ListItem>Mo Town Pizza branches</ListItem>
+              <ListItem>MoTown Pizza branches</ListItem>
               <ListItem>Affiliated brands</ListItem>
               <ListItem>Sister companies</ListItem>
             </List>
@@ -90,7 +90,7 @@ export default function TermsConditions() {
 
             <Text>
               These communications may be delivered via SMS, WhatsApp, email, or similar electronic
-              channels by Mo Town Pizza and its affiliated brands.
+              channels by MoTown Pizza and its affiliated brands.
             </Text>
           </Stack>
 
@@ -101,7 +101,7 @@ export default function TermsConditions() {
 
             <Text>
               Customers may opt out of receiving marketing messages at any time by replying “STOP”
-              to promotional communications or by requesting removal through any Mo Town Pizza
+              to promotional communications or by requesting removal through any MoTown Pizza
               branch.
             </Text>
 
@@ -120,7 +120,7 @@ export default function TermsConditions() {
             </Title>
 
             <Text>
-              Mo Town Pizza commits to applying reasonable technical and organizational measures to
+              MoTown Pizza commits to applying reasonable technical and organizational measures to
               protect customer data against unauthorized access, alteration, loss, or misuse.
             </Text>
           </Stack>
@@ -132,7 +132,7 @@ export default function TermsConditions() {
 
             <Text>
               These Terms & Conditions shall be governed by and interpreted in accordance with the
-              laws of the Republic of Kenya and any other country in which participating Mo Town
+              laws of the Republic of Kenya and any other country in which participating MoTown
               Pizza branches operate.
             </Text>
           </Stack>

@@ -2,7 +2,7 @@ import { List, ListItem } from '@mantine/core';
 
 export const faqLoyalty = [
   {
-    q: 'What is the Mo Town Slice Points Loyalty Program?',
+    q: 'What is the MoTown Slice Points Loyalty Program?',
     a: 'It’s our free rewards program that lets you earn points every time you buy a pizza. When you collect enough points, you get a free pizza.',
   },
   {
@@ -39,11 +39,11 @@ export const faqLoyalty = [
     a: 'You need 12 points of the same pizza size to get one free pizza of that size.',
   },
   {
-    q: 'Does Motown Meltdown have a loyalty reward?',
+    q: 'Does MoTown Meltdown have a loyalty reward?',
     a: (
       <>
         <p>
-          Yes. Our signature Motown Meltdown has its own points system because of the special cheese
+          Yes. Our signature MoTown Meltdown has its own points system because of the special cheese
           crust.
         </p>
         <p>It is available only in:</p>
@@ -53,7 +53,7 @@ export const faqLoyalty = [
           <ListItem>Large</ListItem>
         </List>
 
-        <p>You must collect 12 Meltdown points to earn a free Motown Meltdown pizza.</p>
+        <p>You must collect 12 Meltdown points to earn a free MoTown Meltdown pizza.</p>
       </>
     ),
   },
@@ -97,7 +97,7 @@ export const faqLoyalty = [
   },
 
   {
-    q: 'Can Mo Town Pizza change the program?',
-    a: 'Yes. To keep the program fair and sustainable, Mo Town Pizza may update the loyalty program from time to time.',
+    q: 'Can MoTown Pizza change the program?',
+    a: 'Yes. To keep the program fair and sustainable, MoTown Pizza may update the loyalty program from time to time.',
   },
 ];

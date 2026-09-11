@@ -35,9 +35,9 @@ export default function TermsConditions() {
             </Title>
 
             <Text>
-              The Mo Town Pizza Slice Points Loyalty Program (“the Program”) is open to all
-              customers who register by providing their name, valid mobile phone number and an Email
-              Address. Participation in the Program is free and completely voluntary.
+              The MoTown Pizza Slice Points Loyalty Program (“the Program”) is open to all customers
+              who register by providing their name, valid mobile phone number and an Email Address.
+              Participation in the Program is free and completely voluntary.
             </Text>
           </Stack>
 
@@ -48,7 +48,7 @@ export default function TermsConditions() {
 
             <Text>
               Customers earn one (1) Slice Point for every qualifying pizza purchased at any
-              participating Mo Town Pizza branch. Transactions that are cancelled, refunded,
+              participating MoTown Pizza branch. Transactions that are cancelled, refunded,
               reversed, or found to be fraudulent do not qualify for points.
             </Text>
           </Stack>
@@ -99,11 +99,11 @@ export default function TermsConditions() {
 
           <Stack>
             <Title order={2} fz={'xl'} c={'blue'}>
-              6. Motown Meltdown – Special Rules
+              6. MoTown Meltdown – Special Rules
             </Title>
 
             <Text>
-              “Motown Meltdown” pizzas earn separate loyalty points and are eligible only in:
+              “MoTown Meltdown” pizzas earn separate loyalty points and are eligible only in:
             </Text>
 
             <List>
@@ -112,7 +112,7 @@ export default function TermsConditions() {
             </List>
 
             <Text>
-              A free Motown Meltdown pizza may only be redeemed after collecting twelve (12) Motown
+              A free MoTown Meltdown pizza may only be redeemed after collecting twelve (12) MoTown
               Meltdown points and cannot be exchanged for other pizza types.
             </Text>
           </Stack>
@@ -167,7 +167,7 @@ export default function TermsConditions() {
             </Title>
 
             <Text>
-              Mo Town Pizza reserves the right to amend, modify, suspend, or terminate the Program,
+              MoTown Pizza reserves the right to amend, modify, suspend, or terminate the Program,
               including its rules, structure, rewards, or benefits, at any time without prior notice
               where reasonably required for operational, legal, or business reasons.
             </Text>

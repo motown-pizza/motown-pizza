@@ -38,7 +38,7 @@ export default function LoyaltyProgram() {
 
         <Stack mt={SECTION_SPACING} gap={'xl'}>
           <Text>
-            The Mo Town Slice Points Loyalty Program lets you earn points every time you buy a pizza
+            The MoTown Slice Points Loyalty Program lets you earn points every time you buy a pizza
             and turn those points into FREE pizza.
           </Text>
 
@@ -50,7 +50,7 @@ export default function LoyaltyProgram() {
             <Text>Joining is simple and free:</Text>
 
             <List>
-              <ListItem>Order at any Mo Town Pizza store or onListItemne</ListItem>
+              <ListItem>Order at any MoTown Pizza store or online</ListItem>
               <ListItem>Give us your name, phone number and Email</ListItem>
               <ListItem>
                 You’re automatically registered and start earning points immediately
@@ -103,11 +103,11 @@ export default function LoyaltyProgram() {
 
           <Stack>
             <Title order={2} fz={'xl'} c={'blue'}>
-              Motown Meltdown (Signature Pizza)
+              MoTown Meltdown (Signature Pizza)
             </Title>
 
             <Text>
-              Because of its special cheese-filled crust, the Motown Meltdown has its own loyalty
+              Because of its special cheese-filled crust, the MoTown Meltdown has its own loyalty
               system:
             </Text>
 
@@ -144,7 +144,7 @@ export default function LoyaltyProgram() {
             </List>
 
             <Text>
-              Mo Town Pizza may update the loyalty program from time to time to keep it fair for
+              MoTown Pizza may update the loyalty program from time to time to keep it fair for
               everyone.
             </Text>
           </Stack>
@@ -210,7 +210,7 @@ export default function LoyaltyProgram() {
             </Flex>
 
             <Text fz={'sm'} ta={'center'} mt={'md'}>
-              Mo Town Pizza – Every Slice Gets You Closer
+              MoTown Pizza – Every Slice Gets You Closer
             </Text>
           </Card>
         </Stack>

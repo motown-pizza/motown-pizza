@@ -56,7 +56,7 @@ export default function About() {
                 : Handcrafted Perfection…Every Pizza at MOTOWN is an authentic experience. Our
                 talented and experienced chefs use only the freshest, locally- sourced ingredients
                 to create mouthwatering masterpieces that bursts with flavor. From our signature
-                Motown Meltdown crust to our homemade sauces and premium toppings, we’re dedicated
+                MoTown Meltdown crust to our homemade sauces and premium toppings, we’re dedicated
                 to deliver pizza perfection with every slice.
               </Text>
 
