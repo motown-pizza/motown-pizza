@@ -37,11 +37,12 @@ export default function Main() {
 
         <Group gap={'xl'} visibleFrom="sm" w={{ md: '40%' }} justify="end">
           {headerLinks.map((hl, i) => (
-            <AnchorNextLink
+            <Text
+              component="a"
               key={i}
               href={hl.link}
+              target={hl.blank ? '_blank' : undefined}
               c={'inherit'}
-              underline="never"
               className={classes.link}
             >
               <Group gap={'xs'}>
@@ -55,7 +56,7 @@ export default function Main() {
                   </Text>
                 </Stack>
               </Group>
-            </AnchorNextLink>
+            </Text>
           ))}
         </Group>
       </Group>
@@ -66,13 +67,15 @@ export default function Main() {
 const headerLinks = [
   {
     icon: IconPizza,
-    link: '/menu',
+    link: images.menu,
+    blank: true,
     label: 'Our Menu',
     subLabel: 'Download Now',
   },
   {
     icon: IconMoped,
     link: `tel:${PHONES.PHONES}`,
+    blank: false,
     label: PHONES.PHONES,
     subLabel: 'Call and Order In',
   },

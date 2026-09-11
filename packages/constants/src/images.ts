@@ -19,6 +19,7 @@ export const images = {
     },
   },
 
+  menu: `${imageUrl}/motown-menu-2026.png`,
   mpesa: `${imageUrl}/mpesa.png`,
 
   home: {
