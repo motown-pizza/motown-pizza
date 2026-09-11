@@ -1,5 +1,14 @@
 import React from 'react';
-import { Center, Container, Grid, GridCol, Stack } from '@mantine/core';
+import {
+  BackgroundImage,
+  Box,
+  Center,
+  Container,
+  Grid,
+  GridCol,
+  Overlay,
+  Stack,
+} from '@mantine/core';
 import { ImageDefault } from '../../image/default';
 import { images } from '@repo/constants';
 import { SECTION_SPACING } from '@repo/constants';
@@ -17,24 +26,34 @@ export async function LayoutAuthNotify({ children }: { children: React.ReactNode
     <>
       <Grid gap={0} px={{ base: 'md', xs: 0 }}>
         {logo && (
-          <GridCol span={5.5} visibleFrom="md" bg={'var(--mantine-color-pri-light)'}>
-            <Container size="xs" pos={'sticky'} top={0}>
-              <Center h={'100vh'} px={{ xs: 32 }}>
-                <AnchorNextLink href={'/'}>
-                  <ImageDefault
-                    src={logo}
-                    alt={COMPANY_NAME}
-                    height={140}
-                    width={150}
-                    fit="contain"
-                  />
-                </AnchorNextLink>
-              </Center>
-            </Container>
+          <GridCol
+            span={{ md: 5.5, lg: 6.5 }}
+            visibleFrom="md"
+            bg={'var(--mantine-color-pri-light)'}
+          >
+            <BackgroundImage src={BG_IMAGE} pos={'relative'}>
+              <Overlay backgroundOpacity={0.3} style={{ zIndex: 0 }} />
+
+              <Box style={{ position: 'relative', zIndex: 1 }}>
+                <Container size="xs" pos={'sticky'} top={0}>
+                  <Center h={'100vh'} px={{ xs: 32 }}>
+                    <AnchorNextLink href={'/'}>
+                      <ImageDefault
+                        src={logo}
+                        alt={COMPANY_NAME}
+                        height={200}
+                        width={210}
+                        fit="contain"
+                      />
+                    </AnchorNextLink>
+                  </Center>
+                </Container>
+              </Box>
+            </BackgroundImage>
           </GridCol>
         )}
 
-        <GridCol span={{ base: 12, md: 6.5 }}>
+        <GridCol span={{ base: 12, md: 6.5, lg: 5.5 }}>
           <Container size="xs">
             <Stack gap={'xl'} justify="center" mih={'100vh'} px={{ xs: 32 }} py={SECTION_SPACING}>
               {children}
@@ -45,3 +64,6 @@ export async function LayoutAuthNotify({ children }: { children: React.ReactNode
     </>
   );
 }
+
+const BG_IMAGE =
+  'https://images.unsplash.com/photo-1606152196365-d1ce5ea838b5?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
