@@ -9,7 +9,7 @@ export function AccordionFaq({
   const items = props.items.map((item) => (
     <AccordionItem key={item.q} value={item.q}>
       <AccordionControl>
-        <Text component="span" inherit c={'blue'} fw={500}>
+        <Text component="span" inherit c={'sec'} fw={500}>
           {item.q}
         </Text>
       </AccordionControl>

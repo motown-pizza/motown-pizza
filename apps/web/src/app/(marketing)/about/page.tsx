@@ -183,12 +183,12 @@ export default function About() {
           Our Brand
         </Title>
 
-        <Grid mt={'xl'}>
+        <Grid mt={'xl'} gap={'xl'}>
           {brandItems.map((item) => (
             <GridCol span={{ base: 12, sm: 6 }} key={item.title}>
               <BackgroundImage
                 src={item.image}
-                radius="sm"
+                radius="lg"
                 h={'100%'}
                 p={{ base: 'xl' }}
                 pos={'relative'}

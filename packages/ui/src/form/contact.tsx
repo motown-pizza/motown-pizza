@@ -77,7 +77,6 @@ export function FormContact({
                   placeholder={options?.modal ? 'Message *' : 'Write your message here...'}
                   autosize
                   minRows={2}
-                  styles={{ input: { height: '100%' } }}
                   maxRows={15}
                   resize="vertical"
                   {...form.getInputProps('message')}
