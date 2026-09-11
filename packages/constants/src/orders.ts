@@ -30,7 +30,7 @@ export const defaultOrderDetails: OrderGet = {
   trackingCode: '',
   status: Status.ACTIVE,
   syncStatus: SyncStatus.SYNCED,
-  tableBookingId: '',
+  tableBookingId: null,
   createdAt: now,
   updatedAt: now,
 };
