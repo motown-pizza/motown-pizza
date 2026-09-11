@@ -206,7 +206,7 @@ export const getAppTheme = (params?: AppThemeProps) => {
 
       TextInput: TextInput.extend({
         defaultProps: {
-          size: 'xs',
+          // size: 'xs',
           variant: 'filled',
           styles: {
             input: {
@@ -220,7 +220,7 @@ export const getAppTheme = (params?: AppThemeProps) => {
 
       Checkbox: Checkbox.extend({
         defaultProps: {
-          size: 'xs',
+          // size: 'xs',
           variant: 'filled',
           styles: {
             input: {
@@ -232,7 +232,7 @@ export const getAppTheme = (params?: AppThemeProps) => {
 
       Textarea: Textarea.extend({
         defaultProps: {
-          size: 'xs',
+          // size: 'xs',
           variant: 'filled',
           styles: {
             input: {
@@ -246,7 +246,7 @@ export const getAppTheme = (params?: AppThemeProps) => {
 
       DateInput: DateInput.extend({
         defaultProps: {
-          size: 'xs',
+          // size: 'xs',
           variant: 'filled',
           styles: {
             input: {
@@ -260,7 +260,7 @@ export const getAppTheme = (params?: AppThemeProps) => {
 
       DateTimePicker: DateTimePicker.extend({
         defaultProps: {
-          size: 'xs',
+          // size: 'xs',
           variant: 'filled',
           styles: {
             input: {
@@ -274,7 +274,7 @@ export const getAppTheme = (params?: AppThemeProps) => {
 
       PasswordInput: PasswordInput.extend({
         defaultProps: {
-          size: 'xs',
+          // size: 'xs',
           variant: 'filled',
           styles: {
             input: {
@@ -288,7 +288,7 @@ export const getAppTheme = (params?: AppThemeProps) => {
 
       Select: Select.extend({
         defaultProps: {
-          size: 'xs',
+          // size: 'xs',
           variant: 'filled',
           checkIconPosition: 'right',
           styles: {
