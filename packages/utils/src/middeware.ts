@@ -86,36 +86,35 @@ export const isAllowedOrigin = (origin: string): boolean => {
   try {
     const { hostname, protocol } = new URL(origin);
 
-    // 1. Allow local development
+    // 1. Localhost / Local Dev
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
       return true;
     }
 
-    // 2. Allow HTTPS requests to production domain or its subdomains
-    const productionDomain = process.env.NEXT_PUBLIC_HOST_WEB_PROD;
-
-    if (!productionDomain) {
-      console.error('x--> (CORS error) Production domain required.');
+    // Must be HTTPS for non-localhost
+    if (protocol !== 'https:') {
       return false;
     }
 
+    // 2. Production Domain Check
+    const productionDomain = process.env.NEXT_PUBLIC_HOST_WEB_PROD;
     if (
-      protocol === 'https:' &&
+      productionDomain &&
       (hostname === productionDomain || hostname.endsWith(`.${productionDomain}`))
     ) {
       return true;
     }
 
-    // 3. Allow Vercel preview deployments for motown-pizza projects
-    const vercelPreviewRegex = new RegExp(`^${SHARED_VERCEL_SUBSTRING}-[a-z0-9-]+\\.vercel\\.app$`);
-
-    if (protocol === 'https:' && vercelPreviewRegex.test(hostname)) {
+    // 3. Vercel Preview Deployments Check
+    // Safely verify it ends with .vercel.app and starts with your project prefix
+    const prefix = `${SHARED_VERCEL_SUBSTRING}-`;
+    if (hostname.endsWith('.vercel.app') && hostname.startsWith(prefix)) {
       return true;
     }
 
     return false;
   } catch {
-    return false; // Invalid URL structure
+    return false;
   }
 };
 
