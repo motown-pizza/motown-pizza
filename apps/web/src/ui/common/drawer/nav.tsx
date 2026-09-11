@@ -3,8 +3,9 @@
 import React from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { Burger, Drawer, Group, Stack } from '@mantine/core';
-import { AnchorNextLink } from '@repo/ui';
+import { AnchorNextLink, ImageDefault } from '@repo/ui';
 import classes from './nav.module.css';
+import { APP_NAME, images } from '@repo/constants';
 
 export default function Nav({
   links,
@@ -17,8 +18,27 @@ export default function Nav({
 
   return (
     <>
-      <Drawer opened={opened} onClose={close} size={'xs'}>
-        <Stack>
+      <Drawer
+        opened={opened}
+        onClose={close}
+        size={'xs'}
+        title={
+          <>
+            <AnchorNextLink href="/" underline="never">
+              <ImageDefault
+                src={images.brand.logo.landscape.meta}
+                alt={APP_NAME.WEB}
+                height={{ base: 40 }}
+                width={{ base: 50 }}
+                fit="contain"
+                mode="grid"
+                style={{ transform: 'scale(1.3)' }}
+              />
+            </AnchorNextLink>
+          </>
+        }
+      >
+        <Stack pt={'xs'}>
           {links.map((li, i) => (
             <Group key={i}>
               <AnchorNextLink

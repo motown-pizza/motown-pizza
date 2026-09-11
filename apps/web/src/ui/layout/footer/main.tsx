@@ -74,7 +74,6 @@ export default function Main() {
                       href={l.link}
                       underline="never"
                       className={classes.link}
-                      ta={{ base: 'center', md: 'start' }}
                     >
                       <Group wrap="nowrap">
                         {l.location && (

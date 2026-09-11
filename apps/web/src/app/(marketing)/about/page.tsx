@@ -83,7 +83,7 @@ export default function About() {
           </GridCol>
 
           <GridCol span={12}>
-            <Text ta={'center'}>
+            <Text ta={{ base: 'start', md: 'center' }}>
               <Text component="span" inherit fw={'bold'} c={'sec'}>
                 Your feedback Matters
               </Text>
@@ -137,15 +137,15 @@ export default function About() {
 
             <Divider w={'100%'} color="sec" />
 
-            <div>
-              <Text fz={'xs'}>
+            <Stack gap={'xs'} ta={'center'}>
+              <Text inherit fz={'xs'}>
                 Follow us on social media and stay tuned for exciting offers, events and more!
               </Text>
 
-              <Text fz={'xs'}>
+              <Text inherit fz={'xs'}>
                 Thank you for choosing MoTown Pizza KENYA. We can’t wait to serve you.
               </Text>
-            </div>
+            </Stack>
           </Stack>
         </Card>
       </LayoutSection>
