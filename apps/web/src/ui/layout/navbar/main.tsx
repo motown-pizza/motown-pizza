@@ -5,7 +5,7 @@ import { LayoutSection } from '@repo/ui';
 import { Divider, Flex, Group, Indicator, NumberFormatter } from '@mantine/core';
 import { links } from '@web/data/links';
 import { AnchorNextLink } from '@repo/ui';
-import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants';
+import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE } from '@repo/constants';
 import classes from './main.module.css';
 import { IconShoppingCart } from '@tabler/icons-react';
 import DrawerNav from '@web/ui/common/drawer/nav';
@@ -30,7 +30,7 @@ export default function Main() {
           {links.map((li, i) => (
             <Group key={i}>
               {i > 0 && (
-                <Divider orientation="vertical" h={24} color="dark.0" size={ICON_STROKE_WIDTH} />
+                <Divider orientation="vertical" h={24} color="white" size={ICON_STROKE_WIDTH} />
               )}
 
               <AnchorNextLink
@@ -47,12 +47,6 @@ export default function Main() {
         </Group>
 
         <Group>
-          <Group c={'white'} style={{ cursor: 'pointer' }}>
-            <MenuUser>
-              <AvatarMain />
-            </MenuUser>
-          </Group>
-
           <DrawerCart>
             <div style={{ cursor: 'pointer' }}>
               <Indicator
@@ -73,11 +67,17 @@ export default function Main() {
             </div>
           </DrawerCart>
 
+          <Group c={'white'} style={{ cursor: 'pointer' }}>
+            <MenuUser>
+              <AvatarMain size={ICON_WRAPPER_SIZE + 4} />
+            </MenuUser>
+          </Group>
+
           <>
             <Divider
               orientation="vertical"
-              h={24}
-              color="dark.0"
+              h={32}
+              color="white"
               size={ICON_STROKE_WIDTH}
               visibleFrom="md"
             />
