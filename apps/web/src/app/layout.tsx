@@ -15,6 +15,7 @@ import './globals.css';
 // All packages except `@mantine/hooks` require styles imports
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
+import { createClientcloudbaseServer } from '@repo/cloudbase';
 // import '@mantine/dates/styles.css';
 // // ‼️ import schedule styles after core and dates package styles
 // import '@mantine/schedule/styles.css';
@@ -35,6 +36,9 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const supabase = await createClientcloudbaseServer();
+  const { data: session } = await supabase.auth.getUser();
+
   const resolvedTheme = ColorScheme.DARK as MantineColorScheme;
 
   return (
@@ -63,7 +67,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           theme={getAppTheme}
           cssVariablesResolver={getAppResolver}
         >
-          <ProviderInitialize props={{ baseUrl: API_URL, sessionUser: null }}>
+          <ProviderInitialize props={{ baseUrl: API_URL, sessionUser: session.user || null }}>
             <ProviderSync>{children}</ProviderSync>
           </ProviderInitialize>
         </ProviderMantine>
