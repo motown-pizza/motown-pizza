@@ -1,26 +1,29 @@
 {
   "name": "@repo/handlers",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
   "exports": {
-    "./*": "./src/*.ts"
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
   },
   "scripts": {
-    "lint": "eslint .",
-    "check-types": "tsc --noEmit",
-    "build": "tsc"
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@repo/constants": "workspace:*",
+    "next": "16.2.10",
+    "@repo/auth": "workspace:*",
+    "@repo/cloudbase": "workspace:*",
+    "@repo/db": "workspace:*",
     "@repo/types": "workspace:*",
-    "@mantine/form": "^8.3.6",
-    "@mantine/notifications": "^8.3.6",
-    "react": "^19.2.0"
+    "@repo/utils": "workspace:*",
+    "@repo/constants": "workspace:*"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
-    "@types/node": "^22.15.3",
-    "@types/react": "^19",
-    "typescript": "5.9.2"
+    "@repo/config": "workspace:*",
+    "typescript": "^5.6.2"
   }
 }

@@ -1,22 +1,17 @@
-/**
- * @template-source next-template
- * @template-sync auto
- * @description This file originates from the base template repository.
- * Do not modify unless you intend to backport changes to the template.
- */
+'use client';
 
-import { capitalizeWords } from '@repo/utilities/string';
-import { validators } from '@repo/utilities/validation';
+import { capitalizeWords } from '@repo/utils';
+import { validators } from '@repo/utils';
 import { hasLength } from '@mantine/form';
-import { handleInquiry } from '@repo/handlers/requests/email/inquiry';
-import { contactAdd } from '@repo/handlers/requests/contact';
-import { formValuesInitialInquiry, FormValuesInquiry } from '@repo/types/form';
+import { handleInquiry } from '@repo/handlers';
+import { contactAdd } from '@repo/handlers';
+import { formValuesInitialInquiry, FormValuesInquiry } from '@repo/types';
 import { useFormBase } from '../form';
-import { COMPANY_NAME } from '@repo/constants/app';
-import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-placement';
+import { COMPANY_NAME } from '@repo/constants';
+import { useStoreOrderPlacement } from '@repo/store';
 import { useEffect } from 'react';
 import { useDebouncedCallback } from '@mantine/hooks';
-import { defaultOrderDetails } from '@repo/constants/orders';
+import { defaultOrderDetails } from '@repo/constants';
 
 type UseFormEmailInquiryOptions = {
   saveEmailContact?: boolean;
@@ -26,64 +21,57 @@ type UseFormEmailInquiryOptions = {
 
 export const useFormEmailInquiry = (
   initialValues?: Partial<FormValuesInquiry>,
-  options?: UseFormEmailInquiryOptions
+  options?: UseFormEmailInquiryOptions,
 ) => {
   const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
 
-  const { form, submitted, handleSubmit, reset, validate } =
-    useFormBase<FormValuesInquiry>(
-      {
-        ...formValuesInitialInquiry,
-        appName: COMPANY_NAME,
-        ...initialValues,
+  const { form, submitted, handleSubmit, reset, validate } = useFormBase<FormValuesInquiry>(
+    {
+      ...formValuesInitialInquiry,
+      appName: COMPANY_NAME,
+      ...initialValues,
+    },
+    {
+      name: hasLength({ min: 2, max: 24 }, 'Between 2 and 24 characters'),
+      email: (value) => validators.email(value.trim()),
+      subject: hasLength({ min: 2, max: 255 }, 'Between 2 and 255 characters'),
+      phone: (value) => validators.phone(value.trim()),
+      message: hasLength({ min: 3, max: 2048 }, 'Between 3 and 2048 characters'),
+    },
+    {
+      close: options?.close,
+      resetOnSuccess: true,
+
+      onSubmit: async (rawValues) => {
+        const values = normalizeFormValues(rawValues);
+
+        // --- send the inquiry ---
+        const response = await handleInquiry(values);
+
+        if (!response) throw new Error('No response from server');
+
+        if (!response.ok) {
+          const result = await response.json().catch(() => null);
+          throw new Error(result?.message || 'Failed to send inquiry');
+        }
+
+        const result = await response.json();
+
+        // Optionally save contact
+        if (options?.saveEmailContact) {
+          const addContact = await contactAdd(values);
+          if (!addContact.ok) console.error('Failed to add email contact');
+        }
+
+        return { response, result };
       },
-      {
-        name: hasLength({ min: 2, max: 24 }, 'Between 2 and 24 characters'),
-        email: (value) => validators.email(value.trim()),
-        subject: hasLength(
-          { min: 2, max: 255 },
-          'Between 2 and 255 characters'
-        ),
-        phone: hasLength({ min: 7, max: 15 }, 'Between 7 and 15 characters'),
-        message: hasLength(
-          { min: 3, max: 2048 },
-          'Between 3 and 2048 characters'
-        ),
+
+      onError: (error) => {
+        // Optional: handle unexpected errors (caught by base hook)
+        console.error('Form submission error:', error);
       },
-      {
-        close: options?.close,
-        resetOnSuccess: true,
-
-        onSubmit: async (rawValues) => {
-          const values = normalizeFormValues(rawValues);
-
-          // --- send the inquiry ---
-          const response = await handleInquiry(values);
-
-          if (!response) throw new Error('No response from server');
-
-          if (!response.ok) {
-            const result = await response.json().catch(() => null);
-            throw new Error(result?.message || 'Failed to send inquiry');
-          }
-
-          const result = await response.json();
-
-          // Optionally save contact
-          if (options?.saveEmailContact) {
-            const addContact = await contactAdd(values);
-            if (!addContact.ok) console.error('Failed to add email contact');
-          }
-
-          return { response, result };
-        },
-
-        onError: (error) => {
-          // Optional: handle unexpected errors (caught by base hook)
-          console.error('Form submission error:', error);
-        },
-      }
-    );
+    },
+  );
 
   const debouncedsetOrderDetails = useDebouncedCallback(setOrderDetails, 500);
 
@@ -92,8 +80,8 @@ export const useFormEmailInquiry = (
 
     debouncedsetOrderDetails({
       ...(orderDetails || defaultOrderDetails),
-      customer_name: form.values.name,
-      customer_phone: form.values.phone,
+      customerName: form.values.name,
+      customerPhone: form.values.phone,
     });
   }, [form.values]);
 

@@ -1,0 +1,58 @@
+<table style="
+    width: 100%;
+    max-width: 600px;
+    padding: 4rem 1rem;
+    border-radius: 1rem;
+    margin: 0 auto;
+    font-family: 'Calibri', Arial, sans-serif;
+    font-size: 14px;
+  ">
+  <tr>
+    <td>
+      <h1 style="margin: 0;font-size: 1.75rem;">Confirm Your Sign In</h1>
+    </td>
+  </tr>
+
+  <tr>
+    <td style="padding-top: 2rem">
+      <p>Hi there,</p>
+      <p style="margin: 0">
+        This is an email containing an OTP to sign you in. We're just
+        making sure it's really you. Enter the code below to access your
+        personalized experience.
+      </p>
+    </td>
+  </tr>
+
+  <td style="padding-top: 2rem">
+    <div style="background-color: #fe0000; color: #ffff00; border-radius: .5rem; padding: 1rem 2rem;">
+      <p style="font-weight: bold; font-size: 1rem; margin: 0;">
+        {{ .Token }}
+      </p>
+    </div>
+  </td>
+
+  <tr>
+    <td style="padding-top: 3rem">
+      <hr style="border: none; height: 1px; background-color: #e4e6ed" />
+    </td>
+  </tr>
+
+  <tr>
+    <td style="color: gray; margin: 0; padding-top: 1rem; font-size: 12px;">
+      <p>
+        If you didn't request an OTP from MoTown Pizza, you can safely ignore this email.
+      </p>
+      <p>
+        If you are concerned about the security of your account, please
+        <a href="mailto:support@motownpizza.co.ke"
+          style="color: black; font-weight:bold; text-decoration: none;">contact
+          support</a>.
+      </p>
+      <p>
+        © 2026, <a href="https://motownpizza.co.ke"
+          style="color: black; font-weight:bold; text-decoration: none;">MoTown Pizza</a> Inc.
+      </p>
+    </td>
+  </tr>
+</table>

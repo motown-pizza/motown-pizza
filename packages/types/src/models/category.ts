@@ -1,4 +1,4 @@
-import { Prisma, Category } from '@repo/db/generated/prisma/client.js';
+import { Prisma, Category } from '@repo/db';
 
 // Type for creating a item (without id and relations)
 export type CategoryCreate = Prisma.CategoryCreateInput;

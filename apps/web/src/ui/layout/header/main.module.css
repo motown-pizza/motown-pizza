@@ -1,0 +1,16 @@
+.link {
+  transition: 0.25s all ease;
+  color: var(--mantine-color-text);
+}
+
+@media (hover: hover) {
+  .link:hover {
+    color: var(--mantine-color-sec-6) !important;
+  }
+}
+
+@media (hover: none) {
+  .link:active {
+    color: var(--mantine-color-sec-6) !important;
+  }
+}

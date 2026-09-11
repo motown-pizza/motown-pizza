@@ -10,15 +10,12 @@
 // npx prisma generate -> generate prisma client
 
 generator client {
-  provider      = "prisma-client-js"
-  output        = "../src/generated/prisma"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL") // uses connection pooling
-  directUrl = env("DIRECT_URL") // uses a direct connection
+  provider = "postgresql"
 }
 
 // enums
@@ -69,6 +66,12 @@ enum ProductDietaryType {
   VEGGIE
   VEGAN
   NEUTRAL
+}
+
+enum ProductDietarySubType {
+  BEEF
+  CHICKEN
+  SAUCE
 }
 
 enum OrderSource {
@@ -155,52 +158,55 @@ enum TableBookingStatus {
 
 model Profile {
   id         String  @id
-  user_name  String?
-  first_name String?
-  last_name  String?
+  userName   String? @map("user_name")
+  firstName  String? @map("first_name")
+  lastName   String? @map("last_name")
   email      String?
   bio        String?
   avatar     String?
   phone      String?
+  customized Boolean @default(false)
   role       Role    @default(USER)
 
-  posts          Post[]
-  comments       Comment[]
-  orders         Order[]
-  order_items    OrderItem[]
-  cart_items     CartItem[]
-  wishlist_items WishlistItem[]
-  deliveries     Delivery[] // for transporters
+  posts         Post[]
+  comments      Comment[]
+  orders        Order[]
+  orderItems    OrderItem[]
+  cartItems     CartItem[]
+  wishlistItems WishlistItem[]
+  deliveries    Delivery[] // for transporters
 
-  status      Status     @default(ACTIVE)
-  sync_status SyncStatus @default(SYNCED)
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@unique([email])
   @@map("profiles")
 }
 
 model Post {
-  id             String  @id @default(uuid())
-  image          String
-  title          String
-  excerpt        String
-  content        String
-  allow_comments Boolean @default(true)
-  view_count     Int     @default(0)
+  id            String  @id @default(uuid())
+  image         String
+  title         String
+  excerpt       String
+  content       String
+  allowComments Boolean @default(true) @map("allow_comments")
+  viewCount     Int     @default(0) @map("view_count")
 
-  profile     Profile?  @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id  String?
-  category    Category? @relation(fields: [category_id], references: [id], onDelete: SetNull)
-  category_id String?
+  profile    Profile?  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId  String?   @map("profile_id")
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId String?   @map("category_id")
 
   comments Comment[]
 
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "posts")
 }
@@ -211,48 +217,52 @@ model Category {
 
   posts Post[]
 
-  status      Status     @default(ACTIVE)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "categories")
 }
 
 model Comment {
-  id         String  @id @default(uuid())
-  name       String?
-  content    String
-  comment_id String?
+  id        String  @id @default(uuid())
+  name      String?
+  content   String
+  commentId String? @map("comment_id")
 
-  post       Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
-  post_id    String
-  profile    Profile? @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id String?
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String   @map("post_id")
+  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String?  @map("profile_id")
 
-  status      Status     @default(ACTIVE)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "comments")
 }
 
 model Product {
-  id            String              @id @default(uuid())
-  image         String
-  image_id      String?
-  title         String
-  description   String
-  type          ProductType
-  dietary_class ProductDietaryType?
+  id              String                 @id @default(uuid())
+  image           String
+  imageId         String?                @map("image_id")
+  title           String
+  description     String
+  type            ProductType
+  dietaryClass    ProductDietaryType?    @map("dietary_class")
+  dietarySubClass ProductDietarySubType? @map("dietary_sub_class")
 
-  product_variants ProductVariant[]
+  productVariants ProductVariant[]
 
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "products")
 }
@@ -264,181 +274,189 @@ model ProductVariant {
   price       Float
   measurement String?
 
-  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
-  product_id String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String  @map("product_id")
 
-  recipie_items RecipieItem[]
-  order_items   OrderItem[]
-  cart_items    CartItem[]
-  wihlist_items WishlistItem[]
+  recipieItems RecipieItem[]
+  orderItems   OrderItem[]
+  cartItems    CartItem[]
+  wihlistItems WishlistItem[]
 
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "product_variants")
 }
 
 model Ingredient {
-  id               String              @id @default(uuid())
-  name             String
-  unit             MeasurementUnitType
-  stock_quantity   Float
-  low_stock_margin Float
-  stockout_margin  Float
-  stock_capacity   Float
+  id             String              @id @default(uuid())
+  name           String
+  unit           MeasurementUnitType
+  stockQuantity  Float               @map("stock_quantity")
+  lowStockMargin Float               @map("low_stock_margin")
+  stockoutMargin Float               @map("stockout_margin")
+  stockCapacity  Float               @map("stock_capacity")
 
-  recipie_items   RecipieItem[]
-  stock_movements StockMovement[]
+  recipieItems   RecipieItem[]
+  stockMovements StockMovement[]
 
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "ingredients")
 }
 
 model RecipieItem {
-  id              String              @id @default(uuid())
-  quantity_needed Float
-  unit            MeasurementUnitType
+  id             String              @id @default(uuid())
+  quantityNeeded Float               @map("quantity_needed")
+  unit           MeasurementUnitType
 
-  product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
-  product_variant_id String
-  ingredient         Ingredient     @relation(fields: [ingredient_id], references: [id], onDelete: Cascade)
-  ingredient_id      String
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
+  productVariantId String         @map("product_variant_id")
+  ingredient       Ingredient     @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+  ingredientId     String         @map("ingredient_id")
 
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "recipie_items")
 }
 
 model Order {
-  id                   String              @id @default(uuid())
-  source               OrderSource
-  order_status         OrderStatus
-  order_payment_status OrderPaymentStatus
-  fulfillment_type     OrderFulfilmentType
-  order_time           OrderTime
-  payment_method       OrderPaymentMethod
-  eta_estimate         String?
-  customer_name        String
-  customer_phone       String?
-  guest_count          Int?
-  tracking_code        String // (eg. NYC240115DK7QX9M2)
+  id                 String              @id @default(uuid())
+  source             OrderSource
+  orderStatus        OrderStatus         @map("order_status")
+  orderPaymentStatus OrderPaymentStatus  @map("order_payment_status")
+  fulfillmentType    OrderFulfilmentType @map("fulfillment_type")
+  orderTime          OrderTime           @map("order_time")
+  paymentMethod      OrderPaymentMethod  @map("payment_method")
+  etaEstimate        String?             @map("eta_estimate")
+  customerName       String              @map("customer_name")
+  customerPhone      String?             @map("customer_phone")
+  guestCount         Int?                @map("guest_count")
+  trackingCode       String              @map("tracking_code") // (eg. NYC240115DK7QX9M2)
 
-  profile          Profile?      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id       String?
-  // store      Store?  @relation(fields: [store_id], references: [id], onDelete: Cascade)
-  store_id         String?
-  table_booking    TableBooking? @relation(fields: [table_booking_id], references: [id], onDelete: Cascade)
-  table_booking_id String?
+  profile        Profile?      @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId      String?       @map("profile_id")
+  // store      Store?  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId        String?       @map("store_id")
+  tableBooking   TableBooking? @relation(fields: [tableBookingId], references: [id], onDelete: Cascade)
+  tableBookingId String?       @map("table_booking_id")
 
-  order_items     OrderItem[]
-  stock_movements StockMovement[]
-  deliveries      Delivery[] // how many delivery attempts were made
+  orderItems     OrderItem[]
+  stockMovements StockMovement[]
+  deliveries     Delivery[] // how many delivery attempts were made
 
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "orders")
 }
 
 model Delivery {
-  id              String         @id @default(uuid())
-  delivery_status DeliveryStatus @default(PENDING)
+  id             String         @id @default(uuid())
+  deliveryStatus DeliveryStatus @default(PENDING) @map("delivery_status")
 
   // time & schedule
-  scheduled_date         DateTime? // planned delivery date
-  scheduled_window_start DateTime? // scheduledWindowEnd – time window
-  dispatched_at          DateTime? // when courier left
-  estimated_delivery_at  DateTime? // ETA shown to customer
-  delivered_at           DateTime? // when delivery was completed
+  scheduledDate        DateTime? @map("scheduled_date") // planned delivery date
+  scheduledWindowStart DateTime? @map("scheduled_window_start") // scheduledWindowEnd – time window
+  dispatchedAt         DateTime? @map("dispatched_at") // when courier left
+  estimatedDeliveryAt  DateTime? @map("estimated_delivery_at") // ETA shown to customer
+  deliveredAt          DateTime? @map("delivered_at") // when delivery was completed
 
   // logistics & tracking
-  vehicle_type TransportVehicleType? // bike, car, van, truck
-  vehicle_id   String?
-  distance_km  Float? // delivery distance
-  delivery_fee Float? // cost of delivery
+  vehicleType TransportVehicleType? @map("vehicle_type") // bike, car, van, truck
+  vehicleId   String?               @map("vehicle_id")
+  distanceKm  Float?                @map("distance_km") // delivery distance
+  deliveryFee Float?                @map("delivery_fee") // cost of delivery
 
   // Proof of Delivery
-  verfication_code String? // shared to only user, admin, supervisor accounts (not shared with transporter)
+  verficationCode String? @map("verfication_code") // shared to only user, admin, supervisor accounts (not shared with transporter)
 
   // Failures & Exceptions
-  status_reason        String? // reason for failure/cancellation
-  failed_at            DateTime? // when it failed
-  previous_delivery_id String? // link to previous failed/cancelled attempt
+  statusReason       String?   @map("status_reason") // reason for failure/cancellation
+  failedAt           DateTime? @map("failed_at") // when it failed
+  previousDeliveryId String?   @map("previous_delivery_id") // link to previous failed/cancelled attempt
 
-  profile    Profile? @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id String? // courier
-  order      Order    @relation(fields: [order_id], references: [id], onDelete: Cascade)
-  order_id   String // order being delivered
+  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String?  @map("profile_id") // courier
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   String   @map("order_id") // order being delivered
 
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "deliveries")
 }
 
 model OrderItem {
-  id            String @id @default(uuid())
-  quantity      Int
-  price_at_sale Int
+  id          String @id @default(uuid())
+  quantity    Int
+  priceAtSale Int    @map("price_at_sale")
 
-  profile            Profile?       @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id         String?
-  order              Order          @relation(fields: [order_id], references: [id], onDelete: Cascade)
-  order_id           String
-  product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
-  product_variant_id String
+  profile          Profile?       @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId        String?        @map("profile_id")
+  order            Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId          String         @map("order_id")
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
+  productVariantId String         @map("product_variant_id")
 
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "order_items")
 }
 
 model Table {
-  id           String @id @default(uuid())
-  table_number String
-  seat_count   Int
-  // table_status TableStatus @default(AVAILABLE)
+  id          String @id @default(uuid())
+  tableNumber String @map("table_number")
+  seatCount   Int    @map("seat_count")
+  // tableStatus TableStatus @map("table_status") @default(AVAILABLE)
 
   tableBookings TableBooking[]
 
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "tables")
 }
 
 model TableBooking {
-  id                   String             @id @default(uuid())
-  number_of_persons    Int // ie. table for x people
-  table_booking_status TableBookingStatus @default(WAITING)
+  id                 String             @id @default(uuid())
+  numberOfPersons    Int                @map("number_of_persons") // ie. table for x people
+  tableBookingStatus TableBookingStatus @default(WAITING) @map("table_booking_status")
 
-  table    Table  @relation(fields: [table_id], references: [id], onDelete: Cascade)
-  table_id String
+  table   Table  @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  tableId String @map("table_id")
 
   orders Order[]
 
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "table_bookings")
 }
@@ -447,15 +465,16 @@ model CartItem {
   id       String @id @default(uuid())
   quantity Int    @default(1)
 
-  profile            Profile?       @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id         String?
-  product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
-  product_variant_id String
+  profile          Profile?       @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId        String?        @map("profile_id")
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
+  productVariantId String         @map("product_variant_id")
 
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "cart_items")
 }
@@ -464,15 +483,16 @@ model WishlistItem {
   id       String @id @default(uuid())
   quantity Int    @default(1)
 
-  profile            Profile        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id         String
-  product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
-  product_variant_id String
+  profile          Profile        @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId        String         @map("profile_id")
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
+  productVariantId String         @map("product_variant_id")
 
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "wishlist_items")
 }
@@ -482,15 +502,16 @@ model StockMovement {
   type     StockMovementType
   quantity Int
 
-  order         Order?     @relation(fields: [order_id], references: [id], onDelete: Cascade)
-  order_id      String?
-  ingredient    Ingredient @relation(fields: [ingredient_id], references: [id], onDelete: Cascade)
-  ingredient_id String
+  order        Order?     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId      String?    @map("order_id")
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+  ingredientId String     @map("ingredient_id")
 
-  status      Status     @default(DRAFT)
-  sync_status SyncStatus @default(SYNCED)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  status     Status     @default(ACTIVE)
+  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "stock_movements")
 }

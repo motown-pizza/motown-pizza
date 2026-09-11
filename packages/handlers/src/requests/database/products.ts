@@ -1,139 +1,48 @@
-/**
- * @template-source next-template
- * @template-sync auto
- * @description This file originates from the base template repository.
- * Do not modify unless you intend to backport changes to the template.
- */
+import { ProductCreate, ProductGet, ProductUpdate } from '@repo/types';
+import { apiCall } from './fetch';
 
-import { API_URL } from '@repo/constants/paths';
-import { HEADERS } from '@repo/constants/other';
-import {
-  ProductCreate,
-  ProductRelations,
-  ProductUpdate,
-} from '@repo/types/models/product';
+const segment = 'products';
 
-const baseRequestUrl = `${API_URL}/products`;
-
-export const productsGet = async () => {
-  try {
-    const request = new Request(baseRequestUrl, {
-      method: 'GET',
-      headers: HEADERS.WITHOUT_BODY,
-    });
-
-    const response = await fetch(request);
-
-    const result = await response.json();
-
-    return result;
-  } catch (error) {
-    console.error('---> handler error - (get products):', error);
-    throw error;
-  }
+export const productsGet = (params: { apiUrl: string; userId?: string }) => {
+  const query = params?.userId ? `?userId=${params.userId}` : '';
+  return apiCall(segment + query, 'GET', params.apiUrl);
 };
 
 let currentController: AbortController | null = null;
 
 export const productsUpdate = async (
-  products: ProductRelations[],
-  deletedIds?: string[]
+  apiUrl: string,
+  products: ProductGet[],
+  deletedIds?: string[],
 ) => {
-  // Cancel previous request if still in-flight
   if (currentController) currentController.abort();
-
-  // New controller for this request
   currentController = new AbortController();
 
   try {
-    const request = new Request(baseRequestUrl, {
-      method: 'PUT',
-      headers: HEADERS.WITH_BODY,
-      body: JSON.stringify({ products, deletedIds }),
-    });
-
-    const response = await fetch(request);
-
-    if (!response.ok) {
-      throw new Error(`${response.status}: ${response.statusText}`);
-    }
-
-    const result = await response.json();
-
-    return result;
-  } catch (error) {
-    console.error('---> handler error - (update products):', error);
-    throw error;
+    return await apiCall(
+      segment + '',
+      'PUT',
+      apiUrl,
+      { products, deletedIds },
+      currentController.signal,
+    );
   } finally {
-    // Clear controller once done (important for GC)
     currentController = null;
   }
 };
 
-export const productGet = async (params: { productId: string }) => {
-  try {
-    const request = new Request(`${baseRequestUrl}/${params.productId}`, {
-      method: 'GET',
-      headers: HEADERS.WITHOUT_BODY,
-    });
-
-    const response = await fetch(request);
-
-    const result = await response.json();
-
-    return result;
-  } catch (error) {
-    console.error('---> handler error - (get product):', error);
-    throw error;
-  }
+export const productGet = (params: { apiUrl: string; productId: string }) => {
+  return apiCall(segment + `/${params.productId}`, 'GET', params.apiUrl);
 };
 
-export const productCreate = async (product: ProductCreate) => {
-  try {
-    const request = new Request(`${baseRequestUrl}/create`, {
-      method: 'POST',
-      headers: HEADERS.WITH_BODY,
-      body: JSON.stringify(product),
-    });
-
-    const response = await fetch(request);
-
-    return response;
-  } catch (error) {
-    console.error('---> handler error - (create product):', error);
-    throw error;
-  }
+export const productCreate = (apiUrl: string, product: ProductCreate) => {
+  return apiCall(segment + '/create', 'POST', apiUrl, product);
 };
 
-export const productUpdate = async (product: ProductUpdate) => {
-  try {
-    const request = new Request(`${baseRequestUrl}/${product.id}`, {
-      method: 'PUT',
-      headers: HEADERS.WITH_BODY,
-      body: JSON.stringify(product),
-    });
-
-    const response = await fetch(request);
-
-    return response;
-  } catch (error) {
-    console.error('---> handler error - (update product):', error);
-    throw error;
-  }
+export const productUpdate = (apiUrl: string, product: ProductUpdate) => {
+  return apiCall(segment + `/${product.id}`, 'PUT', apiUrl, product);
 };
 
-export const productDelete = async (productId: string) => {
-  try {
-    const request = new Request(`${baseRequestUrl}/${productId}`, {
-      method: 'DELETE',
-      headers: HEADERS.WITHOUT_BODY,
-    });
-
-    const response = await fetch(request);
-
-    return response;
-  } catch (error) {
-    console.error('---> handler error - (delete product):', error);
-    throw error;
-  }
+export const productDelete = (apiUrl: string, productId: string) => {
+  return apiCall(segment + `/${productId}`, 'DELETE', apiUrl);
 };

@@ -1,15 +1,17 @@
-import { useStoreOrder } from '@repo/libraries/zustand/stores/order';
-import { useStoreOrderPlacement } from '@repo/libraries/zustand/stores/order-placement';
-import { getUrlParam } from '@repo/utilities/url';
-import { useStoreCartItem } from '@repo/libraries/zustand/stores/cart-item';
-import { useStoreProductVariant } from '@repo/libraries/zustand/stores/product-variant';
+'use client';
+
+import { useStoreOrder } from '@repo/store';
+import { useStoreOrderPlacement } from '@repo/store';
+import { getUrlParam } from '@repo/utils';
+import { useStoreCartItem } from '@repo/store';
+import { useStoreProductVariant } from '@repo/store';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { generateUUID } from '@repo/utilities/generators';
+import { generateUUID } from '@repo/utils';
 import { useRouter } from 'next/navigation';
-import { useOrderActions } from './actions/order';
-import { defaultOrderDetails } from '@repo/constants/orders';
-import { OrderFulfilmentType, SyncStatus } from '@repo/types/models/enums';
-import { OrderGet } from '@repo/types/models/order';
+import { useOrderActions } from '@repo/store';
+import { defaultOrderDetails } from '@repo/constants';
+import { OrderFulfilmentType, SyncStatus } from '@repo/types';
+import { OrderGet } from '@repo/types';
 
 export const useOrderPlacementData = () => {
   const { orders } = useStoreOrder();
@@ -18,7 +20,7 @@ export const useOrderPlacementData = () => {
   useEffect(() => {
     if (orders === undefined) return;
     if (orders === null) return;
-    if (orderDetails?.customer_name) return;
+    if (orderDetails?.customerName) return;
 
     const orderCurrentId = getUrlParam('orderId');
     if (!orderCurrentId) return;
@@ -48,40 +50,49 @@ type CountdownResult = {
 
 export function useCountdown(
   target: Date,
-  durationMinutes: number
+  durationMinutes: number,
+  onComplete?: () => void,
 ): CountdownResult {
   const [now, setNow] = useState(() => Date.now());
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
 
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  return useMemo(() => {
+  const result = useMemo(() => {
     const end = target.getTime();
     const durationMs = durationMinutes * 60 * 1000;
     const start = end - durationMs;
-
     const msRemaining = Math.max(end - now, 0);
 
-    const parts: TimeParts = {
-      days: Math.floor(msRemaining / (24 * 60 * 60 * 1000)),
-      hours: Math.floor((msRemaining / (60 * 60 * 1000)) % 24),
-      minutes: Math.floor((msRemaining / (60 * 1000)) % 60),
-      seconds: Math.floor((msRemaining / 1000) % 60),
-      milliseconds: msRemaining % 1000,
-    };
-
-    const total = Math.max(durationMs, 1); // avoid div-by-zero
+    const total = Math.max(durationMs, 1);
     const elapsed = Math.min(Math.max(now - start, 0), total);
     const percentElapsed = (elapsed / total) * 100;
 
     return {
       msRemaining,
-      parts,
+      parts: {
+        days: Math.floor(msRemaining / (24 * 60 * 60 * 1000)),
+        hours: Math.floor((msRemaining / (60 * 60 * 1000)) % 24),
+        minutes: Math.floor((msRemaining / (60 * 1000)) % 60),
+        seconds: Math.floor((msRemaining / 1000) % 60),
+        milliseconds: msRemaining % 1000,
+      },
       percentElapsed,
     };
   }, [target, durationMinutes, now]);
+
+  // Trigger completion when time runs out
+  useEffect(() => {
+    if (result.msRemaining === 0 && onCompleteRef.current) {
+      onCompleteRef.current();
+    }
+  }, [result.msRemaining]);
+
+  return result;
 }
 
 export const useGetSum = () => {
@@ -92,9 +103,7 @@ export const useGetSum = () => {
     let sum = 0;
 
     cartItems?.map((ci) => {
-      const variant = productVariants?.find(
-        (pv) => pv.id == ci.product_variant_id
-      );
+      const variant = productVariants?.find((pv) => pv.id == ci.productVariantId);
       if (variant?.price) sum += variant.price * ci.quantity;
     });
 
@@ -111,17 +120,14 @@ export const useOrderStart = (params: { storeId: string; stores: any[] }) => {
   const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
   const { orderCreate } = useOrderActions();
 
-  const handleStart = async (startParams?: {
-    fulfillmentType?: OrderFulfilmentType;
-  }) => {
+  const handleStart = async (startParams?: { fulfillmentType?: OrderFulfilmentType }) => {
     const orderObject: Partial<OrderGet> = {
       ...(orderDetails || defaultOrderDetails),
-      store_id: params.storeId,
-      fulfillment_type:
-        startParams?.fulfillmentType ||
-        (orderDetails || defaultOrderDetails).fulfillment_type,
+      storeId: params.storeId,
+      fulfillmentType:
+        startParams?.fulfillmentType || (orderDetails || defaultOrderDetails).fulfillmentType,
       id: orderIdRef.current,
-      sync_status: SyncStatus.PENDING,
+      syncStatus: SyncStatus.PENDING,
     };
 
     const newOrder = await orderCreate(orderObject, { stores: params.stores });

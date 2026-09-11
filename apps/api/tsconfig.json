@@ -1,0 +1,17 @@
+{
+  "extends": "@repo/config/tsconfig/next.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@api/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": ["node_modules"]
+}

@@ -1,4 +1,4 @@
-import { Prisma, StockMovement } from '@repo/db/generated/prisma/client.js';
+import { Prisma, StockMovement } from '@repo/db';
 
 // Type for creating a item (without id and relations)
 export type StockMovementCreate = Prisma.StockMovementCreateInput;

@@ -46,6 +46,12 @@ export enum ProductDietaryType {
   NEUTRAL = 'NEUTRAL',
 }
 
+export enum ProductDietarySubType {
+  BEEF = 'BEEF',
+  CHICKEN = 'CHICKEN',
+  SAUCE = 'SAUCE',
+}
+
 export enum OrderSource {
   WEBSITE = 'WEBSITE',
   POS = 'POS',

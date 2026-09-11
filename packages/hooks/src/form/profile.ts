@@ -1,36 +1,30 @@
+'use client';
+
 import { hasLength } from '@mantine/form';
-import { useProfileActions } from '@repo/hooks/actions/profile';
+import { useProfileActions } from '@repo/store';
 import { useFormBase } from '../form';
-import { ProfileGet } from '@repo/types/models/profile';
-import { Role, Status } from '@repo/types/models/enums';
-import { validators } from '@repo/utilities/validation';
+import { ProfileGet } from '@repo/types';
+import { Role, Status } from '@repo/types';
+import { validators } from '@repo/utils';
 import { useRouter } from 'next/navigation';
 
-export const useFormProfile = (params?: {
-  defaultValues?: Partial<ProfileGet>;
-}) => {
+export const useFormProfile = (params?: { defaultValues?: Partial<ProfileGet> }) => {
   const { profileCreate, profileUpdate } = useProfileActions();
   const router = useRouter();
 
   const { form, submitted, handleSubmit } = useFormBase<Partial<ProfileGet>>(
     {
       bio: params?.defaultValues?.bio || '',
-      first_name: params?.defaultValues?.first_name || '',
-      last_name: params?.defaultValues?.last_name || '',
+      firstName: params?.defaultValues?.firstName || '',
+      lastName: params?.defaultValues?.lastName || '',
       email: params?.defaultValues?.email || '',
       phone: params?.defaultValues?.phone || '',
       role: params?.defaultValues?.role || Role.EMPLOYEE,
       status: params?.defaultValues?.status || Status.INACTIVE,
     },
     {
-      first_name: hasLength(
-        { min: 2, max: 48 },
-        'Between 2 and 48 characters required'
-      ),
-      last_name: hasLength(
-        { min: 2, max: 48 },
-        'Between 2 and 48 characters required'
-      ),
+      firstName: hasLength({ min: 2, max: 48 }, 'Between 2 and 48 characters required'),
+      lastName: hasLength({ min: 2, max: 48 }, 'Between 2 and 48 characters required'),
       email: (value) => validators.email((value || '').trim()),
       phone: hasLength({ min: 7, max: 15 }, 'Invalid phone number'),
       role: hasLength({ min: 1 }, 'User role required'),
@@ -43,10 +37,10 @@ export const useFormProfile = (params?: {
       onSubmit: async (rawValues) => {
         const submitObject: Partial<ProfileGet> = {
           ...rawValues,
-          user_name: `${rawValues.first_name}_${rawValues.last_name}`,
+          userName: `${rawValues.firstName}_${rawValues.lastName}`,
         };
 
-        if (!params?.defaultValues?.updated_at) {
+        if (!params?.defaultValues?.updatedAt) {
           profileCreate({
             ...submitObject,
           });
@@ -58,11 +52,9 @@ export const useFormProfile = (params?: {
         }
 
         form.reset();
-        router.push(
-          `/dashboard/people/${form.values.role?.toLocaleLowerCase()}s`
-        );
+        router.push(`/dashboard/people/${form.values.role?.toLocaleLowerCase()}s`);
       },
-    }
+    },
   );
 
   return {

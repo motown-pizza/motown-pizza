@@ -1,0 +1,142 @@
+import React from 'react';
+import {
+  ActionIcon,
+  Card,
+  Grid,
+  GridCol,
+  Group,
+  NumberFormatter,
+  Text,
+  Title,
+  Tooltip,
+} from '@mantine/core';
+import { ImageDefault } from '@repo/ui';
+import { IconMinus, IconPlus, IconTrash } from '@tabler/icons-react';
+import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE } from '@repo/constants';
+import { useStoreProductVariant } from '@repo/store';
+import { capitalizeWords } from '@repo/utils';
+import { CartItemGet } from '@repo/types';
+import { useStoreProduct } from '@repo/store';
+import { useCartItemActions } from '@repo/store';
+import { useNotification } from '@repo/notifications';
+import { Variant } from '@repo/types';
+
+export default function Cart({
+  props,
+  options,
+}: {
+  props: CartItemGet;
+  options?: { checkout?: boolean };
+}) {
+  const { products } = useStoreProduct();
+  const { productVariants } = useStoreProductVariant();
+
+  const { cartItemUpdate, cartItemDelete } = useCartItemActions();
+
+  const { showNotification } = useNotification();
+
+  const variant = (productVariants || []).find((pv) => pv.id == props.productVariantId);
+  const product = (products || []).find((p) => p.id == variant?.productId);
+  // const external = product?.image.includes('https');
+  // const drink = product?.image.includes('drink');
+
+  return (
+    <Card bg={'transparent'} padding={'xs'}>
+      <Grid gap={0}>
+        <GridCol span={options?.checkout ? 1.5 : 3}>
+          <ImageDefault
+            src={product?.image || 'loading'}
+            alt={product?.title || 'loading'}
+            height={80}
+            fit={'contain'}
+            radius={'lg'}
+          />
+        </GridCol>
+
+        <GridCol span={options?.checkout ? 10.5 : 9} pl={'xs'}>
+          <Group justify="space-between">
+            <Title order={3} fz={'lg'} fw={500} c={'pri'} lineClamp={1}>
+              {product?.title}
+            </Title>
+
+            <Tooltip label={`Remove item (${product?.title}) from cart`} multiline w={240}>
+              <ActionIcon
+                size={ICON_WRAPPER_SIZE}
+                color="pri"
+                onClick={() => {
+                  cartItemDelete(props);
+                  showNotification({
+                    title: 'Item removed',
+                    desc: `Item (${product?.title}) removed from cart`,
+                    variant: Variant.SUCCESS,
+                  });
+                }}
+              >
+                <IconTrash size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+              </ActionIcon>
+            </Tooltip>
+          </Group>
+
+          {variant && (
+            <>
+              {variant.title &&
+                product?.title.trim().toLowerCase() != variant.title.trim().toLowerCase() && (
+                  <Text inherit>{capitalizeWords(variant.title)}</Text>
+                )}
+
+              <Group justify="space-between" mt={'md'}>
+                <Group>
+                  <Text inherit c={'dimmed'}>
+                    Qty:{' '}
+                    <Text component={'span'} inherit fw={500} c={'ter'}>
+                      <NumberFormatter value={props.quantity} />
+                    </Text>
+                  </Text>
+
+                  <Group gap={'xs'}>
+                    <Tooltip label={props.quantity <= 1 ? 'Currently at minimum' : 'Remove -1'}>
+                      <ActionIcon
+                        size={ICON_WRAPPER_SIZE - 6}
+                        disabled={props.quantity <= 1}
+                        onClick={() => {
+                          cartItemUpdate({
+                            ...props,
+                            quantity: props.quantity - 1,
+                          });
+                        }}
+                      >
+                        <IconMinus size={ICON_SIZE - 6} stroke={ICON_STROKE_WIDTH} />
+                      </ActionIcon>
+                    </Tooltip>
+
+                    <Tooltip label={props.quantity >= 10 ? 'Currently at maximum' : 'Add +1'}>
+                      <ActionIcon
+                        size={ICON_WRAPPER_SIZE - 6}
+                        disabled={props.quantity >= 10}
+                        onClick={() => {
+                          cartItemUpdate({
+                            ...props,
+                            quantity: props.quantity + 1,
+                          });
+                        }}
+                      >
+                        <IconPlus size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
+                      </ActionIcon>
+                    </Tooltip>
+                  </Group>
+                </Group>
+
+                <Text inherit>
+                  Kshs.{' '}
+                  <Text component="span" inherit fz={'lg'} fw={500} c={'ter'}>
+                    <NumberFormatter value={(variant.price || 0) * props.quantity} />
+                  </Text>
+                </Text>
+              </Group>
+            </>
+          )}
+        </GridCol>
+      </Grid>
+    </Card>
+  );
+}

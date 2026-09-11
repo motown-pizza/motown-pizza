@@ -1,4 +1,4 @@
-import { Prisma, ProductVariant } from '@repo/db/generated/prisma/client.js';
+import { Prisma, ProductVariant } from '@repo/db';
 
 // Type for creating a item (without id and relations)
 export type ProductVariantCreate = Prisma.ProductVariantCreateInput;
@@ -12,6 +12,6 @@ export type ProductVariantGet = ProductVariant;
 // Type for fetched item with relations
 export type ProductVariantRelations = Prisma.ProductVariantGetPayload<{
   include: {
-    _count: { select: { order_items: true; recipie_items: true } };
+    _count: { select: { orderItems: true; recipieItems: true } };
   };
 }>;

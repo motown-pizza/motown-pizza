@@ -1,4 +1,4 @@
-import { Prisma, Order } from '@repo/db/generated/prisma/client.js';
+import { Prisma, Order } from '@repo/db';
 
 // Type for creating a item (without id and relations)
 export type OrderCreate = Prisma.OrderCreateInput;
@@ -12,6 +12,6 @@ export type OrderGet = Order;
 // Type for fetched item with relations
 export type OrderRelations = Prisma.OrderGetPayload<{
   include: {
-    _count: { select: { order_items: true; stock_movements: true } };
+    _count: { select: { orderItems: true; stockMovements: true } };
   };
 }>;

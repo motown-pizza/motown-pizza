@@ -1,0 +1,379 @@
+'use client';
+
+import React from 'react';
+import {
+  ActionIcon,
+  Avatar,
+  Button,
+  Divider,
+  Group,
+  NumberFormatter,
+  Stack,
+  TableTd,
+  TableTh,
+  TableTr,
+  Text,
+  Title,
+  Tooltip,
+} from '@mantine/core';
+import { useStoreProduct } from '@repo/store';
+import { getRegionalDate } from '@repo/utils';
+import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE } from '@repo/constants';
+import { ProductGet } from '@repo/types';
+import { Status, SyncStatus } from '@repo/types';
+import {
+  IconArrowUp,
+  IconEdit,
+  IconMilk,
+  IconMilkOff,
+  IconPlus,
+  IconTrash,
+} from '@tabler/icons-react';
+import { ModalConfirm } from '@repo/ui';
+import { useProductActions } from '@repo/store';
+import { useStoreProductVariant } from '@repo/store';
+import { useStoreRecipieItem } from '@repo/store';
+import { useStoreIngredient } from '@repo/store';
+import { useTableListing } from '@repo/hooks';
+import { BadgeStatus } from '@repo/ui';
+import { BadgeDietType } from '@repo/ui';
+import { PartialTableHeader } from '@repo/ui';
+import { PartialTableMain } from '@repo/ui';
+import { PartialTableFooter } from '@repo/ui';
+import { CheckboxTable } from '@repo/ui';
+import { ButtonPublish } from '@repo/ui';
+import { ButtonActivate } from '@repo/ui';
+import { ButtonDelete } from '@repo/ui';
+import Link from 'next/link';
+
+export default function Products({ props }: { props?: { products?: ProductGet[] } }) {
+  const { products, setProducts, deleteProducts } = useStoreProduct();
+  const { productVariants } = useStoreProductVariant();
+  const { productUpdate, productDelete } = useProductActions();
+  const { recipieItems } = useStoreRecipieItem();
+  const { ingredients } = useStoreIngredient();
+
+  const filteredItems = props?.products || products;
+
+  const {
+    search,
+    setSearch,
+    selectedRows,
+    setSelectedRows,
+    items,
+    activePage,
+    setActivePage,
+    totalPages,
+    pageRange,
+    anyActive,
+    anyDraft,
+  } = useTableListing({ list: filteredItems || [] });
+
+  const rows = items.map((p) => {
+    const dates = {
+      created: getRegionalDate(p.createdAt),
+    };
+    const active = p.status == Status.ACTIVE;
+    const draft = p.status == Status.DRAFT;
+    const productProps = {
+      icon: {
+        active: active ? IconMilkOff : IconMilk,
+        draft: IconArrowUp,
+      },
+    };
+    const productVariantsCurrent = productVariants?.filter((pv) => pv.productId == p.id);
+    const recipieItemsCurrent = recipieItems?.filter((ri) => {
+      const productVariantIds = productVariantsCurrent?.map((pv) => pv.id);
+      return productVariantIds?.includes(ri.productVariantId);
+    });
+    const ingredientIds = recipieItemsCurrent?.map((ri) => ri.ingredientId);
+    const ingredientsCurrent = ingredients?.filter((i) => ingredientIds?.includes(i.id));
+    const content = `${ingredientsCurrent?.map((ci) => ci.name).join(', ') ?? ''}`;
+
+    return (
+      <TableTr
+        key={p.id}
+        bg={selectedRows.includes(p.id) ? 'var(--mantine-color-sec-light)' : undefined}
+      >
+        <TableTd w={widths.selection}>
+          <CheckboxTable
+            props={{
+              list: filteredItems,
+              selectedRows,
+              setSelectedRows,
+              options: { head: true, itemId: p.id },
+            }}
+          />
+        </TableTd>
+
+        <TableTd w={widths.title}>
+          <Group gap={'xs'} wrap="nowrap">
+            <Avatar src={p.image} radius={0} size={50} />
+
+            <Stack gap={0} align="start">
+              <Tooltip label={p.title} multiline maw={240}>
+                <Title order={3} fz={'md'} fw={500} lineClamp={1}>
+                  {p.title}
+                </Title>
+              </Tooltip>
+
+              <Tooltip label={content} multiline maw={240}>
+                <Text c={'dimmed'} fz={'sm'} lineClamp={1}>
+                  <Text component="span" inherit>
+                    {content}
+                  </Text>
+                </Text>
+              </Tooltip>
+
+              <Divider w={'100%'} />
+
+              <Text fz={'sm'} c={'dimmed'}>
+                Variants:{' '}
+                <Text component="span" inherit c={'sec'}>
+                  <NumberFormatter value={productVariantsCurrent?.length || 0} suffix="" />
+                </Text>
+              </Text>
+            </Stack>
+          </Group>
+        </TableTd>
+
+        <TableTd w={widths.dietaryClass}>
+          <BadgeDietType props={p} />
+        </TableTd>
+
+        <TableTd w={widths.status}>
+          <BadgeStatus props={p} />
+        </TableTd>
+
+        <TableTd
+          w={widths.added}
+        >{`${dates.created.date}, ${dates.created.time.toUpperCase()}`}</TableTd>
+
+        <TableTd w={widths.actions}>
+          <Group gap={'xs'} justify="end" wrap="nowrap">
+            {draft && (
+              <ModalConfirm
+                props={{
+                  title: `${draft ? 'Publish' : 'Unpublish'} Product`,
+                  desc: draft
+                    ? `(${p.title}) will be made visible to users and staff.`
+                    : `The item (${p.title}) will no longer be visible to users and staff.`,
+                  onConfirm: () =>
+                    productUpdate({
+                      ...p,
+                      status: draft ? Status.ACTIVE : Status.DRAFT,
+                    }),
+                  confirmMessage: draft
+                    ? `(${p.title}) is now visible to users and staff.`
+                    : `(${p.title}) is no longer be visible to users and staff.`,
+                }}
+              >
+                <Group>
+                  <Tooltip label={`${draft ? 'Publish' : 'Unpublish'} Product`}>
+                    <ActionIcon
+                      size={ICON_WRAPPER_SIZE - 4}
+                      variant="light"
+                      color={draft ? 'green' : 'yellow'}
+                    >
+                      <productProps.icon.draft size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
+                    </ActionIcon>
+                  </Tooltip>
+                </Group>
+              </ModalConfirm>
+            )}
+
+            <Group>
+              <Tooltip label={'Edit Product'}>
+                <ActionIcon
+                  size={ICON_WRAPPER_SIZE - 4}
+                  variant="light"
+                  component={Link}
+                  href={`/dashboard/products/${p.id}`}
+                >
+                  <IconEdit size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
+
+            <ModalConfirm
+              props={{
+                title: `${active ? 'Deactivate' : 'Activate'} Product`,
+                desc: active
+                  ? `The item (${p.title}) will no longer be visible to users.`
+                  : `Visibility of the item (${p.title}) to users will be restored.`,
+                onConfirm: () =>
+                  productUpdate({
+                    ...p,
+                    status: active ? Status.INACTIVE : Status.ACTIVE,
+                  }),
+                confirmMessage: active
+                  ? `(${p.title}) is no longer visible to users.`
+                  : `Visibility of ${p.title} to users is restored.`,
+              }}
+            >
+              <Group>
+                <Tooltip
+                  label={
+                    draft
+                      ? 'Item needs to be published first'
+                      : `${active ? 'Deactivate' : 'Activate'} Product`
+                  }
+                >
+                  <ActionIcon
+                    size={ICON_WRAPPER_SIZE - 4}
+                    variant="light"
+                    color={active ? 'yellow' : 'green'}
+                    disabled={draft}
+                  >
+                    <productProps.icon.active size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
+                  </ActionIcon>
+                </Tooltip>
+              </Group>
+            </ModalConfirm>
+
+            <ModalConfirm
+              props={{
+                title: `Delete Product`,
+                desc: `This will remove all data associated with the item (${p.title}). This action is irreversible.`,
+                onConfirm: () => productDelete(p),
+                confirmMessage: `(${p.title}) and all data associated with it has been removed.`,
+              }}
+            >
+              <Group>
+                <Tooltip label={'Delete Product'}>
+                  <ActionIcon size={ICON_WRAPPER_SIZE - 4} variant="light" color="red">
+                    <IconTrash size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
+                  </ActionIcon>
+                </Tooltip>
+              </Group>
+            </ModalConfirm>
+          </Group>
+        </TableTd>
+      </TableTr>
+    );
+  });
+
+  return (
+    <div>
+      <PartialTableHeader
+        props={{
+          list: filteredItems,
+          selectedRows,
+          search,
+          setSearch,
+          options: { nested: true },
+        }}
+      >
+        <Button
+          size="xs"
+          leftSection={<IconPlus size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
+          component={Link}
+          href={`/dashboard/products/new`}
+        >
+          Add New
+        </Button>
+
+        {selectedRows.length && (
+          <>
+            {selectedRows.length == 1 && (
+              <Button
+                size="xs"
+                color="blue"
+                leftSection={<IconEdit size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
+                component={Link}
+                href={`/dashboard/products/${selectedRows[0]}`}
+              >
+                Edit Item
+              </Button>
+            )}
+
+            <ButtonPublish
+              props={{
+                anyDraft,
+                onConfirm: () => {
+                  setProducts(
+                    products?.map((p) => {
+                      if (!selectedRows.includes(p.id)) return p;
+
+                      return {
+                        ...p,
+                        syncStatus: SyncStatus.PENDING,
+                        status: anyDraft ? Status.ACTIVE : Status.DRAFT,
+                      };
+                    }),
+                  );
+
+                  setSelectedRows([]);
+                },
+              }}
+            />
+
+            <ButtonActivate
+              props={{
+                anyActive,
+                onConfirm: () => {
+                  setProducts(
+                    products?.map((p) => {
+                      if (!selectedRows.includes(p.id)) return p;
+
+                      return {
+                        ...p,
+                        syncStatus: SyncStatus.PENDING,
+                        status: anyActive ? Status.INACTIVE : Status.ACTIVE,
+                      };
+                    }),
+                  );
+
+                  setSelectedRows([]);
+                },
+              }}
+            />
+
+            <ButtonDelete
+              props={{
+                onConfirm: () => {
+                  deleteProducts((products || []).filter((i) => selectedRows.includes(i.id)));
+                },
+              }}
+            />
+          </>
+        )}
+      </PartialTableHeader>
+
+      <PartialTableMain
+        props={{
+          filteredItems,
+          rows,
+          selectedRows,
+          setSelectedRows,
+          widths,
+        }}
+      >
+        <TableTh w={widths.title}>Title</TableTh>
+        <TableTh w={widths.dietaryClass}>Diet Class</TableTh>
+        <TableTh w={widths.status}>Status</TableTh>
+        <TableTh w={widths.added}>Added</TableTh>
+        <TableTh w={widths.actions} />
+      </PartialTableMain>
+
+      <PartialTableFooter
+        props={{
+          list: filteredItems,
+          activePage,
+          setActivePage,
+          totalPages,
+          pageRange,
+        }}
+      />
+    </div>
+  );
+}
+
+const widths = {
+  selection: '5%',
+  title: '45%',
+  dietaryClass: '10%',
+  status: '10%',
+  added: '20%',
+  actions: '10%',
+};

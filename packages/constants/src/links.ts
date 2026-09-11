@@ -1,10 +1,3 @@
-/**
- * @template-source next-template
- * @template-sync auto
- * @description This file originates from the base template repository.
- * Do not modify unless you intend to backport changes to the template.
- */
-
 import {
   IconCategory,
   IconLabel,
@@ -13,7 +6,7 @@ import {
   IconUserEdit,
 } from '@tabler/icons-react';
 import { AUTH_URLS } from './paths';
-import { NavLink } from '@repo/types/link';
+import { NavLink } from '@repo/types';
 
 export const navLinkItems = {
   user: {

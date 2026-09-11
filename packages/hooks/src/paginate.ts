@@ -1,9 +1,4 @@
-/**
- * @template-source next-template
- * @template-sync auto
- * @description This file originates from the base template repository.
- * Do not modify unless you intend to backport changes to the template.
- */
+'use client';
 
 import { useState, useMemo, useEffect, useRef } from 'react';
 
@@ -46,10 +41,7 @@ export const usePaginate = <T>(list: T[], pageSize: number) => {
   }, [activePage, totalPages]);
 
   // Derived items — no need for extra state
-  const items = useMemo(
-    () => chunkedList[activePage - 1] ?? [],
-    [chunkedList, activePage]
-  );
+  const items = useMemo(() => chunkedList[activePage - 1] ?? [], [chunkedList, activePage]);
 
   // Page range
   const pageRange = useMemo<PageRange | null>(() => {

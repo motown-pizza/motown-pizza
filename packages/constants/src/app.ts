@@ -1,14 +1,10 @@
-/**
- * @template-source next-template
- * @template-sync auto
- * @description This file originates from the base template repository.
- * Do not modify unless you intend to backport changes to the template.
- */
-
 export const COMPANY_NAME = 'MoTown Pizza';
 
 export const PHONES = {
-  MAIN: '(254) 123 456-789',
+  PHONES: '0707 000 014/15/16',
+  PHONE1: '0707 000 014',
+  PHONE2: '0707 000 015',
+  PHONE3: '0707 000 016',
 };
 
 export const EMAILS = {
@@ -52,16 +48,17 @@ export const SOCIALS = {
 };
 
 export const APP_NAME = {
-  ADMIN: 'MoTown Back Office',
-  POS: 'MoTown POS',
-  KDS: 'MoTown KDS',
+  API: `${COMPANY_NAME} Server`,
+  ADMIN: `${COMPANY_NAME} Admin`,
   WEB: COMPANY_NAME,
+  POS: `${COMPANY_NAME} POS`,
+  KDS: `${COMPANY_NAME} KDS`,
 };
 
 export const APP_DESC = {
-  ADMIN:
-    'A lightweight and optimized Next.js template for building fast, SEO-friendly websites.',
+  API: 'A lightweight and optimized Next.js template for building fast, SEO-friendly websites.',
+  ADMIN: 'A lightweight and optimized Next.js template for building fast, SEO-friendly websites.',
+  WEB: 'A lightweight and optimized Next.js template for building fast, SEO-friendly websites.',
   POS: 'A lightweight and optimized Next.js template for building fast, SEO-friendly websites.',
   KDS: 'A lightweight and optimized Next.js template for building fast, SEO-friendly websites.',
-  WEB: 'A lightweight and optimized Next.js template for building fast, SEO-friendly websites.',
 };

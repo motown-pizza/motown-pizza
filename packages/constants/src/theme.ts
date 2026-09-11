@@ -1,19 +1,14 @@
 'use client';
 
-/**
- * @template-source next-template
- * @template-sync auto
- * @description This file originates from the base template repository.
- * Do not modify unless you intend to backport changes to the template.
- */
-
 import {
   Anchor,
+  Checkbox,
   Container,
   createTheme,
   Divider,
   Drawer,
   Fieldset,
+  HoverCard,
   Loader,
   MantineThemeOverride,
   Menu,
@@ -21,14 +16,18 @@ import {
   Notification,
   NumberFormatter,
   NumberInput,
+  PasswordInput,
+  Popover,
   ScrollArea,
+  ScrollAreaAutosize,
   Select,
   Textarea,
   TextInput,
   Tooltip,
 } from '@mantine/core';
-import cx from 'clsx';
+// import cx from 'clsx';
 import { ICON_STROKE_WIDTH } from './sizes';
+import { DateInput, DateTimePicker } from '@mantine/dates';
 
 export type AppThemeProps = {
   theme?: MantineThemeOverride;
@@ -39,35 +38,35 @@ export const getAppTheme = (params?: AppThemeProps) => {
   const componentAnchor = {
     Anchor: Anchor.extend({
       defaultProps: { underline: 'never' },
-      classNames: params?.styleSheets?.anchor,
+      // classNames: params?.styleSheets?.anchor,
     }),
   };
 
-  const componentContainer = {
-    Container: Container.extend({
-      defaultProps: {
-        mx: 'auto',
-      },
+  // const componentContainer = {
+  //   Container: Container.extend({
+  //     defaultProps: {
+  //       mx: 'auto',
+  //     },
 
-      classNames: (_: unknown, { size }: { size?: unknown }) => ({
-        root: cx({
-          [params?.styleSheets?.container.root]: size === 'responsive',
-        }),
-      }),
-    }),
-  };
+  //     classNames: (_: unknown, { size }: { size?: unknown }) => ({
+  //       root: cx({
+  //         [params?.styleSheets?.container.root]: size === 'responsive',
+  //       }),
+  //     }),
+  //   }),
+  // };
 
   const componentNotification = {
     Notification: Notification.extend({
-      classNames: params?.styleSheets?.notification,
+      // classNames: params?.styleSheets?.notification,
     }),
   };
 
-  const componentsWithStyles = {
-    ...(params?.styleSheets?.anchor ? componentAnchor : {}),
-    ...(params?.styleSheets?.container ? componentContainer : {}),
-    ...(params?.styleSheets?.notification ? componentNotification : {}),
-  };
+  // const componentsWithStyles = {
+  //   ...(params?.styleSheets?.anchor ? componentAnchor : {}),
+  //   ...(params?.styleSheets?.container ? componentContainer : {}),
+  //   ...(params?.styleSheets?.notification ? componentNotification : {}),
+  // };
 
   const baseTheme: MantineThemeOverride = {
     colors: {
@@ -119,71 +118,57 @@ export const getAppTheme = (params?: AppThemeProps) => {
     },
 
     components: {
-      Container: Container.extend({
-        defaultProps: {
-          mx: 'auto',
-        },
+      // Container: Container.extend({
+      //   defaultProps: {
+      //     mx: 'auto',
+      //   },
 
-        classNames: (_: unknown, { size }: { size?: unknown }) => ({
-          root: cx({
-            [params?.styleSheets?.container.root]: size === 'responsive',
-          }),
-        }),
+      //   classNames: (_: unknown, { size }: { size?: unknown }) => ({
+      //     root: cx({
+      //       [params?.styleSheets?.container.root]: size === 'responsive',
+      //     }),
+      //   }),
+      // }),
+
+      Loader: Loader.extend({
+        defaultProps: {
+          type: 'dots',
+          size: 'xs',
+        },
+      }),
+
+      Divider: Divider.extend({
+        defaultProps: {
+          color: 'var(--mantine-color-default-border)',
+        },
       }),
 
       Anchor: Anchor.extend({
         defaultProps: { underline: 'never' },
       }),
 
-      Divider: Divider.extend({
-        defaultProps: { color: 'var(--mantine-color-default-border)' },
-      }),
-
-      Menu: Menu.extend({
+      ScrollArea: ScrollArea.extend({
         defaultProps: {
-          transitionProps: {
-            duration: 100,
-          },
+          type: 'auto',
+          scrollbarSize: 5,
         },
         styles: {
-          dropdown: {
-            backgroundColor: 'var(--mantine-color-body)',
-            borderColor: 'var(--mantine-color-default-border)',
-            padding: 'var(--mantine-spacing-xs)',
+          scrollbar: { zIndex: 10 },
+          thumb: {
+            backgroundColor: 'light-dark(var(--mantine-color-dark-0), var(--mantine-color-dark-6))',
           },
         },
       }),
 
-      Tooltip: Tooltip.extend({
-        defaultProps: { withArrow: true, openDelay: 500 },
-      }),
-
-      NumberFormatter: NumberFormatter.extend({
-        defaultProps: { thousandSeparator: true },
-      }),
-
-      ScrollArea: ScrollArea.extend({
-        defaultProps: { scrollbarSize: ICON_STROKE_WIDTH * 4, type: 'auto' },
-        styles: { scrollbar: { zIndex: 100 } },
-      }),
-
-      Loader: Loader.extend({
+      ScrollAreaAutosize: ScrollAreaAutosize.extend({
         defaultProps: {
-          type: 'bars',
-          size: 'sm',
+          type: 'auto',
+          scrollbarSize: 8,
         },
-      }),
-
-      Modal: Modal.extend({
-        defaultProps: {
-          centered: true,
-          transitionProps: {
-            duration: 100,
-            transition: 'fade',
-          },
-          overlayProps: {
-            backgroundOpacity: 0.55,
-            blur: 3,
+        styles: {
+          scrollbar: { zIndex: 10 },
+          thumb: {
+            backgroundColor: 'light-dark(var(--mantine-color-dark-0), var(--mantine-color-dark-6))',
           },
         },
       }),
@@ -197,66 +182,245 @@ export const getAppTheme = (params?: AppThemeProps) => {
             backgroundOpacity: 0.55,
             blur: 3,
           },
+          styles: {
+            content: {
+              backgroundColor: 'light-dark(var(--mantine-color-body), var(--mantine-color-dark-9))',
+            },
+          },
         },
+      }),
+
+      NumberFormatter: NumberFormatter.extend({
+        defaultProps: { thousandSeparator: true },
       }),
 
       Fieldset: Fieldset.extend({
         styles: {
           root: {
             borderWidth: 1,
-            backgroundColor:
-              'light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))',
+            backgroundColor: 'light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))',
             boxShadow: 'var(--mantine-shadow-xs)',
           },
         },
       }),
 
       TextInput: TextInput.extend({
-        defaultProps: { variant: 'filled' },
-        styles: {
-          input: {
-            backgroundColor:
-              'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-7))',
+        defaultProps: {
+          // size: 'xs',
+          variant: 'filled',
+          styles: {
+            input: {
+              backgroundColor:
+                'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-8))',
+              fontWeight: 500,
+            },
           },
         },
       }),
 
-      NumberInput: NumberInput.extend({
-        defaultProps: { variant: 'filled' },
-        styles: {
-          input: {
-            backgroundColor:
-              'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-7))',
+      Checkbox: Checkbox.extend({
+        defaultProps: {
+          // size: 'xs',
+          variant: 'filled',
+          styles: {
+            input: {
+              borderColor: 'var(--mantine-color-default-border)',
+            },
           },
         },
       }),
 
       Textarea: Textarea.extend({
-        defaultProps: { variant: 'filled' },
-        styles: {
-          input: {
-            backgroundColor:
-              'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-7))',
+        defaultProps: {
+          // size: 'xs',
+          variant: 'filled',
+          styles: {
+            input: {
+              backgroundColor:
+                'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-8))',
+              fontWeight: 500,
+            },
+          },
+        },
+      }),
+
+      DateInput: DateInput.extend({
+        defaultProps: {
+          // size: 'xs',
+          variant: 'filled',
+          styles: {
+            input: {
+              backgroundColor:
+                'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-8))',
+              fontWeight: 500,
+            },
+          },
+        },
+      }),
+
+      DateTimePicker: DateTimePicker.extend({
+        defaultProps: {
+          // size: 'xs',
+          variant: 'filled',
+          styles: {
+            input: {
+              backgroundColor:
+                'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-8))',
+              fontWeight: 500,
+            },
+          },
+        },
+      }),
+
+      PasswordInput: PasswordInput.extend({
+        defaultProps: {
+          // size: 'xs',
+          variant: 'filled',
+          styles: {
+            input: {
+              backgroundColor:
+                'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-8))',
+              fontWeight: 500,
+            },
           },
         },
       }),
 
       Select: Select.extend({
-        defaultProps: { variant: 'filled' },
-        styles: {
-          input: {
-            backgroundColor:
-              'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-7))',
+        defaultProps: {
+          // size: 'xs',
+          variant: 'filled',
+          checkIconPosition: 'right',
+          styles: {
+            input: {
+              backgroundColor:
+                'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-8))',
+              fontWeight: 500,
+            },
+            dropdown: {
+              backgroundColor:
+                'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-8))',
+              borderColor: 'transparent',
+              padding: 'xs',
+            },
           },
         },
       }),
 
-      ...componentsWithStyles,
+      Menu: Menu.extend({
+        defaultProps: {
+          transitionProps: {
+            enterDelay: 0,
+            duration: 100,
+            exitDuration: 100,
+            exitDelay: 0,
+          },
+          overlayProps: { backgroundOpacity: 0.5, blur: 4 },
+          shadow: 'xs',
+        },
+        styles: {
+          dropdown: {
+            overflow: 'hidden',
+            padding: 5,
+            backgroundColor: 'light-dark(var(--mantine-color-body), var(--mantine-color-dark-9))',
+            borderColor: 'transparent',
+          },
+          item: {
+            // padding: '3px 6px',
+            overflow: 'hidden',
+            // borderRadius: 'var(--mantine-radius-md)',
+          },
+          itemLabel: { fontSize: 'var(--mantine-font-size-sm)' },
+          divider: {
+            borderColor: 'light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-7))',
+          },
+        },
+      }),
+
+      HoverCard: HoverCard.extend({
+        defaultProps: {
+          transitionProps: {
+            enterDelay: 0,
+            duration: 100,
+            exitDuration: 100,
+            exitDelay: 0,
+          },
+          overlayProps: { backgroundOpacity: 0.5, blur: 4 },
+          shadow: 'xs',
+        },
+        styles: {
+          dropdown: {
+            overflow: 'hidden',
+            padding: 'xs',
+            backgroundColor: 'light-dark(var(--mantine-color-body), var(--mantine-color-dark-9))',
+            borderColor: 'transparent',
+          },
+        },
+      }),
+
+      Popover: Popover.extend({
+        defaultProps: {
+          transitionProps: {
+            enterDelay: 0,
+            duration: 100,
+            exitDuration: 100,
+            exitDelay: 0,
+          },
+        },
+        styles: {
+          dropdown: {
+            overflow: 'hidden',
+            padding: 'var(--mantine-spacing-xs)',
+            backgroundColor: 'light-dark(var(--mantine-color-body), var(--mantine-color-dark-9))',
+            borderColor: 'transparent',
+          },
+        },
+      }),
+
+      Tooltip: Tooltip.extend({
+        defaultProps: {
+          visibleFrom: 'md',
+          withArrow: true,
+          transitionProps: {
+            duration: 100,
+            transition: 'fade',
+            exitDuration: 100,
+            enterDelay: 500,
+            exitDelay: 0,
+          },
+        },
+      }),
+
+      Modal: Modal.extend({
+        defaultProps: {
+          centered: true,
+          withCloseButton: false,
+          padding: 'xs',
+          transitionProps: {
+            enterDelay: 0,
+            duration: 100,
+            exitDuration: 100,
+            exitDelay: 0,
+            transition: 'fade',
+          },
+          overlayProps: {
+            backgroundOpacity: 0.33,
+            blur: 3,
+          },
+          styles: {
+            content: {
+              backgroundColor: 'light-dark(var(--mantine-color-body), var(--mantine-color-dark-9))',
+            },
+          },
+        },
+      }),
+
+      // ...componentsWithStyles,
     },
   };
 
   return createTheme({
     ...baseTheme,
-    ...(params?.theme || {}),
+    // ...(params?.theme || {}),
   });
 };

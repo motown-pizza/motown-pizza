@@ -1,0 +1,10 @@
+.avatarImage {
+  border: 3px solid transparent;
+  transition: 0.25s all ease;
+}
+
+@media (hover: hover) {
+  .avatarImage:hover {
+    border: 3px solid var(--mantine-color-pri-light);
+  }
+}

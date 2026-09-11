@@ -1,16 +1,7 @@
-/**
- * @template-source next-template
- * @template-sync auto
- * @description This file originates from the base template repository.
- * Do not modify unless you intend to backport changes to the template.
- */
-
-import React from 'react';
-
 export type Sizes = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type Widths = Partial<Record<'md' | 'lg', number>>;
 
-export interface BodyProps {
+export interface MainProps {
   bar?: React.ReactNode;
   header?: React.ReactNode;
   nav?: React.ReactNode;
@@ -38,8 +29,7 @@ export interface PageProps extends React.ComponentPropsWithoutRef<'article'> {
   children: React.ReactNode;
 }
 
-export interface SectionProps
-  extends React.ComponentPropsWithoutRef<'section'> {
+export interface SectionProps extends React.ComponentPropsWithoutRef<'section'> {
   containerized?: boolean | Sizes | 'responsive';
   padded?: boolean | number | Sizes;
   margined?: boolean | number | Sizes;

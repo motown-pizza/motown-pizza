@@ -1,24 +1,21 @@
-import { hasLength } from '@mantine/form';
-import { useStockMovementActions } from '@repo/hooks/actions/stock-movement';
-import { useFormBase } from '../form';
-import { StockMovementGet } from '@repo/types/models/stock-movement';
-import { Status, StockMovementType } from '@repo/types/models/enums';
-import { useRouter } from 'next/navigation';
-import { useIngredientActions } from '../actions/ingredient';
-import { useStoreIngredient } from '@repo/libraries/zustand/stores/ingredient';
+'use client';
 
-export const useFormStockMovement = (params?: {
-  defaultValues?: Partial<StockMovementGet>;
-}) => {
-  const { stockMovementCreate, stockMovementUpdate } =
-    useStockMovementActions();
+import { hasLength } from '@mantine/form';
+import { useStockMovementActions } from '@repo/store';
+import { useFormBase } from '../form';
+import { StockMovementGet } from '@repo/types';
+import { Status, StockMovementType } from '@repo/types';
+import { useRouter } from 'next/navigation';
+import { useIngredientActions } from '@repo/store';
+import { useStoreIngredient } from '@repo/store';
+
+export const useFormStockMovement = (params?: { defaultValues?: Partial<StockMovementGet> }) => {
+  const { stockMovementCreate, stockMovementUpdate } = useStockMovementActions();
   const { ingredients } = useStoreIngredient();
   const { ingredientUpdate } = useIngredientActions();
   const router = useRouter();
 
-  const { form, submitted, handleSubmit } = useFormBase<
-    Partial<StockMovementGet>
-  >(
+  const { form, submitted, handleSubmit } = useFormBase<Partial<StockMovementGet>>(
     {
       quantity: params?.defaultValues?.quantity || 0,
       type: params?.defaultValues?.type || StockMovementType.PURCHASE,
@@ -34,7 +31,7 @@ export const useFormStockMovement = (params?: {
           ...rawValues,
         };
 
-        if (!params?.defaultValues?.updated_at) {
+        if (!params?.defaultValues?.updatedAt) {
           stockMovementCreate({
             ...submitObject,
           });
@@ -44,18 +41,16 @@ export const useFormStockMovement = (params?: {
             ...submitObject,
           } as StockMovementGet);
 
-          const ingredient = ingredients?.find(
-            (i) => i.id == params.defaultValues?.ingredient_id
-          );
+          const ingredient = ingredients?.find((i) => i.id == params.defaultValues?.ingredientId);
 
           if (ingredient) {
             const addition = rawValues.type == StockMovementType.PURCHASE;
 
             ingredientUpdate({
               ...ingredient,
-              stock_quantity: addition
-                ? ingredient.stock_quantity + Number(rawValues.quantity)
-                : ingredient.stock_quantity - Number(rawValues.quantity),
+              stockQuantity: addition
+                ? ingredient.stockQuantity + Number(rawValues.quantity)
+                : ingredient.stockQuantity - Number(rawValues.quantity),
             });
           }
         }
@@ -63,7 +58,7 @@ export const useFormStockMovement = (params?: {
         form.reset();
         router.push(`/dashboard/ingredient/stock-movement`);
       },
-    }
+    },
   );
 
   return {

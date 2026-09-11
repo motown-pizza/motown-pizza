@@ -1,5 +1,5 @@
-import { OrderGet } from '@repo/types/models/order';
-import { stores } from '@repo/constants/stores';
+import { OrderGet } from '@repo/types';
+import { stores } from '@repo/constants';
 import {
   OrderFulfilmentType,
   OrderPaymentMethod,
@@ -9,28 +9,28 @@ import {
   OrderTime,
   Status,
   SyncStatus,
-} from '@repo/types/models/enums';
+} from '@repo/types';
 
 const now = new Date();
 
 export const defaultOrderDetails: OrderGet = {
   id: 'new',
-  customer_name: '',
-  customer_phone: '',
-  eta_estimate: '',
-  fulfillment_type: OrderFulfilmentType.DELIVERY,
-  guest_count: 0,
-  order_payment_status: OrderPaymentStatus.PENDING,
-  order_status: OrderStatus.DRAFT,
-  order_time: OrderTime.NOW,
-  payment_method: OrderPaymentMethod.ONLINE,
-  profile_id: null,
+  customerName: '',
+  customerPhone: '',
+  etaEstimate: '',
+  fulfillmentType: OrderFulfilmentType.DELIVERY,
+  guestCount: 0,
+  orderPaymentStatus: OrderPaymentStatus.PENDING,
+  orderStatus: OrderStatus.DRAFT,
+  orderTime: OrderTime.NOW,
+  paymentMethod: OrderPaymentMethod.ONLINE,
+  profileId: null,
   source: OrderSource.WEBSITE,
-  store_id: stores[0].id,
-  tracking_code: '',
+  storeId: stores?.[0]?.id ?? null,
+  trackingCode: '',
   status: Status.ACTIVE,
-  sync_status: SyncStatus.SYNCED,
-  table_booking_id: '',
-  created_at: now,
-  updated_at: now,
+  syncStatus: SyncStatus.SYNCED,
+  tableBookingId: null,
+  createdAt: now,
+  updatedAt: now,
 };

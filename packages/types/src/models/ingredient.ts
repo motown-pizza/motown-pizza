@@ -1,4 +1,4 @@
-import { Prisma, Ingredient } from '@repo/db/generated/prisma/client.js';
+import { Prisma, Ingredient } from '@repo/db';
 
 // Type for creating a item (without id and relations)
 export type IngredientCreate = Prisma.IngredientCreateInput;
@@ -12,6 +12,6 @@ export type IngredientGet = Ingredient;
 // Type for fetched item with relations
 export type IngredientRelations = Prisma.IngredientGetPayload<{
   include: {
-    _count: { select: { recipie_items: true; stock_movements: true } };
+    _count: { select: { recipieItems: true; stockMovements: true } };
   };
 }>;
