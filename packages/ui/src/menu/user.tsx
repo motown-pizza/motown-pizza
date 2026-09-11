@@ -20,12 +20,7 @@ export function MenuUser({ children }: { children: React.ReactNode }) {
       position="bottom-end"
       width={mobile ? 200 : 240}
       trigger="click-hover"
-      openDelay={50}
-      closeDelay={200}
       opened={desktop ? undefined : false}
-      transitionProps={{ transition: 'pop-bottom-left', duration: 100 }}
-      withArrow
-      arrowOffset={16}
       disabled={!session?.email}
     >
       <MenuTarget>
