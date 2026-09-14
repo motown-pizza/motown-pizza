@@ -2,6 +2,7 @@ import {
   IconCategory,
   IconLabel,
   IconLogout,
+  IconPackage,
   IconSettings,
   IconUserEdit,
 } from '@tabler/icons-react';
@@ -16,11 +17,11 @@ export const navLinkItems = {
       //   link: `/account/wishlist`,
       //   label: 'My Wishlist',
       // },
-      // {
-      //   icon: IconPackage,
-      //   link: `/account/orders`,
-      //   label: 'My Orders',
-      // },
+      {
+        icon: IconPackage,
+        link: `/account/orders`,
+        label: 'My Orders',
+      },
       // {
       //   icon: IconStar,
       //   link: `/account/reviews`,
