@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { LayoutMain } from '@repo/ui';
-// import AffixNavbar from '@repo/ui/common/affixi/navbar';
+import { AffixNavbar } from '@repo/ui';
 import { APP_NAME } from '@repo/constants';
 import HeaderMain from '@web/ui/layout/header/main';
 import NavbarMain from '@web/ui/layout/navbar/main';
@@ -20,9 +20,9 @@ export default async function LayoutMarketing({
     <LayoutMain header={<HeaderMain />} nav={<NavbarMain />} footer={<FooterMain />}>
       <main>{children}</main>
 
-      {/* <AffixNavbar>
+      <AffixNavbar>
         <NavbarMain />
-      </AffixNavbar> */}
+      </AffixNavbar>
     </LayoutMain>
   );
 }
