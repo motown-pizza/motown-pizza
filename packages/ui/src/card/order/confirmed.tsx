@@ -2,6 +2,7 @@ import React from 'react';
 import {
   ActionIcon,
   Badge,
+  Box,
   Button,
   Card,
   CardProps,
@@ -19,6 +20,7 @@ import { OrderGet } from '@repo/types';
 import { getRegionalDate } from '@repo/utils';
 import { capitalizeWords } from '@repo/utils';
 import { IconCheck, IconCopy } from '@tabler/icons-react';
+import { ButtonCopy } from '../../button/copy';
 
 export function CardOrderConfirmed({
   props,
@@ -31,7 +33,6 @@ export function CardOrderConfirmed({
 } & CardProps) {
   const { order, store } = props;
   const clipboard = useClipboard({ timeout: 1000 });
-  const copyProps = { icon: clipboard.copied ? IconCheck : IconCopy };
 
   return (
     <Card bg={'var(--mantine-color-dark-9)'} withBorder p={{ base: 'md', md: 'xl' }} {...restProps}>
@@ -46,18 +47,9 @@ export function CardOrderConfirmed({
               {order?.trackingCode}
             </Text>
 
-            <Tooltip label={clipboard.copied ? 'Coppied' : 'Copy Code'} visibleFrom="xs">
-              <ActionIcon
-                size={ICON_WRAPPER_SIZE - 4}
-                color={clipboard.copied ? 'ter' : 'blue'}
-                onClick={() => {
-                  clipboard.copy(order?.trackingCode);
-                }}
-                visibleFrom="xs"
-              >
-                <copyProps.icon size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
-              </ActionIcon>
-            </Tooltip>
+            <Box visibleFrom="xs">
+              <ButtonCopy clipboardItem={order?.trackingCode} />
+            </Box>
 
             <Button
               size="xs"
