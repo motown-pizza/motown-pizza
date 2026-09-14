@@ -1,0 +1,33 @@
+import React from 'react';
+import { Metadata } from 'next';
+import { LayoutMain } from '@repo/ui';
+// import { AffixNavbar } from '@repo/ui';
+import { APP_NAME } from '@repo/constants';
+import HeaderMain from '@web/ui/layout/header/main';
+import NavbarMain from '@web/ui/layout/navbar/main';
+import FooterMain from '@web/ui/layout/footer/main';
+
+export const metadata: Metadata = {
+  title: { default: APP_NAME.WEB, template: `%s - Account - ${APP_NAME.WEB}` },
+};
+
+export default async function LayoutMarketing({
+  children, // will be a page or nested layout
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <LayoutMain
+      header={<HeaderMain />}
+      nav={<NavbarMain />}
+      footer={<FooterMain />}
+      // aside={{ left: { component: <>aside component</> } }}
+    >
+      <main>{children}</main>
+
+      {/* <AffixNavbar>
+        <NavbarMain />
+      </AffixNavbar> */}
+    </LayoutMain>
+  );
+}

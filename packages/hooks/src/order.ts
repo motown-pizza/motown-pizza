@@ -1,6 +1,6 @@
 'use client';
 
-import { useStoreOrder } from '@repo/store';
+import { useStoreOrder, useStoreOrderItem } from '@repo/store';
 import { useStoreOrderPlacement } from '@repo/store';
 import { getUrlParam } from '@repo/utils';
 import { useStoreCartItem } from '@repo/store';
@@ -105,6 +105,25 @@ export const useGetSum = () => {
     cartItems?.map((ci) => {
       const variant = productVariants?.find((pv) => pv.id == ci.productVariantId);
       if (variant?.price) sum += variant.price * ci.quantity;
+    });
+
+    return sum;
+  };
+
+  return { getSum };
+};
+
+export const useGetSumOrderItems = (params: { orderId: string }) => {
+  const { orderItems } = useStoreOrderItem();
+  const orderItemsCurrent = orderItems?.filter((oi) => oi.orderId == params.orderId);
+  const productVariants = useStoreProductVariant((s) => s.productVariants);
+
+  const getSum = () => {
+    let sum = 0;
+
+    orderItemsCurrent?.map((oi) => {
+      const variant = productVariants?.find((pv) => pv.id == oi.productVariantId);
+      if (variant?.price) sum += variant.price * oi.quantity;
     });
 
     return sum;

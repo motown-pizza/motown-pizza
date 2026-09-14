@@ -19,6 +19,7 @@ export * from './breadcrumb/dashboard/admin';
 export * from './button/appshell/navbar';
 export * from './button/activate';
 export * from './button/auth-providers';
+export * from './button/copy';
 export * from './button/confirm-cancel';
 export * from './button/delete';
 export * from './button/fullscreen';
