@@ -45,6 +45,7 @@ export function ProviderSync({ children }: { children: React.ReactNode }) {
 }
 
 const STORES_TO_SYNC = [
+  STORE_NAME.PROFILES,
   STORE_NAME.PRODUCTS,
   STORE_NAME.PRODUCT_VARIANTS,
   STORE_NAME.INGREDIENTS,
