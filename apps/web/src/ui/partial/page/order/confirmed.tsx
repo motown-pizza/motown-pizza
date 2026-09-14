@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LayoutSection } from '@repo/ui';
 import { LayoutIntroSection } from '@repo/ui';
-import { useStoreOrder } from '@repo/store';
+import { useStoreOrder, useStoreSession } from '@repo/store';
 import { PARAM_NAME } from '@repo/constants';
 import { Button, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE, SECTION_SPACING } from '@repo/constants';
@@ -18,6 +18,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 export default function Confirmed() {
   const { orders } = useStoreOrder();
   const { deliveries } = useStoreDelivery();
+
+  const session = useStoreSession((s) => s.session);
 
   const searchParams = useSearchParams();
 
@@ -86,6 +88,14 @@ export default function Confirmed() {
                 <AnchorNextLink href={`/order/track?trackingCode=${order.trackingCode}`}>
                   <Button>Track Order</Button>
                 </AnchorNextLink>
+
+                {session?.email && (
+                  <AnchorNextLink href={`/account/orders`}>
+                    <Button color="sec" c={'dark.9'}>
+                      View Orders
+                    </Button>
+                  </AnchorNextLink>
+                )}
               </Group>
             </Stack>
           </Stack>
