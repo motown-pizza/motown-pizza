@@ -39,6 +39,7 @@ export function ProviderInitialize({
 }
 
 const STORES_TO_LOAD = {
+  [STORE_NAME.PROFILES]: true,
   [STORE_NAME.PRODUCTS]: true,
   [STORE_NAME.PRODUCT_VARIANTS]: true,
   [STORE_NAME.INGREDIENTS]: true,

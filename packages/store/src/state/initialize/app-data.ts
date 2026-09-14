@@ -144,6 +144,11 @@ type LoadStoreConfig<TItems = any, THookReturn = any> = {
 };
 
 export const LOAD_STORES: Record<string, LoadStoreConfig> = {
+  [STORE_NAME.PROFILES]: {
+    dataStore: STORE_NAME.PROFILES,
+    useStoreHook: useStoreProfile,
+    setState: (store, items) => store.setProfiles(items),
+  },
   [STORE_NAME.CART_ITEMS]: {
     dataStore: STORE_NAME.CART_ITEMS,
     useStoreHook: useStoreCartItem,
@@ -232,6 +237,7 @@ export const useLoadAppData = (options: {
   const session = useStoreSession((s) => s.session);
 
   const stores = {
+    [STORE_NAME.PROFILES]: useStoreProfile(),
     [STORE_NAME.CART_ITEMS]: useStoreCartItem(),
     [STORE_NAME.CATEGORIES]: useStoreCategory(),
     [STORE_NAME.DELIVERIES]: useStoreDelivery(),

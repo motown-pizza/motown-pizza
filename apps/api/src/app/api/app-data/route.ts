@@ -41,7 +41,11 @@ export async function GET(request: NextRequest) {
       [STORE_NAME.PRODUCTS]: () => db.product.findMany({ orderBy: { createdAt: 'desc' } }),
       [STORE_NAME.PRODUCT_VARIANTS]: () =>
         db.productVariant.findMany({ orderBy: { createdAt: 'desc' } }),
-      [STORE_NAME.PROFILES]: () => db.profile.findMany({ orderBy: { createdAt: 'desc' } }),
+      [STORE_NAME.PROFILES]: () =>
+        db.profile.findMany({
+          where: { id: sourceSite != 'web' ? undefined : userId },
+          orderBy: { createdAt: 'desc' },
+        }),
       [STORE_NAME.RECIPIE_ITEMS]: () => db.recipieItem.findMany({ orderBy: { createdAt: 'desc' } }),
       [STORE_NAME.STOCK_MOVEMENTS]: () =>
         db.stockMovement.findMany({ orderBy: { createdAt: 'desc' } }),

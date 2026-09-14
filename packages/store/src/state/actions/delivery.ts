@@ -73,11 +73,11 @@ export const useDeliveryActions = () => {
 
     addDelivery({ ...newDelivery, verficationCode: recipientPin });
 
-    showNotification({
-      variant: Variant.SUCCESS,
-      title: 'Delivery Added',
-      desc: `The delivery has been added`,
-    });
+    // showNotification({
+    //   variant: Variant.SUCCESS,
+    //   title: 'Delivery Added',
+    //   desc: `The delivery has been added`,
+    // });
   };
 
   const deliveryUpdate = (params: DeliveryGet) => {
@@ -93,11 +93,11 @@ export const useDeliveryActions = () => {
 
     updateDelivery(newDelivery);
 
-    showNotification({
-      variant: Variant.SUCCESS,
-      title: 'Delivery Updated',
-      desc: `The delivery has been updated`,
-    });
+    // showNotification({
+    //   variant: Variant.SUCCESS,
+    //   title: 'Delivery Updated',
+    //   desc: `The delivery has been updated`,
+    // });
   };
 
   const deliveryDelete = (params: DeliveryGet) => {

@@ -14,21 +14,19 @@ import {
 } from '@mantine/core';
 import { useFormEmailInquiry } from '@repo/hooks';
 import { AnchorNextLink } from '../anchor/next-link';
+import { FormValuesInquiry } from '@repo/types';
 
 export function FormContact({
   props,
   options,
 }: {
-  props?: { subject?: string; message?: string };
+  props?: Partial<FormValuesInquiry>;
   options?: { modal?: boolean; close?: () => void; order?: boolean };
 }) {
-  const { form, submitted, handleSubmit } = useFormEmailInquiry(
-    {
-      subject: props?.subject,
-      message: props?.message,
-    },
-    { close: options?.close, order: options?.order },
-  );
+  const { form, submitted, handleSubmit } = useFormEmailInquiry(props, {
+    close: options?.close,
+    order: options?.order,
+  });
 
   return (
     <Box component="form" onSubmit={form.onSubmit(() => handleSubmit())} noValidate>

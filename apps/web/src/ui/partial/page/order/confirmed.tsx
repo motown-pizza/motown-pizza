@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LayoutSection } from '@repo/ui';
 import { LayoutIntroSection } from '@repo/ui';
-import { useStoreOrder } from '@repo/store';
+import { useStoreOrder, useStoreSession } from '@repo/store';
 import { PARAM_NAME } from '@repo/constants';
 import { Button, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE, SECTION_SPACING } from '@repo/constants';
@@ -13,15 +13,25 @@ import { AnchorNextLink } from '@repo/ui';
 import { useStoreDelivery } from '@repo/store';
 import { OrderFulfilmentType } from '@repo/types';
 import { CardOrderConfirmed } from '@repo/ui';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function Confirmed() {
   const { orders } = useStoreOrder();
   const { deliveries } = useStoreDelivery();
 
+  const session = useStoreSession((s) => s.session);
+
   const searchParams = useSearchParams();
 
   const orderID = searchParams.get(PARAM_NAME.ORDER_CONFIRMED);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!orderID) {
+      router.replace('/');
+    }
+  }, []);
 
   const order = orders?.find((o) => o.id === orderID) ?? null;
 
@@ -78,6 +88,14 @@ export default function Confirmed() {
                 <AnchorNextLink href={`/order/track?trackingCode=${order.trackingCode}`}>
                   <Button>Track Order</Button>
                 </AnchorNextLink>
+
+                {session?.email && (
+                  <AnchorNextLink href={`/account/orders`}>
+                    <Button color="sec" c={'dark.9'}>
+                      View Orders
+                    </Button>
+                  </AnchorNextLink>
+                )}
               </Group>
             </Stack>
           </Stack>

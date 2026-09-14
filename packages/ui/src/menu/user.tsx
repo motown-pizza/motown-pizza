@@ -34,9 +34,7 @@ export function MenuUser({ children }: { children: React.ReactNode }) {
           <PartialUser />
         </Box>
 
-        {/* <MenuDivider />
-
-        {navLinkItems.user.account.map((item) => (
+        {/* {navLinkItems.user.account.map((item) => (
           <MenuItem
             key={item.label}
             leftSection={<item.icon size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
@@ -45,7 +43,20 @@ export function MenuUser({ children }: { children: React.ReactNode }) {
           >
             {item.label}
           </MenuItem>
-        ))} */}
+        ))}
+
+        <MenuDivider /> */}
+
+        {navLinkItems.user.activity.map((item) => (
+          <MenuItem
+            key={item.label}
+            leftSection={<item.icon size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
+            component={Link}
+            href={item.link}
+          >
+            {item.label}
+          </MenuItem>
+        ))}
 
         <MenuDivider />
 

@@ -38,11 +38,11 @@ export const useProfileActions = () => {
 
     addProfile(newProfile);
 
-    showNotification({
-      variant: Variant.SUCCESS,
-      title: 'Person Added',
-      desc: `'${newProfile.firstName || newProfile.email}' has been added`,
-    });
+    // showNotification({
+    //   variant: Variant.SUCCESS,
+    //   title: 'Person Added',
+    //   desc: `'${newProfile.firstName || newProfile.email}' has been added`,
+    // });
   };
 
   const profileUpdate = (params: ProfileGet) => {
@@ -59,11 +59,11 @@ export const useProfileActions = () => {
 
     updateProfile(newProfile);
 
-    showNotification({
-      variant: Variant.SUCCESS,
-      title: 'Person Updated',
-      desc: `'${newProfile.firstName || newProfile.email}' has been updated`,
-    });
+    // showNotification({
+    //   variant: Variant.SUCCESS,
+    //   title: 'Person Updated',
+    //   desc: `'${newProfile.firstName || newProfile.email}' has been updated`,
+    // });
   };
 
   const profileDelete = (params: ProfileGet) => {
