@@ -13,6 +13,7 @@ import {
   Group,
   Loader,
   NumberFormatter,
+  Overlay,
   Radio,
   RadioGroup,
   ScrollAreaAutosize,
@@ -21,7 +22,12 @@ import {
   Title,
 } from '@mantine/core';
 import { LayoutIntroSection } from '@repo/ui';
-import { useStoreOrderPlacement } from '@repo/store';
+import {
+  useProfileActions,
+  useStoreOrderPlacement,
+  useStoreProfile,
+  useStoreSession,
+} from '@repo/store';
 import { defaultOrderDetails, PARAM_NAME } from '@repo/constants';
 import { OrderFulfilmentType, OrderPaymentMethod, OrderStatus, OrderTime } from '@repo/types';
 import { stores } from '@repo/constants';
@@ -40,6 +46,7 @@ import { useNotification } from '@repo/notifications';
 import { Variant } from '@repo/types';
 
 export default function Checkout() {
+  const session = useStoreSession((s) => s.session);
   const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
   const { cartItems } = useStoreCartItem();
   const { getSum } = useGetSum();
@@ -47,6 +54,10 @@ export default function Checkout() {
 
   const store = stores.find((s) => s.id == orderDetails?.storeId);
   const { orderUpdate } = useOrderActions();
+
+  const profiles = useStoreProfile((s) => s.profiles);
+  const currentProfile = profiles?.find((pi) => pi.id == session?.id);
+  const { profileUpdate } = useProfileActions();
 
   const isReadyForConfirmation =
     !!cartItems?.length &&
@@ -156,11 +167,21 @@ export default function Checkout() {
             </div>
 
             <Card bg={'transparent'} withBorder w={{ md: '70%' }}>
-              <FormContact options={{ order: true }} />
+              <FormContact
+                props={{
+                  name:
+                    `${currentProfile?.firstName || ''} ${currentProfile?.lastName || ''}`.trim() ||
+                    '',
+                  phone: currentProfile?.phone || '',
+                }}
+                options={{ order: true }}
+              />
             </Card>
 
             <Text fz={'sm'} c={'dimmed'}>
-              You can also sign in to your {APP_NAME.WEB} profile for faster checkout.
+              {!session?.email
+                ? `You can also sign in to your ${APP_NAME.WEB} account for faster checkout.`
+                : 'The above personal information was provided when you signed in.'}
             </Text>
           </Stack>
         </Card>
@@ -249,6 +270,10 @@ export default function Checkout() {
               }
 
               if (orderDetails) {
+                if (currentProfile && !currentProfile.phone) {
+                  profileUpdate({ ...currentProfile, phone: orderDetails.customerPhone });
+                }
+
                 orderUpdate(
                   { ...orderDetails, orderStatus: OrderStatus.PREPARING },
                   { placement: true },
