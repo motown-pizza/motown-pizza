@@ -13,7 +13,7 @@ import { AnchorNextLink } from '@repo/ui';
 import { useStoreDelivery } from '@repo/store';
 import { OrderFulfilmentType } from '@repo/types';
 import { CardOrderConfirmed } from '@repo/ui';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function Confirmed() {
   const { orders } = useStoreOrder();
@@ -22,6 +22,14 @@ export default function Confirmed() {
   const searchParams = useSearchParams();
 
   const orderID = searchParams.get(PARAM_NAME.ORDER_CONFIRMED);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!orderID) {
+      router.replace('/');
+    }
+  }, []);
 
   const order = orders?.find((o) => o.id === orderID) ?? null;
 
