@@ -10,6 +10,7 @@ export const protectedRoutes = [
   '/dashboard',
   '/pos',
   '/kds',
+  '/account',
 
   // Add other protected routes
 ];
