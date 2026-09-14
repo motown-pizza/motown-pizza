@@ -169,7 +169,6 @@ model Profile {
   role       Role    @default(USER)
 
   posts         Post[]
-  comments      Comment[]
   orders        Order[]
   orderItems    OrderItem[]
   cartItems     CartItem[]
@@ -200,8 +199,6 @@ model Post {
   category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   categoryId String?   @map("category_id")
 
-  comments Comment[]
-
   status     Status     @default(ACTIVE)
   syncStatus SyncStatus @default(SYNCED) @map("sync_status")
 
@@ -224,26 +221,6 @@ model Category {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map(name: "categories")
-}
-
-model Comment {
-  id        String  @id @default(uuid())
-  name      String?
-  content   String
-  commentId String? @map("comment_id")
-
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId    String   @map("post_id")
-  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  profileId String?  @map("profile_id")
-
-  status     Status     @default(ACTIVE)
-  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map(name: "comments")
 }
 
 model Product {
