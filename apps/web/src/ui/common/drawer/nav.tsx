@@ -28,8 +28,8 @@ export default function Nav({
               <ImageDefault
                 src={images.brand.logo.landscape.meta}
                 alt={APP_NAME.WEB}
-                height={{ base: 40 }}
-                width={{ base: 50 }}
+                height={{ base: 70 }}
+                width={{ base: 80 }}
                 fit="contain"
                 mode="grid"
                 style={{ transform: 'scale(1.3)' }}

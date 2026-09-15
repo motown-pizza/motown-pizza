@@ -25,13 +25,13 @@ export default function Main() {
           </Title>
         </Box>
 
-        <Group w={{ md: '30%' }} justify="center" py={'md'}>
+        <Group w={{ base: '100%', md: '30%' }} justify="center" py={'md'}>
           <AnchorNextLink href="/" underline="never">
             <ImageDefault
               src={images.brand.logo.landscape.meta}
               alt={APP_NAME.WEB}
-              height={{ base: 50, sm: 70, md: 90 }}
-              width={{ base: 60, sm: 80, md: 100 }}
+              height={{ base: 70, sm: 100, md: 120 }}
+              width={{ base: 80, sm: 110, md: 130 }}
               fit="contain"
               mode="grid"
               style={{ transform: 'scale(1.3)' }}

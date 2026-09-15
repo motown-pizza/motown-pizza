@@ -5,12 +5,12 @@ export const images = {
   brand: {
     logo: {
       landscape: {
-        default: `${imageUrl}/brand/logo/landscape/default.png`,
-        meta: `${imageUrl}/brand/logo/landscape/meta.png`,
+        default: `${imageUrl}/brand/logo/landscape/default.webp`,
+        meta: `${imageUrl}/brand/logo/landscape/meta.webp`,
       },
       potrait: {
-        default: `${imageUrl}/brand/logo/potrait/default.png`,
-        meta: `${imageUrl}/brand/logo/potrait/meta.png`,
+        default: `${imageUrl}/brand/logo/potrait/default.webp`,
+        meta: `${imageUrl}/brand/logo/potrait/meta.webp`,
       },
     },
     icon: {
