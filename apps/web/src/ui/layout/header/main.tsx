@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { LayoutSection } from '@repo/ui';
-import { Box, Group, Stack, Text, Title } from '@mantine/core';
+import { Box, Card, Group, Stack, Text, Title } from '@mantine/core';
 import { IconMoped, IconPizza } from '@tabler/icons-react';
 import { PHONES } from '@repo/constants';
 import { APP_NAME } from '@repo/constants';
@@ -12,6 +12,7 @@ import classes from './main.module.css';
 import { useMediaQuery } from '@mantine/hooks';
 import { ImageDefault } from '@repo/ui';
 import { images } from '@repo/constants';
+import { OrderFulfilmentType } from '@repo/types';
 
 export default function Main() {
   const tablet = useMediaQuery('(min-width: 48em)');
@@ -20,9 +21,30 @@ export default function Main() {
     <LayoutSection id={'header-main'} padded={'xs'}>
       <Group justify={tablet ? 'space-between' : 'center'} wrap="nowrap">
         <Box w={{ md: '40%' }} visibleFrom="md">
-          <Title order={1} c={'sec'} fz={'xl'}>
+          {/* <Title order={1} c={'sec'} fz={'xl'}>
             Authentic Taste that Rules!
-          </Title>
+          </Title> */}
+
+          <AnchorNextLink
+            href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
+            underline="never"
+          >
+            <Card
+              padding={0}
+              bg={'transparent'}
+              // withBorder
+              // style={{ borderStyle: 'dashed' }}
+              w={{ md: 100 }}
+            >
+              <ImageDefault
+                src={images.theme.vibes}
+                alt="Double Offer"
+                height={{ base: 140 }}
+                width={'100%'}
+                // fit="contain"
+              />
+            </Card>
+          </AnchorNextLink>
         </Box>
 
         <Group w={{ base: '100%', md: '30%' }} justify="center" py={'md'}>
@@ -40,7 +62,7 @@ export default function Main() {
         </Group>
 
         <Group gap={'xl'} visibleFrom="sm" w={{ md: '40%' }} justify="end">
-          {headerLinks.map((hl, i) => (
+          {/* {headerLinks.map((hl, i) => (
             <Text
               component="a"
               key={i}
@@ -61,7 +83,7 @@ export default function Main() {
                 </Stack>
               </Group>
             </Text>
-          ))}
+          ))} */}
         </Group>
       </Group>
     </LayoutSection>

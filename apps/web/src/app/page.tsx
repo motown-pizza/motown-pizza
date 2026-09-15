@@ -32,7 +32,7 @@ export default function Home() {
       <LayoutSection id="home-page-intro" margined={SECTION_SPACING} containerized={'xl'}>
         <Grid gap={0} pos={'relative'}>
           <GridCol span={{ base: 12, md: 2 }} visibleFrom="md">
-            <Box pos={'sticky'} top={SECTION_SPACING * 1.5}>
+            {/* <Box pos={'sticky'} top={SECTION_SPACING * 1.5}>
               <AnchorNextLink
                 href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
                 underline="never"
@@ -47,13 +47,13 @@ export default function Home() {
                   />
                 </ImageCard>
               </AnchorNextLink>
-            </Box>
+            </Box> */}
           </GridCol>
 
           <GridCol span={{ md: 0.5 }} visibleFrom="md">
-            <Center py={'xl'} h={'100%'}>
+            {/* <Center py={'xl'} h={'100%'}>
               <Divider orientation="vertical" color="sec" h={'100%'} />
-            </Center>
+            </Center> */}
           </GridCol>
 
           <GridCol span={{ base: 12, md: 7 }}>
