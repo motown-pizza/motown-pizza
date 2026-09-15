@@ -31,19 +31,27 @@ export const LOCATIONS = {
 export const SOCIALS = {
   X: {
     label: `X`,
-    link: '#twitter',
+    link: 'https://x.com/motownpizza_ke',
   },
-  FB: {
-    label: `Facebook`,
-    link: '#facebook',
-  },
+  // FB: {
+  //   label: `Facebook`,
+  //   link: '#facebook',
+  // },
   IG: {
     label: `Instagram`,
-    link: '#instagram',
+    link: 'https://www.instagram.com/motownpizza_ke',
   },
-  LI: {
-    label: `LinkedIn`,
-    link: '#linkedin',
+  // LI: {
+  //   label: `LinkedIn`,
+  //   link: '#linkedin',
+  // },
+  TI: {
+    label: `TikTok`,
+    link: 'https://www.tiktok.com/@motownpizza_ke',
+  },
+  YT: {
+    label: `YouTube`,
+    link: 'https://www.youtube.com/@motownpizza_ke',
   },
 };
 

@@ -19,7 +19,9 @@ import {
   IconBrandFacebook,
   IconBrandInstagram,
   IconBrandLinkedin,
+  IconBrandTiktok,
   IconBrandX,
+  IconBrandYoutube,
 } from '@tabler/icons-react';
 
 export default function Main() {
@@ -109,7 +111,7 @@ export default function Main() {
 
             <Group justify="center" gap={'xs'}>
               {social.map((si, i) => (
-                <a key={i} href={'#'}>
+                <a key={i} href={si.link} target="_blank">
                   <ActionIcon
                     size={ICON_WRAPPER_SIZE + 8}
                     color={'pri'}
@@ -176,19 +178,29 @@ const social = [
     label: SOCIALS.X.label,
     link: SOCIALS.X.link,
   },
-  {
-    icon: IconBrandFacebook,
-    label: SOCIALS.FB.label,
-    link: SOCIALS.FB.link,
-  },
+  // {
+  //   icon: IconBrandFacebook,
+  //   label: SOCIALS.FB.label,
+  //   link: SOCIALS.FB.link,
+  // },
   {
     icon: IconBrandInstagram,
     label: SOCIALS.IG.label,
     link: SOCIALS.IG.link,
   },
+  // {
+  //   icon: IconBrandLinkedin,
+  //   label: SOCIALS.LI.label,
+  //   link: SOCIALS.LI.link,
+  // },
   {
-    icon: IconBrandLinkedin,
-    label: SOCIALS.LI.label,
-    link: SOCIALS.LI.link,
+    icon: IconBrandTiktok,
+    label: SOCIALS.TI.label,
+    link: SOCIALS.TI.link,
+  },
+  {
+    icon: IconBrandYoutube,
+    label: SOCIALS.YT.label,
+    link: SOCIALS.YT.link,
   },
 ];
