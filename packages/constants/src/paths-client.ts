@@ -1,4 +1,4 @@
-export const SHARED_VERCEL_SUBSTRING = 'motownpizza';
+export const SHARED_VERCEL_SUBSTRING = 'motown';
 const VERCEL_TEAM_SLUG = `${SHARED_VERCEL_SUBSTRING}-team`;
 
 const vercelEnv = process.env.NEXT_PUBLIC_VERCEL_ENV;
