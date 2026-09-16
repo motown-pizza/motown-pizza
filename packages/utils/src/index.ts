@@ -3,6 +3,7 @@ export * from './cookie-client';
 export * from './cookie-server';
 export * from './date-time';
 export * from './generators';
+export * from './geo';
 export * from './hooks';
 export * from './middeware';
 export * from './misc';

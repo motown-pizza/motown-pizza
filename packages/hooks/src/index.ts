@@ -14,6 +14,7 @@ export * from './form/stock-movement';
 export * from './appshell';
 export * from './edit';
 export * from './form';
+export * from './geo';
 export * from './interval';
 export * from './order';
 export * from './paginate';

@@ -8,6 +8,7 @@ import {
   Button,
   Card,
   Center,
+  Divider,
   Group,
   Indicator,
   Loader,
@@ -21,23 +22,41 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE, SECTION_SPACING } from '@repo/constants';
+import {
+  ICON_SIZE,
+  ICON_STROKE_WIDTH,
+  ICON_WRAPPER_SIZE,
+  SECTION_SPACING,
+  StoreGet,
+} from '@repo/constants';
 import { stores } from '@repo/constants';
 import { IconBrandWhatsapp, IconCurrentLocation } from '@tabler/icons-react';
-import React, { useEffect, useState } from 'react';
-import { useOrderStart } from '@repo/hooks';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useGeolocation, useOrderStart } from '@repo/hooks';
 import { OrderFulfilmentType } from '@repo/types';
+import { extractCoordsFromIframeUrl, getDistanceInKm } from '@repo/utils';
 
-export default function DeliveryType() {
+export default function OrderType() {
   const [activeTab, setActiveTab] = useState<string | null>('delivery');
 
-  const styles = (v: string | null) => {
-    return { c: v == activeTab ? 'sec' : undefined };
-  };
+  const geolocation = useGeolocation();
+
+  const sortedStores = useMemo(() => {
+    if (!geolocation.location) return [];
+    return getStoresSortedByProximity(
+      geolocation.location.latitude,
+      geolocation.location.longitude,
+      stores,
+    );
+  }, [geolocation.location]);
+
+  const styles = (v: string | null) => ({
+    c: v === activeTab ? 'sec' : undefined,
+  });
 
   return (
     <Tabs
-      defaultValue="delivery"
+      defaultValue={'delivery'}
       value={activeTab}
       onChange={setActiveTab}
       variant="outline"
@@ -62,38 +81,25 @@ export default function DeliveryType() {
         <TabsTab value="delivery" c={styles('delivery').c}>
           Delivery
         </TabsTab>
-        <TabsTab value="take-away" c={styles('take-away').c}>
-          Take Away
-        </TabsTab>
-        <TabsTab value="call" c={styles('call').c}>
-          Call To Collect
+
+        <TabsTab value="collection" c={styles('collection').c}>
+          Collection
         </TabsTab>
       </TabsList>
 
       <TabsPanel value="delivery">
-        <PartialCallCollect
-          props={{
-            type: 'delivery',
-            title: <>Closest stores for delivery for the area</>,
-          }}
+        <PartialOrderType
+          type={OrderFulfilmentType.DELIVERY}
+          geolocation={geolocation}
+          sortedStores={sortedStores}
         />
       </TabsPanel>
 
-      <TabsPanel value="take-away">
-        <PartialCallCollect
-          props={{
-            type: 'take-away',
-            title: <>Closest stores for take-away for the area</>,
-          }}
-        />
-      </TabsPanel>
-
-      <TabsPanel value="call">
-        <PartialCallCollect
-          props={{
-            type: 'call',
-            title: <>Closest stores for call-to-order for the area</>,
-          }}
+      <TabsPanel value="collection">
+        <PartialOrderType
+          type={OrderFulfilmentType.COLLECTION}
+          geolocation={geolocation}
+          sortedStores={sortedStores}
         />
       </TabsPanel>
     </Tabs>
@@ -102,28 +108,145 @@ export default function DeliveryType() {
 
 function TabCard({ children }: { children: React.ReactNode }) {
   return (
-    <Card bg={'var(--mantine-color-dark-8)'} p={{ base: 'md', md: 'xl' }}>
+    <Card bg={'var(--mantine-color-dark-9)'} p={{ base: 'md', md: 'xl' }}>
       {children}
     </Card>
   );
 }
 
-function PartialCallCollect({
-  props,
-}: {
-  props: {
-    type: 'delivery' | 'take-away' | 'call';
-    title: string | React.ReactNode;
-    desc?: string | React.ReactNode;
-  };
-}) {
+interface PartialOrderTypeProps {
+  type: OrderFulfilmentType;
+  desc?: string | React.ReactNode;
+  geolocation: ReturnType<typeof useGeolocation>;
+  sortedStores: StoreWithDistance[];
+}
+
+function PartialOrderType({ type, desc, geolocation, sortedStores }: PartialOrderTypeProps) {
   const [loaded, setLoaded] = useState(false);
+  const { location, error, loading: loadingLocation, requestLocation } = geolocation;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoaded(true);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const nearestStore = sortedStores[0];
+
+  return (
+    <Box mih={320}>
+      <TabCard>
+        <Stack ta={'center'}>
+          <div>
+            <Box mih={26.6}>
+              {!location ? (
+                loadingLocation ? (
+                  <Group justify="center">
+                    <Loader />
+                  </Group>
+                ) : error ? (
+                  <Text>
+                    <Text component="span" inherit c={'red'} fw={500}>
+                      Error:
+                    </Text>{' '}
+                    Failed to get your location.
+                  </Text>
+                ) : (
+                  <Group justify="center">
+                    <Text>Activate location service:</Text>
+                    <Button size="xs" onClick={() => requestLocation()}>
+                      Get Location
+                    </Button>
+                  </Group>
+                )
+              ) : (
+                <Stack>
+                  <Group justify="center">
+                    <Title order={2} fz={'md'} fw={'normal'}>
+                      <Text component="span" inherit c={'sec'} fw={500}>
+                        Your location:
+                      </Text>{' '}
+                      {String(location.longitude).slice(0, 10)},{' '}
+                      {String(location.latitude).slice(0, 10)}
+                    </Title>
+
+                    <Tooltip label={'Location in use'}>
+                      <Group>
+                        <Indicator processing offset={2}>
+                          <ThemeIcon size={ICON_WRAPPER_SIZE} color="sec" variant="light">
+                            <IconCurrentLocation size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
+                          </ThemeIcon>
+                        </Indicator>
+                      </Group>
+                    </Tooltip>
+                  </Group>
+                </Stack>
+              )}
+            </Box>
+
+            {desc && typeof desc === 'string' ? (
+              <Text>Select your location to start your order</Text>
+            ) : (
+              desc
+            )}
+          </div>
+
+          <Divider />
+
+          {!loaded ? (
+            <Center py={SECTION_SPACING}>
+              <Loader size={'sm'} />
+            </Center>
+          ) : (
+            <Stack gap={'xs'}>
+              {!sortedStores.length ? (
+                <Stack py={SECTION_SPACING}>
+                  <Text>Use location to see store listings.</Text>
+                </Stack>
+              ) : (
+                <>
+                  <Title order={3} fz={'xl'}>
+                    Nearest Store
+                  </Title>
+
+                  <CardStore props={nearestStore} type={type} index={1} />
+
+                  <Title order={3} fz={'xl'} mt={'md'}>
+                    Other Stores
+                  </Title>
+
+                  {sortedStores.slice(1).map((ssi, i) => (
+                    <div key={ssi.id}>
+                      <CardStore props={ssi} type={type} index={i + 2} />
+                    </div>
+                  ))}
+                </>
+              )}
+            </Stack>
+          )}
+        </Stack>
+      </TabCard>
+    </Box>
+  );
+}
+
+function CardStore({
+  props,
+  type,
+  index,
+}: {
+  props: StoreGet & { distanceKm: number };
+  type: OrderFulfilmentType;
+  index: number;
+}) {
   const [loading, setLoading] = useState(false);
-  const { handleStart } = useOrderStart({ storeId: stores[0].id, stores });
+  const { handleStart } = useOrderStart({ storeId: props.id, stores });
 
   const action = () => {
-    switch (props.type) {
-      case 'delivery':
+    switch (type) {
+      case OrderFulfilmentType.DELIVERY:
         return (
           <>
             <Button
@@ -139,10 +262,13 @@ function PartialCallCollect({
                 }, 500);
               }}
             >
-              Order from {stores[0].title}
+              Order from {props.title}
             </Button>
 
             <Box c={'dimmed'} fz={'xs'}>
+              <Text inherit>
+                Distance: <strong>{Math.round(props.distanceKm * 10) / 10} Km</strong>.
+              </Text>
               <Text inherit>
                 Avg. delivery time: <strong>17 - 21 min</strong>.
               </Text>
@@ -152,7 +278,8 @@ function PartialCallCollect({
             </Box>
           </>
         );
-      case 'take-away':
+
+      case OrderFulfilmentType.COLLECTION:
         return (
           <>
             <Button
@@ -168,34 +295,12 @@ function PartialCallCollect({
                 }, 500);
               }}
             >
-              Order from {stores[0].title}
+              Order from {props.title}
             </Button>
 
             <Box c={'dimmed'} fz={'xs'}>
               <Text inherit>
                 Avg. waiting time at store: <strong>17 - 21 min</strong>.
-              </Text>
-            </Box>
-          </>
-        );
-      case 'call':
-        return (
-          <>
-            <Group gap={'xs'}>
-              <Anchor inherit c={'sec'} href={`tel:${stores[0].phone}`}>
-                <Button size="xs">Call {stores[0].title}</Button>
-              </Anchor>
-
-              <Anchor inherit c={'sec'} href={`https://wa.me/${stores[0].phone}`}>
-                <ActionIcon size={ICON_WRAPPER_SIZE + 4} color="green">
-                  <IconBrandWhatsapp size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-                </ActionIcon>
-              </Anchor>
-            </Group>
-
-            <Box c={'dimmed'} fz={'xs'}>
-              <Text inherit c={'dimmed'} fz={'xs'}>
-                Typically responds within <strong>10 min</strong>.
               </Text>
             </Box>
           </>
@@ -208,87 +313,72 @@ function PartialCallCollect({
 
   const actionComponent = action();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoaded(true);
-    }, 1000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
-
   return (
-    <Box mih={320}>
-      <TabCard>
-        <Stack ta={'center'}>
+    <Card key={props.id} bg={'var(--mantine-color-dark-8)'} withBorder>
+      <Group wrap="nowrap" w={'100%'} align="start">
+        <Group mt={5}>
+          <Avatar size={32}>{index}</Avatar>
+        </Group>
+
+        <Stack ta={'start'}>
           <div>
-            <Group justify="center">
-              <Title order={2} fz={'md'} fw={500}>
-                {props.title}{' '}
-              </Title>
+            <Title order={3} fz={'md'} c={'blue'}>
+              {'MoTown'} {props.title}
+            </Title>
 
-              <Tooltip label={'Location in use'}>
-                <Group>
-                  <Indicator processing offset={2}>
-                    <ThemeIcon size={ICON_WRAPPER_SIZE} color="sec" variant="light">
-                      <IconCurrentLocation size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
-                    </ThemeIcon>
-                  </Indicator>
-                </Group>
-              </Tooltip>
-            </Group>
+            <Stack fz={'sm'} c={'dimmed'} gap={0} mt={5}>
+              <Text inherit>
+                Location:{' '}
+                <Anchor inherit c={'sec'} href={props.iframe} target="_blank">
+                  {props.location}
+                </Anchor>
+              </Text>
 
-            {props.desc && typeof props.desc == 'string' ? (
-              <Text>Select your location to start your order</Text>
-            ) : (
-              props.desc
-            )}
+              <Text inherit>
+                Phone Number:{' '}
+                <Anchor inherit c={'sec'} href={`tel:${props.phone}`}>
+                  {props.phone}
+                </Anchor>
+              </Text>
+            </Stack>
           </div>
 
-          {!loaded ? (
-            <Center py={SECTION_SPACING}>
-              <Loader size={'sm'} />
-            </Center>
-          ) : (
-            <Card bg={'var(--mantine-color-dark-7)'}>
-              <Group wrap="nowrap" w={'100%'} align="start">
-                <Group mt={5}>
-                  <Avatar size={32}>1</Avatar>
-                </Group>
-
-                <Stack ta={'start'}>
-                  <div>
-                    <Title order={3} fz={'md'} c={'blue'}>
-                      {'MoTown'} {stores[0].title}
-                    </Title>
-
-                    <Stack fz={'sm'} c={'dimmed'} gap={0} mt={5}>
-                      <Text inherit>
-                        Location:{' '}
-                        <Anchor inherit c={'sec'} href={stores[0].iframe} target="_blank">
-                          {stores[0].location}
-                        </Anchor>
-                      </Text>
-
-                      <Text inherit>
-                        Phone Number:{' '}
-                        <Anchor inherit c={'sec'} href={`tel:${stores[0].phone}`}>
-                          {stores[0].phone}
-                        </Anchor>
-                      </Text>
-                    </Stack>
-                  </div>
-
-                  <Stack gap={'xs'} align="start">
-                    {actionComponent}
-                  </Stack>
-                </Stack>
-              </Group>
-            </Card>
-          )}
+          <Stack gap={'xs'} align="start">
+            {actionComponent}
+          </Stack>
         </Stack>
-      </TabCard>
-    </Box>
+      </Group>
+    </Card>
   );
+}
+
+export interface StoreWithDistance extends StoreGet {
+  distanceKm: number;
+  latitude?: number;
+  longitude?: number;
+}
+
+export function getStoresSortedByProximity(
+  userLat: number,
+  userLng: number,
+  storeList: StoreGet[],
+): StoreWithDistance[] {
+  return storeList
+    .map((store) => {
+      const coords = extractCoordsFromIframeUrl(store.iframe);
+
+      if (!coords) {
+        return { ...store, distanceKm: Infinity };
+      }
+
+      const distanceKm = getDistanceInKm(userLat, userLng, coords.latitude, coords.longitude);
+
+      return {
+        ...store,
+        distanceKm,
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      };
+    })
+    .sort((a, b) => a.distanceKm - b.distanceKm);
 }
