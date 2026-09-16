@@ -2,10 +2,8 @@
 
 import React from 'react';
 import {
-  Box,
   Card,
   Divider,
-  Flex,
   Grid,
   GridCol,
   Group,
@@ -14,14 +12,9 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import {
-  useStoreOrder,
-  useStoreOrderItem,
-  useStoreProduct,
-  useStoreProductVariant,
-} from '@repo/store';
-import { OrderGet, OrderItemGet } from '@repo/types';
-import { BadgeOrderType, BadgeStatus, ButtonCopy, ImageDefault, LayoutSection } from '@repo/ui';
+import { useStoreOrder, useStoreOrderItem } from '@repo/store';
+import { OrderGet } from '@repo/types';
+import { BadgeOrderType, ButtonCopy, CardOrderItem, LayoutSection } from '@repo/ui';
 import { getRegionalDate } from '@repo/utils';
 import { useGetSumOrderItems } from '@repo/hooks';
 import { SECTION_SPACING } from '@repo/constants';
@@ -129,89 +122,6 @@ function CardOrderAside({ props }: { props: OrderGet }) {
           </Text>
         </Group>
       </Stack>
-    </Card>
-  );
-}
-
-function CardOrderItem({ props }: { props: OrderItemGet }) {
-  const productVariants = useStoreProductVariant((s) => s.productVariants);
-  const productVariant = productVariants?.find((pvi) => pvi.id == props.productVariantId);
-  const products = useStoreProduct((s) => s.products);
-  const product = products?.find((pi) => pi.id == productVariant?.productId);
-
-  const divider = <Divider orientation="vertical" h={24} visibleFrom="xs" color="sec" />;
-
-  return (
-    <Card bg={'transparent'} px={0}>
-      <Grid align="center">
-        <GridCol span={{ base: 4, xs: 1.5 }}>
-          <ImageDefault
-            src={product?.image || 'loading'}
-            alt={product?.title || 'loading'}
-            height={80}
-            fit={'contain'}
-            radius={'lg'}
-          />
-        </GridCol>
-
-        <GridCol span={{ base: 8, xs: 10.5 }}>
-          <Flex gap={{ base: 'xl', xs: 'md' }} justify="space-between" wrap="nowrap"></Flex>
-
-          <Stack gap={5}>
-            <Group gap={'xs'} align="end" wrap="nowrap">
-              <Title order={2} fz={'md'} fw={500} c={'sec'}>
-                {product?.title}
-              </Title>
-            </Group>
-
-            {product?.title.toLowerCase().trim() != productVariant?.title?.toLowerCase().trim() && (
-              <Group gap={'xs'} align="end" wrap="nowrap">
-                <Text fz={'sm'}>{productVariant?.title}</Text>
-              </Group>
-            )}
-
-            <Flex
-              fz={'sm'}
-              direction={{ base: 'column', xs: 'row' }}
-              align={{ base: 'start', xs: 'center' }}
-              gap={'xs'}
-            >
-              <Group fz={'sm'} visibleFrom="xs">
-                <Text inherit>
-                  Unit Price:{' '}
-                  <Text component="span" inherit c={'ter'} fw={500}>
-                    <NumberFormatter value={productVariant?.price} />
-                    /-
-                  </Text>
-                </Text>
-              </Group>
-
-              {divider}
-
-              <Group fz={'sm'}>
-                <Text inherit>
-                  Qty:{' '}
-                  <Text component="span" inherit c={'pri'} fw={500}>
-                    <NumberFormatter value={props.quantity} />
-                  </Text>
-                </Text>
-              </Group>
-
-              {divider}
-
-              <Group fz={'sm'}>
-                <Text inherit>
-                  Total:{' '}
-                  <Text component="span" inherit c={'ter'} fw={500}>
-                    <NumberFormatter value={(productVariant?.price || 0) * props.quantity} />
-                    /-
-                  </Text>
-                </Text>
-              </Group>
-            </Flex>
-          </Stack>
-        </GridCol>
-      </Grid>
     </Card>
   );
 }

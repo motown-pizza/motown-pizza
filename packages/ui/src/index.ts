@@ -29,9 +29,9 @@ export * from './button/publish';
 export * from './card/blog/main';
 export * from './card/blog/new';
 export * from './card/order/confirmed';
+export * from './card/order/item';
 export * from './card/overview/main';
 export * from './card/cookies';
-export * from './card/order-item';
 export * from './card/product-variant';
 export * from './card/recipie-item';
 

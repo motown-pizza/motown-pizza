@@ -30,7 +30,7 @@ import Link from 'next/link';
 import { useStoreOrderItem } from '@repo/store';
 import { sortArray } from '@repo/utils';
 import { Order as EnumOrder } from '@repo/types';
-import { CardOrderItem } from '../../card/order-item';
+import { CardOrderItem } from '../../card/order/item';
 
 export function FormStoresOrder({
   props,

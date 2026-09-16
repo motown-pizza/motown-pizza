@@ -7,20 +7,23 @@ import {
   Card,
   Divider,
   Group,
+  Modal,
   NumberFormatter,
+  ScrollAreaAutosize,
   Stack,
   Text,
   Title,
 } from '@mantine/core';
 import { OrderGet } from '@repo/types';
 import { capitalizeWords } from '@repo/utils';
-import { BadgeStatus } from '@repo/ui';
-import { useStoreOrderItem } from '@repo/store';
+import { BadgeStatus, CardOrderItem, LayoutModal } from '@repo/ui';
+import { useStoreOrder, useStoreOrderItem } from '@repo/store';
 import { getRegionalDate } from '@repo/utils';
 import { BadgeOrderType } from '@repo/ui';
 import { OrderFulfilmentType } from '@repo/types';
 import { useStoreTable } from '@repo/store';
 import { useStoreTableBooking } from '@repo/store';
+import { useDisclosure } from '@mantine/hooks';
 
 export default function Order({ props }: { props: OrderGet }) {
   const { orderItems } = useStoreOrderItem();
@@ -80,9 +83,11 @@ export default function Order({ props }: { props: OrderGet }) {
           </Text>
 
           {orderItemsCurrent?.length && (
-            <Text inherit>
-              <NumberFormatter value={orderItemsCurrent.length} /> items
-            </Text>
+            <ModalComponent orderId={props.id}>
+              <Text inherit c={'pri'}>
+                <NumberFormatter value={orderItemsCurrent.length} /> items
+              </Text>
+            </ModalComponent>
           )}
         </Group>
 
@@ -105,5 +110,59 @@ export default function Order({ props }: { props: OrderGet }) {
         </Group>
       </Stack>
     </Card>
+  );
+}
+
+function ModalComponent({ orderId, children }: { orderId: string; children: React.ReactNode }) {
+  const orders = useStoreOrder((s) => s.orders);
+  const order = orders?.find((oi) => oi.id == orderId);
+
+  const orderItems = useStoreOrderItem((s) => s.orderItems);
+  const orderItemsOrder = orderItems?.filter((oii) => oii.orderId == orderId);
+
+  const [opened, { open, close }] = useDisclosure(false);
+
+  return (
+    <>
+      <Modal opened={opened} onClose={close} withCloseButton={false} padding={0}>
+        <LayoutModal props={{ close, title: `Order Items (${orderItemsOrder?.length})` }}>
+          <div>
+            <div>
+              <Text>
+                Order ID:{' '}
+                <Text component="span" inherit fw={500} c={'pri'}>
+                  {order?.trackingCode}
+                </Text>
+              </Text>
+              <Text>
+                Customer Name:{' '}
+                <Text component="span" inherit fw={500} c={'pri'}>
+                  {order?.customerName}
+                </Text>
+              </Text>
+            </div>
+
+            <Divider mt={'md'} />
+
+            <ScrollAreaAutosize mah={320}>
+              <div>
+                {orderItemsOrder?.map((oioi, i) => (
+                  <div key={oioi.id}>
+                    {i > 0 && <Divider />}
+                    <CardOrderItem props={oioi} />
+                  </div>
+                ))}
+              </div>
+            </ScrollAreaAutosize>
+
+            <Divider />
+          </div>
+        </LayoutModal>
+      </Modal>
+
+      <span onClick={open} style={{ cursor: 'pointer' }}>
+        {children}
+      </span>
+    </>
   );
 }

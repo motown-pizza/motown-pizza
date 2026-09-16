@@ -62,10 +62,10 @@ export default function Orders() {
               key={i}
               size="xs"
               color={currentType === s ? 'pri' : 'gray'}
-              tt={'uppercase'}
+              variant="light"
               onClick={() => setCurrentStatus(s)}
             >
-              {capitalizeWords(s)}
+              {capitalizeWords(s.replaceAll('_', ' '))}
             </Button>
           ))}
         </Group>
@@ -85,7 +85,10 @@ export default function Orders() {
           </ThemeIcon>
 
           <Stack align="center" ta={'center'} gap={0}>
-            <Text inherit>No orders with the fulfilment type &apos;{currentType}&apos; found.</Text>
+            <Text inherit>
+              No orders with the fulfilment type &apos;
+              {capitalizeWords(currentType.replaceAll('_', ' '))}&apos; found.
+            </Text>
 
             <Text inherit maw={320} mt={'xs'}>
               Orders with this status will appear here automatically.
@@ -94,8 +97,8 @@ export default function Orders() {
         </Stack>
       ) : (
         <Grid gap={'xl'}>
-          {filteredOrdersTab.map((oi, i) => (
-            <GridCol key={i} span={4}>
+          {filteredOrdersTab.map((oi) => (
+            <GridCol key={oi.id} span={4}>
               <CardOrder props={oi} />
             </GridCol>
           ))}

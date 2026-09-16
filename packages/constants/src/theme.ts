@@ -419,6 +419,7 @@ export const getAppTheme = (params?: AppThemeProps) => {
           styles: {
             content: {
               backgroundColor: 'light-dark(var(--mantine-color-body), var(--mantine-color-dark-9))',
+              border: '1px solid var(--mantine-color-default-border)',
             },
           },
         },
