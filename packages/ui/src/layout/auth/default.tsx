@@ -20,8 +20,8 @@ import { getThemeLogo } from '@repo/utils';
 
 export async function LayoutAuthDefault({ children }: { children: React.ReactNode }) {
   const logo = await getThemeLogo({
-    darkImage: images.brand.logo.landscape.default,
-    lightImage: images.brand.logo.landscape.default,
+    darkImage: images.brand.logo.landscape.meta,
+    lightImage: images.brand.logo.landscape.meta,
   });
 
   return (
