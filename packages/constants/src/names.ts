@@ -6,6 +6,7 @@ export const COOKIE_NAME = {
   COLOR_SCHEME: 'theme.color-scheme',
   COLOR_SCHEME_STATE: 'theme.color-scheme-state',
   AUTH: { EMAIL: 'auth.email' },
+  GEO_LOCATION: 'geo.location',
 };
 
 export const LOCAL_STORAGE_NAME = {

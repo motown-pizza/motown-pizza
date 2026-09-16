@@ -1,4 +1,6 @@
-import { useState, useCallback } from 'react';
+import { COOKIE_NAME } from '@repo/constants';
+import { getCookieClient, setCookieClient } from '@repo/utils';
+import { useState, useCallback, useEffect } from 'react';
 
 interface LocationData {
   latitude: number;
@@ -24,17 +26,23 @@ export function useGeolocation(): UseGeolocationReturn {
       return;
     }
 
+    if (location) return;
+
     setLoading(true);
     setError(null);
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        setLocation({
+        const locationValue = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           accuracy: position.coords.accuracy,
-        });
+        };
+
+        setLocation(locationValue);
         setLoading(false);
+
+        setCookieClient(COOKIE_NAME.GEO_LOCATION, locationValue, { expiryInSeconds: 60 * 60 });
       },
       (err) => {
         switch (err.code) {
@@ -55,6 +63,12 @@ export function useGeolocation(): UseGeolocationReturn {
       },
       options,
     );
+  }, []);
+
+  useEffect(() => {
+    const cookieGeoLocation: LocationData | null = getCookieClient(COOKIE_NAME.GEO_LOCATION);
+    if (!cookieGeoLocation) return;
+    setLocation(cookieGeoLocation);
   }, []);
 
   return { location, error, loading, requestLocation };
