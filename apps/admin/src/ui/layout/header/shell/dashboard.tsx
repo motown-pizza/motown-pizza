@@ -41,7 +41,7 @@ export default function Dashboard() {
         />
 
         {/* <ImageDefault
-          src={images.brand.logo.landscape.meta}
+          src={images.brand.logo.landscape.default}
           height={40}
           width={50}
           fit={'cont'}

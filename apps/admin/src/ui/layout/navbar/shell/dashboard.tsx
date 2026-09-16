@@ -80,7 +80,7 @@ export default function Dashboard() {
       >
         <Group justify="center" mih={APPSHELL.HEADER_HEIGHT - 1} px={'sm'}>
           <ImageDefault
-            src={images.brand.logo.landscape.meta}
+            src={images.brand.logo.landscape.default}
             height={APPSHELL.HEADER_HEIGHT - 10}
             width={APPSHELL.HEADER_HEIGHT - 5}
             alt={APP_NAME.ADMIN}

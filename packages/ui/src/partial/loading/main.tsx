@@ -10,7 +10,7 @@ export function PartialLoadingMain() {
       <Center mih={'100vh'}>
         <Stack align="center" gap={'xl'}>
           <ImageDefault
-            src={images.brand.logo.landscape.meta}
+            src={images.brand.logo.landscape.default}
             alt={APP_NAME.WEB}
             height={{ base: 70 }}
             width={{ base: 80 }}

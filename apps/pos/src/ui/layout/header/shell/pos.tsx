@@ -43,7 +43,7 @@ export default function Pos() {
           </Box> */}
 
           <ImageDefault
-            src={images.brand.logo.landscape.meta}
+            src={images.brand.logo.landscape.default}
             height={APP_SHELL.HEADER_HEIGHT - 20}
             width={APP_SHELL.HEADER_HEIGHT - 10}
             fit="contain"

@@ -50,7 +50,7 @@ export default function Main() {
         <Group w={{ base: '100%', md: '30%' }} justify="center" py={'md'}>
           <AnchorNextLink href="/" underline="never">
             <ImageDefault
-              src={images.brand.logo.landscape.meta}
+              src={images.brand.logo.landscape.default}
               alt={APP_NAME.WEB}
               height={{ base: 70, sm: 100, md: 120 }}
               width={{ base: 80, sm: 110, md: 130 }}
