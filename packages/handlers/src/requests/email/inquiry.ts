@@ -1,8 +1,8 @@
-import { API_URL } from '@repo/constants';
+import { getClientApiUrl } from '@repo/constants';
 import { HEADERS } from '@repo/constants';
 import { FormValuesInquiry } from '@repo/types';
 
-const baseRequestUrl = `${API_URL}/inquiry`;
+const baseRequestUrl = `${getClientApiUrl()}/inquiry`;
 
 export const handleInquiry = async (formData: FormValuesInquiry) => {
   try {

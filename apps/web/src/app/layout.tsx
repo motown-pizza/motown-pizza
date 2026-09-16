@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Montserrat, Geist_Mono } from 'next/font/google';
-import { API_URL, APP_DESC, APP_NAME } from '@repo/constants';
+import { APP_DESC, APP_NAME, getApiUrl } from '@repo/constants';
 import { ProviderMantine } from '@repo/ui';
 import { ProviderInitialize } from '@web/ui/provider/initialize';
 import { ProviderSync } from '@web/ui/provider/sync';
@@ -67,7 +67,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           theme={getAppTheme}
           cssVariablesResolver={getAppResolver}
         >
-          <ProviderInitialize props={{ baseUrl: API_URL, sessionUser: session.user || null }}>
+          <ProviderInitialize
+            props={{ baseUrl: await getApiUrl(), sessionUser: session.user || null }}
+          >
             <ProviderSync>{children}</ProviderSync>
           </ProviderInitialize>
         </ProviderMantine>
