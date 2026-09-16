@@ -1,5 +1,5 @@
+import { getBaseUrl } from '@repo/constants';
 import { NextResponse } from 'next/server';
-import { BASE_URL } from '@repo/constants';
 
 export const dynamic = 'force-static';
 
@@ -8,7 +8,7 @@ export async function GET() {
 User-agent: *
 Disallow: /
 
-Sitemap: ${BASE_URL.POS}/sitemap.xml
+Sitemap: ${(await getBaseUrl()).POS}/sitemap.xml
   `.trim();
 
   return new NextResponse(content, {

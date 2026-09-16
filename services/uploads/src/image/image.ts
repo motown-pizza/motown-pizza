@@ -1,6 +1,6 @@
-import { API_URL } from '@repo/constants';
+import { getClientApiUrl } from '@repo/constants';
 
-const baseRequestUrl = `${API_URL}/file/image`;
+const baseRequestUrl = `${getClientApiUrl()}/file/image`;
 
 export const imageUpload = async (
   formData: FormData,

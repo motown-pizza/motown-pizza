@@ -1,16 +1,16 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { NotifySignOut as PartialNotifySignOut } from '@repo/ui';
-import { BASE_URL } from '@repo/constants';
+import { getBaseUrl } from '@repo/constants';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = { title: 'Sign Out' };
 
-export default function SignOut() {
+export default async function SignOut() {
   return (
     <div>
-      <PartialNotifySignOut props={{ baseUrl: BASE_URL.ADMIN }} />
+      <PartialNotifySignOut props={{ baseUrl: (await getBaseUrl()).ADMIN }} />
     </div>
   );
 }

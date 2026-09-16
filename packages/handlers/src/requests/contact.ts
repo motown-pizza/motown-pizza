@@ -1,9 +1,9 @@
-import { API_URL } from '@repo/constants';
+import { getClientApiUrl } from '@repo/constants';
 import { FormValuesInquiry } from '@repo/types';
 
 export const contactAdd = async (params: Partial<FormValuesInquiry>) => {
   try {
-    const response = await fetch(`${API_URL}/email-contacts`, {
+    const response = await fetch(`${getClientApiUrl()}/email-contacts`, {
       method: 'POST',
       body: JSON.stringify(params),
       headers: {

@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Card, CardSection, Group, NumberFormatter, Stack, Text, Title } from '@mantine/core';
 import classes from './main.module.css';
