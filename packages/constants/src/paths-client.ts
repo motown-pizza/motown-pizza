@@ -43,7 +43,7 @@ export const resolveHost = (
     }
 
     // SAFE SWAP: Swap the current project prefix with the target project name
-    // e.g. "hostname-atlas-git-fix..." -> "hostname-api-git-fix..."
+    // e.g. "hostname-web-git-fix..." -> "hostname-api-git-fix..."
     const pattern = new RegExp(`^${SHARED_VERCEL_SUBSTRING}-[a-z0-9]+`);
     return currentHost.replace(pattern, projectName);
   }

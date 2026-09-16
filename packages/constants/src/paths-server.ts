@@ -28,8 +28,8 @@ export async function getBaseUrl() {
   );
 
   const HOST_ADMIN = resolveHost(
-    process.env.NEXT_PUBLIC_HOST_ATLAS_PROD,
-    process.env.NEXT_PUBLIC_HOST_ATLAS_DEV,
+    process.env.NEXT_PUBLIC_HOST_ADMIN_PROD,
+    process.env.NEXT_PUBLIC_HOST_ADMIN_DEV,
     `${SHARED_VERCEL_SUBSTRING}-admin`,
     hostHeader,
   );
@@ -42,15 +42,15 @@ export async function getBaseUrl() {
   );
 
   const HOST_POS = resolveHost(
-    process.env.NEXT_PUBLIC_HOST_ATLAS_PROD,
-    process.env.NEXT_PUBLIC_HOST_ATLAS_DEV,
+    process.env.NEXT_PUBLIC_HOST_POS_PROD,
+    process.env.NEXT_PUBLIC_HOST_POS_DEV,
     `${SHARED_VERCEL_SUBSTRING}-pos`,
     hostHeader,
   );
 
   const HOST_KDS = resolveHost(
-    process.env.NEXT_PUBLIC_HOST_ATLAS_PROD,
-    process.env.NEXT_PUBLIC_HOST_ATLAS_DEV,
+    process.env.NEXT_PUBLIC_HOST_KDS_PROD,
+    process.env.NEXT_PUBLIC_HOST_KDS_DEV,
     `${SHARED_VERCEL_SUBSTRING}-kds`,
     hostHeader,
   );
