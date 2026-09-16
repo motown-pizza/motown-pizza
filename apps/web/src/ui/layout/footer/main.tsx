@@ -65,7 +65,7 @@ export default function Main() {
 
             <GridCol span={{ base: 12, md: 4 }}>
               <div>
-                <Title order={2} fz={'md'} c={'sec'}>
+                <Title order={2} fz={'lg'} c={'sec'}>
                   {contact.title}
                 </Title>
 
