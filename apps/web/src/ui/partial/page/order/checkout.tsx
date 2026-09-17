@@ -284,7 +284,11 @@ export default function Checkout() {
               setOrderDetails(defaultOrderDetails);
 
               if (orderDetails && orderDetails.customerPhone) {
-                handleOrderNotification(orderDetails.customerPhone, orderDetails.trackingCode);
+                handleOrderNotification(
+                  orderDetails.customerPhone,
+                  orderDetails.trackingCode,
+                  getSum(),
+                );
               }
             }}
           >

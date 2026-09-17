@@ -4,15 +4,17 @@ import twilio from 'twilio';
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
+const whatsappNumber = process.env.TWILIO_WHATSAPP_NUMBER;
 
 const client = twilio(accountSid, authToken);
 
 interface SendSMSParams {
   toPhone: string;
   orderId: string;
+  total: number;
 }
 
-export async function sendOrderConfirmationWhatsapp({ toPhone, orderId }: SendSMSParams) {
+export async function sendOrderConfirmationWhatsapp({ toPhone, orderId, total }: SendSMSParams) {
   // Clean phone number input
   const cleanDigits = toPhone.replace(/[^0-9]/g, '');
   const formattedPhone = cleanDigits.startsWith('254')
@@ -21,13 +23,13 @@ export async function sendOrderConfirmationWhatsapp({ toPhone, orderId }: SendSM
 
   try {
     const message = await client.messages.create({
-      body: `Order Confirmation (${orderId}): Thank you for ordering with MoTown!`,
-      // Standard Twilio WhatsApp Sandbox Number
-      from: 'whatsapp:+14155238886',
+      from: `whatsapp:${whatsappNumber}`,
       to: `whatsapp:${formattedPhone}`,
+      body: `Order Placed \nID: ${orderId} \nTotal: Kshs. ${total}/- \nThank you for ordering with MoTown!`,
+      // // Required for production templates
+      // contentSid: process.env.TWILIO_TEMPLATE_SID,
     });
 
-    console.log(`WhatsApp Message Sent! SID: ${message.sid}`);
     return { success: true, sid: message.sid };
   } catch (error: any) {
     console.error('Twilio Error:', error.message);

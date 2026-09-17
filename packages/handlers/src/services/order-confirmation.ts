@@ -3,11 +3,16 @@
 // Example usage inside an API Route or Server Action
 import { sendOrderConfirmationWhatsapp } from '@repo/notifications';
 
-export async function handleOrderNotification(customerPhone: string, orderId: string) {
+export async function handleOrderNotification(
+  customerPhone: string,
+  orderId: string,
+  total: number,
+) {
   const result = await sendOrderConfirmationWhatsapp({
     // toPhone: customerPhone, // Must be your verified caller ID while using Trial
     toPhone: customerPhone,
     orderId: orderId,
+    total: total,
   });
 
   if (!result.success) {
