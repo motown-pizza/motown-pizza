@@ -85,9 +85,9 @@ export default function Confirmed() {
               )}
 
               <Group justify="center">
-                <AnchorNextLink href={`/order/track?trackingCode=${order.trackingCode}`}>
+                {/* <AnchorNextLink href={`/order/track?trackingCode=${order.trackingCode}`}>
                   <Button>Track Order</Button>
-                </AnchorNextLink>
+                </AnchorNextLink> */}
 
                 {session?.email && (
                   <AnchorNextLink href={`/account/orders`}>
