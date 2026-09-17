@@ -55,7 +55,7 @@ export function FormStoresOrder({
           <GridCol span={8}>
             <Grid>
               <GridCol span={12}>
-                <Fieldset legend="Basic order details">
+                <Fieldset legend="Basic order details" bg={'transparent'}>
                   <Grid>
                     <GridCol span={{ base: 12, xs: 6 }}>
                       <TextInput
@@ -84,15 +84,21 @@ export function FormStoresOrder({
                         data={[
                           {
                             value: OrderFulfilmentType.DINE_IN,
-                            label: capitalizeWords(OrderFulfilmentType.DINE_IN),
+                            label: capitalizeWords(
+                              OrderFulfilmentType.DINE_IN.replaceAll('_', ' '),
+                            ),
                           },
                           {
                             value: OrderFulfilmentType.COLLECTION,
-                            label: capitalizeWords(OrderFulfilmentType.COLLECTION),
+                            label: capitalizeWords(
+                              OrderFulfilmentType.COLLECTION.replaceAll('_', ' '),
+                            ),
                           },
                           {
                             value: OrderFulfilmentType.DELIVERY,
-                            label: capitalizeWords(OrderFulfilmentType.DELIVERY),
+                            label: capitalizeWords(
+                              OrderFulfilmentType.DELIVERY.replaceAll('_', ' '),
+                            ),
                           },
                         ]}
                         {...form.getInputProps('fulfillmentType')}
@@ -104,12 +110,11 @@ export function FormStoresOrder({
 
               {form.values.fulfillmentType == OrderFulfilmentType.DINE_IN && (
                 <GridCol span={12}>
-                  <Fieldset legend="Guest details">
+                  <Fieldset legend="Guest details" bg={'transparent'}>
                     <Grid>
                       <GridCol span={{ base: 12, xs: 6 }}>
                         <Box mih={60.8} mt={'xs'}>
                           <Checkbox
-                            size="md"
                             label={'With guests'}
                             description={'Customer has guests'}
                             checked={withGuests}
@@ -173,7 +178,7 @@ export function FormStoresOrder({
 
               {props?.defaultValues?.updatedAt && (
                 <GridCol span={12}>
-                  <Fieldset legend="Order items">
+                  <Fieldset legend="Order items" bg={'transparent'}>
                     <Grid>
                       <GridCol span={12}>
                         {orderItems === undefined ? (

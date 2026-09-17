@@ -4,6 +4,7 @@ import React from 'react';
 import {
   Avatar,
   Badge,
+  Box,
   Card,
   Divider,
   Group,
@@ -128,12 +129,14 @@ function ModalComponent({ orderId, children }: { orderId: string; children: Reac
         <LayoutModal props={{ close, title: `Order Items (${orderItemsOrder?.length})` }}>
           <div>
             <div>
-              <Text>
-                Order ID:{' '}
-                <Text component="span" inherit fw={500} c={'pri'}>
-                  {order?.trackingCode}
+              {order?.trackingCode && (
+                <Text>
+                  Order ID:{' '}
+                  <Text component="span" inherit fw={500} c={'pri'}>
+                    {order.trackingCode}
+                  </Text>
                 </Text>
-              </Text>
+              )}
               <Text>
                 Customer Name:{' '}
                 <Text component="span" inherit fw={500} c={'pri'}>

@@ -25,9 +25,12 @@ export default function CartItem({ props }: { props: CartItemGet }) {
               {productCurrent?.title}
             </Title>
 
-            <Text fz={'sm'} c={'dimmed'} lineClamp={1}>
-              {productVariantCurrent?.title}
-            </Text>
+            {productCurrent?.title.trim().toLowerCase() !=
+              productVariantCurrent?.title?.trim().toLowerCase() && (
+              <Text fz={'sm'} c={'dimmed'} lineClamp={1}>
+                {productVariantCurrent?.title}
+              </Text>
+            )}
           </div>
 
           <Group align="end" ta={'end'}>

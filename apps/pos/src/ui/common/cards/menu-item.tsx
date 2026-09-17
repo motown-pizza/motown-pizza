@@ -16,7 +16,7 @@ import {
 import { ProductGet } from '@repo/types';
 import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE } from '@repo/constants';
 import { IconMinus, IconPlus, IconShoppingCart } from '@tabler/icons-react';
-import { useStoreProductVariant } from '@repo/store';
+import { useStoreIngredient, useStoreProductVariant, useStoreRecipieItem } from '@repo/store';
 import { useStoreCartItem } from '@repo/store';
 import { useCartItemActions } from '@repo/store';
 import { useOrderPlacementData } from '@repo/hooks';
@@ -24,10 +24,22 @@ import { useOrderPlacementData } from '@repo/hooks';
 export default function MenuItem({ props }: { props: ProductGet }) {
   const { orderDetails } = useOrderPlacementData();
   const { productVariants } = useStoreProductVariant();
-  const productVariantsCurrent = productVariants?.filter((pv) => pv.productId == props.id);
+  // const productVariantsCurrent = productVariants?.filter((pv) => pv.productId == props.id);
   const [currentVariant, setCurrentVariant] = useState('');
   const productVariantCurrent = productVariants?.find((pv) => pv.id == currentVariant);
   const [currentQuantity, setCurrentQuantity] = useState(1);
+
+  const { recipieItems } = useStoreRecipieItem();
+  const { ingredients } = useStoreIngredient();
+
+  const productVariantsCurrent = (productVariants || []).filter((pv) => pv.productId == props.id);
+  const recipieItemsCurrent = recipieItems?.filter((ri) => {
+    const productVariantIds = productVariantsCurrent?.map((pv) => pv.id);
+    return productVariantIds?.includes(ri.productVariantId);
+  });
+  const ingredientIds = recipieItemsCurrent?.map((ri) => ri.ingredientId);
+  const ingredientsCurrent = ingredients?.filter((i) => ingredientIds?.includes(i.id));
+  const content = `${ingredientsCurrent?.map((ci) => ci.name).join(', ') ?? ''}`;
 
   useEffect(() => {
     const handleVariant = () => {
@@ -54,6 +66,7 @@ export default function MenuItem({ props }: { props: ProductGet }) {
       });
     } else {
       cartItemCreate({
+        orderId: orderDetails.id,
         quantity: currentQuantity,
         productVariantId: currentVariant,
       });
@@ -63,27 +76,33 @@ export default function MenuItem({ props }: { props: ProductGet }) {
   };
 
   return (
-    <Card bg={'var(--mantine-color-dark-9)'}>
+    <Card bg={'var(--mantine-color-dark-8)'}>
       <Stack>
         <Group align="start" justify="space-between" wrap="nowrap" mih={44.1}>
-          <Group>
-            <div>
-              <Title order={3} fz={'md'} fw={'bold'}>
-                {props.title}
-              </Title>
+          <Stack>
+            <Title order={3} fz={'md'} fw={'bold'} c={'sec'}>
+              {props.title}
+            </Title>
 
-              <Text fz={'sm'} c={'dimmed'} lineClamp={1}>
+            {props.description ? (
+              <Text fz={'sm'} mih={110} c={'dimmed'}>
                 {props.description}
               </Text>
-            </div>
-          </Group>
+            ) : (
+              content && (
+                <Text fz={'sm'} mih={110} c={'dimmed'}>
+                  {content}
+                </Text>
+              )
+            )}
+          </Stack>
 
           <Group justify="end">
             <ActionIcon
               size={ICON_WRAPPER_SIZE * 1.2}
               onClick={handleAddCart}
               color="ter"
-              c={inCart ? 'var(--mantine-color-black)' : undefined}
+              c={inCart ? 'dark.9' : undefined}
               variant={inCart ? undefined : 'light'}
               disabled={!orderDetails}
             >
@@ -100,7 +119,7 @@ export default function MenuItem({ props }: { props: ProductGet }) {
               radius={'lg'}
               checkIconPosition="right"
               allowDeselect={false}
-              variant="filled"
+              variant="default"
               styles={{
                 input: { backgroundColor: 'var(--mantine-color-dark-7)' },
               }}
@@ -122,7 +141,7 @@ export default function MenuItem({ props }: { props: ProductGet }) {
           <Group>
             <Text inherit>
               Kshs.{' '}
-              <Text component="span" inherit fw={'bold'} c={'sec'} fz={'lg'}>
+              <Text component="span" inherit fw={'bold'} c={'ter'} fz={'lg'}>
                 <NumberFormatter value={productVariantCurrent?.price || 0} />
               </Text>
             </Text>
@@ -131,8 +150,8 @@ export default function MenuItem({ props }: { props: ProductGet }) {
           <Group justify="end" gap={0}>
             <ActionIcon
               size={ICON_WRAPPER_SIZE}
-              color="gray"
-              variant="light"
+              color="dark"
+              // variant="light"
               style={{
                 borderTopRightRadius: 0,
                 borderBottomRightRadius: 0,
@@ -143,7 +162,7 @@ export default function MenuItem({ props }: { props: ProductGet }) {
               <IconMinus size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
             </ActionIcon>
 
-            <Paper px={'xs'} bg={'var(--mantine-color-dark-7)'} radius={0}>
+            <Paper px={'xs'} bg={'var(--mantine-color-dark-5)'} radius={0}>
               <Center mih={ICON_WRAPPER_SIZE} miw={16}>
                 <Text inherit fz={'sm'}>
                   {currentQuantity}
@@ -153,8 +172,8 @@ export default function MenuItem({ props }: { props: ProductGet }) {
 
             <ActionIcon
               size={ICON_WRAPPER_SIZE}
-              color="gray"
-              variant="light"
+              color="dark"
+              // variant="light"
               style={{
                 borderTopLeftRadius: 0,
                 borderBottomLeftRadius: 0,

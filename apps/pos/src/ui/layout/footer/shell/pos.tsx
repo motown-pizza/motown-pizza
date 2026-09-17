@@ -45,7 +45,13 @@ export default function Pos() {
             <ActionIcon
               size={ICON_WRAPPER_SIZE * 2.5}
               radius={99}
-              onClick={() => router.push('/pos')}
+              color="sec"
+              c={'dark.9'}
+              onClick={() => {
+                if (pathname !== '/pos') {
+                  router.push('/pos');
+                }
+              }}
             >
               <IconPlus size={ICON_SIZE * 2.5} stroke={ICON_STROKE_WIDTH} />
             </ActionIcon>

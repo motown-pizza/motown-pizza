@@ -37,35 +37,39 @@ export function CardOrderConfirmed({
   return (
     <Card bg={'var(--mantine-color-dark-9)'} withBorder p={{ base: 'md', md: 'xl' }} {...restProps}>
       <Stack gap={'xs'}>
-        <Group justify="space-between" align="end">
-          <Title order={3} fz={'sm'} fw={'normal'} c={'sec'}>
-            Tracking Code
-          </Title>
+        {order?.trackingCode && (
+          <>
+            <Group justify="space-between" align="end">
+              <Title order={3} fz={'sm'} fw={'normal'} c={'sec'}>
+                Tracking Code
+              </Title>
 
-          <Group wrap="nowrap" gap={'xs'}>
-            <Text ta={'end'} fz={'md'} fw={500} visibleFrom="xs">
-              {order?.trackingCode}
-            </Text>
+              <Group wrap="nowrap" gap={'xs'}>
+                <Text ta={'end'} fz={'md'} fw={500} visibleFrom="xs">
+                  {order.trackingCode}
+                </Text>
 
-            <Box visibleFrom="xs">
-              <ButtonCopy clipboardItem={order?.trackingCode} />
-            </Box>
+                <Box visibleFrom="xs">
+                  <ButtonCopy clipboardItem={order.trackingCode} />
+                </Box>
 
-            <Button
-              size="xs"
-              color={clipboard.copied ? 'ter' : 'blue'}
-              onClick={() => {
-                clipboard.copy(order?.trackingCode);
-              }}
-              hiddenFrom="xs"
-              leftSection={<IconCopy size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />}
-            >
-              {clipboard.copied ? 'Coppied' : 'Copy Code'}
-            </Button>
-          </Group>
-        </Group>
+                <Button
+                  size="xs"
+                  color={clipboard.copied ? 'ter' : 'blue'}
+                  onClick={() => {
+                    clipboard.copy(order.trackingCode);
+                  }}
+                  hiddenFrom="xs"
+                  leftSection={<IconCopy size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />}
+                >
+                  {clipboard.copied ? 'Coppied' : 'Copy Code'}
+                </Button>
+              </Group>
+            </Group>
 
-        <Divider variant="dashed" color="dark.4" />
+            <Divider variant="dashed" color="dark.4" />
+          </>
+        )}
 
         <Group justify="space-between" wrap="nowrap" align="end">
           <Title order={3} fz={'sm'} fw={'normal'} c={'sec'}>
@@ -73,7 +77,7 @@ export function CardOrderConfirmed({
           </Title>
 
           <Text ta={'end'} fz={'md'} fw={500}>
-            {(order?.fulfillmentType || '').toUpperCase()}
+            {capitalizeWords((order?.fulfillmentType || '').toLowerCase().replaceAll('_', ' '))}
           </Text>
         </Group>
 

@@ -77,9 +77,9 @@ export default function Confirmed() {
                   </Text>
 
                   <Text inherit>
-                    It will be required to verify your identity when receiving your delivery. This
-                    security feature exists to protect orders (and customers) from theft. Don&apos;t
-                    share the pin with anyone other than the delivery person.
+                    It will be required to verify your identity when receiving your order from the
+                    delivery person. This security feature exists to protect orders (and customers)
+                    from theft. Don&apos;t share the pin with anyone other than the delivery person.
                   </Text>
                 </Stack>
               )}

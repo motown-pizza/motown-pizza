@@ -25,8 +25,8 @@ export default function Orders() {
   // You can now use `orderItem` and `storeItem` directly in your markup!
 
   return (
-    <LayoutSection id={'order-confirmed'} containerized={'xs'} padded={'xl'}>
-      <Stack>
+    <LayoutSection id={'order-confirmed'} containerized={'xs'} padded={'xl'} pb={SECTION_SPACING}>
+      <Stack gap={'xl'}>
         <Group justify="center">
           <ThemeIcon size={ICON_WRAPPER_SIZE * 2} color="ter" radius={999}>
             <IconCheck size={ICON_SIZE * 2} stroke={ICON_STROKE_WIDTH} />
