@@ -28,3 +28,5 @@ export * from './route/auth/callback/oauth';
 export * from './route/auth/sign-in';
 export * from './route/auth/sign-out';
 export * from './route/profiles';
+
+export * from './services/order-confirmation';

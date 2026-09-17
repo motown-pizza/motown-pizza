@@ -44,6 +44,7 @@ import { SECTION_SPACING } from '@repo/constants';
 import { getRegionalDate, validators } from '@repo/utils';
 import { useNotification } from '@repo/notifications';
 import { Variant } from '@repo/types';
+import { handleOrderNotification } from '@repo/handlers';
 
 export default function Checkout() {
   const session = useStoreSession((s) => s.session);
@@ -281,6 +282,14 @@ export default function Checkout() {
               }
 
               setOrderDetails(defaultOrderDetails);
+
+              if (orderDetails && orderDetails.customerPhone) {
+                handleOrderNotification(
+                  orderDetails.customerPhone,
+                  orderDetails.trackingCode,
+                  getSum(),
+                );
+              }
             }}
           >
             <Button color="pri" size="md" disabled={!isReadyForConfirmation}>
