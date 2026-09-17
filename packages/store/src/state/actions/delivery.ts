@@ -67,9 +67,11 @@ export const useDeliveryActions = () => {
 
     let recipientPin: string = '';
 
-    if (order.fulfillmentType == OrderFulfilmentType.DELIVERY) {
-      recipientPin = await generateRecipientPin(order.trackingCode);
-    }
+    // if (order.fulfillmentType == OrderFulfilmentType.DELIVERY) {
+    recipientPin = await generateRecipientPin(order.trackingCode);
+    // }
+
+    const resolvedDelivery = { ...newDelivery, verficationCode: recipientPin };
 
     addDelivery({ ...newDelivery, verficationCode: recipientPin });
 
@@ -78,6 +80,8 @@ export const useDeliveryActions = () => {
     //   title: 'Delivery Added',
     //   desc: `The delivery has been added`,
     // });
+
+    return resolvedDelivery;
   };
 
   const deliveryUpdate = (params: DeliveryGet) => {

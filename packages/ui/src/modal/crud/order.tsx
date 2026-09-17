@@ -31,7 +31,7 @@ export function ModalCrudOrder({
               title: `${props?.defaultValues?.updatedAt ? 'Edit' : 'Add'} Order`,
             }}
           >
-            <FormStoresOrder props={{ options: { close } }} />
+            <FormStoresOrder props={{ source: 'pos', options: { close } }} />
           </LayoutModal>
         </Box>
       </Modal>

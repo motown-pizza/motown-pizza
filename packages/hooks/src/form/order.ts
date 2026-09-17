@@ -16,8 +16,9 @@ import { useNotification } from '@repo/notifications';
 export type FormOrder = ReturnType<typeof useFormOrder>['form'];
 
 export const useFormOrder = (params?: {
-  options?: { admin?: boolean };
   defaultValues?: Partial<OrderGet>;
+  options?: { admin?: boolean };
+  close?: () => void;
 }) => {
   const { orderCreate, orderUpdate } = useOrderActions();
   const { showNotification } = useNotification();
@@ -42,15 +43,16 @@ export const useFormOrder = (params?: {
     },
     {
       resetOnSuccess: false,
-      hideSuccessNotification: false,
+      hideSuccessNotification: !params?.options?.admin,
 
       onSubmit: async (rawValues) => {
         const submitObject: Partial<OrderGet> = {
           ...(orderDetails || defaultOrderDetails),
-          id: orderIdRef.current,
-          guestCount: !withGuests ? 0 : form.values.guestCount,
-          syncStatus: SyncStatus.PENDING,
+          ...params?.defaultValues,
           ...rawValues,
+          syncStatus: SyncStatus.PENDING,
+          guestCount: !withGuests ? null : form.values.guestCount,
+          id: orderIdRef.current,
         };
 
         if (!params?.defaultValues?.updatedAt) {
@@ -74,6 +76,10 @@ export const useFormOrder = (params?: {
 
           router.push(`${nextPath}?orderId=${submitObject.id}`);
         }
+
+        if (params?.close) params.close();
+
+        orderIdRef.current = generateUUID();
       },
     },
   );

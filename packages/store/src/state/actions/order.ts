@@ -48,7 +48,11 @@ export const useOrderActions = () => {
       customerPhone: params.customerPhone || '',
       etaEstimate: params.etaEstimate || '',
       fulfillmentType: params.fulfillmentType || OrderFulfilmentType.DELIVERY,
-      guestCount: params.guestCount || 0,
+      guestCount: !params.guestCount
+        ? params.fulfillmentType == OrderFulfilmentType.DINE_IN
+          ? 0
+          : null
+        : params.guestCount,
       orderPaymentStatus: params.orderPaymentStatus || OrderPaymentStatus.PENDING,
       orderStatus: params.orderStatus || OrderStatus.PROCESSING,
       orderTime: params.orderTime || OrderTime.NOW,
@@ -64,6 +68,9 @@ export const useOrderActions = () => {
       updatedAt: now.toISOString() as any,
     };
 
+    let orderToAdd: OrderGet = newOrder;
+
+    // if (newOrder.fulfillmentType == OrderFulfilmentType.DELIVERY) {
     const trackingCode = await generateTrackingCode({
       date: new Date(newOrder.createdAt),
       deliveryType: newOrder.fulfillmentType,
@@ -71,7 +78,8 @@ export const useOrderActions = () => {
       storeTitle: options.stores.find((s) => s.id == newOrder.storeId)?.title || 'GEN',
     });
 
-    const orderToAdd = { ...newOrder, trackingCode: trackingCode };
+    orderToAdd = { ...newOrder, trackingCode: trackingCode };
+    // }
 
     addOrder(orderToAdd);
 
@@ -131,19 +139,21 @@ export const useOrderActions = () => {
 
       setOrderItems([...(orderItems || []), ...cartToOrderItems]);
 
-      deleteCartItems(
-        (cartItems || []).map((ci) => {
-          return {
-            ...ci,
-            syncStatus: SyncStatus.DELETED,
-            updatedAt: now.toISOString() as any,
-          };
-        }),
-      );
-
-      if (newOrder.fulfillmentType == OrderFulfilmentType.DELIVERY) {
-        deliveryCreate({ orderId: newOrder.id });
+      if (cartItems?.length) {
+        deleteCartItems(
+          (cartItems || []).map((ci) => {
+            return {
+              ...ci,
+              syncStatus: SyncStatus.DELETED,
+              updatedAt: now.toISOString() as any,
+            };
+          }),
+        );
       }
+
+      // if (newOrder.fulfillmentType == OrderFulfilmentType.DELIVERY) {
+      deliveryCreate({ orderId: newOrder.id });
+      // }
 
       return { cartToOrderItems };
     }
