@@ -1,7 +1,7 @@
 import { CartItemCreate, CartItemGet, CartItemUpdate } from '@repo/types';
 import { apiCall } from './fetch';
 
-const segment = 'cartItems';
+const segment = 'cart-items';
 
 export const cartItemsGet = (params: { sourceSite?: string; apiUrl: string; userId?: string }) => {
   const query = params?.userId
