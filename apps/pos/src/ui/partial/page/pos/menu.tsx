@@ -400,8 +400,8 @@ function CardOrderDetails() {
             )}
           </Group>
 
-          <Group gap={'xs'} grow>
-            {cartItems === undefined ? (
+          <Group gap={'xs'} grow mih={36}>
+            {/* {cartItems === undefined ? (
               <Skeleton h={36} />
             ) : (
               <Button
@@ -411,9 +411,9 @@ function CardOrderDetails() {
               >
                 Cash
               </Button>
-            )}
+            )} */}
 
-            {cartItems === undefined ? (
+            {/* {cartItems === undefined ? (
               <Skeleton h={36} />
             ) : (
               <Button
@@ -423,7 +423,7 @@ function CardOrderDetails() {
               >
                 Online
               </Button>
-            )}
+            )} */}
           </Group>
 
           <Group gap={'xs'} grow>
@@ -433,7 +433,7 @@ function CardOrderDetails() {
               <Button
                 disabled={!cartItems?.length}
                 leftSection={<IconTrash size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
-                color="pri"
+                color="gray"
                 loading={loadingCancel}
                 onClick={handleCancelOrder}
               >
@@ -447,8 +447,7 @@ function CardOrderDetails() {
               <Button
                 disabled={!cartItems?.length}
                 leftSection={<IconPlus size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
-                color="ter"
-                c={!cartItems?.length ? undefined : 'var(--mantine-color-black)'}
+                color="pri"
                 loading={loadingPlace}
                 onClick={handlePlaceOrder}
               >
