@@ -92,9 +92,29 @@ export default function Order({ props }: { props: OrderGet }) {
           )}
         </Group>
 
-        <Group gap={'xs'}>
-          <BadgeStatus props={{ status: props.orderStatus }} />
-          <BadgeOrderType props={props} />
+        <Group fz={'sm'}>
+          <Group gap={5}>
+            <Text inherit mb={2}>
+              Type:
+            </Text>
+            <BadgeOrderType props={props} />
+          </Group>
+
+          <Group gap={5}>
+            <Text inherit mb={2}>
+              Status:
+            </Text>
+            <BadgeStatus props={{ status: props.orderStatus }} />
+          </Group>
+        </Group>
+
+        <Group gap={5} fz={'sm'}>
+          <Text inherit mb={2}>
+            Origin:{' '}
+            <Text component="span" inherit fw={500}>
+              {capitalizeWords(props.source)}
+            </Text>
+          </Text>
         </Group>
 
         <Divider />
