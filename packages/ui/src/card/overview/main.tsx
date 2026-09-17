@@ -27,7 +27,7 @@ export type OverviewProps = {
 
 export function CardOverviewMain({ props, ...restProps }: { props: OverviewProps } & CardProps) {
   return (
-    <Card bg={'var(--mantine-color-dark-9)'} {...restProps}>
+    <Card bg={'var(--mantine-color-dark-8)'} {...restProps}>
       <Stack>
         <Group align="end" justify="space-between">
           <Title order={3} fz={'lg'} fw={500}>

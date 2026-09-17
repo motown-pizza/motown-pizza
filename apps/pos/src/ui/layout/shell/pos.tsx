@@ -27,7 +27,7 @@ export default function Pos({ children }: { children: React.ReactNode }) {
         </Group>
       </AppShellHeader>
 
-      <AppShellMain bg={'var(--mantine-color-dark-8)'}>
+      <AppShellMain bg={'var(--mantine-color-dark-9)'}>
         <ScrollArea
           h={`calc(100vh - ${APP_SHELL.HEADER_HEIGHT + APP_SHELL.FOOTER_HEIGHT}px)`}
           type="auto"

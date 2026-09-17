@@ -14,8 +14,8 @@ export default function Pos() {
   const router = useRouter();
 
   return (
-    <Box>
-      <Group justify="space-between" grow gap={'xl'}>
+    <Box pos={'relative'}>
+      <Group justify="space-between" grow gap={'xl'} style={{ position: 'relative', zIndex: 0 }}>
         {posLinks.map((pl, i) => {
           const active = pathname.includes(pl.link);
 
@@ -39,19 +39,19 @@ export default function Pos() {
         })}
       </Group>
 
-      <Box pos={'absolute'} left={0} top={-32} right={0}>
-        <Group justify={'center'}>
+      <Group justify={'center'}>
+        <Box style={{ position: 'absolute', top: -40, zIndex: 1 }}>
           <ModalCrudOrder>
             <ActionIcon
-              size={ICON_WRAPPER_SIZE * 2}
+              size={ICON_WRAPPER_SIZE * 2.5}
               radius={99}
               onClick={() => router.push('/pos')}
             >
-              <IconPlus size={ICON_SIZE * 2} stroke={ICON_STROKE_WIDTH} />
+              <IconPlus size={ICON_SIZE * 2.5} stroke={ICON_STROKE_WIDTH} />
             </ActionIcon>
           </ModalCrudOrder>
-        </Group>
-      </Box>
+        </Box>
+      </Group>
     </Box>
   );
 }

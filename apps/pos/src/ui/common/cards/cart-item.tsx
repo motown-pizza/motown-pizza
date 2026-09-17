@@ -21,7 +21,7 @@ export default function CartItem({ props }: { props: CartItemGet }) {
       <Stack>
         <Group align="start" justify="space-between" wrap="nowrap">
           <div>
-            <Title order={3} fz={'md'} fw={'bold'} lineClamp={1}>
+            <Title order={3} fz={'md'} fw={'bold'} lineClamp={1} c={'sec'}>
               {productCurrent?.title}
             </Title>
 
@@ -31,7 +31,7 @@ export default function CartItem({ props }: { props: CartItemGet }) {
           </div>
 
           <Group align="end" ta={'end'}>
-            <Text inherit fz={'sm'} c={'dimmed'} fw={500}>
+            <Text inherit fz={'sm'} fw={500}>
               x<NumberFormatter value={props.quantity} />
             </Text>
           </Group>
@@ -39,7 +39,7 @@ export default function CartItem({ props }: { props: CartItemGet }) {
 
         <Group align="start" justify="space-between" wrap="nowrap">
           <Group justify="end">
-            <ActionIcon size={ICON_WRAPPER_SIZE} color="gray" onClick={() => cartItemDelete(props)}>
+            <ActionIcon size={ICON_WRAPPER_SIZE} color="pri" onClick={() => cartItemDelete(props)}>
               <IconTrash size={ICON_SIZE - 4} stroke={ICON_STROKE_WIDTH} />
             </ActionIcon>
           </Group>
@@ -47,7 +47,7 @@ export default function CartItem({ props }: { props: CartItemGet }) {
           <Group justify="end" ta={'end'}>
             <Text inherit>
               Kshs.{' '}
-              <Text component="span" inherit fw={'bold'} c={'sec'} fz={'lg'}>
+              <Text component="span" inherit fw={'bold'} c={'ter'} fz={'lg'}>
                 <NumberFormatter value={(productVariantCurrent?.price || 0) * props.quantity} />
               </Text>
             </Text>
