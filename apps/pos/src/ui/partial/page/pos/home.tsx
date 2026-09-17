@@ -129,9 +129,9 @@ function CardRecentOrders() {
   const [search, setSearch] = useState('');
 
   return (
-    <Card bg={'var(--mantine-color-dark-9)'} padding={0}>
+    <Card bg={'var(--mantine-color-dark-9)'} withBorder padding={0}>
       <ScrollAreaAutosize
-        h={`calc(100vh - ${APP_SHELL.HEADER_HEIGHT + APP_SHELL.FOOTER_HEIGHT}px - 280px)`}
+        h={`calc(100vh - ${APP_SHELL.HEADER_HEIGHT + APP_SHELL.FOOTER_HEIGHT + 2}px - 280px)`}
         scrollbars={'y'}
       >
         <Stack gap={0} px={'md'}>
@@ -248,9 +248,9 @@ function CardPopularItems() {
   );
 
   return (
-    <Card bg={'var(--mantine-color-dark-9)'} padding={0}>
+    <Card bg={'var(--mantine-color-dark-9)'} withBorder padding={0}>
       <ScrollAreaAutosize
-        h={`calc(100vh - ${APP_SHELL.HEADER_HEIGHT + APP_SHELL.FOOTER_HEIGHT}px - 32px)`}
+        h={`calc(100vh - ${APP_SHELL.HEADER_HEIGHT + APP_SHELL.FOOTER_HEIGHT + 2}px - 32px)`}
         scrollbars={'y'}
       >
         <Stack gap={0} px={'md'}>

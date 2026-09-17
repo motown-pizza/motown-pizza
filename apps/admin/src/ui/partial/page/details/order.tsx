@@ -15,7 +15,7 @@ export default function Order({ props }: { props: { itemId?: string | null } }) 
       <PartialPageIntro />
 
       <LayoutSection id={'detail-item'} containerized={false}>
-        <FormStoresOrder props={{ defaultValues: order }} />
+        <FormStoresOrder props={{ source: 'admin', defaultValues: order }} />
       </LayoutSection>
     </>
   );

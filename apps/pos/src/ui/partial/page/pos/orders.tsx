@@ -33,14 +33,14 @@ export default function Orders() {
       : filteredOrders?.filter((oi) => oi.fulfillmentType == currentType);
 
   return (
-    <Stack gap={'xl'}>
+    <div>
       <Group
         justify="space-between"
         pos={'sticky'}
         top={0}
         py={'lg'}
         style={{
-          backgroundColor: 'var(--mantine-color-dark-8)',
+          backgroundColor: 'var(--mantine-color-dark-9)',
           zIndex: 1,
         }}
       >
@@ -62,7 +62,7 @@ export default function Orders() {
               key={i}
               size="xs"
               color={currentType === s ? 'pri' : 'gray'}
-              variant="light"
+              // variant="light"
               onClick={() => setCurrentStatus(s)}
             >
               {capitalizeWords(s.replaceAll('_', ' '))}
@@ -96,7 +96,7 @@ export default function Orders() {
           </Stack>
         </Stack>
       ) : (
-        <Grid gap={'xl'}>
+        <Grid pb={'lg'}>
           {filteredOrdersTab.map((oi) => (
             <GridCol key={oi.id} span={4}>
               <CardOrder props={oi} />
@@ -104,7 +104,7 @@ export default function Orders() {
           ))}
         </Grid>
       )}
-    </Stack>
+    </div>
   );
 }
 

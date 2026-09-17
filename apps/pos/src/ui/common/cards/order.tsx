@@ -4,6 +4,7 @@ import React from 'react';
 import {
   Avatar,
   Badge,
+  Box,
   Card,
   Divider,
   Group,
@@ -51,7 +52,7 @@ export default function Order({ props }: { props: OrderGet }) {
   const sum = getSum();
 
   return (
-    <Card bg={'var(--mantine-color-dark-9)'}>
+    <Card bg={'var(--mantine-color-dark-8)'}>
       <Stack>
         <Group align="start" justify="space-between" wrap="nowrap">
           <Group wrap="nowrap">
@@ -59,7 +60,7 @@ export default function Order({ props }: { props: OrderGet }) {
               <Avatar key={props.customerName} name={props.customerName} color="initials" />
             </div>
 
-            <div>
+            <Box mih={44.1}>
               <Title order={3} fz={'md'} fw={'bold'} lineClamp={1}>
                 {capitalizeWords(props.customerName)}
               </Title>
@@ -67,7 +68,7 @@ export default function Order({ props }: { props: OrderGet }) {
               <Text fz={'sm'} c={'dimmed'} lineClamp={1}>
                 {props.trackingCode}
               </Text>
-            </div>
+            </Box>
           </Group>
 
           <Group justify="end" gap={'xs'}>
@@ -91,9 +92,29 @@ export default function Order({ props }: { props: OrderGet }) {
           )}
         </Group>
 
-        <Group gap={'xs'}>
-          <BadgeStatus props={{ status: props.orderStatus }} />
-          <BadgeOrderType props={props} />
+        <Group fz={'sm'}>
+          <Group gap={5}>
+            <Text inherit mb={2}>
+              Type:
+            </Text>
+            <BadgeOrderType props={props} />
+          </Group>
+
+          <Group gap={5}>
+            <Text inherit mb={2}>
+              Status:
+            </Text>
+            <BadgeStatus props={{ status: props.orderStatus }} />
+          </Group>
+        </Group>
+
+        <Group gap={5} fz={'sm'}>
+          <Text inherit mb={2}>
+            Origin:{' '}
+            <Text component="span" inherit fw={500}>
+              {capitalizeWords(props.source)}
+            </Text>
+          </Text>
         </Group>
 
         <Divider />
@@ -128,12 +149,14 @@ function ModalComponent({ orderId, children }: { orderId: string; children: Reac
         <LayoutModal props={{ close, title: `Order Items (${orderItemsOrder?.length})` }}>
           <div>
             <div>
-              <Text>
-                Order ID:{' '}
-                <Text component="span" inherit fw={500} c={'pri'}>
-                  {order?.trackingCode}
+              {order?.trackingCode && (
+                <Text>
+                  Order ID:{' '}
+                  <Text component="span" inherit fw={500} c={'pri'}>
+                    {order.trackingCode}
+                  </Text>
                 </Text>
-              </Text>
+              )}
               <Text>
                 Customer Name:{' '}
                 <Text component="span" inherit fw={500} c={'pri'}>

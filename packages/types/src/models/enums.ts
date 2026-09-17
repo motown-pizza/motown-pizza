@@ -27,9 +27,7 @@ export enum ProductType {
   PIZZA = 'PIZZA',
   SIDE = 'SIDE',
   DRINK = 'DRINK',
-  SOUP = 'SOUP',
-  DESSERT = 'DESSERT',
-  SALAD = 'SALAD',
+  SAUCE = 'SAUCE',
 }
 
 export enum Size {

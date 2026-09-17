@@ -2,6 +2,7 @@
 
 import { create } from 'zustand';
 import { OrderGet } from '@repo/types';
+import { defaultOrderDetails } from '@repo/constants';
 
 export type OrderDetailsValue = OrderGet | null | undefined;
 
@@ -19,6 +20,6 @@ export const useStoreOrderPlacement = create<OrderDetailsState>((set) => ({
   },
 
   clearOrderDetails: () => {
-    set({ orderDetails: undefined });
+    set({ orderDetails: defaultOrderDetails });
   },
 }));

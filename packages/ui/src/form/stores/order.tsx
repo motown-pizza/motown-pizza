@@ -23,7 +23,7 @@ import {
 import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE } from '@repo/constants';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
 import { useFormOrder } from '@repo/hooks';
-import { OrderFulfilmentType, OrderStatus } from '@repo/types';
+import { OrderFulfilmentType, OrderSource, OrderStatus, Status } from '@repo/types';
 import { capitalizeWords } from '@repo/utils';
 import { OrderGet } from '@repo/types';
 import Link from 'next/link';
@@ -36,12 +36,22 @@ export function FormStoresOrder({
   props,
 }: {
   props?: {
+    source: 'admin' | 'pos';
     options?: { modal?: boolean; close?: () => void };
     defaultValues?: Partial<OrderGet>;
   };
 }) {
+  const sourcePos = props?.source == 'pos';
+
   const { form, submitted, handleSubmit, withGuests, setWithGuests } = useFormOrder({
-    defaultValues: props?.defaultValues,
+    close: props?.options?.close,
+    defaultValues: !props?.defaultValues
+      ? {
+          source: !sourcePos ? undefined : OrderSource.POS,
+          status: !sourcePos ? undefined : Status.ACTIVE,
+          orderStatus: !sourcePos ? undefined : OrderStatus.PROCESSING,
+        }
+      : props.defaultValues,
   });
 
   const { orderItems } = useStoreOrderItem();
@@ -52,10 +62,10 @@ export function FormStoresOrder({
     <form onSubmit={form.onSubmit(() => handleSubmit())} noValidate>
       <Card bg={'var(--mantine-color-body)'} shadow="xs" pt={'xs'}>
         <Grid>
-          <GridCol span={8}>
+          <GridCol span={{ base: 12, md: sourcePos ? 12 : 8 }}>
             <Grid>
               <GridCol span={12}>
-                <Fieldset legend="Basic order details">
+                <Fieldset legend="Basic order details" bg={'transparent'}>
                   <Grid>
                     <GridCol span={{ base: 12, xs: 6 }}>
                       <TextInput
@@ -84,15 +94,21 @@ export function FormStoresOrder({
                         data={[
                           {
                             value: OrderFulfilmentType.DINE_IN,
-                            label: capitalizeWords(OrderFulfilmentType.DINE_IN),
+                            label: capitalizeWords(
+                              OrderFulfilmentType.DINE_IN.replaceAll('_', ' '),
+                            ),
                           },
                           {
                             value: OrderFulfilmentType.COLLECTION,
-                            label: capitalizeWords(OrderFulfilmentType.COLLECTION),
+                            label: capitalizeWords(
+                              OrderFulfilmentType.COLLECTION.replaceAll('_', ' '),
+                            ),
                           },
                           {
                             value: OrderFulfilmentType.DELIVERY,
-                            label: capitalizeWords(OrderFulfilmentType.DELIVERY),
+                            label: capitalizeWords(
+                              OrderFulfilmentType.DELIVERY.replaceAll('_', ' '),
+                            ),
                           },
                         ]}
                         {...form.getInputProps('fulfillmentType')}
@@ -104,12 +120,11 @@ export function FormStoresOrder({
 
               {form.values.fulfillmentType == OrderFulfilmentType.DINE_IN && (
                 <GridCol span={12}>
-                  <Fieldset legend="Guest details">
+                  <Fieldset legend="Guest details" bg={'transparent'}>
                     <Grid>
                       <GridCol span={{ base: 12, xs: 6 }}>
                         <Box mih={60.8} mt={'xs'}>
                           <Checkbox
-                            size="md"
                             label={'With guests'}
                             description={'Customer has guests'}
                             checked={withGuests}
@@ -173,7 +188,7 @@ export function FormStoresOrder({
 
               {props?.defaultValues?.updatedAt && (
                 <GridCol span={12}>
-                  <Fieldset legend="Order items">
+                  <Fieldset legend="Order items" bg={'transparent'}>
                     <Grid>
                       <GridCol span={12}>
                         {orderItems === undefined ? (
@@ -211,44 +226,46 @@ export function FormStoresOrder({
             </Grid>
           </GridCol>
 
-          <GridCol span={4}>
-            <Grid>
-              <GridCol span={12}>
-                <Fieldset legend="Order status">
-                  <Select
-                    name="order-status"
-                    label="Select the order's current status"
-                    required
-                    checkIconPosition="right"
-                    allowDeselect={false}
-                    data={[
-                      {
-                        value: OrderStatus.DRAFT,
-                        label: capitalizeWords(OrderStatus.DRAFT),
-                      },
-                      {
-                        value: OrderStatus.PROCESSING,
-                        label: capitalizeWords(OrderStatus.PROCESSING),
-                      },
-                      {
-                        value: OrderStatus.PREPARING,
-                        label: capitalizeWords(OrderStatus.PREPARING),
-                      },
-                      {
-                        value: OrderStatus.OUT_FOR_DELIVERY,
-                        label: capitalizeWords(OrderStatus.OUT_FOR_DELIVERY),
-                      },
-                      {
-                        value: OrderStatus.COMPLETED,
-                        label: capitalizeWords(OrderStatus.COMPLETED),
-                      },
-                    ]}
-                    {...form.getInputProps('orderStatus')}
-                  />
-                </Fieldset>
-              </GridCol>
-            </Grid>
-          </GridCol>
+          {!sourcePos && (
+            <GridCol span={{ base: 12, md: 4 }}>
+              <Grid>
+                <GridCol span={12}>
+                  <Fieldset legend="Order status" bg={'transparent'}>
+                    <Select
+                      name="order-status"
+                      label="Select the order's current status"
+                      required
+                      checkIconPosition="right"
+                      allowDeselect={false}
+                      data={[
+                        {
+                          value: OrderStatus.DRAFT,
+                          label: capitalizeWords(OrderStatus.DRAFT),
+                        },
+                        {
+                          value: OrderStatus.PROCESSING,
+                          label: capitalizeWords(OrderStatus.PROCESSING),
+                        },
+                        {
+                          value: OrderStatus.PREPARING,
+                          label: capitalizeWords(OrderStatus.PREPARING),
+                        },
+                        {
+                          value: OrderStatus.OUT_FOR_DELIVERY,
+                          label: capitalizeWords(OrderStatus.OUT_FOR_DELIVERY),
+                        },
+                        {
+                          value: OrderStatus.COMPLETED,
+                          label: capitalizeWords(OrderStatus.COMPLETED),
+                        },
+                      ]}
+                      {...form.getInputProps('orderStatus')}
+                    />
+                  </Fieldset>
+                </GridCol>
+              </Grid>
+            </GridCol>
+          )}
 
           <GridCol span={12} mt={'md'}>
             <Group>
@@ -260,7 +277,11 @@ export function FormStoresOrder({
                 <Divider orientation="vertical" h={24} my={'auto'} />
 
                 <Button type="submit" loading={submitted}>
-                  {!props?.defaultValues?.updatedAt ? 'Save Draft' : 'Update'}
+                  {!props?.defaultValues?.updatedAt
+                    ? !sourcePos
+                      ? 'Save Draft'
+                      : 'Create Order'
+                    : 'Update'}
                 </Button>
               </Group>
             </Group>

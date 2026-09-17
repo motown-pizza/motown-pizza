@@ -13,7 +13,7 @@ export const useCartItemActions = () => {
   const { session } = useStoreSession();
   const { productVariants } = useStoreProductVariant();
   const { products } = useStoreProduct();
-  const { addCartItem, updateCartItem, deleteCartItem } = useStoreCartItem();
+  const { addCartItem, updateCartItem, deleteCartItem, deleteCartItems } = useStoreCartItem();
   // const { showNotification } = useNotification();
 
   const cartItemCreate = (params: Partial<CartItemGet>) => {
@@ -25,6 +25,7 @@ export const useCartItemActions = () => {
     const newCartItem: CartItemGet = {
       id: params.id || id,
       productVariantId: params.productVariantId || '',
+      orderId: params.orderId || null,
       profileId: session.email ? session.id : null,
       quantity: params.quantity || 1,
       status: params.status || Status.ACTIVE,
@@ -72,5 +73,13 @@ export const useCartItemActions = () => {
     });
   };
 
-  return { cartItemCreate, cartItemUpdate, cartItemDelete };
+  const cartItemsDelete = (params: CartItemGet[]) => {
+    if (!session) return;
+
+    const now = new Date();
+
+    deleteCartItems(params);
+  };
+
+  return { cartItemCreate, cartItemUpdate, cartItemDelete, cartItemsDelete };
 };

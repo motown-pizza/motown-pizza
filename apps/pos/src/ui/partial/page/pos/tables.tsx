@@ -79,14 +79,14 @@ export default function Tables() {
   }, [tables, currentStatus]);
 
   return (
-    <Stack gap={'xl'}>
+    <div>
       <Group
         justify="space-between"
         pos={'sticky'}
         top={0}
         py={'lg'}
         style={{
-          backgroundColor: 'var(--mantine-color-dark-8)',
+          backgroundColor: 'var(--mantine-color-dark-9)',
           zIndex: 1,
         }}
       >
@@ -108,10 +108,10 @@ export default function Tables() {
               key={i}
               size="xs"
               color={currentStatus === s ? 'pri' : 'gray'}
-              tt={'uppercase'}
+              // variant="light"
               onClick={() => setCurrentStatus(s)}
             >
-              {capitalizeWords(s)}
+              {capitalizeWords(s.replaceAll('_', ' '))}
             </Button>
           ))}
         </Group>
@@ -131,7 +131,10 @@ export default function Tables() {
           </ThemeIcon>
 
           <Stack align="center" ta={'center'} gap={0}>
-            <Text inherit>No tables with the status &apos;{currentStatus}&apos; found.</Text>
+            <Text inherit>
+              No tables with the status &apos;{capitalizeWords(currentStatus.replaceAll('_', ' '))}
+              &apos; found.
+            </Text>
 
             <Text inherit maw={320} mt={'xs'}>
               Tables with this status will appear here automatically.
@@ -139,7 +142,7 @@ export default function Tables() {
           </Stack>
         </Stack>
       ) : (
-        <Grid>
+        <Grid pb={'lg'}>
           {filteredTables.map((oi, i) => (
             <GridCol key={i} span={{ base: 12, md: 3 }}>
               <CardTable props={oi} />
@@ -147,7 +150,7 @@ export default function Tables() {
           ))}
         </Grid>
       )}
-    </Stack>
+    </div>
   );
 }
 

@@ -332,6 +332,7 @@ model Order {
   orderItems     OrderItem[]
   stockMovements StockMovement[]
   deliveries     Delivery[] // how many delivery attempts were made
+  cartItems      CartItem[]
 
   status     Status     @default(ACTIVE)
   syncStatus SyncStatus @default(SYNCED) @map("sync_status")
@@ -444,6 +445,8 @@ model CartItem {
 
   profile          Profile?       @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId        String?        @map("profile_id")
+  order            Order?         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId          String?        @map("order_id")
   productVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
   productVariantId String         @map("product_variant_id")
 
