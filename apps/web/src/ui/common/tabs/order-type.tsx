@@ -79,7 +79,7 @@ export default function OrderType() {
           fontSize: 'var(--mantine-font-size-sm)',
           fontWeight: 'bold',
           // borderRadius: 99,
-          minWidth: 160,
+          minWidth: 120,
         },
         panel: {
           paddingTop: 'var(--mantine-spacing-xl)',
@@ -183,6 +183,7 @@ function PartialOrderType({ type, desc, geolocation, sortedStores }: PartialOrde
                       <Text component="span" inherit c={'sec'} fw={500}>
                         Your location:
                       </Text>{' '}
+                      <Text component="br" hiddenFrom="xs" />
                       {String(location.longitude).slice(0, 10)},{' '}
                       {String(location.latitude).slice(0, 10)}
                     </Title>
@@ -355,7 +356,7 @@ function CardStore({
   return (
     <Card key={props.id} bg={'var(--mantine-color-dark-8)'} withBorder>
       <Group wrap="nowrap" w={'100%'} align="start">
-        <Group mt={5}>
+        <Group mt={5} visibleFrom="xs">
           <Avatar size={32}>{index}</Avatar>
         </Group>
 

@@ -32,7 +32,7 @@ export default function Home() {
     <HomeLayout>
       <LayoutSection id="home-page-intro" margined={SECTION_SPACING} containerized={'xl'}>
         <Grid gap={0} pos={'relative'}>
-          <GridCol span={{ base: 12, md: 2 }} visibleFrom="md">
+          <GridCol span={{ base: 12, md: 2 }}>
             <Box pos={'sticky'} top={SECTION_SPACING * 1.5}>
               <Card bg={'transparent'} withBorder style={{ borderStyle: 'dashed' }}>
                 <Stack>
@@ -88,10 +88,14 @@ export default function Home() {
             </Box>
           </GridCol>
 
-          <GridCol span={{ md: 0.5 }} visibleFrom="md">
-            <Center py={'xl'} h={'100%'}>
+          <GridCol span={{ md: 0.5 }}>
+            <Center py={'xl'} h={'100%'} visibleFrom="md">
               <Divider orientation="vertical" color="sec" h={'100%'} />
             </Center>
+
+            <Box my={'xl'}>
+              <Divider color="sec" hiddenFrom="md" />
+            </Box>
           </GridCol>
 
           <GridCol span={{ base: 12, md: 7 }}>
