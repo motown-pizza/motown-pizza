@@ -64,9 +64,10 @@ export const APP_NAME = {
 };
 
 export const APP_DESC = {
-  API: 'A lightweight and optimized Next.js template for building fast, SEO-friendly websites.',
-  ADMIN: 'A lightweight and optimized Next.js template for building fast, SEO-friendly websites.',
-  WEB: 'A lightweight and optimized Next.js template for building fast, SEO-friendly websites.',
-  POS: 'A lightweight and optimized Next.js template for building fast, SEO-friendly websites.',
-  KDS: 'A lightweight and optimized Next.js template for building fast, SEO-friendly websites.',
+  API: 'A high-performance backend API engine delivering secure, real-time data synchronization and endpoints across all pizza operations.',
+  ADMIN:
+    'A comprehensive back-office management dashboard for real-time inventory control, staff scheduling, business reporting, and store configuration.',
+  WEB: 'A lightning-fast, SEO-optimized customer-facing pizza ordering website designed for seamless menu browsing, mobile checkout, and marketing.',
+  POS: 'A reliable, high-speed Point of Sale system built for rapid order entry, secure payment processing, and smooth in-store operations.',
+  KDS: 'An intelligent Kitchen Display System for real-time order tracking, ticket management, and optimized kitchen workflow automation.',
 };

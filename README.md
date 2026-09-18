@@ -10,6 +10,7 @@ This monorepo contains all core systems required to run and scale a pizza shop, 
 
 The suite is composed of four main applications:
 
+- **API** — shared data endpoints
 - **Back Office** — business management (inventory, staff, reporting, configuration)
 - **POS (Point of Sale)** — order taking, payments, in-store operations
 - **KDS (Kitchen Display System)** — real-time order tracking and kitchen workflow
@@ -47,6 +48,7 @@ Each system is independently deployable but shares a common foundation.
 
 ```
 apps/
+  api/     # Platform API endpoints
   admin/   # Admin dashboard
   pos/     # Point of sale system
   kds/     # Kitchen display system
