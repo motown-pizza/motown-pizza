@@ -31,7 +31,7 @@ import {
   StoreGet,
 } from '@repo/constants';
 import { stores } from '@repo/constants';
-import { IconBrandWhatsapp, IconCurrentLocation } from '@tabler/icons-react';
+import { IconCurrentLocation } from '@tabler/icons-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useGeolocation, useOrderStart } from '@repo/hooks';
 import { OrderFulfilmentType } from '@repo/types';
@@ -165,6 +165,8 @@ function PartialOrderType({ type, desc, geolocation, sortedStores }: PartialOrde
                     </Text>
 
                     <Text>{error}</Text>
+
+                    <Text mt={'md'}>Listing stores in random order.</Text>
                   </>
                 ) : (
                   <Group justify="center">
@@ -215,9 +217,19 @@ function PartialOrderType({ type, desc, geolocation, sortedStores }: PartialOrde
           ) : (
             <Stack gap={'xs'}>
               {!sortedStores.length ? (
-                <Stack py={SECTION_SPACING}>
-                  <Text>Use location to see store listings.</Text>
-                </Stack>
+                !!error ? (
+                  <>
+                    {stores.map((ssi, i) => (
+                      <div key={ssi.id}>
+                        <CardStore props={ssi} type={type} index={i + 1} />
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <Stack py={SECTION_SPACING}>
+                    <Text>Use location to see store listings.</Text>
+                  </Stack>
+                )
               ) : (
                 <>
                   <Title order={3} fz={'xl'}>
@@ -250,7 +262,7 @@ function CardStore({
   type,
   index,
 }: {
-  props: StoreGet & { distanceKm: number };
+  props: StoreGet & { distanceKm?: number };
   type: OrderFulfilmentType;
   index: number;
 }) {
@@ -261,26 +273,18 @@ function CardStore({
     switch (type) {
       case OrderFulfilmentType.DELIVERY:
         return (
-          <>
-            <Button
-              size="xs"
-              loading={loading}
-              onClick={() => {
-                setLoading(true);
-
-                setTimeout(() => {
-                  handleStart({
-                    fulfillmentType: OrderFulfilmentType.DELIVERY,
-                  });
-                }, 500);
-              }}
-            >
-              Order from {props.title}
-            </Button>
+          <Stack gap={'xs'}>
+            <Divider />
 
             <Box c={'dimmed'} fz={'xs'}>
               <Text inherit>
-                Distance: <strong>{Math.round(props.distanceKm * 10) / 10} Km</strong>.
+                Distance:{' '}
+                <strong>
+                  {!props.distanceKm
+                    ? 'Failed to get your location'
+                    : `${Math.round(props.distanceKm * 10) / 10} Km`}
+                </strong>
+                .
               </Text>
               <Text inherit>
                 Avg. delivery time: <strong>17 - 21 min</strong>.
@@ -289,34 +293,56 @@ function CardStore({
                 Delivery radius: <strong>3 - 5 Km</strong>.
               </Text>
             </Box>
-          </>
+
+            <Group mt={'xs'}>
+              <Button
+                size="xs"
+                loading={loading}
+                onClick={() => {
+                  setLoading(true);
+
+                  setTimeout(() => {
+                    handleStart({
+                      fulfillmentType: OrderFulfilmentType.DELIVERY,
+                    });
+                  }, 500);
+                }}
+              >
+                Select
+              </Button>
+            </Group>
+          </Stack>
         );
 
       case OrderFulfilmentType.COLLECTION:
         return (
-          <>
-            <Button
-              size="xs"
-              loading={loading}
-              onClick={() => {
-                setLoading(true);
-
-                setTimeout(() => {
-                  handleStart({
-                    fulfillmentType: OrderFulfilmentType.COLLECTION,
-                  });
-                }, 500);
-              }}
-            >
-              Order from {props.title}
-            </Button>
+          <Stack gap={'xs'}>
+            <Divider />
 
             <Box c={'dimmed'} fz={'xs'}>
               <Text inherit>
                 Avg. waiting time at store: <strong>17 - 21 min</strong>.
               </Text>
             </Box>
-          </>
+
+            <Group mt={'xs'}>
+              <Button
+                size="xs"
+                loading={loading}
+                onClick={() => {
+                  setLoading(true);
+
+                  setTimeout(() => {
+                    handleStart({
+                      fulfillmentType: OrderFulfilmentType.COLLECTION,
+                    });
+                  }, 500);
+                }}
+              >
+                Select
+              </Button>
+            </Group>
+          </Stack>
         );
 
       default:
@@ -333,7 +359,7 @@ function CardStore({
           <Avatar size={32}>{index}</Avatar>
         </Group>
 
-        <Stack ta={'start'}>
+        <Stack ta={'start'} gap={0}>
           <div>
             <Title order={3} fz={'md'} c={'blue'}>
               {'MoTown'} {props.title}
@@ -356,9 +382,7 @@ function CardStore({
             </Stack>
           </div>
 
-          <Stack gap={'xs'} align="start">
-            {actionComponent}
-          </Stack>
+          <Box mt={'xs'}>{actionComponent}</Box>
         </Stack>
       </Group>
     </Card>
