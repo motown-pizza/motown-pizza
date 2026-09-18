@@ -256,7 +256,7 @@ function CodeComponent({ props }: { props: DeliveryGet }) {
         </Group>
       ) : (
         <Text inherit miw={40}>
-          {props.verficationCode}
+          {props.verificationCode}
         </Text>
       )}
 
@@ -266,7 +266,7 @@ function CodeComponent({ props }: { props: DeliveryGet }) {
             size={ICON_WRAPPER_SIZE}
             color={'gray'}
             variant="subtle"
-            onClick={() => clipboard.copy(props.verficationCode)}
+            onClick={() => clipboard.copy(props.verificationCode)}
           >
             <IconEye size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
           </ActionIcon>

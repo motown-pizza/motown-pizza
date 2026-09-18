@@ -46,7 +46,7 @@ export const useDeliveryActions = () => {
       statusReason: params.statusReason || '',
       vehicleId: params.vehicleId || '',
       vehicleType: params.vehicleType || TransportVehicleType.MOPED,
-      verficationCode: params.verficationCode || '',
+      verificationCode: params.verificationCode || '',
       status: params.status || Status.ACTIVE,
       syncStatus: SyncStatus.PENDING,
       createdAt: now.toISOString() as any,
@@ -71,9 +71,9 @@ export const useDeliveryActions = () => {
     recipientPin = await generateRecipientPin(order.trackingCode);
     // }
 
-    const resolvedDelivery = { ...newDelivery, verficationCode: recipientPin };
+    const resolvedDelivery = { ...newDelivery, verificationCode: recipientPin };
 
-    addDelivery({ ...newDelivery, verficationCode: recipientPin });
+    addDelivery({ ...newDelivery, verificationCode: recipientPin });
 
     // showNotification({
     //   variant: Variant.SUCCESS,

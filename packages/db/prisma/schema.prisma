@@ -361,7 +361,7 @@ model Delivery {
   deliveryFee Float?                @map("delivery_fee") // cost of delivery
 
   // Proof of Delivery
-  verficationCode String? @map("verfication_code") // shared to only user, admin, supervisor accounts (not shared with transporter)
+  verificationCode String? @map("verification_code") // shared to only user, admin, supervisor accounts (not shared with transporter)
 
   // Failures & Exceptions
   statusReason       String?   @map("status_reason") // reason for failure/cancellation

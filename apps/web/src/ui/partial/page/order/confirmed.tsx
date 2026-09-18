@@ -71,7 +71,7 @@ export default function Confirmed() {
                   <Text inherit fz={'xl'}>
                     Your verification pin is{' '}
                     <Text component={'span'} inherit fw={'bold'} c={'sec'}>
-                      {delivery.verficationCode}
+                      {delivery.verificationCode}
                     </Text>
                     .
                   </Text>
