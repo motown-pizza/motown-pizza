@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@mantine/notifications": "^9.4.2",
+    "@repo/constants": "workspace:*",
     "@repo/types": "workspace:*",
     "@repo/utils": "workspace:*",
     "react": "19.2.4",

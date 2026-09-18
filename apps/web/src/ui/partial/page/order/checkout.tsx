@@ -29,7 +29,13 @@ import {
   useStoreSession,
 } from '@repo/store';
 import { defaultOrderDetails, PARAM_NAME } from '@repo/constants';
-import { OrderFulfilmentType, OrderPaymentMethod, OrderStatus, OrderTime } from '@repo/types';
+import {
+  DeliveryGet,
+  OrderFulfilmentType,
+  OrderPaymentMethod,
+  OrderStatus,
+  OrderTime,
+} from '@repo/types';
 import { stores } from '@repo/constants';
 import { FormContact } from '@repo/ui';
 import { APP_NAME } from '@repo/constants';
@@ -270,25 +276,30 @@ export default function Checkout() {
                 return;
               }
 
+              let delivery: DeliveryGet | undefined;
+
               if (orderDetails) {
                 if (currentProfile && !currentProfile.phone) {
                   profileUpdate({ ...currentProfile, phone: orderDetails.customerPhone });
                 }
 
-                orderUpdate(
+                const { orderDelivery } = await orderUpdate(
                   { ...orderDetails, orderStatus: OrderStatus.PREPARING },
                   { placement: true },
                 );
+
+                delivery = orderDelivery;
               }
 
               setOrderDetails(defaultOrderDetails);
 
-              if (orderDetails && orderDetails.customerPhone) {
-                handleOrderNotification(
-                  orderDetails.customerPhone,
-                  orderDetails.trackingCode,
-                  getSum(),
-                );
+              if (orderDetails && orderDetails.customerPhone && store) {
+                handleOrderNotification({
+                  order: { ...orderDetails },
+                  total: getSum(),
+                  store,
+                  verificationCode: delivery?.verificationCode,
+                });
               }
             }}
           >
