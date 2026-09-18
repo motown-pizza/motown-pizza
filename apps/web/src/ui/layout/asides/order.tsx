@@ -56,7 +56,7 @@ export default function Order() {
   }, []);
 
   return (
-    <Box pos={'sticky'} top={SECTION_SPACING}>
+    <Box pos={'sticky'} top={72 + 24}>
       <Card bg={'var(--mantine-color-dark-9)'} withBorder pb={0}>
         <CardSection p={'md'} bg={'var(--mantine-color-sec-6)'}>
           <Title order={2} fz={'lg'} fw={'bold'} c={'var(--mantine-color-dark-9)'}>

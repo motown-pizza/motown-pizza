@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Tabs, TabsList, TabsPanel, TabsTab } from '@mantine/core';
+import { Box, Tabs, TabsList, TabsPanel, TabsTab } from '@mantine/core';
 import { getUrlParam, setUrlParam } from '@repo/utils';
-import { PARAM_NAME } from '@repo/constants';
+import { PARAM_NAME, SECTION_SPACING } from '@repo/constants';
 import PartialTabMenuPizzas from '@web/ui/partial/tabs/menu/pizzas';
 import PartialTabMenuSides from '@web/ui/partial/tabs/menu/sides';
 import PartialTabMenuDrinks from '@web/ui/partial/tabs/menu/drinks';
 import { useSearchParams } from 'next/navigation';
+import { useWindowScroll } from '@mantine/hooks';
 
 export default function Menu({
   options,
@@ -18,6 +19,8 @@ export default function Menu({
 
   const tab = searchparams.get(PARAM_NAME.MENU_TAB) ?? 'pizzas';
 
+  const [scroll, scrollTo] = useWindowScroll();
+
   return (
     <Tabs
       defaultValue={tab}
@@ -25,6 +28,7 @@ export default function Menu({
       onChange={(value) => {
         // setTab(value as string);
         setUrlParam({ [PARAM_NAME.MENU_TAB]: value });
+        scrollTo({ y: 368 });
       }}
       styles={{
         tab: {
@@ -35,19 +39,29 @@ export default function Menu({
         root: { minHeight: 500 },
       }}
     >
-      <TabsList justify="center">
-        <TabsTab value="pizzas" w={{ base: '33%', xs: 'inherit', md: '33%' }}>
-          Pizzas
-        </TabsTab>
+      <Box
+        style={{
+          position: 'sticky',
+          top: 72,
+          zIndex: 10,
+          backgroundColor: 'var(--mantine-color-body)',
+        }}
+        pt={24}
+      >
+        <TabsList justify="center">
+          <TabsTab value="pizzas" w={{ base: '33%', xs: 'inherit', md: '33%' }}>
+            Pizzas
+          </TabsTab>
 
-        <TabsTab value="sides" w={{ base: '33%', xs: 'inherit', md: '33%' }}>
-          Sides
-        </TabsTab>
+          <TabsTab value="sides" w={{ base: '33%', xs: 'inherit', md: '33%' }}>
+            Sides
+          </TabsTab>
 
-        <TabsTab value="drinks" w={{ base: '33%', xs: 'inherit', md: '33%' }}>
-          Drinks
-        </TabsTab>
-      </TabsList>
+          <TabsTab value="drinks" w={{ base: '33%', xs: 'inherit', md: '33%' }}>
+            Drinks
+          </TabsTab>
+        </TabsList>
+      </Box>
 
       <TabsPanel value="pizzas">
         <PartialTabMenuPizzas options={options} />
