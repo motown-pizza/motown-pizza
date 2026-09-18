@@ -227,13 +227,13 @@ function CardOrderDetails() {
     router.push(`/pos`);
   };
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (order === undefined) return;
     if (order === null) return;
 
     setLoadingPlace(true);
 
-    const result = orderUpdate(
+    const result = await orderUpdate(
       { ...orderDetails, ...order, orderStatus: OrderStatus.PREPARING },
       { placement: true },
     );
@@ -449,7 +449,7 @@ function CardOrderDetails() {
                 leftSection={<IconPlus size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
                 color="pri"
                 loading={loadingPlace}
-                onClick={handlePlaceOrder}
+                onClick={async () => handlePlaceOrder()}
               >
                 Place Order
               </Button>

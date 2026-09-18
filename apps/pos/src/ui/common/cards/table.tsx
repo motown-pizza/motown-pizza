@@ -106,7 +106,11 @@ export default function Table({ props }: { props: TableGet }) {
     setOrderDetails(updatedOrderDetails);
 
     setTimeout(() => {
-      orderUpdate(updatedOrderDetails);
+      const updateOrders = async () => {
+        await orderUpdate(updatedOrderDetails);
+      };
+
+      updateOrders();
 
       router.push(`/pos/menu?orderId=${updatedOrderDetails.id}`);
     }, 2000);

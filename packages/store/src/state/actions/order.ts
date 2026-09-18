@@ -2,7 +2,7 @@
 
 import { useStoreOrder } from '../order';
 import { useStoreSession } from '../session';
-import { OrderGet } from '@repo/types';
+import { DeliveryGet, OrderGet } from '@repo/types';
 import {
   OrderPaymentMethod,
   OrderStatus,
@@ -86,10 +86,10 @@ export const useOrderActions = () => {
     return orderToAdd;
   };
 
-  const orderUpdate = (
+  const orderUpdate = async (
     params: OrderGet,
     options?: { placement?: boolean },
-  ): { cartToOrderItems?: OrderItemGet[] } => {
+  ): Promise<{ orderDelivery?: DeliveryGet; cartToOrderItems?: OrderItemGet[] }> => {
     if (!session) return {};
 
     const now = new Date();
@@ -118,6 +118,8 @@ export const useOrderActions = () => {
     }
 
     updateOrder(newOrder);
+
+    let orderDelivery: DeliveryGet | undefined;
 
     if (options?.placement) {
       const cartToOrderItems: OrderItemGet[] = (cartItems || []).map((ci) => {
@@ -152,10 +154,10 @@ export const useOrderActions = () => {
       }
 
       // if (newOrder.fulfillmentType == OrderFulfilmentType.DELIVERY) {
-      deliveryCreate({ orderId: newOrder.id });
+      orderDelivery = await deliveryCreate({ orderId: newOrder.id });
       // }
 
-      return { cartToOrderItems };
+      return { orderDelivery, cartToOrderItems };
     }
 
     return {};

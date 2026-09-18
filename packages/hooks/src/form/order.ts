@@ -58,7 +58,7 @@ export const useFormOrder = (params?: {
         if (!params?.defaultValues?.updatedAt) {
           orderCreate({ ...submitObject }, { stores });
         } else {
-          orderUpdate({
+          await orderUpdate({
             ...params?.defaultValues,
             ...submitObject,
           } as OrderGet);
