@@ -52,9 +52,7 @@ export function useGeolocation(): UseGeolocationReturn {
       (err) => {
         switch (err.code) {
           case err.PERMISSION_DENIED:
-            setError(
-              'Location permission denied. Please check your OS and browser location settings.',
-            );
+            setError('Location permission denied.');
             break;
           case err.POSITION_UNAVAILABLE:
             setError('Location information is unavailable.');
