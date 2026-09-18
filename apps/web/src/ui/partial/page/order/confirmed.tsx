@@ -5,7 +5,7 @@ import { LayoutSection } from '@repo/ui';
 import { LayoutIntroSection } from '@repo/ui';
 import { useStoreOrder, useStoreSession } from '@repo/store';
 import { PARAM_NAME } from '@repo/constants';
-import { Button, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core';
+import { Button, Group, Stack, Text, ThemeIcon } from '@mantine/core';
 import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE, SECTION_SPACING } from '@repo/constants';
 import { IconCheck } from '@tabler/icons-react';
 import { stores } from '@repo/constants';
@@ -64,8 +64,6 @@ export default function Confirmed() {
             <CardOrderConfirmed props={{ order, store }} />
 
             <Stack ta={'center'} gap={'xl'}>
-              <Title order={3}>Order Tracking</Title>
-
               {order.fulfillmentType == OrderFulfilmentType.DELIVERY && delivery && (
                 <Stack gap={'xl'} c={'dimmed'}>
                   <Text inherit fz={'xl'}>
@@ -85,9 +83,11 @@ export default function Confirmed() {
               )}
 
               <Group justify="center">
-                {/* <AnchorNextLink href={`/order/track?trackingCode=${order.trackingCode}`}>
-                  <Button>Track Order</Button>
-                </AnchorNextLink> */}
+                {/* {order.trackingCode && (
+                  <AnchorNextLink href={`/order/track?trackingCode=${order.trackingCode}`}>
+                    <Button>Track Order</Button>
+                  </AnchorNextLink>
+                )} */}
 
                 {session?.email && (
                   <AnchorNextLink href={`/account/orders`}>

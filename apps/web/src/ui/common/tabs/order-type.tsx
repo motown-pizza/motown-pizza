@@ -277,7 +277,7 @@ function CardStore({
                 Avg. delivery time: <strong>17 - 21 min</strong>.
               </Text>
               <Text inherit>
-                Delivery radius: <strong>3 - 5 min</strong>.
+                Delivery radius: <strong>3 - 5 Km</strong>.
               </Text>
             </Box>
           </>
