@@ -4,6 +4,7 @@ import { LayoutSection } from '@repo/ui';
 import {
   BackgroundImage,
   Box,
+  Button,
   Card,
   Center,
   Divider,
@@ -21,7 +22,7 @@ import FooterMain from '@web/ui/layout/footer/main';
 import { AnchorNextLink } from '@repo/ui';
 import { OrderFulfilmentType } from '@repo/types';
 import { ImageDefault } from '@repo/ui';
-import { images } from '@repo/constants';
+import { BASE_URL, images, PARAM_NAME } from '@repo/constants';
 import { SECTION_SPACING } from '@repo/constants';
 import TabDeliveryType from '@web/ui/common/tabs/order-type';
 import { APP_NAME } from '@repo/constants';
@@ -32,8 +33,45 @@ export default function Home() {
       <LayoutSection id="home-page-intro" margined={SECTION_SPACING} containerized={'xl'}>
         <Grid gap={0} pos={'relative'}>
           <GridCol span={{ base: 12, md: 2 }} visibleFrom="md">
-            {/* <Box pos={'sticky'} top={SECTION_SPACING * 1.5}>
-              <AnchorNextLink
+            <Box pos={'sticky'} top={SECTION_SPACING * 1.5}>
+              <Card bg={'transparent'} withBorder style={{ borderStyle: 'dashed' }}>
+                <Stack>
+                  <Title order={1} fz={'sm'} tt={'uppercase'} ta={'center'} c={'sec'}>
+                    Start Your Order
+                  </Title>
+
+                  <Divider />
+
+                  <AnchorNextLink
+                    href={`/?${PARAM_NAME.ORDER_TYPE_TAB}=${OrderFulfilmentType.DELIVERY.toLowerCase()}#home-start-order`}
+                  >
+                    <Button fullWidth size="md">
+                      Delivery
+                    </Button>
+                  </AnchorNextLink>
+
+                  <Divider
+                    label={'or'}
+                    color="sec"
+                    styles={{
+                      label: {
+                        color: 'var(--mantine-color-sec-6)',
+                        // fontSize: 'var(--mantine-font-size-md)',
+                      },
+                    }}
+                  />
+
+                  <AnchorNextLink
+                    href={`/?${PARAM_NAME.ORDER_TYPE_TAB}=${OrderFulfilmentType.COLLECTION.toLowerCase()}#home-start-order`}
+                  >
+                    <Button fullWidth size="md">
+                      Collection
+                    </Button>
+                  </AnchorNextLink>
+                </Stack>
+              </Card>
+
+              {/* <AnchorNextLink
                 href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
                 underline="never"
               >
@@ -46,14 +84,14 @@ export default function Home() {
                     // fit="contain"
                   />
                 </ImageCard>
-              </AnchorNextLink>
-            </Box> */}
+              </AnchorNextLink> */}
+            </Box>
           </GridCol>
 
           <GridCol span={{ md: 0.5 }} visibleFrom="md">
-            {/* <Center py={'xl'} h={'100%'}>
+            <Center py={'xl'} h={'100%'}>
               <Divider orientation="vertical" color="sec" h={'100%'} />
-            </Center> */}
+            </Center>
           </GridCol>
 
           <GridCol span={{ base: 12, md: 7 }}>
@@ -256,7 +294,12 @@ export default function Home() {
         </Grid>
       </LayoutSection>
 
-      <LayoutSection id="home-page-intro" margined={SECTION_SPACING * 2} containerized={'sm'}>
+      <LayoutSection
+        id="home-start-order"
+        pt={SECTION_SPACING * 2}
+        mb={SECTION_SPACING * 2}
+        containerized={'sm'}
+      >
         <Stack gap={'xl'} px={{ sm: SECTION_SPACING }}>
           <Group grow preventGrowOverflow={false} gap={'xs'} px={SECTION_SPACING}>
             <Divider color="ter" />
