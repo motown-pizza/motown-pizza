@@ -47,7 +47,7 @@ import { useGetSum } from '@repo/hooks';
 import { useStoreCartItem } from '@repo/store';
 import CardMenuCart from '@web/ui/common/cards/menu/cart';
 import { SECTION_SPACING } from '@repo/constants';
-import { getRegionalDate, validators } from '@repo/utils';
+import { getRegionalDate, segmentFullName, validators } from '@repo/utils';
 import { useNotification } from '@repo/notifications';
 import { Variant } from '@repo/types';
 import { handleOrderNotification } from '@repo/handlers';
@@ -208,9 +208,9 @@ export default function Checkout() {
                 Payment Information
               </Title>
 
-              <Text c={'sec'}>
+              <Text>
                 Balance Due:{' '}
-                <Text component="span" inherit fw={500}>
+                <Text component="span" inherit fw={500} c={'ter'}>
                   <NumberFormatter value={getSum()} /> KES
                 </Text>
               </Text>
@@ -234,8 +234,8 @@ export default function Checkout() {
                   label={
                     (orderDetails || defaultOrderDetails).fulfillmentType ==
                     OrderFulfilmentType.COLLECTION
-                      ? 'Pay in store upon collection (Cash)'
-                      : 'Pay on delivery/collection (Cash)'
+                      ? 'Pay at the store upon collection (Cash)'
+                      : 'Pay in person upon delivery (Cash)'
                   }
                 />
 
@@ -243,7 +243,7 @@ export default function Checkout() {
                   value={OrderPaymentMethod.ONLINE}
                   label={
                     <Stack gap={5}>
-                      <Text inherit>Pay with cash, card, or mobile money</Text>
+                      <Text inherit>Pay with card or mobile money (Online)</Text>
 
                       <Group>
                         <ImageDefault
@@ -306,7 +306,7 @@ export default function Checkout() {
             }}
           >
             <Button color="pri" size="md" disabled={!isReadyForConfirmation}>
-              Continue
+              Place Order
             </Button>
           </AnchorNextLink>
         </Group>

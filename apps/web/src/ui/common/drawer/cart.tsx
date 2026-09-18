@@ -93,7 +93,7 @@ export default function Cart({ children }: { children: React.ReactNode }) {
                   </Group>
 
                   <Text fz={'sm'} c={'dimmed'}>
-                    Delivery fee not included
+                    Inclusive of VAT.
                   </Text>
                 </div>
 
