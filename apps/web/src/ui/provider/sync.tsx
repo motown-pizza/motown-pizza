@@ -9,6 +9,7 @@ import {
   MergedSyncPayload,
   syncToServerAfterDelay,
   useMergedSync,
+  useOrderPlacementSync,
 } from '@repo/store';
 import { getClientApiUrl, STORE_NAME } from '@repo/constants';
 
@@ -30,6 +31,8 @@ export function ProviderSync({ children }: { children: React.ReactNode }) {
     debounceMergedSyncToServer,
     clientOnly: false,
   };
+
+  useOrderPlacementSync();
 
   useMergedSync({
     syncStatus: restProps.syncStatus,

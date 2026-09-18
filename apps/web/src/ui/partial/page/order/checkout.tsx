@@ -80,6 +80,8 @@ export default function Checkout() {
     format: 'numeric',
   });
 
+  const customerFullName = segmentFullName(orderDetails?.customerName || '');
+
   return (
     <LayoutSection id="page-checkout-review-content" padded containerized={'md'}>
       <LayoutIntroSection props={{ title: 'Checkout' }} options={{ alignment: 'start' }} />
@@ -177,9 +179,9 @@ export default function Checkout() {
               <FormContact
                 props={{
                   name:
-                    `${currentProfile?.firstName || ''} ${currentProfile?.lastName || ''}`.trim() ||
+                    `${customerFullName.first || currentProfile?.firstName || ''} ${customerFullName.last || currentProfile?.lastName || ''}`.trim() ||
                     '',
-                  phone: currentProfile?.phone || '',
+                  phone: orderDetails?.customerPhone || currentProfile?.phone || '',
                 }}
                 options={{ order: true }}
               />

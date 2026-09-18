@@ -9,7 +9,7 @@ import { formValuesInitialInquiry, FormValuesInquiry } from '@repo/types';
 import { useFormBase } from '../form';
 import { COMPANY_NAME } from '@repo/constants';
 import { useStoreOrderPlacement } from '@repo/store';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDebouncedCallback } from '@mantine/hooks';
 import { defaultOrderDetails } from '@repo/constants';
 
@@ -24,6 +24,8 @@ export const useFormEmailInquiry = (
   options?: UseFormEmailInquiryOptions,
 ) => {
   const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
+
+  const [initializing, setInitializing] = useState(true);
 
   const { form, submitted, handleSubmit, reset, validate } = useFormBase<FormValuesInquiry>(
     {
@@ -73,9 +75,27 @@ export const useFormEmailInquiry = (
     },
   );
 
+  useEffect(() => {
+    if (!initializing) return;
+
+    if (orderDetails === undefined) return;
+    if (!orderDetails) return;
+
+    form.setValues({ ...initialValues });
+
+    setTimeout(() => {
+      setInitializing(false);
+    }, 500);
+  }, [orderDetails]);
+
   const debouncedsetOrderDetails = useDebouncedCallback(setOrderDetails, 500);
 
   useEffect(() => {
+    if (initializing) return;
+
+    if (orderDetails === undefined) return;
+    if (!orderDetails) return;
+
     if (!options?.order) return;
 
     debouncedsetOrderDetails({

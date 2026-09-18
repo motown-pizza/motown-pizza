@@ -1,7 +1,12 @@
 'use client';
 
 import React from 'react';
-import { useAppshellInitialize, useLoadAppData, useSessionStore } from '@repo/store';
+import {
+  useAppshellInitialize,
+  useLoadAppData,
+  useOrderPlacementInitialize,
+  useSessionStore,
+} from '@repo/store';
 import { UserObject } from '@repo/types';
 import { AppShellValue } from '@repo/store';
 import { STORE_NAME } from '@repo/constants';
@@ -27,6 +32,8 @@ export function ProviderInitialize({
   // useUserRoleStore();
 
   useAppshellInitialize();
+
+  useOrderPlacementInitialize();
 
   useLoadAppData({
     sourceSite: 'web',

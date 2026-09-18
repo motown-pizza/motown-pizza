@@ -5,6 +5,22 @@ import { getCookieClient, getFromSessionStorage, setCookieClient } from '@repo/u
 import { WEEK, COOKIE_NAME, SESSION_STORAGE_NAME } from '@repo/constants';
 import { AppShellValue, useStoreAppShell } from '../../state/appshell';
 import { useMediaQuery } from '@mantine/hooks';
+import { OrderGet } from '@repo/types';
+import { useStoreOrderPlacement } from '../order-placement';
+
+export const useOrderPlacementInitialize = () => {
+  const setOrderDetails = useStoreOrderPlacement((s) => s.setOrderDetails);
+
+  useEffect(() => {
+    const savedOrderDetails: OrderGet | null = getFromSessionStorage(
+      SESSION_STORAGE_NAME.ORDER_PLACEMENT,
+    );
+
+    if (!savedOrderDetails) return;
+
+    setOrderDetails(savedOrderDetails);
+  }, []);
+};
 
 export const useAppshellInitialize = (params?: { cookie?: AppShellValue }) => {
   const desktop = useMediaQuery('(min-width: 62em)');

@@ -5,7 +5,7 @@ import { useIdle, UserNetworkReturnValue } from '@mantine/hooks';
 import { config } from './indexed-db/config';
 import { openDatabase } from './indexed-db/actions';
 import { Database, DatabaseError } from './indexed-db/transactions';
-import { STORE_NAME } from '@repo/constants';
+import { SESSION_STORAGE_NAME, STORE_NAME } from '@repo/constants';
 import { SyncParams, SyncStatus } from '@repo/types';
 import {
   cartItemsUpdate,
@@ -40,6 +40,23 @@ import { useStoreStockMovement } from './state/stock-movement';
 import { useStoreTableBooking } from './state/table-booking';
 import { useStoreTable } from './state/table';
 import { useStoreWishlistItem } from './state/wishlist-item';
+import { useStoreOrderPlacement } from './state/order-placement';
+import { saveToSessionStorage } from '@repo/utils';
+
+export const useOrderPlacementSync = () => {
+  const { orderDetails } = useStoreOrderPlacement.getState();
+
+  useEffect(() => {
+    if (orderDetails === undefined) return;
+    if (!orderDetails) return;
+
+    if (orderDetails.id == 'new') {
+      saveToSessionStorage(SESSION_STORAGE_NAME.ORDER_PLACEMENT, null);
+    } else {
+      saveToSessionStorage(SESSION_STORAGE_NAME.ORDER_PLACEMENT, orderDetails);
+    }
+  }, [orderDetails]);
+};
 
 const useSessionCheck = () => {
   const session = useStoreSession((s) => s.session);

@@ -19,6 +19,7 @@ export const LOCAL_STORAGE_NAME = {
 
 export const SESSION_STORAGE_NAME = {
   VIEW: 'view',
+  ORDER_PLACEMENT: 'order-placement',
 };
 
 export const PARAM_NAME = {
