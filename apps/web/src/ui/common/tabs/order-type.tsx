@@ -26,6 +26,7 @@ import {
   ICON_SIZE,
   ICON_STROKE_WIDTH,
   ICON_WRAPPER_SIZE,
+  PARAM_NAME,
   SECTION_SPACING,
   StoreGet,
 } from '@repo/constants';
@@ -34,15 +35,20 @@ import { IconBrandWhatsapp, IconCurrentLocation } from '@tabler/icons-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useGeolocation, useOrderStart } from '@repo/hooks';
 import { OrderFulfilmentType } from '@repo/types';
-import { extractCoordsFromIframeUrl, getDistanceInKm } from '@repo/utils';
+import { extractCoordsFromIframeUrl, getDistanceInKm, setUrlParam } from '@repo/utils';
+import { useSearchParams } from 'next/navigation';
 
 export default function OrderType() {
-  const [activeTab, setActiveTab] = useState<string | null>('delivery');
+  const searchparams = useSearchParams();
+
+  const tab =
+    searchparams.get(PARAM_NAME.ORDER_TYPE_TAB) ?? OrderFulfilmentType.DELIVERY.toLowerCase();
 
   const geolocation = useGeolocation();
 
   const sortedStores = useMemo(() => {
     if (!geolocation.location) return [];
+
     return getStoresSortedByProximity(
       geolocation.location.latitude,
       geolocation.location.longitude,
@@ -51,14 +57,17 @@ export default function OrderType() {
   }, [geolocation.location]);
 
   const styles = (v: string | null) => ({
-    c: v === activeTab ? 'sec' : undefined,
+    c: v === tab ? 'sec' : undefined,
   });
 
   return (
     <Tabs
-      defaultValue={'delivery'}
-      value={activeTab}
-      onChange={setActiveTab}
+      defaultValue={tab}
+      value={tab}
+      onChange={(value) => {
+        // setTab(value as string);
+        setUrlParam({ [PARAM_NAME.ORDER_TYPE_TAB]: value });
+      }}
       variant="outline"
       keepMounted={false}
       styles={{

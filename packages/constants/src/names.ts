@@ -28,6 +28,7 @@ export const PARAM_NAME = {
   MENU_TAB: 'menuTab',
   ORDER_TYPE: 'orderType',
   ORDER_CONFIRMED: 'confirmedOrder',
+  ORDER_TYPE_TAB: 'orderTypeTab',
 };
 
 export const BUCKET_NAME = {

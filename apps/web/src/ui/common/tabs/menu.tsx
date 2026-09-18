@@ -24,7 +24,7 @@ export default function Menu({
       value={tab}
       onChange={(value) => {
         // setTab(value as string);
-        setUrlParam({ menuTab: value });
+        setUrlParam({ [PARAM_NAME.MENU_TAB]: value });
       }}
       styles={{
         tab: {
