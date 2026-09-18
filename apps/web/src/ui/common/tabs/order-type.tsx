@@ -147,12 +147,16 @@ function PartialOrderType({ type, desc, geolocation, sortedStores }: PartialOrde
                     <Loader />
                   </Group>
                 ) : error ? (
-                  <Text>
-                    <Text component="span" inherit c={'red'} fw={500}>
-                      Error:
-                    </Text>{' '}
-                    Failed to get your location.
-                  </Text>
+                  <>
+                    <Text>
+                      <Text component="span" inherit c={'red'} fw={500}>
+                        Error:
+                      </Text>{' '}
+                      Failed to get your location.
+                    </Text>
+
+                    <Text>{error}</Text>
+                  </>
                 ) : (
                   <Group justify="center">
                     <Text>Activate location service:</Text>
