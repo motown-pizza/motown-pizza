@@ -1,6 +1,6 @@
 import { COOKIE_NAME } from '@repo/constants';
 import { getCookieClient, setCookieClient } from '@repo/utils';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 
 interface LocationData {
   latitude: number;
@@ -20,13 +20,18 @@ export function useGeolocation(): UseGeolocationReturn {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  // Use a ref to check the current location value inside the callback without causing re-creations
+  const locationRef = useRef<LocationData | null>(location);
+  locationRef.current = location;
+
   const requestLocation = useCallback((options?: PositionOptions) => {
     if (typeof window === 'undefined' || !('geolocation' in navigator)) {
       setError('Geolocation is not supported by this browser.');
       return;
     }
 
-    if (location) return;
+    // Prevents redundant requests if location is already set
+    if (locationRef.current) return;
 
     setLoading(true);
     setError(null);
@@ -47,7 +52,9 @@ export function useGeolocation(): UseGeolocationReturn {
       (err) => {
         switch (err.code) {
           case err.PERMISSION_DENIED:
-            setError('Location permission was denied.');
+            setError(
+              'Location permission denied. Please check your OS and browser location settings.',
+            );
             break;
           case err.POSITION_UNAVAILABLE:
             setError('Location information is unavailable.');
