@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { LayoutMain } from '@repo/ui';
 import { AffixNavbar } from '@repo/ui';
 import { APP_NAME } from '@repo/constants';
-import HeaderMain from '@web/ui/layout/header/main';
+// import HeaderMain from '@web/ui/layout/header/main';
 import NavbarMain from '@web/ui/layout/navbar/main';
 import FooterMain from '@web/ui/layout/footer/main';
 
@@ -17,7 +17,11 @@ export default async function LayoutMarketing({
   children: React.ReactNode;
 }) {
   return (
-    <LayoutMain header={<HeaderMain />} nav={<NavbarMain />} footer={<FooterMain />}>
+    <LayoutMain
+      // header={<HeaderMain />}
+      nav={<NavbarMain />}
+      footer={<FooterMain />}
+    >
       <main>{children}</main>
 
       <AffixNavbar>

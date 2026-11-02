@@ -3,29 +3,31 @@ import { NavLink } from '@repo/types';
 
 export const links: NavLink[] = [
   {
-    link: '/about',
-    label: 'About Us',
-    subLinks: null,
-  },
-  {
-    link: '/menu',
-    label: 'Menu',
-    subLinks: null,
+    link: '/menu?menuTab=pizzas',
+    label: 'Pizzas',
   },
   {
     link: '/menu?menuTab=sides',
     label: 'Sides',
-    subLinks: null,
   },
   {
     link: '/menu?menuTab=drinks',
     label: 'Drinks',
-    subLinks: null,
   },
   {
     link: '/loyalty-program',
     label: 'Loyalty Program',
-    subLinks: null,
+  },
+];
+
+export const linksSecondary: NavLink[] = [
+  {
+    link: '/about',
+    label: 'About Us',
+  },
+  {
+    link: '/contact',
+    label: 'Contact',
   },
 ];
 

@@ -2,13 +2,11 @@
 
 import React from 'react';
 import { LayoutSection } from '@repo/ui';
-import { Box, Card, Group, Stack, Text, Title } from '@mantine/core';
+import { Box, Card, Group } from '@mantine/core';
 import { IconMoped, IconPizza } from '@tabler/icons-react';
 import { PHONES } from '@repo/constants';
 import { APP_NAME } from '@repo/constants';
-import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants';
 import { AnchorNextLink } from '@repo/ui';
-import classes from './main.module.css';
 import { useMediaQuery } from '@mantine/hooks';
 import { ImageDefault } from '@repo/ui';
 import { images } from '@repo/constants';

@@ -13,6 +13,7 @@ interface UseGeolocationReturn {
   error: string | null;
   loading: boolean;
   requestLocation: (options?: PositionOptions) => void;
+  revokeLocation: () => void;
 }
 
 export function useGeolocation(): UseGeolocationReturn {
@@ -70,11 +71,25 @@ export function useGeolocation(): UseGeolocationReturn {
     );
   }, []);
 
+  // Revoke/Clear location state and cookies
+  const revokeLocation = useCallback(() => {
+    setLocation(null);
+    setError(null);
+    setLoading(false);
+
+    // Depending on your cookie helper, clear the cookie:
+    // Option A: If you have a removeCookieClient utility
+    // removeCookieClient(COOKIE_NAME.GEO_LOCATION);
+
+    // Option B: If using your existing setCookieClient, expire it immediately:
+    setCookieClient(COOKIE_NAME.GEO_LOCATION, null, { expiryInSeconds: -1 });
+  }, []);
+
   useEffect(() => {
     const cookieGeoLocation: LocationData | null = getCookieClient(COOKIE_NAME.GEO_LOCATION);
     if (!cookieGeoLocation) return;
     setLocation(cookieGeoLocation);
   }, []);
 
-  return { location, error, loading, requestLocation };
+  return { location, error, loading, requestLocation, revokeLocation };
 }
