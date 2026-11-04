@@ -16,16 +16,43 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { useStoreCartItem } from '@repo/store';
+import {
+  useOrderActions,
+  useStoreCartItem,
+  useStoreOrderPlacement,
+  useStoreProfile,
+  useStoreSession,
+} from '@repo/store';
 import CardMenuCart from '../cards/menu/cart';
-import { SECTION_SPACING } from '@repo/constants';
-import { sortArray } from '@repo/utils';
-import { Order } from '@repo/types';
+import { defaultOrderDetails, SECTION_SPACING, stores } from '@repo/constants';
+import { generateUUID, sortArray } from '@repo/utils';
+import { Order, OrderFulfilmentType, OrderGet } from '@repo/types';
 import { AnchorNextLink } from '@repo/ui';
 import { useGetSum } from '@repo/hooks';
 
 export default function Cart({ children }: { children: React.ReactNode }) {
   const [opened, { open, close }] = useDisclosure(false);
+
+  const session = useStoreSession((s) => s.session);
+  const profiles = useStoreProfile((s) => s.profiles);
+  const currentProfile = profiles?.find((pi) => pi.id == session?.id);
+  const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
+  const { orderCreate } = useOrderActions();
+
+  const handleStartOrder = (fulfillmentType: OrderFulfilmentType) => {
+    const newOrderId = generateUUID();
+    const fullName = `${currentProfile?.firstName || ''} ${currentProfile?.lastName || ''}`.trim();
+    const newOrder: OrderGet = {
+      ...defaultOrderDetails,
+      id: newOrderId,
+      customerName: fullName,
+      fulfillmentType,
+    };
+
+    orderCreate(newOrder, { stores: stores });
+    setOrderDetails(newOrder);
+  };
+
   const { cartItems } = useStoreCartItem();
   const { getSum } = useGetSum();
 
@@ -96,11 +123,18 @@ export default function Cart({ children }: { children: React.ReactNode }) {
                   </div>
 
                   <Group justify="end">
-                    <AnchorNextLink href={`/order/checkout-review`}>
-                      <Button size="sm" onClick={close}>
-                        Checkout
-                      </Button>
-                    </AnchorNextLink>
+                    <Button
+                      component={AnchorNextLink}
+                      href={`/order/checkout`}
+                      size="sm"
+                      disabled={!cartItems?.length}
+                      onClick={() => {
+                        close();
+                        if (!orderDetails) handleStartOrder(OrderFulfilmentType.DELIVERY);
+                      }}
+                    >
+                      Checkout
+                    </Button>
                   </Group>
                 </Stack>
               </Box>
