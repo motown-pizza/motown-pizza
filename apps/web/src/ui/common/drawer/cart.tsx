@@ -3,6 +3,7 @@
 import React from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import {
+  Box,
   Button,
   Center,
   Divider,
@@ -51,27 +52,19 @@ export default function Cart({ children }: { children: React.ReactNode }) {
             <Text c={'dimmed'}>Cart Empty</Text>
           </Center>
         ) : (
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: 'calc(100vh - 61px)',
-            }}
-          >
-            <ScrollArea
-              scrollbars={'y'}
-              style={{
-                flex: 1,
-                overflowY: 'auto',
-              }}
-            >
-              {sortArray(cartItems || [], (i) => i.createdAt, Order.ASCENDING).map((ci, i) => (
-                <Stack key={i} gap={5}>
-                  {i > 0 && <Divider mt={5} w={'95%'} mx={'auto'} />}
+          <div>
+            <ScrollArea h={`calc(100vh - ${60 + 1 + 1 + 109.8}px)`} scrollbars={'y'}>
+              <Box
+              // mih={'100vh'}
+              >
+                {sortArray(cartItems || [], (i) => i.createdAt, Order.ASCENDING).map((ci, i) => (
+                  <Stack key={i} gap={5}>
+                    {i > 0 && <Divider mt={5} w={'95%'} mx={'auto'} />}
 
-                  <CardMenuCart props={ci} />
-                </Stack>
-              ))}
+                    <CardMenuCart props={ci} />
+                  </Stack>
+                ))}
+              </Box>
             </ScrollArea>
 
             <div>
