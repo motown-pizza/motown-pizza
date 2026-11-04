@@ -49,7 +49,7 @@ export default function Cart({ children }: { children: React.ReactNode }) {
           </Center>
         ) : (
           <div>
-            <ScrollArea h={`calc(95vh - ${60 + 1 + 1}px)`} scrollbars={'y'}>
+            <ScrollArea h={`calc(90vh - ${60 + 1 + 1}px)`} scrollbars={'y'}>
               <Stack>
                 {!cartItems?.length ? (
                   <Center py={SECTION_SPACING}>
