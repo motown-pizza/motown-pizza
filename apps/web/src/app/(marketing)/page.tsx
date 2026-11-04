@@ -38,7 +38,7 @@ export default function Home() {
 
   const handleStartOrder = (fulfillmentType: OrderFulfilmentType) => {
     const newOrderId = generateUUID();
-    const fullName = `${currentProfile?.firstName} ${currentProfile?.lastName}`.trim();
+    const fullName = `${currentProfile?.firstName || ''} ${currentProfile?.lastName || ''}`.trim();
     const newOrder: OrderGet = {
       ...defaultOrderDetails,
       id: newOrderId,
