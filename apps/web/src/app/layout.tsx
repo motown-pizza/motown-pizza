@@ -62,15 +62,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
         {/* General Web App Metadata */}
         <meta name="application-name" content={APP_NAME.WEB} />
-        <meta
-          name="theme-color"
-          content={resolvedTheme == ColorScheme.LIGHT ? '#ffffff' : '#000000'}
-        />
-        {/* <meta
-          name="background-color"
-          content={resolvedTheme == ColorScheme.LIGHT ? '#ffffff' : '#000000'}
-        /> */}
-        {/* <meta name="theme-color" content={'#fe0000'} /> */}
+        <meta name="theme-color" content={'#fe0000'} />
         <meta name="background-color" content={'#fe0000'} />
 
         {/* Apple Web App Tags */}
