@@ -24,7 +24,7 @@ export default function Nav({
         size={'xs'}
         title={
           <>
-            <AnchorNextLink href="/" underline="never">
+            <AnchorNextLink href="/" underline="never" onClick={close}>
               <ImageDefault
                 src={images.brand.logo.landscape.meta}
                 alt={APP_NAME.WEB}

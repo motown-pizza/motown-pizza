@@ -47,58 +47,65 @@ export default function Cart({ children }: { children: React.ReactNode }) {
           <Center py={SECTION_SPACING}>
             <Loader size={'sm'} />
           </Center>
-        ) : cartItems?.length == 0 ? (
-          <Center py={SECTION_SPACING}>
-            <Text c={'dimmed'}>Cart Empty</Text>
-          </Center>
         ) : (
           <div>
-            <ScrollArea h={`calc(100vh - ${60 + 1 + 1 + 109.8 + 40}px)`} scrollbars={'y'}>
-              <Box
-              // mih={'100vh'}
-              >
-                {sortArray(cartItems || [], (i) => i.createdAt, Order.ASCENDING).map((ci, i) => (
-                  <Stack key={i} gap={5}>
-                    {i > 0 && <Divider mt={5} w={'95%'} mx={'auto'} />}
+            <ScrollArea h={`calc(100vh - ${60 + 1 + 1}px)`} scrollbars={'y'}>
+              <Stack mih={'100vh'}>
+                {!cartItems?.length ? (
+                  <Center py={SECTION_SPACING}>
+                    <Text c={'dimmed'}>Cart Empty</Text>
+                  </Center>
+                ) : (
+                  <div>
+                    {sortArray(cartItems || [], (i) => i.createdAt, Order.ASCENDING).map(
+                      (ci, i) => (
+                        <Stack key={i} gap={5}>
+                          {i > 0 && <Divider mt={5} w={'95%'} mx={'auto'} />}
 
-                    <CardMenuCart props={ci} />
-                  </Stack>
-                ))}
+                          <CardMenuCart props={ci} />
+                        </Stack>
+                      ),
+                    )}
+                  </div>
+                )}
+              </Stack>
+
+              <Box
+                bg={'var(--mantine-color-body)'}
+                style={{ position: 'sticky', bottom: -1, zIndex: 1 }}
+              >
+                <Divider />
+
+                <Stack gap={'xs'} p={'xs'}>
+                  <div>
+                    <Group justify="space-between" align="end">
+                      <Title order={4} fz={'md'} c={'sec'}>
+                        Total:
+                      </Title>
+
+                      <Text inherit fz={'sm'}>
+                        Kshs.{' '}
+                        <Text component="span" inherit fz={'lg'} fw={500} c={'white'}>
+                          <NumberFormatter value={getSum()} />
+                        </Text>
+                      </Text>
+                    </Group>
+
+                    <Text fz={'sm'} c={'dark.1'} fw={500}>
+                      Inc. VAT & delivery
+                    </Text>
+                  </div>
+
+                  <Group justify="end">
+                    <AnchorNextLink href={`/order/checkout-review`}>
+                      <Button size="sm" onClick={close}>
+                        Checkout
+                      </Button>
+                    </AnchorNextLink>
+                  </Group>
+                </Stack>
               </Box>
             </ScrollArea>
-
-            <div>
-              <Divider />
-
-              <Stack gap={'xs'} p={'xs'}>
-                <div>
-                  <Group justify="space-between" align="end">
-                    <Title order={4} fz={'md'} c={'sec'}>
-                      Subtotal:
-                    </Title>
-
-                    <Text inherit fz={'sm'}>
-                      Kshs.{' '}
-                      <Text component="span" inherit fz={'lg'} fw={500} c={'white'}>
-                        <NumberFormatter value={getSum()} />
-                      </Text>
-                    </Text>
-                  </Group>
-
-                  <Text fz={'sm'} c={'dimmed'}>
-                    Inclusive of VAT.
-                  </Text>
-                </div>
-
-                <Group justify="end">
-                  <AnchorNextLink href={`/order/checkout-review`}>
-                    <Button size="xs" onClick={close}>
-                      Checkout
-                    </Button>
-                  </AnchorNextLink>
-                </Group>
-              </Stack>
-            </div>
           </div>
         )}
       </Drawer>
