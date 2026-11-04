@@ -45,6 +45,7 @@ export const useOrderActions = () => {
     const newOrder: OrderGet = {
       id: params.id || id,
       customerName: params.customerName || '',
+      customerAddress: params.customerAddress || '',
       customerPhone: params.customerPhone || '',
       etaEstimate: params.etaEstimate || '',
       fulfillmentType: params.fulfillmentType || OrderFulfilmentType.DELIVERY,
@@ -106,7 +107,7 @@ export const useOrderActions = () => {
       if (!draftOrders) {
         // error notification goes here
 
-        router.replace('/order/select-store');
+        router.replace('/order/select-menu');
         return { cartToOrderItems: [] };
       }
 

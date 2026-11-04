@@ -41,7 +41,7 @@ export default function Orders() {
       <Card bg={'var(--mantine-color-dark-9)'} withBorder>
         <Stack>
           <Group justify="end">
-            <AnchorNextLink href="/order/select-store?orderType=delivery">
+            <AnchorNextLink href="/order/select-menu">
               <Button color="sec" c={'dark.9'}>
                 Order Now
               </Button>
@@ -65,11 +65,11 @@ export default function Orders() {
                 </Text>
 
                 <Group>
-                  <AnchorNextLink href="/order/select-store?orderType=delivery">
+                  <AnchorNextLink href="/order/select-menu">
                     <Button>Order Now</Button>
                   </AnchorNextLink>
 
-                  <AnchorNextLink href="/menu">
+                  <AnchorNextLink href="/order/select-menu">
                     <Button color="sec" c={'dark.9'}>
                       See Menu
                     </Button>

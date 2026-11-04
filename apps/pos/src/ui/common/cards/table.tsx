@@ -159,7 +159,7 @@ export default function Table({ props }: { props: TableGet }) {
                     miw={180}
                     maw={220}
                   >
-                    <Avatar name={oi.name} color="initials" />
+                    <Avatar name={oi.name || 'Anonymous'} color="initials" />
                   </Tooltip>
                 ))}
               </AvatarGroup>
@@ -256,17 +256,19 @@ function CardOccupant({ props, tableId }: { props: Occupant; tableId: string }) 
     if (tableBooking) tableBookingUpdate({ ...tableBooking, tableBookingStatus: 'DONE' });
   };
 
+  const customerName = props.name || 'Anonymous';
+
   return (
     <Card bg={'var(--mantine-color-dark-9)'} px={0}>
       <Grid align="center">
         <GridCol span={1.5}>
-          <Avatar name={props.name} color="initials" />
+          <Avatar name={customerName} color="initials" />
         </GridCol>
 
         <GridCol span={7.5}>
           <div>
             <Title order={2} fz={'md'} fw={500}>
-              {props.name}
+              {customerName}
             </Title>
             {props.phone && (
               <Text inherit fz={'sm'}>

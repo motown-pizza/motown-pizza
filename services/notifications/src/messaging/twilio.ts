@@ -36,7 +36,7 @@ export async function sendOrderConfirmationWhatsapp(params: {
 
 Order Details:
 ID: ${params.order.trackingCode}
-Name: ${params.order.customerName.toUpperCase()}
+Name/Phone: ${(params.order.customerName || params.order.customerPhone).toUpperCase()}
 
 Fulfilment Type: ${capitalizeWords(params.order.fulfillmentType)}
 ${actionVerb} from: ${params.store.title}

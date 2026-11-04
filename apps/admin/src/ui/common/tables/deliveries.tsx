@@ -55,6 +55,8 @@ export default function Deliveries() {
   const rows = items.map((p) => {
     const orderCurrent = orders?.find((oi) => oi.id == p.orderId);
 
+    const customerName = p.customerName || 'Anonymous';
+
     return (
       <TableTr
         key={p.id}
@@ -73,17 +75,12 @@ export default function Deliveries() {
 
         <TableTd w={widths.title}>
           <Group gap={'xs'} wrap="nowrap">
-            <Avatar
-              key={orderCurrent?.customerName}
-              name={orderCurrent?.customerName}
-              size={36}
-              color="initials"
-            />
+            <Avatar key={customerName} name={customerName} size={36} color="initials" />
 
             <Stack gap={0} align="start">
-              <Tooltip label={orderCurrent?.customerName} multiline maw={240}>
+              <Tooltip label={customerName} multiline maw={240}>
                 <Title order={3} fz={'md'} fw={500} lineClamp={1}>
-                  {orderCurrent?.customerName}
+                  {customerName}
                 </Title>
               </Tooltip>
 

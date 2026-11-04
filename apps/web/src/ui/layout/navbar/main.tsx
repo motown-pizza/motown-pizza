@@ -31,12 +31,14 @@ import { AvatarMain } from '@repo/ui';
 import { MenuUser } from '@repo/ui';
 import { usePathname, useSearchParams } from 'next/navigation';
 import PopoverGeolocation from '@web/ui/common/popover/geolocation';
+import { useWindowScroll } from '@mantine/hooks';
 
 export default function Main() {
   const pathname = usePathname();
   const { cartItems } = useStoreCartItem();
   const searchParams = useSearchParams();
   const menuTab = searchParams.get(PARAM_NAME.MENU_TAB);
+  const [scroll, scrollTo] = useWindowScroll();
 
   return (
     <LayoutSection id={'navbar-main'} bg={'var(--mantine-color-pri-6)'} padded={'sm'}>
@@ -67,7 +69,7 @@ export default function Main() {
               <Stack key={i} gap={5} mih={31.4}>
                 <AnchorNextLink
                   href={li.link}
-
+                  onClick={() => scrollTo({ y: 0 })}
                   fw={500}
                   underline="never"
                   className={classes.link}

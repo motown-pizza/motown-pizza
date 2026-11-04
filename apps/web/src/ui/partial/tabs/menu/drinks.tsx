@@ -10,7 +10,7 @@ import { capitalizeWords } from '@repo/utils';
 
 export default function Drinks({ options }: { options?: { withAside?: boolean } }) {
   const { products } = useStoreProduct();
-  const drinks = products?.filter((p) => p.type == ProductType.DRINK);
+  const drinks = products?.filter((p) => p.status == 'ACTIVE' && p.type == ProductType.DRINK);
 
   return products === undefined ? (
     <Center py={SECTION_SPACING} mih={400}>
@@ -22,74 +22,21 @@ export default function Drinks({ options }: { options?: { withAside?: boolean } 
     </Center>
   ) : (
     <section>
-      <Divider
-        label={capitalizeWords(`Flavored Drinks`)}
-        my={SECTION_SPACING}
-        w={{ base: '100%', md: '60%' }}
-        mx={'auto'}
-        color="pri"
-        styles={{
-          label: {
-            color: 'var(--mantine-color-sec-6)',
-            fontSize: 'var(--mantine-h2-font-size)',
-            fontWeight: 'bold',
-          },
-        }}
-      />
-
       <Grid>
-        {sortArray(drinks, (i) => i.updatedAt, Order.DESCENDING)?.map(
-          (p, i) =>
-            p.title.toLowerCase() != 'water' && (
-              <GridCol
-                key={i}
-                span={{
-                  base: 12,
-                  xs: 6,
-                  sm: 4,
-                  md: options?.withAside ? 6 : 4,
-                  xl: options?.withAside ? 4 : 3,
-                }}
-              >
-                <CardMenuMain props={p} />
-              </GridCol>
-            ),
-        )}
-      </Grid>
-
-      <Divider
-        label={capitalizeWords(`Neutral Drinks`)}
-        my={SECTION_SPACING}
-        w={{ base: '100%', md: '60%' }}
-        mx={'auto'}
-        color="pri"
-        styles={{
-          label: {
-            color: 'var(--mantine-color-sec-6)',
-            fontSize: 'var(--mantine-h2-font-size)',
-            fontWeight: 'bold',
-          },
-        }}
-      />
-
-      <Grid>
-        {sortArray(drinks, (i) => i.updatedAt, Order.DESCENDING)?.map(
-          (p, i) =>
-            p.title.toLowerCase() == 'water' && (
-              <GridCol
-                key={i}
-                span={{
-                  base: 12,
-                  xs: 6,
-                  sm: 4,
-                  md: options?.withAside ? 6 : 4,
-                  xl: options?.withAside ? 4 : 3,
-                }}
-              >
-                <CardMenuMain props={p} />
-              </GridCol>
-            ),
-        )}
+        {sortArray(drinks, (i) => i.updatedAt, Order.DESCENDING)?.map((p, i) => (
+          <GridCol
+            key={i}
+            span={{
+              base: 12,
+              xs: 6,
+              sm: 4,
+              md: options?.withAside ? 6 : 4,
+              lg: options?.withAside ? 4 : 3,
+            }}
+          >
+            <CardMenuMain props={p} />
+          </GridCol>
+        ))}
       </Grid>
     </section>
   );

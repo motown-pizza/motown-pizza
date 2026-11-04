@@ -51,18 +51,20 @@ export default function Order({ props }: { props: OrderGet }) {
 
   const sum = getSum();
 
+  const customerName = props.customerName || 'Anonymous';
+
   return (
     <Card bg={'var(--mantine-color-dark-8)'}>
       <Stack>
         <Group align="start" justify="space-between" wrap="nowrap">
           <Group wrap="nowrap">
             <div>
-              <Avatar key={props.customerName} name={props.customerName} color="initials" />
+              <Avatar key={customerName} name={customerName} color="initials" />
             </div>
 
             <Box mih={44.1}>
               <Title order={3} fz={'md'} fw={'bold'} lineClamp={1}>
-                {capitalizeWords(props.customerName)}
+                {capitalizeWords(customerName)}
               </Title>
 
               <Text fz={'sm'} c={'dimmed'} lineClamp={1}>

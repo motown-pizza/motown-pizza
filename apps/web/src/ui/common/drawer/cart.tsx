@@ -79,14 +79,14 @@ export default function Cart({ children }: { children: React.ReactNode }) {
 
               <Stack gap={'xs'} p={'xs'}>
                 <div>
-                  <Group justify="space-between" align="start">
-                    <Title order={4} fz={'md'} c={'blue'}>
+                  <Group justify="space-between" align="end">
+                    <Title order={4} fz={'md'} c={'sec'}>
                       Subtotal:
                     </Title>
 
                     <Text inherit fz={'sm'}>
                       Kshs.{' '}
-                      <Text component="span" inherit fz={'md'} fw={500} c={'sec'}>
+                      <Text component="span" inherit fz={'lg'} fw={500} c={'white'}>
                         <NumberFormatter value={getSum()} />
                       </Text>
                     </Text>

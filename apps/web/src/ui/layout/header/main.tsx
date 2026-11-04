@@ -23,10 +23,7 @@ export default function Main() {
             Authentic Taste that Rules!
           </Title> */}
 
-          <AnchorNextLink
-            href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-            underline="never"
-          >
+          <AnchorNextLink href={`/order/select-menu`} underline="never">
             <Card
               padding={0}
               bg={'transparent'}

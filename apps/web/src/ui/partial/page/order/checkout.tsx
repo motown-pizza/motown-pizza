@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { LayoutSection } from '@repo/ui';
 import {
   Badge,
@@ -10,35 +10,43 @@ import {
   CardSection,
   Center,
   Divider,
+  Grid,
+  GridCol,
   Group,
   Loader,
   NumberFormatter,
-  Overlay,
   Radio,
   RadioGroup,
+  ScrollArea,
   ScrollAreaAutosize,
   Stack,
   Text,
+  Textarea,
   Title,
 } from '@mantine/core';
-import { LayoutIntroSection } from '@repo/ui';
 import {
   useProfileActions,
   useStoreOrderPlacement,
+  useStoreProduct,
+  useStoreProductVariant,
   useStoreProfile,
   useStoreSession,
 } from '@repo/store';
-import { defaultOrderDetails, PARAM_NAME } from '@repo/constants';
+import {
+  defaultOrderDetails,
+  ICON_SIZE,
+  ICON_STROKE_WIDTH,
+  LOCAL_STORAGE_NAME,
+  PARAM_NAME,
+} from '@repo/constants';
 import {
   DeliveryGet,
   OrderFulfilmentType,
   OrderPaymentMethod,
   OrderStatus,
-  OrderTime,
+  ProductType,
 } from '@repo/types';
 import { stores } from '@repo/constants';
-import { FormContact } from '@repo/ui';
-import { APP_NAME } from '@repo/constants';
 import { ImageDefault } from '@repo/ui';
 import { images } from '@repo/constants';
 import { AnchorNextLink } from '@repo/ui';
@@ -47,270 +55,390 @@ import { useGetSum } from '@repo/hooks';
 import { useStoreCartItem } from '@repo/store';
 import CardMenuCart from '@web/ui/common/cards/menu/cart';
 import { SECTION_SPACING } from '@repo/constants';
-import { getRegionalDate, segmentFullName, validators } from '@repo/utils';
+import { getFromLocalStorage, segmentFullName, validators } from '@repo/utils';
 import { useNotification } from '@repo/notifications';
 import { Variant } from '@repo/types';
 import { handleOrderNotification } from '@repo/handlers';
+import PopoverGeolocation from '@web/ui/common/popover/geolocation';
+import IndicatorFulfilment from '@web/ui/indicators/fulfilment';
+import InputPayment from '@web/ui/inputs/payment';
+import { IconClock, IconStar } from '@tabler/icons-react';
+import CardMenuMain from '@web/ui/common/cards/menu/main';
+import { Router } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export default function Checkout() {
-  const session = useStoreSession((s) => s.session);
+  const router = useRouter();
   const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
   const { cartItems } = useStoreCartItem();
+  const { productVariants } = useStoreProductVariant();
+  const { products } = useStoreProduct();
   const { getSum } = useGetSum();
   const { showNotification } = useNotification();
 
-  const store = stores.find((s) => s.id == orderDetails?.storeId);
-  const { orderUpdate } = useOrderActions();
+  const storeId = getFromLocalStorage(LOCAL_STORAGE_NAME.STORE);
+  const store = stores.find((s) => s.id == storeId);
 
-  const profiles = useStoreProfile((s) => s.profiles);
-  const currentProfile = profiles?.find((pi) => pi.id == session?.id);
-  const { profileUpdate } = useProfileActions();
+  const { orderUpdate } = useOrderActions();
 
   const isReadyForConfirmation =
     !!cartItems?.length &&
     (!orderDetails
       ? false
-      : orderDetails.customerName.length > 1 &&
-        (!orderDetails.customerPhone
-          ? false
-          : validators.phone(orderDetails.customerPhone) == false));
-
-  const readyDate = getRegionalDate(new Date(), {
-    locale: 'en-GB',
-    format: 'numeric',
-  });
-
-  const customerFullName = segmentFullName(orderDetails?.customerName || '');
+      : !orderDetails.customerPhone
+        ? false
+        : validators.phone(orderDetails.customerPhone) == false);
 
   return (
-    <LayoutSection id="page-checkout-review-content" padded containerized={'md'}>
-      <LayoutIntroSection props={{ title: 'Checkout' }} options={{ alignment: 'start' }} />
+    <LayoutSection id="page-checkout-review-content" margined mt={SECTION_SPACING / 2}>
+      <Title order={1} c={'sec'}>
+        Checkout
+      </Title>
 
-      <Stack mt={'xl'}>
-        <Box fz={'lg'}>
-          {store && (
-            <Text inherit c={'sec'}>
-              Carryout from:{' '}
-              <Text component="span" inherit fw={500} c={'var(--mantine-color-text)'}>
-                {store.title}, {store.location}
-              </Text>
-              .
-            </Text>
-          )}
+      <Grid mt={SECTION_SPACING}>
+        <GridCol span={{ base: 12, md: 4.5 }}>
+          <Stack>
+            <Card bg={'transparent'} p={0} withBorder>
+              <Box p={'md'} bg={'var(--mantine-color-dark-9)'}>
+                <Group justify="space-between">
+                  <Title order={3} c={'white'} fz={'md'}>
+                    Order Items
+                  </Title>
 
-          {orderDetails?.orderTime == OrderTime.NOW && (
-            <Text inherit c={'sec'}>
-              Your order will be ready on:{' '}
-              <Text component="span" inherit fw={500} c={'var(--mantine-color-text)'}>
-                {readyDate.date}, {readyDate.time.toUpperCase()}
-              </Text>
-              .
-            </Text>
-          )}
-        </Box>
+                  <Text ta={'end'} c={'dark.1'} fw={500} fz={'sm'}>
+                    <NumberFormatter value={cartItems?.length} /> item(s)
+                  </Text>
+                </Group>
+              </Box>
 
-        <Badge size="xl" color="pri" tt={'capitalize'} p={'lg'}>
-          <Text inherit>
-            Total:{' '}
-            <Text component="span" inherit c={'sec'} fz={'xl'}>
-              Kshs.{' '}
-              <Text component="span" inherit>
-                <NumberFormatter value={getSum()} />
-              </Text>
-            </Text>
-          </Text>
-        </Badge>
-      </Stack>
+              <ScrollArea scrollbars={'y'} h={{ base: undefined, md: 400 }}>
+                {cartItems === undefined ? (
+                  <Center py={SECTION_SPACING * 2}>
+                    <Loader />
+                  </Center>
+                ) : !cartItems?.length ? (
+                  <Stack align="center" py={SECTION_SPACING * 2}>
+                    <Text>No order items found.</Text>
 
-      <Stack gap={'xl'} mt={'xl'}>
-        <Card bg={'var(--mantine-color-dark-9)'} padding={0} withBorder>
-          <CardSection p={'md'} bg={'var(--mantine-color-dark-8)'}>
-            <Title order={3} c={'sec'}>
-              Order Items Summary
-            </Title>
-          </CardSection>
+                    <AnchorNextLink href="/order/select-menu?menuTab=pizzas">
+                      <Group justify="center">
+                        <Button>Select items to order</Button>
+                      </Group>
+                    </AnchorNextLink>
+                  </Stack>
+                ) : (
+                  cartItems?.map((ci, i) => (
+                    <Stack gap={5} key={i} pr={'xs'}>
+                      {i > 0 && <Divider mb={'xs'} />}
 
-          <ScrollAreaAutosize scrollbars={'y'} mah={1080}>
-            {cartItems === undefined ? (
-              <Center py={SECTION_SPACING * 2}>
-                <Loader />
-              </Center>
-            ) : !cartItems?.length ? (
-              <Stack align="center" py={SECTION_SPACING * 2}>
-                <Text>No order items selected.</Text>
-
-                <AnchorNextLink href="/order/select-menu?menuTab=pizzas">
-                  <Group justify="center">
-                    <Button>Select items to order</Button>
-                  </Group>
-                </AnchorNextLink>
-              </Stack>
-            ) : (
-              cartItems?.map((ci, i) => (
-                <Stack gap={5} key={i} pr={'xs'}>
-                  {i > 0 && <Divider mb={'xs'} />}
-
-                  <CardMenuCart props={ci} options={{ checkout: true }} />
-                </Stack>
-              ))
-            )}
-          </ScrollAreaAutosize>
-        </Card>
-
-        <Card bg={'var(--mantine-color-dark-9)'} withBorder>
-          <CardSection p={'md'} bg={'var(--mantine-color-dark-8)'}>
-            <Title order={3} c={'sec'}>
-              Step 1: Contact Info
-            </Title>
-          </CardSection>
-
-          <Stack mt={'md'}>
-            <div>
-              <Title order={4} fz={'lg'} c={'sec'}>
-                Personal Information
-              </Title>
-
-              <Text>
-                The information you provide will be used to contact you regarding your order.
-              </Text>
-            </div>
-
-            <Card bg={'transparent'} withBorder w={{ md: '70%' }}>
-              <FormContact
-                props={{
-                  name:
-                    `${customerFullName.first || currentProfile?.firstName || ''} ${customerFullName.last || currentProfile?.lastName || ''}`.trim() ||
-                    '',
-                  phone: orderDetails?.customerPhone || currentProfile?.phone || '',
-                }}
-                options={{ order: true }}
-              />
+                      <CardMenuCart
+                        props={ci}
+                        // options={{ checkout: true }}
+                      />
+                    </Stack>
+                  ))
+                )}
+              </ScrollArea>
             </Card>
 
-            <Text fz={'sm'} c={'dimmed'}>
-              {!session?.email
-                ? `You can also sign in to your ${APP_NAME.WEB} account for faster checkout.`
-                : 'The above personal information was provided when you signed in.'}
-            </Text>
-          </Stack>
-        </Card>
+            <Card bg={'transparent'} withBorder p={0}>
+              <Box p={'md'} bg={'var(--mantine-color-dark-9)'}>
+                <Title order={3} c={'white'} fz={'md'}>
+                  Add something on the side
+                </Title>
+              </Box>
 
-        <Card bg={'var(--mantine-color-dark-9)'} withBorder>
-          <CardSection p={'md'} bg={'var(--mantine-color-dark-9)'}>
-            <Title order={3} c={'sec'}>
-              Step 2: Select Payment Method
-            </Title>
-          </CardSection>
+              <Stack mt={'md'} mih={188.4}>
+                {cartItems === undefined ? (
+                  <Center py={SECTION_SPACING}>
+                    <Loader />
+                  </Center>
+                ) : !cartItems?.length ? (
+                  <Stack align="center" py={SECTION_SPACING}>
+                    <Text>No menu items found.</Text>
+                  </Stack>
+                ) : (
+                  <ScrollArea scrollbars={'x'} pb={'md'}>
+                    <Group wrap="nowrap" px={'md'}>
+                      {products
+                        ?.filter((pi) => pi.type == ProductType.SIDE)
+                        ?.map((pi) => (
+                          <Box key={pi.id} miw={200}>
+                            <CardMenuMain props={pi} options={{ small: true }} />
+                          </Box>
+                        ))}
+                    </Group>
+                  </ScrollArea>
+                )}
+              </Stack>
+            </Card>
 
-          <Stack mt={'md'}>
-            <div>
-              <Title order={4} fz={'lg'}>
-                Payment Information
-              </Title>
+            <Card bg={'transparent'} withBorder p={0}>
+              <Box p={'md'} bg={'var(--mantine-color-dark-9)'}>
+                <Title order={3} c={'white'} fz={'md'}>
+                  Note for the kitchen
+                </Title>
+              </Box>
 
-              <Text>
-                Balance Due:{' '}
-                <Text component="span" inherit fw={500} c={'ter'}>
-                  <NumberFormatter value={getSum()} /> KES
-                </Text>
-              </Text>
-            </div>
-
-            <RadioGroup
-              name="payment-option"
-              label="Payment Option"
-              withAsterisk
-              value={(orderDetails || defaultOrderDetails).paymentMethod}
-              onChange={(v) => {
-                setOrderDetails({
-                  ...(orderDetails || defaultOrderDetails),
-                  paymentMethod: v as OrderPaymentMethod,
-                });
-              }}
-            >
-              <Stack mt="xs">
-                <Radio
-                  value={OrderPaymentMethod.CASH}
-                  label={
-                    (orderDetails || defaultOrderDetails).fulfillmentType ==
-                    OrderFulfilmentType.COLLECTION
-                      ? 'Pay at the store upon collection (Cash)'
-                      : 'Pay in person upon delivery (Cash)'
-                  }
-                />
-
-                <Radio
-                  value={OrderPaymentMethod.ONLINE}
-                  label={
-                    <Stack gap={5}>
-                      <Text inherit>Pay with card or mobile money (Online)</Text>
-
-                      <Group>
-                        <ImageDefault
-                          src={images.mpesa}
-                          alt="M-Pesa"
-                          height={48}
-                          width={48}
-                          fit={'contain'}
-                        />
-                      </Group>
-                    </Stack>
-                  }
+              <Stack p={'md'}>
+                <Textarea
+                  aria-label="Order note"
+                  placeholder="Extra cheese, no olive oil..."
+                  minRows={1}
+                  maxRows={3}
+                  autosize
                 />
               </Stack>
-            </RadioGroup>
+            </Card>
           </Stack>
-        </Card>
+        </GridCol>
 
-        <Group justify="end">
-          <AnchorNextLink
-            href={`/order/confirmed?${PARAM_NAME.ORDER_CONFIRMED}=${orderDetails?.id}`}
-            onClick={async (e) => {
-              if (!isReadyForConfirmation) {
-                e.preventDefault();
+        <GridCol span={{ base: 12, md: 4 }}>
+          <Stack>
+            <Card bg={'transparent'} withBorder p={0}>
+              <Box p={'md'} bg={'var(--mantine-color-dark-9)'}>
+                <Title order={3} c={'white'} fz={'md'}>
+                  Order Details
+                </Title>
+              </Box>
 
-                showNotification({
-                  title: 'Not Ready For Checkout',
-                  desc: `Verify form details and order items`,
-                  variant: Variant.WARNING,
-                });
+              <Stack p={'md'}>
+                <IndicatorFulfilment />
 
-                return;
-              }
+                <PopoverGeolocation options={{ checkout: true }} />
 
-              let delivery: DeliveryGet | undefined;
+                <Box display={orderDetails?.fulfillmentType == 'DELIVERY' ? undefined : 'none'}>
+                  <Textarea
+                    label="Delivery address"
+                    placeholder="Rhapta Road, Westlands, Nairobi"
+                    minRows={1}
+                    maxRows={3}
+                    autosize
+                    value={orderDetails?.customerAddress || ''}
+                    onChange={(event) => {
+                      if (orderDetails)
+                        setOrderDetails({
+                          ...orderDetails,
+                          customerAddress: event.currentTarget.value,
+                        });
+                    }}
+                  />
+                </Box>
 
-              if (orderDetails) {
-                if (currentProfile && !currentProfile.phone) {
-                  profileUpdate({ ...currentProfile, phone: orderDetails.customerPhone });
-                }
+                <div>
+                  <Textarea
+                    label="Phone number"
+                    placeholder="Phone number"
+                    minRows={1}
+                    maxRows={3}
+                    autosize
+                    value={orderDetails?.customerPhone}
+                    onChange={(event) => {
+                      if (orderDetails)
+                        setOrderDetails({
+                          ...orderDetails,
+                          customerPhone: event.currentTarget.value,
+                        });
+                    }}
+                  />
+                </div>
 
-                const { orderDelivery } = await orderUpdate(
-                  { ...orderDetails, orderStatus: OrderStatus.PREPARING },
-                  { placement: true },
-                );
+                <div>
+                  <Textarea
+                    label="Name"
+                    placeholder="Name"
+                    minRows={1}
+                    maxRows={3}
+                    autosize
+                    value={orderDetails?.customerName || ''}
+                    onChange={(event) => {
+                      if (orderDetails)
+                        setOrderDetails({
+                          ...orderDetails,
+                          customerName: event.currentTarget.value,
+                        });
+                    }}
+                  />
+                </div>
+              </Stack>
+            </Card>
 
-                delivery = orderDelivery;
-              }
+            <Card bg={'transparent'} withBorder>
+              <CardSection p={'md'} bg={'var(--mantine-color-dark-9)'}>
+                <Title order={3} c={'white'} fz={'md'}>
+                  Payment Method
+                </Title>
+              </CardSection>
 
-              setOrderDetails(defaultOrderDetails);
+              <Stack mt={'md'}>
+                <InputPayment
+                  // value={payment}
+                  // setValue={setPayment}
+                  value={orderDetails?.paymentMethod}
+                  setValue={(v: OrderPaymentMethod) => {
+                    if (orderDetails)
+                      setOrderDetails({
+                        ...orderDetails,
+                        paymentMethod: v,
+                      });
+                  }}
+                />
+              </Stack>
+            </Card>
+          </Stack>
+        </GridCol>
 
-              if (orderDetails && orderDetails.customerPhone && store) {
-                handleOrderNotification({
-                  order: { ...orderDetails },
-                  total: getSum(),
-                  store,
-                  verificationCode: delivery?.verificationCode,
-                });
-              }
-            }}
-          >
-            <Button color="pri" size="md" disabled={!isReadyForConfirmation}>
-              Place Order
-            </Button>
-          </AnchorNextLink>
-        </Group>
-      </Stack>
+        <GridCol span={{ base: 12, md: 3.5 }}>
+          <Stack>
+            <Card bg={'transparent'} withBorder p={0}>
+              <Box p={'md'} bg={'var(--mantine-color-dark-9)'}>
+                <Title order={3} c={'white'} fz={'md'}>
+                  Order Summary
+                </Title>
+              </Box>
+
+              <Stack>
+                <div>
+                  <ScrollArea scrollbars={'y'} h={{ md: 280 }} px={'md'}>
+                    {cartItems === undefined ? (
+                      <Center py={SECTION_SPACING}>
+                        <Loader />
+                      </Center>
+                    ) : !cartItems?.length ? (
+                      <Stack align="center" py={SECTION_SPACING * 2}>
+                        <Text>No order items found.</Text>
+
+                        <AnchorNextLink href="/order/select-menu?menuTab=pizzas">
+                          <Group justify="center">
+                            <Button>Select items to order</Button>
+                          </Group>
+                        </AnchorNextLink>
+                      </Stack>
+                    ) : (
+                      <Stack gap={'xs'} py={'md'}>
+                        {cartItems?.map((ci, i) => {
+                          const variant = productVariants?.find(
+                            (vi) => vi.id == ci.productVariantId,
+                          );
+                          const product = products?.find((pi) => pi.id == variant?.productId);
+
+                          return (
+                            <Group key={i} justify="space-between" fz={'sm'} c={'dark.1'} fw={500}>
+                              <Text inherit>
+                                {product?.title} ({ci.quantity})
+                              </Text>
+
+                              <Text inherit ta={'end'}>
+                                <NumberFormatter value={(variant?.price || 0) * ci.quantity} />
+                                /-
+                              </Text>
+                            </Group>
+                          );
+                        })}
+                      </Stack>
+                    )}
+                  </ScrollArea>
+
+                  <Box px={'md'}>
+                    <Divider />
+                  </Box>
+                </div>
+
+                <Group justify="space-between" px={'md'} c={'white'} fw={'bold'}>
+                  <Text inherit>Total:</Text>
+
+                  <Text component="span" inherit ta={'end'}>
+                    Kshs. <NumberFormatter value={getSum()} />
+                  </Text>
+                </Group>
+
+                <Group grow px={'md'}>
+                  <Button
+                    onClick={async (e) => {
+                      if (!isReadyForConfirmation) {
+                        e.preventDefault();
+
+                        showNotification({
+                          title: 'Not Ready For Checkout',
+                          desc: `Verify form details and order items`,
+                          variant: Variant.WARNING,
+                        });
+
+                        return;
+                      }
+
+                      let delivery: DeliveryGet | undefined;
+
+                      if (orderDetails) {
+                        // if (currentProfile && !currentProfile.phone) {
+                        //   profileUpdate({ ...currentProfile, phone: orderDetails.customerPhone });
+                        // }
+
+                        const { orderDelivery } = await orderUpdate(
+                          { ...orderDetails, orderStatus: OrderStatus.PREPARING },
+                          { placement: true },
+                        );
+
+                        delivery = orderDelivery;
+                      }
+
+                      setOrderDetails(defaultOrderDetails);
+
+                      if (orderDetails && orderDetails.customerPhone && store) {
+                        handleOrderNotification({
+                          order: { ...orderDetails },
+                          total: getSum(),
+                          store,
+                          verificationCode: delivery?.verificationCode,
+                        });
+                      }
+
+                      router.push(
+                        `/order/confirmed?${PARAM_NAME.ORDER_CONFIRMED}=${orderDetails?.id}`,
+                      );
+                    }}
+                    color="pri"
+                    size="sm"
+                    fullWidth
+                    disabled={!isReadyForConfirmation}
+                  >
+                    <Text component="span" inherit>
+                      Pay Kshs. <NumberFormatter value={getSum()} /> (
+                      {orderDetails?.paymentMethod == OrderPaymentMethod.ONLINE ? 'M-Pesa' : 'Cash'}
+                      )
+                    </Text>
+                  </Button>
+                </Group>
+
+                <Group px={'md'} gap={'xs'}>
+                  <Box c={'sec'}>
+                    <IconClock size={ICON_SIZE - 2} stroke={ICON_STROKE_WIDTH} />
+                  </Box>
+
+                  <Text inherit fz={'xs'} c={'dark.1'}>
+                    Arrives in 30 - 45 minutes.
+                  </Text>
+                </Group>
+
+                <Group p={'md'} pt={0} gap={'xs'}>
+                  <Card p={'xs'} bg={'transparent'} withBorder>
+                    <Group gap={'xs'} wrap="nowrap" align="start">
+                      <Box c={'ter'}>
+                        <IconStar size={ICON_SIZE - 2} stroke={ICON_STROKE_WIDTH} />
+                      </Box>
+
+                      <Text inherit fz={'xs'} c={'dark.1'}>
+                        You&apos;ll earn 2 medium points with this order. 10 more to go for a free
+                        medium pizza.
+                      </Text>
+                    </Group>
+                  </Card>
+                </Group>
+              </Stack>
+            </Card>
+          </Stack>
+        </GridCol>
+      </Grid>
     </LayoutSection>
   );
 }

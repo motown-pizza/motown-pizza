@@ -8,32 +8,29 @@ import { sortArray } from '@repo/utils';
 import { Order } from '@repo/types';
 import { capitalizeWords } from '@repo/utils';
 
-export default function Pizzas({ options }: { options?: { withAside?: boolean } }) {
+export default function Pizzas({
+  options,
+}: {
+  options?: { withAside?: boolean; filterBy?: ProductDietaryType };
+}) {
   const { products } = useStoreProduct();
 
-  // 1. Filter and Sort
   const pizzas = sortArray(
-    products?.filter((p) => p.type === ProductType.PIZZA) || [],
+    products?.filter((p) => {
+      if (p.status != 'ACTIVE') return false;
+      if (p.type !== ProductType.PIZZA) return false;
+      if (!p.dietaryClass) return false;
+      if (!options?.filterBy) return true;
+
+      const includesClass = options.filterBy.includes(p.dietaryClass.toLowerCase());
+      const includesSubClass =
+        p.dietarySubClass && options.filterBy.includes(p.dietarySubClass.toLowerCase());
+
+      if (includesClass || includesSubClass) return true;
+      return false;
+    }) || [],
     (i) => i.updatedAt,
     Order.DESCENDING,
-  );
-
-  type CustomGroup = 'BEEF' | 'CHICKEN' | 'VEGGIE';
-
-  const groupedPizzas = pizzas.reduce(
-    (acc, pizza) => {
-      let key: CustomGroup = 'VEGGIE';
-
-      if (pizza.dietarySubClass === ProductDietarySubType.BEEF) {
-        key = 'BEEF';
-      } else if (pizza.dietarySubClass === ProductDietarySubType.CHICKEN) {
-        key = 'CHICKEN';
-      }
-
-      acc[key].push(pizza);
-      return acc;
-    },
-    { BEEF: [], CHICKEN: [], VEGGIE: [] } as Record<CustomGroup, typeof pizzas>,
   );
 
   return products === undefined ? (
@@ -57,41 +54,22 @@ export default function Pizzas({ options }: { options?: { withAside?: boolean } 
       ))}
     </Grid> */}
 
-      {Object.entries(groupedPizzas).map(([diet, items]) => (
-        <section key={diet}>
-          <Divider
-            label={capitalizeWords(`${diet} Pizzas`)}
-            my={SECTION_SPACING}
-            w={{ base: '100%', md: '60%' }}
-            mx={'auto'}
-            color="pri"
-            styles={{
-              label: {
-                color: 'var(--mantine-color-sec-6)',
-                fontSize: 'var(--mantine-h2-font-size)',
-                fontWeight: 'bold',
-              },
+      <Grid>
+        {pizzas.map((p, i) => (
+          <GridCol
+            key={p.id || i} // Prefer p.id over index if available
+            span={{
+              base: 12,
+              xs: 6,
+              sm: 4,
+              md: options?.withAside ? 6 : 4,
+              lg: options?.withAside ? 4 : 3,
             }}
-          />
-
-          <Grid>
-            {items.map((p, i) => (
-              <GridCol
-                key={p.id || i} // Prefer p.id over index if available
-                span={{
-                  base: 12,
-                  xs: 6,
-                  sm: 4,
-                  md: options?.withAside ? 6 : 4,
-                  // xl: options?.withAside ? 4 : 3,
-                }}
-              >
-                <CardMenuMain props={p} />
-              </GridCol>
-            ))}
-          </Grid>
-        </section>
-      ))}
+          >
+            <CardMenuMain props={p} />
+          </GridCol>
+        ))}
+      </Grid>
     </>
   );
 }

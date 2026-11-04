@@ -115,7 +115,7 @@ export const getAppTheme = (params?: AppThemeProps) => {
     cursorType: 'pointer',
 
     headings: {
-      fontFamily: 'var(--font-montserrat)',
+      fontFamily: 'var(--font-archivo-black)',
     },
 
     components: {

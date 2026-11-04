@@ -114,7 +114,7 @@ export default function About() {
             </Text>
 
             <Group justify="center">
-              <AnchorNextLink href="/order/select-store?orderType=delivery">
+              <AnchorNextLink href="/order/select-menu">
                 <Button
                   color="ter"
                   size="md"
@@ -124,7 +124,7 @@ export default function About() {
                 </Button>
               </AnchorNextLink>
 
-              <AnchorNextLink href="/order/select-store?orderType=collection">
+              <AnchorNextLink href="/order/select-menu">
                 <Button
                   color="blue"
                   size="md"

@@ -20,6 +20,7 @@ export const images = {
   },
 
   menu: `${imageUrl}/motown-menu-2026.png`,
+  pizza: `${imageUrl}/pizza.png`,
   mpesa: `${imageUrl}/mpesa.png`,
 
   home: {

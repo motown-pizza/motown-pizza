@@ -33,6 +33,7 @@ export default function Main() {
         id={'footer-main'}
         containerized={false}
         padded={SECTION_SPACING}
+        pb={SECTION_SPACING * 2}
         bg={'var(--mantine-color-dark-9)'}
       >
         <LayoutSection id={'footer-main'}>
@@ -133,9 +134,9 @@ const linkGroups = [
   {
     title: 'Menu',
     links: [
-      { label: 'Pizzas', link: '/menu?menuTab=pizzas' },
-      { label: 'Sides', link: '/menu?menuTab=sides' },
-      { label: 'Drinks', link: '/menu?menuTab=drinks' },
+      { label: 'Pizzas', link: '/order/select-menu?menuTab=pizzas' },
+      { label: 'Sides', link: '/order/select-menu?menuTab=sides' },
+      { label: 'Drinks', link: '/order/select-menu?menuTab=drinks' },
     ],
   },
   {

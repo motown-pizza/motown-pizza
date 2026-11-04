@@ -33,6 +33,7 @@ export function CardOrderConfirmed({
 } & CardProps) {
   const { order, store } = props;
   const clipboard = useClipboard({ timeout: 1000 });
+  const orderTime = getRegionalDate(order?.createdAt || new Date());
 
   return (
     <Card bg={'var(--mantine-color-dark-9)'} withBorder p={{ base: 'md', md: 'xl' }} {...restProps}>
@@ -93,17 +94,21 @@ export function CardOrderConfirmed({
           </Badge>
         </Group>
 
-        <Divider variant="dashed" color="dark.4" />
+        {order?.customerAddress && (
+          <>
+            <Divider variant="dashed" color="dark.4" />
 
-        <Group justify="space-between" wrap="nowrap" align="end">
-          <Title order={3} fz={'sm'} fw={'normal'} c={'sec'}>
-            Name
-          </Title>
+            <Group justify="space-between" wrap="nowrap" align="end">
+              <Title order={3} fz={'sm'} fw={'normal'} c={'sec'}>
+                Address
+              </Title>
 
-          <Text ta={'end'} fz={'md'} fw={500}>
-            {capitalizeWords(order?.customerName || '')}
-          </Text>
-        </Group>
+              <Text ta={'end'} fz={'md'} fw={500}>
+                {capitalizeWords(order?.customerAddress)}
+              </Text>
+            </Group>
+          </>
+        )}
 
         <Divider variant="dashed" color="dark.4" />
 
@@ -133,11 +138,11 @@ export function CardOrderConfirmed({
 
         <Group justify="space-between" wrap="nowrap" align="end">
           <Title order={3} fz={'sm'} fw={'normal'} c={'sec'}>
-            Created
+            Ordered On
           </Title>
 
           <Text ta={'end'} fz={'md'} fw={500} lineClamp={1}>
-            {getRegionalDate(order?.createdAt || new Date()).date}
+            {orderTime.date}, {orderTime.time.toUpperCase()}
           </Text>
         </Group>
       </Stack>

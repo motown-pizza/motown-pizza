@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Montserrat, Geist_Mono } from 'next/font/google';
+import { Montserrat, Geist_Mono, Bebas_Neue, Archivo_Black } from 'next/font/google';
 import { APP_DESC, APP_NAME, getApiUrl } from '@repo/constants';
 import { ProviderMantine } from '@repo/ui';
 import { ProviderInitialize } from '@web/ui/provider/initialize';
@@ -8,6 +8,7 @@ import { ColorSchemeScript, MantineColorScheme, mantineHtmlProps } from '@mantin
 import { getAppTheme } from '@repo/constants';
 import { getAppResolver } from '@web/resolver';
 import { ColorScheme } from '@repo/types';
+import AffixMenu from '@web/ui/common/affixi/menu';
 
 import './globals.css';
 
@@ -23,6 +24,12 @@ import { createClientcloudbaseServer } from '@repo/cloudbase';
 const montserrat = Montserrat({
   variable: '--font-montserrat',
   subsets: ['latin'],
+});
+
+const archivoBlack = Archivo_Black({
+  variable: '--font-archivo-black',
+  subsets: ['latin'],
+  weight: ['400'],
 });
 
 const geistMono = Geist_Mono({
@@ -46,7 +53,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       lang="en"
       {...mantineHtmlProps}
       data-mantine-color-scheme={resolvedTheme}
-      className={`${montserrat.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${montserrat.variable} ${archivoBlack.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
         <meta charSet="UTF-8" />

@@ -1,8 +1,7 @@
-import { LayoutMain } from '@repo/ui';
-import { AffixNavbar } from '@repo/ui';
+'use client';
+
 import { LayoutSection } from '@repo/ui';
 import {
-  BackgroundImage,
   Box,
   Button,
   Card,
@@ -11,29 +10,52 @@ import {
   Grid,
   GridCol,
   Group,
-  Overlay,
   Stack,
-  Text,
   Title,
 } from '@mantine/core';
-import HeaderMain from '@web/ui/layout/header/main';
-import NavbarMain from '@web/ui/layout/navbar/main';
-import FooterMain from '@web/ui/layout/footer/main';
 import { AnchorNextLink } from '@repo/ui';
-import { OrderFulfilmentType } from '@repo/types';
 import { ImageDefault } from '@repo/ui';
-import { BASE_URL, images, PARAM_NAME } from '@repo/constants';
+import { defaultOrderDetails, images, stores } from '@repo/constants';
 import { SECTION_SPACING } from '@repo/constants';
-import TabDeliveryType from '@web/ui/common/tabs/order-type';
 import { APP_NAME } from '@repo/constants';
+import {
+  useOrderActions,
+  useProfileActions,
+  useStoreOrderPlacement,
+  useStoreProfile,
+  useStoreSession,
+} from '@repo/store';
+import { OrderFulfilmentType, OrderGet } from '@repo/types';
+import { generateUUID } from '@repo/utils';
 
 export default function Home() {
+  const session = useStoreSession((s) => s.session);
+  const profiles = useStoreProfile((s) => s.profiles);
+  const currentProfile = profiles?.find((pi) => pi.id == session?.id);
+
+  const { setOrderDetails } = useStoreOrderPlacement();
+  const { orderCreate } = useOrderActions();
+
+  const handleStartOrder = (fulfillmentType: OrderFulfilmentType) => {
+    const newOrderId = generateUUID();
+    const fullName = `${currentProfile?.firstName} ${currentProfile?.lastName}`.trim();
+    const newOrder: OrderGet = {
+      ...defaultOrderDetails,
+      id: newOrderId,
+      customerName: fullName,
+      fulfillmentType,
+    };
+
+    orderCreate(newOrder, { stores });
+    setOrderDetails(newOrder);
+  };
+
   return (
-    <HomeLayout>
+    <div>
       <LayoutSection id="home-page-intro" margined={SECTION_SPACING} containerized={'xl'}>
         <Grid gap={0} pos={'relative'}>
           <GridCol span={{ base: 12, md: 2 }}>
-            <Box pos={'sticky'} top={SECTION_SPACING * 1.5}>
+            <Box pos={'sticky'} top={SECTION_SPACING * 2}>
               <Card bg={'transparent'} withBorder style={{ borderStyle: 'dashed' }}>
                 <Stack>
                   <Title order={1} fz={'sm'} tt={'uppercase'} ta={'center'} c={'sec'}>
@@ -42,10 +64,12 @@ export default function Home() {
 
                   <Divider />
 
-                  <AnchorNextLink
-                    href={`/?${PARAM_NAME.ORDER_TYPE_TAB}=${OrderFulfilmentType.DELIVERY.toLowerCase()}#home-start-order`}
-                  >
-                    <Button fullWidth size="md">
+                  <AnchorNextLink href={`/order/select-menu`}>
+                    <Button
+                      fullWidth
+                      size="md"
+                      onClick={() => handleStartOrder(OrderFulfilmentType.DELIVERY)}
+                    >
                       Delivery
                     </Button>
                   </AnchorNextLink>
@@ -61,30 +85,17 @@ export default function Home() {
                     }}
                   />
 
-                  <AnchorNextLink
-                    href={`/?${PARAM_NAME.ORDER_TYPE_TAB}=${OrderFulfilmentType.COLLECTION.toLowerCase()}#home-start-order`}
-                  >
-                    <Button fullWidth size="md">
+                  <AnchorNextLink href={`/order/select-menu`}>
+                    <Button
+                      fullWidth
+                      size="md"
+                      onClick={() => handleStartOrder(OrderFulfilmentType.COLLECTION)}
+                    >
                       Collection
                     </Button>
                   </AnchorNextLink>
                 </Stack>
               </Card>
-
-              {/* <AnchorNextLink
-                href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-                underline="never"
-              >
-                <ImageCard>
-                  <ImageDefault
-                    src={images.theme.vibes}
-                    alt="Double Offer"
-                    height={{ base: 290 }}
-                    width={'100%'}
-                    // fit="contain"
-                  />
-                </ImageCard>
-              </AnchorNextLink> */}
             </Box>
           </GridCol>
 
@@ -99,10 +110,7 @@ export default function Home() {
           </GridCol>
 
           <GridCol span={{ base: 12, md: 7 }}>
-            <AnchorNextLink
-              href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-              underline="never"
-            >
+            <AnchorNextLink href={`/order/select-menu`} underline="never">
               <ImageDefault
                 src={images.theme.menu.tuesday}
                 alt={APP_NAME.WEB}
@@ -117,10 +125,7 @@ export default function Home() {
               <Divider color="pri" mt={'md'} mb={'md'} />
             </Box>
 
-            <AnchorNextLink
-              href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-              underline="never"
-            >
+            <AnchorNextLink href={`/order/select-menu`} underline="never">
               <ImageDefault
                 src={images.theme.menu.thursday}
                 alt={APP_NAME.WEB}
@@ -135,10 +140,7 @@ export default function Home() {
               <Divider color="ter" mt={'md'} mb={'lg'} />
             </Box>
 
-            <AnchorNextLink
-              href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-              underline="never"
-            >
+            <AnchorNextLink href={`/order/select-menu`} underline="never">
               <ImageDefault
                 src={images.theme.menu.sunday}
                 alt={APP_NAME.WEB}
@@ -157,10 +159,7 @@ export default function Home() {
               <GridCol span={{ base: 12, md: 6 }}>
                 <Grid>
                   <GridCol span={{ base: 12, xs: 6, md: 12 }}>
-                    <AnchorNextLink
-                      href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-                      underline="never"
-                    >
+                    <AnchorNextLink href={`/order/select-menu`} underline="never">
                       <ImageCard>
                         <ImageDefault
                           src={images.theme.menu.beefPizza}
@@ -180,10 +179,7 @@ export default function Home() {
                   </GridCol>
 
                   <GridCol span={{ base: 12, xs: 6, md: 12 }}>
-                    <AnchorNextLink
-                      href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-                      underline="never"
-                    >
+                    <AnchorNextLink href={`/order/select-menu`} underline="never">
                       <ImageCard>
                         <ImageDefault
                           src={images.theme.menu.veggiePizza}
@@ -201,10 +197,7 @@ export default function Home() {
               <GridCol span={{ base: 12, md: 6 }}>
                 <Grid>
                   <GridCol span={{ base: 12, xs: 6, md: 12 }}>
-                    <AnchorNextLink
-                      href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-                      underline="never"
-                    >
+                    <AnchorNextLink href={`/order/select-menu`} underline="never">
                       <ImageCard>
                         <ImageDefault
                           src={images.theme.menu.chickenPizza}
@@ -224,10 +217,7 @@ export default function Home() {
                   </GridCol>
 
                   <GridCol span={{ base: 12, xs: 6, md: 12 }}>
-                    <AnchorNextLink
-                      href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-                      underline="never"
-                    >
+                    <AnchorNextLink href={`/order/select-menu`} underline="never">
                       <ImageCard>
                         <ImageDefault
                           src={images.theme.menu.addons}
@@ -251,10 +241,7 @@ export default function Home() {
               <GridCol span={{ base: 12 }}>
                 <Grid>
                   <GridCol span={{ base: 12, xs: 8, sm: 6, md: 8 }}>
-                    <AnchorNextLink
-                      href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-                      underline="never"
-                    >
+                    <AnchorNextLink href={`/order/select-menu`} underline="never">
                       <ImageCard>
                         <ImageDefault
                           src={images.theme.menu.prices}
@@ -278,11 +265,8 @@ export default function Home() {
           </GridCol>
 
           <GridCol span={{ base: 12, md: 2 }} visibleFrom="md">
-            <Box pos={'sticky'} top={SECTION_SPACING * 1.5}>
-              <AnchorNextLink
-                href={`/order/select-store?orderType=${OrderFulfilmentType.DELIVERY.toLowerCase()}`}
-                underline="never"
-              >
+            <Box pos={'sticky'} top={SECTION_SPACING * 2}>
+              <AnchorNextLink href={`/order/select-menu`} underline="never">
                 <ImageCard>
                   <ImageDefault
                     src={images.theme.deals}
@@ -298,7 +282,7 @@ export default function Home() {
         </Grid>
       </LayoutSection>
 
-      <LayoutSection
+      {/* <LayoutSection
         id="home-start-order"
         pt={SECTION_SPACING * 2}
         mb={SECTION_SPACING * 2}
@@ -326,7 +310,7 @@ export default function Home() {
 
           <TabDeliveryType />
         </Stack>
-      </LayoutSection>
+      </LayoutSection> */}
 
       <Divider />
 
@@ -340,21 +324,7 @@ export default function Home() {
           mode="grid"
         />
       </Group>
-    </HomeLayout>
-  );
-}
-
-async function HomeLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <LayoutMain header={<HeaderMain />} nav={<NavbarMain />} footer={<FooterMain />}>
-      <div>
-        <main>{children}</main>
-
-        <AffixNavbar>
-          <NavbarMain />
-        </AffixNavbar>
-      </div>
-    </LayoutMain>
+    </div>
   );
 }
 

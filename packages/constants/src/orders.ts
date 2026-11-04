@@ -16,6 +16,7 @@ const now = new Date();
 export const defaultOrderDetails: OrderGet = {
   id: 'new',
   customerName: '',
+  customerAddress: '',
   customerPhone: '',
   etaEstimate: '',
   fulfillmentType: OrderFulfilmentType.DELIVERY,

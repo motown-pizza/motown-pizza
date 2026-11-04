@@ -1,0 +1,32 @@
+.root {
+  position: relative;
+  padding: var(--mantine-spacing-md);
+  transition: all 150ms ease;
+  border-width: 2;
+
+  &[data-checked] {
+    border-color: var(--mantine-color-ter-6);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background-color: var(--mantine-color-gray-0);
+    }
+
+    @mixin dark {
+      background-color: var(--mantine-color-dark-6);
+    }
+  }
+}
+
+.label {
+  font-size: var(--mantine-font-size-sm);
+  font-weight: bold;
+  line-height: 1.3;
+  color: var(--mantine-color-bright);
+}
+
+.description {
+  color: var(--mantine-color-dimmed);
+  font-size: var(--mantine-font-size-xs);
+}

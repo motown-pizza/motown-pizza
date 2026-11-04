@@ -209,16 +209,18 @@ function CardRecentOrders() {
 }
 
 function CardOrderRecent({ props }: { props: OrderGet }) {
+  const customerName = props.customerName || 'Anonymous';
+
   return (
     <Card bg={'transparent'} padding={0} px={0} py={5}>
       <Group justify="space-between">
         <Group gap={'xs'}>
           <div>
-            <Avatar key={props.customerName} name={props.customerName} color="initials" />
+            <Avatar key={customerName} name={customerName} color="initials" />
           </div>
 
           <div>
-            <Text inherit>{capitalizeWords(props.customerName)}</Text>
+            <Text inherit>{capitalizeWords(customerName)}</Text>
             <Text inherit c={'dimmed'} fz={'sm'}>
               {props.customerPhone}
             </Text>

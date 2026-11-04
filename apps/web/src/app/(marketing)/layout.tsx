@@ -2,6 +2,8 @@ import React from 'react';
 import { Metadata } from 'next';
 import { LayoutMain } from '@repo/ui';
 import { AffixNavbar } from '@repo/ui';
+import AffixMenu from '@web/ui/common/affixi/menu';
+import AffixCheckout from '@web/ui/common/affixi/checkout';
 import { APP_NAME } from '@repo/constants';
 // import HeaderMain from '@web/ui/layout/header/main';
 import NavbarMain from '@web/ui/layout/navbar/main';
@@ -27,6 +29,9 @@ export default async function LayoutMarketing({
       <AffixNavbar>
         <NavbarMain />
       </AffixNavbar>
+
+      <AffixMenu />
+      <AffixCheckout />
     </LayoutMain>
   );
 }

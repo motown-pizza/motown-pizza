@@ -17,6 +17,7 @@ import {
   ThemeIcon,
   Divider,
   ScrollAreaAutosize,
+  Card,
 } from '@mantine/core';
 import { IconChevronDown, IconCurrentLocation, IconMapPin, IconPhone } from '@tabler/icons-react';
 import {
@@ -32,8 +33,17 @@ import { useGeolocation } from '@repo/hooks';
 import { getStoresSortedByProximity } from '@web/utils/sort';
 import CardStore from '../cards/store/location';
 import { getFromLocalStorage, removeFromLocalStorage, saveToLocalStorage } from '@repo/utils';
+import { useStoreOrderPlacement } from '@repo/store';
 
-export default function PopoverGeolocation({ children }: { children?: React.ReactNode }) {
+export default function PopoverGeolocation({
+  options,
+  children,
+}: {
+  options?: { checkout?: boolean };
+  children?: React.ReactNode;
+}) {
+  const { orderDetails, setOrderDetails } = useStoreOrderPlacement();
+
   const [opened, setOpened] = useState(false);
 
   const {
@@ -81,6 +91,13 @@ export default function PopoverGeolocation({ children }: { children?: React.Reac
     if (!localLocation || localLocation.id != resolvedStore) {
       saveToLocalStorage(LOCAL_STORAGE_NAME.STORE, resolvedStore?.id);
     }
+
+    if (orderDetails === undefined) return;
+    if (orderDetails === null) return;
+
+    if (resolvedStore.id != orderDetails.storeId) {
+      setOrderDetails({ ...orderDetails, storeId: resolvedStore.id });
+    }
   }, [resolvedStore]);
 
   useEffect(() => {
@@ -115,17 +132,44 @@ export default function PopoverGeolocation({ children }: { children?: React.Reac
       >
         <PopoverTarget>
           <span onClick={() => setOpened((o) => !o)}>
-            {children || (
-              <Button
-                variant="transparent"
-                className="bg-[var(--mantine-color-dark-light)]/30!"
-                leftSection={<IconMapPin size={ICON_SIZE - 2} stroke={2} />}
-                rightSection={<IconChevronDown size={ICON_SIZE - 4} stroke={2} />}
-                loading={resolvedStore == null}
-              >
-                {resolvedStore?.locationShort}
-              </Button>
-            )}
+            {children ||
+              (options?.checkout ? (
+                <Card bg={'dark.9'} withBorder>
+                  <Group justify="space-between">
+                    <Group>
+                      <IconMapPin size={ICON_SIZE - 2} stroke={2} />
+
+                      <Stack gap={0}>
+                        <Title order={3} fz={'sm'} c={'white'}>
+                          {resolvedStore?.locationShort} Store
+                        </Title>
+                        <Text fz={'xs'} c={'dimmed'}>
+                          {resolvedStore?.phone}
+                        </Text>
+                      </Stack>
+                    </Group>
+
+                    <Group justify="end">
+                      <Button color="dark" c={'sec'}>
+                        Change Store
+                      </Button>
+                    </Group>
+                  </Group>
+                </Card>
+              ) : (
+                <Button
+                  variant={options?.checkout ? undefined : 'transparent'}
+                  className={
+                    options?.checkout ? undefined : 'bg-[var(--mantine-color-dark-light)]/30!'
+                  }
+                  leftSection={<IconMapPin size={ICON_SIZE - 2} stroke={2} />}
+                  rightSection={<IconChevronDown size={ICON_SIZE - 4} stroke={2} />}
+                  loading={resolvedStore == null}
+                  fullWidth={options?.checkout}
+                >
+                  {resolvedStore?.locationShort}
+                </Button>
+              ))}
           </span>
         </PopoverTarget>
 
@@ -265,14 +309,16 @@ export default function PopoverGeolocation({ children }: { children?: React.Reac
         </PopoverDropdown>
       </Popover>
 
-      <Button
-        component={'a'}
-        href={`tel:${resolvedStore?.phone}`}
-        leftSection={<IconPhone size={ICON_SIZE - 2} stroke={2} />}
-        variant="transparent"
-      >
-        {resolvedStore?.phone}
-      </Button>
+      {!options?.checkout && (
+        <Button
+          component={'a'}
+          href={`tel:${resolvedStore?.phone}`}
+          leftSection={<IconPhone size={ICON_SIZE - 2} stroke={2} />}
+          variant="transparent"
+        >
+          {resolvedStore?.phone}
+        </Button>
+      )}
     </>
   );
 }

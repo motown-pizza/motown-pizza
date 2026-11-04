@@ -317,8 +317,9 @@ model Order {
   orderTime          OrderTime           @map("order_time")
   paymentMethod      OrderPaymentMethod  @map("payment_method")
   etaEstimate        String?             @map("eta_estimate")
-  customerName       String              @map("customer_name")
-  customerPhone      String?             @map("customer_phone")
+  customerAddress    String?             @map("customer_address")
+  customerName       String?             @map("customer_name")
+  customerPhone      String              @map("customer_phone")
   guestCount         Int?                @map("guest_count")
   trackingCode       String              @map("tracking_code") // (eg. NYC240115DK7QX9M2)
 

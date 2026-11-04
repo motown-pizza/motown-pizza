@@ -21,141 +21,23 @@ import { IconCheck } from '@tabler/icons-react';
 import { AccordionFaq } from '@repo/ui';
 import { faqLoyalty } from '@web/data/faq';
 import { LayoutIntroSection } from '@repo/ui';
+import PartialLoyalty from '@web/ui/partial/page/loyalty';
 
 export const metadata: Metadata = { title: 'Loyalty Program' };
 
 export default function LoyaltyProgram() {
   return (
     <div>
-      <LayoutSection id="page-loyalty-program-content" padded containerized={'md'}>
-        <LayoutIntroSection
-          props={{
-            subTitle: 'Loyalty Program',
-            title: 'Slice Points Loyalty Program',
-            desc: 'Love pizza? Get rewarded for it.',
-          }}
-        />
+      <PartialLoyalty />
 
-        <Stack mt={SECTION_SPACING} gap={'xl'}>
-          <Text>
-            The MoTown Slice Points Loyalty Program lets you earn points every time you buy a pizza
-            and turn those points into FREE pizza.
-          </Text>
-
-          <Stack>
-            <Title order={2} fz={'xl'} c={'blue'}>
-              How To Join
-            </Title>
-
-            <Text>Joining is simple and free:</Text>
-
-            <List>
-              <ListItem>Order at any MoTown Pizza store or online</ListItem>
-              <ListItem>Give us your name, phone number and Email</ListItem>
-              <ListItem>
-                You’re automatically registered and start earning points immediately
-              </ListItem>
-            </List>
-
-            <Text>No complicated forms. No hidden costs.</Text>
-          </Stack>
-
-          <Stack>
-            <Title order={2} fz={'xl'} c={'blue'}>
-              How You Earn Points
-            </Title>
-
-            <Text>You earn 1 point for every pizza you buy.</Text>
-
-            <Text>Points are tracked by pizza size:</Text>
-
-            <List>
-              <ListItem>Small Pizza → Small Points</ListItem>
-              <ListItem>Medium Pizza → Medium Points</ListItem>
-              <ListItem>Large Pizza → Large Points</ListItem>
-              <ListItem>Long Play (Extra Large) → XL Points</ListItem>
-            </List>
-
-            <Text>Points from different sizes cannot be mixed.</Text>
-          </Stack>
-
-          <Stack>
-            <Title order={2} fz={'xl'} c={'blue'}>
-              How the Free Pizza Works
-            </Title>
-
-            <Text>
-              Collect 12 points of the same size and you’ll receive:{' '}
-              <Text component="span" inherit fw={'bold'} c={'ter'}>
-                1 FREE pizza of that same size
-              </Text>
-              .
-            </Text>
-
-            <Text>
-              Example:{' '}
-              <Text component="span" inherit fw={'bold'} c={'sec'}>
-                12 Medium pizza points = 1 FREE Medium pizza
-              </Text>
-              .
-            </Text>
-          </Stack>
-
-          <Stack>
-            <Title order={2} fz={'xl'} c={'blue'}>
-              MoTown Meltdown (Signature Pizza)
-            </Title>
-
-            <Text>
-              Because of its special cheese-filled crust, the MoTown Meltdown has its own loyalty
-              system:
-            </Text>
-
-            <List>
-              <ListItem>Available in Medium and Large only</ListItem>
-              <ListItem>Earns separate Meltdown points</ListItem>
-              <ListItem>Requires 12 Meltdown points to earn a FREE Meltdown pizza</ListItem>
-            </List>
-
-            <Text>Points from different sizes cannot be mixed.</Text>
-          </Stack>
-
-          <Divider my={SECTION_SPACING} />
-
-          <Stack>
-            <Title order={2} fz={'xl'} c={'blue'}>
-              Simple Terms & Conditions
-            </Title>
-
-            <Text>We believe in keeping things clear:</Text>
-
-            <List>
-              <ListItem>One point per pizza purchased</ListItem>
-              <ListItem>Points are separated by size</ListItem>
-              <ListItem>12 points = 1 free pizza of the same size</ListItem>
-              <ListItem>Points expire after 6 months of no activity</ListItem>
-              <ListItem>Free pizzas come from the standard loyalty menu</ListItem>
-              <ListItem>
-                Extras like additional toppings, extra cheese, or stuffed crust upgrades will be
-                charged
-              </ListItem>
-              <ListItem>Points cannot be transferred or exchanged for cash</ListItem>
-              <ListItem>One account per phone number</ListItem>
-            </List>
-
-            <Text>
-              MoTown Pizza may update the loyalty program from time to time to keep it fair for
-              everyone.
-            </Text>
-          </Stack>
-        </Stack>
-
+      <LayoutSection id="page-loyalty-program-content" margined containerized={'md'}>
         <Stack mt={SECTION_SPACING}>
           <Card
             padding={0}
             p={{ base: 'md', xs: 'xl' }}
             py={{ base: 'xl' }}
-            bg={'ter.7'}
+            bg={'dark.9'}
+            withBorder
             c={'white'}
           >
             <Flex
@@ -209,23 +91,15 @@ export default function LoyaltyProgram() {
               </Group>
             </Flex>
 
-            <Text fz={'sm'} ta={'center'} mt={'md'}>
+            <Text fz={'sm'} ta={'center'} mt={'xl'}>
               MoTown Pizza – Every Slice Gets You Closer
             </Text>
+
+            <Text fz={'sm'} ta={'center'} mt={'md'}>
+              MoTown Pizza may update the loyalty program from time to time to keep it fair for
+              everyone.
+            </Text>
           </Card>
-        </Stack>
-      </LayoutSection>
-
-      <LayoutSection id="page-loyalty-program-faq" padded containerized={'md'}>
-        <LayoutIntroSection
-          props={{
-            subTitle: "FAQ's",
-            title: 'Slice Points Loyalty Program – FAQs',
-          }}
-        />
-
-        <Stack mt={'xl'}>
-          <AccordionFaq props={{ items: faqLoyalty }} />
         </Stack>
       </LayoutSection>
     </div>
