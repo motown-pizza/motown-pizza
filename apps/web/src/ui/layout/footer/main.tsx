@@ -134,9 +134,9 @@ const linkGroups = [
   {
     title: 'Menu',
     links: [
-      { label: 'Pizzas', link: '/order/select-menu?menuTab=pizzas' },
-      { label: 'Sides', link: '/order/select-menu?menuTab=sides' },
-      { label: 'Drinks', link: '/order/select-menu?menuTab=drinks' },
+      { label: 'Pizzas', link: '/order/select-menu?menuTab=pizzas-beef#page-select-menu-content' },
+      { label: 'Sides', link: '/order/select-menu?menuTab=sides-addons#page-select-menu-content' },
+      { label: 'Drinks', link: '/order/select-menu?menuTab=drinks#page-select-menu-content' },
     ],
   },
   {

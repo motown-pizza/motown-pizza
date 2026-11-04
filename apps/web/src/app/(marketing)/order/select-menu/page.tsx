@@ -51,13 +51,15 @@ export default function SelectMenu() {
                 45 minutes.
               </Text>
 
-              <Flex align={{ xs: 'center' }} direction={{ base: 'column', xs: 'row' }} gap={'xs'}>
-                <Button>Order Now</Button>
+              <Group gap={'xs'}>
+                <Button component="a" href="#page-select-menu-content">
+                  Order Now
+                </Button>
 
                 <Button color="dark" component={AnchorNextLink} href="/loyalty-program">
                   See Loyalty Rewards
                 </Button>
-              </Flex>
+              </Group>
             </Stack>
           </GridCol>
 
@@ -138,7 +140,7 @@ export default function SelectMenu() {
 
       <LayoutSection id="page-select-menu-content" containerized={false} mb={SECTION_SPACING}>
         <Grid gap={'xl'}>
-          <GridCol span={{ base: 12 }}>
+          <GridCol span={{ base: 12 }} pt={{ base: SECTION_SPACING, xs: 0 }}>
             <TabsMenu options={{ ordering: true }} />
           </GridCol>
         </Grid>

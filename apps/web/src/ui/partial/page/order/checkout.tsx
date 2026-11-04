@@ -89,6 +89,8 @@ export default function Checkout() {
         ? false
         : validators.phone(orderDetails.customerPhone) == false);
 
+  const sideProducts = products?.filter((pi) => pi.type == ProductType.SIDE);
+
   return (
     <LayoutSection id="page-checkout-review-content" margined mt={SECTION_SPACING / 2}>
       <Title order={1} c={'sec'}>
@@ -120,7 +122,7 @@ export default function Checkout() {
                   <Stack align="center" py={SECTION_SPACING * 2}>
                     <Text>No order items found.</Text>
 
-                    <AnchorNextLink href="/order/select-menu?menuTab=pizzas">
+                    <AnchorNextLink href="/order/select-menu?menuTab=pizzas-beef#page-select-menu-content">
                       <Group justify="center">
                         <Button>Select items to order</Button>
                       </Group>
@@ -149,24 +151,22 @@ export default function Checkout() {
               </Box>
 
               <Stack mt={'md'} mih={188.4}>
-                {cartItems === undefined ? (
+                {products === undefined ? (
                   <Center py={SECTION_SPACING}>
                     <Loader />
                   </Center>
-                ) : !cartItems?.length ? (
+                ) : !sideProducts?.length ? (
                   <Stack align="center" py={SECTION_SPACING}>
-                    <Text>No menu items found.</Text>
+                    <Text>No sides found.</Text>
                   </Stack>
                 ) : (
                   <ScrollArea scrollbars={'x'} pb={'md'}>
                     <Group wrap="nowrap" px={'md'}>
-                      {products
-                        ?.filter((pi) => pi.type == ProductType.SIDE)
-                        ?.map((pi) => (
-                          <Box key={pi.id} miw={200}>
-                            <CardMenuMain props={pi} options={{ small: true }} />
-                          </Box>
-                        ))}
+                      {sideProducts?.map((pi) => (
+                        <Box key={pi.id} miw={{ base: 160, md: 200 }}>
+                          <CardMenuMain props={pi} options={{ small: true }} />
+                        </Box>
+                      ))}
                     </Group>
                   </ScrollArea>
                 )}
@@ -209,6 +209,7 @@ export default function Checkout() {
 
                 <Box display={orderDetails?.fulfillmentType == 'DELIVERY' ? undefined : 'none'}>
                   <Textarea
+                    withAsterisk
                     label="Delivery address"
                     placeholder="Rhapta Road, Westlands, Nairobi"
                     minRows={1}
@@ -227,6 +228,7 @@ export default function Checkout() {
 
                 <div>
                   <Textarea
+                    withAsterisk
                     label="Phone number"
                     placeholder="Phone number"
                     minRows={1}
@@ -245,6 +247,7 @@ export default function Checkout() {
 
                 <div>
                   <Textarea
+                    withAsterisk
                     label="Name"
                     placeholder="Name"
                     minRows={1}
@@ -308,7 +311,7 @@ export default function Checkout() {
                       <Stack align="center" py={SECTION_SPACING * 2}>
                         <Text>No order items found.</Text>
 
-                        <AnchorNextLink href="/order/select-menu?menuTab=pizzas">
+                        <AnchorNextLink href="/order/select-menu?menuTab=pizzas-beef#page-select-menu-content">
                           <Group justify="center">
                             <Button>Select items to order</Button>
                           </Group>
@@ -360,7 +363,7 @@ export default function Checkout() {
 
                         showNotification({
                           title: 'Not Ready For Checkout',
-                          desc: `Verify form details and order items`,
+                          desc: `Empty cart or invalid phone number, address, or name`,
                           variant: Variant.WARNING,
                         });
 
@@ -400,7 +403,7 @@ export default function Checkout() {
                     color="pri"
                     size="sm"
                     fullWidth
-                    disabled={!isReadyForConfirmation}
+                    // disabled={!isReadyForConfirmation}
                   >
                     <Text component="span" inherit>
                       Pay Kshs. <NumberFormatter value={getSum()} /> (

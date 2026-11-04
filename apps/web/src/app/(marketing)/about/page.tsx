@@ -123,16 +123,6 @@ export default function About() {
                   Order Online
                 </Button>
               </AnchorNextLink>
-
-              <AnchorNextLink href="/order/select-menu">
-                <Button
-                  color="blue"
-                  size="md"
-                  leftSection={<IconPizza size={ICON_SIZE + 4} stroke={ICON_STROKE_WIDTH} />}
-                >
-                  View Our Stores
-                </Button>
-              </AnchorNextLink>
             </Group>
 
             <Divider w={'100%'} color="sec" />

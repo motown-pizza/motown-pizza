@@ -152,7 +152,7 @@ export const useOrderStart = (params: { storeId: string; stores: any[] }) => {
     const newOrder = await orderCreate(orderObject, { stores: params.stores });
     setOrderDetails({ ...orderObject, ...newOrder } as OrderGet);
 
-    router.push('/order/select-menu?menuTab=pizzas');
+    router.push('/order/select-menu?menuTab=pizzas-beef#page-select-menu-content');
   };
 
   return {

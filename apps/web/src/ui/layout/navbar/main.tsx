@@ -41,7 +41,11 @@ export default function Main() {
   const [scroll, scrollTo] = useWindowScroll();
 
   return (
-    <LayoutSection id={'navbar-main'} bg={'var(--mantine-color-pri-6)'} padded={'sm'}>
+    <LayoutSection
+      id={'navbar-main'}
+      bg={'var(--mantine-color-pri-6)'}
+      py={{ base: 'xs', md: 'sm' }}
+    >
       <Flex justify="space-between" style={{ borderRadius: 'var(--mantine-radius-lg)' }}>
         <Group hiddenFrom="md">
           <DrawerNav links={links} />

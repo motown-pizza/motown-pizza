@@ -7,7 +7,7 @@ import { PARAM_NAME, SECTION_SPACING } from '@repo/constants';
 import PartialTabMenuPizzas from '@web/ui/partial/tabs/menu/pizzas';
 import PartialTabMenuSides from '@web/ui/partial/tabs/menu/sides';
 import PartialTabMenuDrinks from '@web/ui/partial/tabs/menu/drinks';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useWindowScroll } from '@mantine/hooks';
 import { LayoutSection } from '@repo/ui';
 
@@ -17,10 +17,8 @@ export default function Menu({
   options?: { withAside?: boolean; ordering?: boolean };
 }) {
   const searchparams = useSearchParams();
-
   const tab = searchparams.get(PARAM_NAME.MENU_TAB) ?? 'pizzas';
-
-  const [scroll, scrollTo] = useWindowScroll();
+  const router = useRouter();
 
   return (
     <Tabs
@@ -30,7 +28,7 @@ export default function Menu({
       onChange={(value) => {
         // setTab(value as string);
         setUrlParam({ [PARAM_NAME.MENU_TAB]: value });
-        // scrollTo({ y: 275 + 32 + 48 });
+        router.push('#page-select-menu-content');
       }}
       styles={{
         tabLabel: { fontWeight: 'bold' },
@@ -56,7 +54,11 @@ export default function Menu({
               Drinks
             </TabsTab>
 
-            <Box w={{ base: '100%' }} hiddenFrom="xs">
+            <Box
+              w={{ base: '100%' }}
+              hiddenFrom="xs"
+              display={!tab.includes('drinks') ? undefined : 'none'}
+            >
               <Divider my={3} />
             </Box>
 

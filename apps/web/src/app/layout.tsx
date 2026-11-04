@@ -58,11 +58,39 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         <meta charSet="UTF-8" />
 
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+        {/* General Web App Metadata */}
+        <meta name="application-name" content={APP_NAME.WEB} />
         <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0"
-          viewport-fit="cover"
+          name="theme-color"
+          content={resolvedTheme == ColorScheme.LIGHT ? '#ffffff' : '#000000'}
         />
+        {/* <meta
+          name="background-color"
+          content={resolvedTheme == ColorScheme.LIGHT ? '#ffffff' : '#000000'}
+        /> */}
+        {/* <meta name="theme-color" content={'#fe0000'} /> */}
+        <meta name="background-color" content={'#fe0000'} />
+
+        {/* Apple Web App Tags */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content={APP_NAME.WEB} />
+
+        {/* Misc. Mobile Enhancements */}
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+
+        {/* Icons */}
+        {/* <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/images/brand/icon/web-app-manifest-192x192.png"
+        /> */}
+
+        {/* <link rel="manifest" href="/manifest.webmanifest" crossOrigin="use-credentials" /> */}
 
         <ColorSchemeScript defaultColorScheme={resolvedTheme} />
       </head>

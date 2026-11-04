@@ -3,15 +3,15 @@ import { NavLink } from '@repo/types';
 
 export const links: NavLink[] = [
   {
-    link: '/order/select-menu?menuTab=pizzas',
+    link: '/order/select-menu?menuTab=pizzas-beef#page-select-menu-content',
     label: 'Pizzas',
   },
   {
-    link: '/order/select-menu?menuTab=sides',
+    link: '/order/select-menu?menuTab=sides-addons#page-select-menu-content',
     label: 'Sides',
   },
   {
-    link: '/order/select-menu?menuTab=drinks',
+    link: '/order/select-menu?menuTab=drinks#page-select-menu-content',
     label: 'Drinks',
   },
   {

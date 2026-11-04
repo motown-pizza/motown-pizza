@@ -22,12 +22,12 @@ import { OrderPaymentMethod } from '@repo/types';
 
 export default function AffixCheckout() {
   const pathname = usePathname();
-  const mounted = pathname.includes('/order/checkout');
+  // const mounted = pathname.includes('/order/checkout');
 
   return (
     <>
-      <Affix position={{ bottom: 0, left: 0, right: 0 }}>
-        <Transition transition="slide-up" mounted={mounted}>
+      <Affix position={{ bottom: 0, left: 0, right: 0 }} hiddenFrom="xs" style={{ zIndex: 10 }}>
+        <Transition transition="slide-up" mounted={false}>
           {(transitionStyles) => (
             <Box style={transitionStyles}>
               <Divider />
@@ -59,7 +59,12 @@ function CardAffixMenu() {
         </Stack>
 
         <Group w={{ xs: '33%' }} justify="end">
-          <Button component={AnchorNextLink} href="/order/checkout" size="md">
+          <Button
+            component={AnchorNextLink}
+            href="/order/checkout"
+            size="md"
+            disabled={!cartItems?.length}
+          >
             Pay ({orderDetails?.paymentMethod == OrderPaymentMethod.ONLINE ? 'M-Pesa' : 'Cash'})
           </Button>
         </Group>

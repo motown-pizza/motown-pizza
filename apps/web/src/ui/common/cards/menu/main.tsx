@@ -105,7 +105,7 @@ export default function Main({
               src={props.image}
               alt={props.title}
               height={
-                options?.small ? { base: 240, md: 100, lg: 100 } : { base: 240, md: 280, lg: 240 }
+                options?.small ? { base: 100, md: 100, lg: 100 } : { base: 240, md: 280, lg: 240 }
               }
               fit={'contain'}
             />
@@ -117,6 +117,7 @@ export default function Main({
               fz={options?.small ? 'xs' : 'md'}
               fw={'bold'}
               c={options?.small ? 'white' : 'sec'}
+              mih={33.6}
             >
               {props.title}
             </Title>

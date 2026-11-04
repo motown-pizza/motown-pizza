@@ -26,10 +26,10 @@ export default function Nav({
           <>
             <AnchorNextLink href="/" underline="never">
               <ImageDefault
-                src={images.brand.logo.landscape.default}
+                src={images.brand.logo.landscape.meta}
                 alt={APP_NAME.WEB}
-                height={{ base: 70 }}
-                width={{ base: 80 }}
+                height={{ base: 40 }}
+                width={{ base: 50 }}
                 fit="contain"
                 mode="grid"
                 style={{ transform: 'scale(1.3)' }}
@@ -67,7 +67,7 @@ export default function Nav({
         </Stack>
       </Drawer>
 
-      <span onClick={open}>{children || <Burger />}</span>
+      <span onClick={open}>{children || <Burger size={'sm'} />}</span>
     </>
   );
 }

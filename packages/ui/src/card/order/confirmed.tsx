@@ -122,6 +122,22 @@ export function CardOrderConfirmed({
           </Text>
         </Group>
 
+        {order?.customerName && (
+          <>
+            <Divider variant="dashed" color="dark.4" />
+
+            <Group justify="space-between" wrap="nowrap" align="end">
+              <Title order={3} fz={'sm'} fw={'normal'} c={'sec'}>
+                Name
+              </Title>
+
+              <Text ta={'end'} fz={'md'} fw={500}>
+                {(order?.customerName).toUpperCase()}
+              </Text>
+            </Group>
+          </>
+        )}
+
         <Divider variant="dashed" color="dark.4" />
 
         <Group justify="space-between" wrap="nowrap" align="end">

@@ -9,7 +9,7 @@ export function AffixNavbar({ children }: { children?: React.ReactNode }) {
   const pinned = useHeadroom({ fixedAt: 120 });
 
   return (
-    <Affix position={{ left: 0, top: 0, right: 0 }}>
+    <Affix position={{ left: 0, top: 0, right: 0 }} hiddenFrom="xs">
       <Transition transition={'slide-down'} mounted={scroll.y > 120 && !!pinned}>
         {(styles) => <div style={styles}>{children || 'nav component goes here'}</div>}
       </Transition>

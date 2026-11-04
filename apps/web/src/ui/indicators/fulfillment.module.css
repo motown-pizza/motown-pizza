@@ -8,7 +8,7 @@
 }
 
 .control {
-  padding: 10px 5px;
+  padding: 10px 5px !important;
   line-height: 1;
   color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-2));
   border-radius: var(--mantine-radius-md);
