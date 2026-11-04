@@ -53,7 +53,7 @@ export default function Cart({ children }: { children: React.ReactNode }) {
           </Center>
         ) : (
           <div>
-            <ScrollArea h={`calc(100vh - ${60 + 1 + 1 + 109.8}px)`} scrollbars={'y'}>
+            <ScrollArea h={`calc(100vh - ${60 + 1 + 1 + 109.8 + 40}px)`} scrollbars={'y'}>
               <Box
               // mih={'100vh'}
               >
