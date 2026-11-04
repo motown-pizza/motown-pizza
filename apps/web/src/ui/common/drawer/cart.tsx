@@ -50,32 +50,10 @@ export default function Cart({ children }: { children: React.ReactNode }) {
         ) : (
           <div>
             <ScrollArea h={`calc(100vh - ${60 + 1 + 1}px)`} scrollbars={'y'}>
-              <Stack mih={'100vh'}>
-                {!cartItems?.length ? (
-                  <Center py={SECTION_SPACING}>
-                    <Text c={'dimmed'}>Cart Empty</Text>
-                  </Center>
-                ) : (
-                  <div>
-                    {sortArray(cartItems || [], (i) => i.createdAt, Order.ASCENDING).map(
-                      (ci, i) => (
-                        <Stack key={i} gap={5}>
-                          {i > 0 && <Divider mt={5} w={'95%'} mx={'auto'} />}
-
-                          <CardMenuCart props={ci} />
-                        </Stack>
-                      ),
-                    )}
-                  </div>
-                )}
-              </Stack>
-
               <Box
                 bg={'var(--mantine-color-body)'}
-                style={{ position: 'sticky', bottom: -1, zIndex: 1 }}
+                style={{ position: 'sticky', top: -1, zIndex: 1 }}
               >
-                <Divider />
-
                 <Stack gap={'xs'} p={'xs'}>
                   <div>
                     <Group justify="space-between" align="end">
@@ -104,7 +82,29 @@ export default function Cart({ children }: { children: React.ReactNode }) {
                     </AnchorNextLink>
                   </Group>
                 </Stack>
+
+                <Divider />
               </Box>
+
+              <Stack>
+                {!cartItems?.length ? (
+                  <Center py={SECTION_SPACING}>
+                    <Text c={'dimmed'}>Cart Empty</Text>
+                  </Center>
+                ) : (
+                  <div>
+                    {sortArray(cartItems || [], (i) => i.createdAt, Order.ASCENDING).map(
+                      (ci, i) => (
+                        <Stack key={i} gap={5}>
+                          {i > 0 && <Divider mt={5} w={'95%'} mx={'auto'} />}
+
+                          <CardMenuCart props={ci} />
+                        </Stack>
+                      ),
+                    )}
+                  </div>
+                )}
+              </Stack>
             </ScrollArea>
           </div>
         )}
