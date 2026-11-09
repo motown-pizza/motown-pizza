@@ -149,7 +149,7 @@ const linkGroups = [
         link: '/loyalty-program',
       },
       {
-        label: "Loyalty FAQ's",
+        label: 'Loyalty FAQs',
         link: '/loyalty-program#page-loyalty-program-faq',
       },
     ],

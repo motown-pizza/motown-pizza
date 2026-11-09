@@ -188,25 +188,29 @@ export default function PartialLoyalty() {
                 </Text>
 
                 <Flex align={{ md: 'center' }} direction={{ base: 'column', md: 'row' }} gap={'xs'}>
-                  <TextInput
-                    w={{ md: '60%' }}
-                    aria-label={'Phone Number'}
-                    placeholder={`Phone Number`}
-                    size="md"
-                    variant="default"
-                    leftSection={<IconPhone size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
-                    value={phoneNumber}
-                    onChange={(event) => setPhoneNumber(event.currentTarget.value)}
-                    styles={{
-                      section: {
-                        color: 'var(--mantine-color-sec-6)',
-                      },
-                      input: {
-                        // borderColor: 'var(--mantine-color-sec-6)',
-                        borderWidth: 2,
-                      },
-                    }}
-                  />
+                  <Stack gap={0} w={{ md: '60%' }}>
+                    <TextInput
+                      aria-label={'Phone Number'}
+                      placeholder={`Phone Number`}
+                      size="md"
+                      variant="default"
+                      leftSection={<IconPhone size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
+                      value={phoneNumber}
+                      onChange={(event) => setPhoneNumber(event.currentTarget.value)}
+                      styles={{
+                        section: {
+                          color: 'var(--mantine-color-sec-6)',
+                        },
+                        input: {
+                          // borderColor: 'var(--mantine-color-sec-6)',
+                          borderWidth: 2,
+                        },
+                      }}
+                    />
+                    <Text c="dimmed" size="xs" mt={4}>
+                      Points lookup coming soon
+                    </Text>
+                  </Stack>
 
                   <Button
                     w={{ md: '40%' }}
@@ -256,7 +260,7 @@ export default function PartialLoyalty() {
                     style={{
                       opacity: !filteredOrders?.length ? 0.8 : 1,
                       borderWidth: 2,
-                      color: !filteredOrders?.length ? 'var(--mantine-color-dark-6)' : undefined,
+                      color: 'white',
                       borderColor: active ? 'var(--mantine-color-ter-6)' : undefined,
                       backgroundColor: !filteredOrders?.length
                         ? undefined
@@ -415,21 +419,31 @@ function CardLoyalty({
                   <Title order={2} fz={'xl'} c={'white'}>
                     {capitalizeWords(pizzaSize?.title || '')} Pizza Points
                   </Title>
-                  {
-                    <Text fz={'sm'} c={'dark.1'}>
-                      Slice points coupon for {!orders?.length ? '?' : phone}.
-                    </Text>
-                  }
+                  {!!orders?.length &&
+                    pizzaSize &&
+                    typeof pizzaSize.timesPurchased === 'number' && (
+                      <Text fz={'sm'} c={'dark.1'}>
+                        Slice points coupon for {phone}.
+                      </Text>
+                    )}
                 </Box>
 
                 <div>
                   <Text fz={'xl'} c={'dark.1'} fw={'bold'}>
                     <Text component="span" inherit fz={'var(--mantine-h1-font-size)'} c={'sec'}>
-                      {!orders ? '?' : !pizzaSize ? orders.length : pizzaSize.timesPurchased}
+                      {orders &&
+                        (!pizzaSize
+                          ? orders.length
+                          : typeof pizzaSize.timesPurchased === 'number'
+                            ? pizzaSize.timesPurchased
+                            : null)}
                     </Text>
-                    <Text component="span" inherit display={!pizzaSize ? 'none' : undefined}>
-                      /{THRESHOLD}
-                    </Text>
+                    {orders &&
+                      (!pizzaSize || typeof pizzaSize.timesPurchased === 'number') && (
+                        <Text component="span" inherit display={!pizzaSize ? 'none' : undefined}>
+                          /{THRESHOLD}
+                        </Text>
+                      )}
                   </Text>
                 </div>
               </Flex>
@@ -500,10 +514,14 @@ function CardLoyalty({
                   <IconStar size={ICON_SIZE - 2} stroke={ICON_STROKE_WIDTH} />
                 </Box>
 
-                <Text fz={'sm'} c={'dark.1'}>
-                  {!orders || !pizzaSize ? '?' : THRESHOLD - pizzaSize.timesPurchased} more Medium
-                  pizzas and the next is free.
-                </Text>
+                {!!orders?.length &&
+                  pizzaSize &&
+                  typeof pizzaSize.timesPurchased === 'number' && (
+                    <Text fz={'sm'} c={'dark.1'}>
+                      {THRESHOLD - pizzaSize.timesPurchased} more Medium pizzas and the next is
+                      free.
+                    </Text>
+                  )}
               </Group>
             </Stack>
           </WrapperUnderlayBlur>

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { ProductGet } from '@repo/types';
+import { ProductDietaryType, ProductGet } from '@repo/types';
 import {
   ActionIcon,
+  Badge,
   Box,
   Button,
   Card,
   CardSection,
   Divider,
+  Flex,
   Group,
   NumberFormatter,
   Select,
@@ -16,6 +18,8 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { ImageDefault } from '@repo/ui';
+import { TagBadge } from '@web/ui/common/badges/tag';
+import { getManualTags } from '@web/data/menu-tags';
 import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE } from '@repo/constants';
 import { IconCheck, IconPlus, IconShoppingCart } from '@tabler/icons-react';
 import { usePathname } from 'next/navigation';
@@ -92,11 +96,12 @@ export default function Main({
     label: pv.title?.replace(props.title, '').trim(),
     price: pv.price,
   }));
+  const manualTags = getManualTags(props.title);
 
   return (
     <Card radius={'lg'} h={'100%'} bg={'var(--mantine-color-dark-9)'} withBorder pt={0}>
-      <Stack h={'100%'} justify="space-between">
-        <div>
+      <Flex direction="column" h="100%" justify="space-between">
+        <Flex direction="column" h="100%">
           <CardSection
             bg={options?.small ? undefined : 'var(--mantine-color-dark-8)'}
             py={options?.small ? undefined : 'xl'}
@@ -112,6 +117,15 @@ export default function Main({
           </CardSection>
 
           <Stack mt={'md'}>
+            <Group gap="xs" mb="xs">
+              {manualTags.map((tag, index) => (
+                <TagBadge key={`${tag}-${index}`} type={tag} label={tag} />
+              ))}
+              {(props.dietaryClass === ProductDietaryType.VEGGIE ||
+                props.dietaryClass === ProductDietaryType.VEGAN) && (
+                <TagBadge type="veg" label="Veg" />
+              )}
+            </Group>
             <Title
               order={3}
               fz={options?.small ? 'xs' : 'md'}
@@ -176,10 +190,12 @@ export default function Main({
                             {vi.label}
                           </Text>
 
-                          <Text inherit fz={'sm'} fw={'bold'}>
-                            <NumberFormatter value={vi.price} />
-                            /-
-                          </Text>
+                          {productVariantsArray.length > 1 && (
+                            <Text inherit fz={'sm'} fw={'bold'}>
+                              <NumberFormatter value={vi.price} />
+                              /-
+                            </Text>
+                          )}
                         </Stack>
                       </Card>
                     );
@@ -189,7 +205,7 @@ export default function Main({
             </Box>
           )}
 
-          <Stack mt={options?.small ? 'x' : 'md'}>
+          <Stack mt="auto" pt="md">
             <Group justify="space-between">
               <Text fz={options?.small ? 'xs' : 'sm'}>
                 Kshs.{' '}
@@ -237,16 +253,17 @@ export default function Main({
                         size="sm"
                         onClick={handleAddCart}
                         rightSection={
-                          <Text component="span" inherit>
-                            (
-                            <NumberFormatter
-                              value={
-                                cartItems?.find((ci) => ci.productVariantId == variantId)
-                                  ?.quantity || 0
-                              }
-                            />
-                            )
-                          </Text>
+                          (cartItems?.find((ci) => ci.productVariantId == variantId)?.quantity ??
+                            0) > 0 && (
+                            <Badge size="sm" variant="white" color="dark" circle>
+                              <NumberFormatter
+                                value={
+                                  cartItems?.find((ci) => ci.productVariantId == variantId)
+                                    ?.quantity || 0
+                                }
+                              />
+                            </Badge>
+                          )
                         }
                       >
                         {'Add'}
@@ -257,8 +274,8 @@ export default function Main({
               </Tooltip>
             </Group>
           </Stack>
-        </div>
-      </Stack>
+        </Flex>
+      </Flex>
     </Card>
   );
 }

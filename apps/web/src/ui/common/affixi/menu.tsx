@@ -28,6 +28,9 @@ import { generateUUID } from '@repo/utils';
 
 export default function AffixMenu() {
   const pathname = usePathname();
+  const { cartItems } = useStoreCartItem();
+  if (!cartItems || cartItems.length === 0) return null;
+
   const mounted = pathname.includes('/order/select-menu');
 
   return (

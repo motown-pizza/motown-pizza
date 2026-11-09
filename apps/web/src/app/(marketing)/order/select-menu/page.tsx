@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { AnchorNextLink, ImageDefault, LayoutSection } from '@repo/ui';
 import TabsMenu from '@web/ui/common/tabs/menu';
 import AsideOrder from '@web/ui/layout/asides/order';
+import { menuHero } from '@web/data/menu-hero';
 import {
   Box,
   Button,
@@ -43,13 +44,10 @@ export default function SelectMenu() {
           <GridCol span={{ base: 12, md: 6.5 }}>
             <Stack maw={{ md: '80%' }} pb={SECTION_SPACING / 2}>
               <Title order={1} fz={{ md: '2.5rem', xl: '3rem' }} tt={'none'} c={'white'}>
-                Two Mediums. One Great Deal.
+                {menuHero.headline}
               </Title>
 
-              <Text>
-                Pick any 2 medium pizzas from the classic or chicken menu. Hot at your door in 30 to
-                45 minutes.
-              </Text>
+              <Text>{menuHero.subheadline}</Text>
 
               <Group gap={'xs'}>
                 <Button component="a" href="#page-select-menu-content">
@@ -69,33 +67,35 @@ export default function SelectMenu() {
               h={{ base: 240, sm: 280, md: 320 }}
             >
               {/* Floating Badge - Responsive positioning and scaling */}
-              <Box
-                style={{
-                  position: 'absolute',
-                  // top: '1rem',
-                  // left: '1rem',
-                  transform: 'rotate(-15deg)',
-                  // zIndex: 2,
-                }}
-              >
-                <Paper radius={999} bg={'sec'} c={'black'} w={'fit-content'} shadow="md">
-                  <Stack
-                    justify="center"
-                    gap={0}
-                    w={{ base: 85, sm: 100 }}
-                    h={{ base: 85, sm: 100 }}
-                    ta={'center'}
-                  >
-                    <Text inherit fz={{ base: 'xs', sm: 'sm' }} fw={'bold'}>
-                      2 Mediums
-                    </Text>
-                    <Text inherit fz={{ base: 'lg', sm: 'xl' }} fw={900}>
-                      <NumberFormatter value={1800} />
-                      /-
-                    </Text>
-                  </Stack>
-                </Paper>
-              </Box>
+              {menuHero.promo && (
+                <Box
+                  style={{
+                    position: 'absolute',
+                    // top: '1rem',
+                    // left: '1rem',
+                    transform: 'rotate(-15deg)',
+                    // zIndex: 2,
+                  }}
+                >
+                  <Paper radius={999} bg={'sec'} c={'black'} w={'fit-content'} shadow="md">
+                    <Stack
+                      justify="center"
+                      gap={0}
+                      w={{ base: 85, sm: 100 }}
+                      h={{ base: 85, sm: 100 }}
+                      ta={'center'}
+                    >
+                      <Text inherit fz={{ base: 'xs', sm: 'sm' }} fw={'bold'}>
+                        2 Mediums
+                      </Text>
+                      <Text inherit fz={{ base: 'lg', sm: 'xl' }} fw={900}>
+                        <NumberFormatter value={1800} />
+                        /-
+                      </Text>
+                    </Stack>
+                  </Paper>
+                </Box>
+              )}
 
               {/* Hero Image - Responsive bottom offset and height */}
               <Box
@@ -120,21 +120,23 @@ export default function SelectMenu() {
 
       <Divider />
 
-      <LayoutSection id="page-select-menu-conditions" padded={'xs'}>
-        <Group>
-          {conditions.map((ci, i) => (
-            <div key={i}>
-              <Group gap={'xs'} fz={'sm'}>
-                <ThemeIcon size={ICON_WRAPPER_SIZE} color="dark" c={'sec'}>
-                  <ci.icon size={ICON_SIZE - 2} stroke={ICON_STROKE_WIDTH} />
-                </ThemeIcon>
+      {menuHero.infoStrip.length > 0 && (
+        <LayoutSection id="page-select-menu-conditions" padded={'xs'}>
+          <Group>
+            {conditions.map((ci, i) => (
+              <div key={i}>
+                <Group gap={'xs'} fz={'sm'}>
+                  <ThemeIcon size={ICON_WRAPPER_SIZE} color="dark" c={'sec'}>
+                    <ci.icon size={ICON_SIZE - 2} stroke={ICON_STROKE_WIDTH} />
+                  </ThemeIcon>
 
-                {ci.content}
-              </Group>
-            </div>
-          ))}
-        </Group>
-      </LayoutSection>
+                  {ci.content}
+                </Group>
+              </div>
+            ))}
+          </Group>
+        </LayoutSection>
+      )}
 
       <Divider />
 

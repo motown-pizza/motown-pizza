@@ -22,6 +22,9 @@ import { OrderPaymentMethod } from '@repo/types';
 
 export default function AffixCheckout() {
   const pathname = usePathname();
+  const { cartItems } = useStoreCartItem();
+  if (!cartItems || cartItems.length === 0) return null;
+
   // const mounted = pathname.includes('/order/checkout');
 
   return (

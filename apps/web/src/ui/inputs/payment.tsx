@@ -18,7 +18,7 @@ export default function InputPayment({ value, setValue }: { value: any; setValue
   ];
 
   const cards = data.map((item) => {
-    const active = item.name == value;
+    const active = item.value == value;
 
     return (
       <RadioCard

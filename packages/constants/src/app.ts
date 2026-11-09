@@ -67,7 +67,7 @@ export const APP_DESC = {
   API: 'A high-performance backend API engine delivering secure, real-time data synchronization and endpoints across all pizza operations.',
   ADMIN:
     'A comprehensive back-office management dashboard for real-time inventory control, staff scheduling, business reporting, and store configuration.',
-  WEB: 'A lightning-fast, SEO-optimized customer-facing pizza ordering website designed for seamless menu browsing, mobile checkout, and marketing.',
+  WEB: 'Order fresh, hot pizza online from MoTown Pizza in Nairobi. Delivery and collection from Westlands, Valley Arcade and Kileleshwa.',
   POS: 'A reliable, high-speed Point of Sale system built for rapid order entry, secure payment processing, and smooth in-store operations.',
   KDS: 'An intelligent Kitchen Display System for real-time order tracking, ticket management, and optimized kitchen workflow automation.',
 };

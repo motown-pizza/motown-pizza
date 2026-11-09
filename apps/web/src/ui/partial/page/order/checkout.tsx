@@ -62,7 +62,7 @@ import { handleOrderNotification } from '@repo/handlers';
 import PopoverGeolocation from '@web/ui/common/popover/geolocation';
 import IndicatorFulfilment from '@web/ui/indicators/fulfilment';
 import InputPayment from '@web/ui/inputs/payment';
-import { IconClock, IconStar } from '@tabler/icons-react';
+import { IconStar } from '@tabler/icons-react';
 import CardMenuMain from '@web/ui/common/cards/menu/main';
 import { Router } from 'next/router';
 import { useRouter } from 'next/navigation';
@@ -98,7 +98,7 @@ export default function Checkout() {
       </Title>
 
       <Grid mt={SECTION_SPACING}>
-        <GridCol span={{ base: 12, md: 4.5 }}>
+        <GridCol span={{ base: 12, md: 5 }}>
           <Stack>
             <Card bg={'transparent'} p={0} withBorder>
               <Box p={'md'} bg={'var(--mantine-color-dark-9)'}>
@@ -291,7 +291,7 @@ export default function Checkout() {
           </Stack>
         </GridCol>
 
-        <GridCol span={{ base: 12, md: 3.5 }}>
+        <GridCol span={{ base: 12, md: 3 }}>
           <Stack>
             <Card bg={'transparent'} withBorder p={0}>
               <Box p={'md'} bg={'var(--mantine-color-dark-9)'}>
@@ -413,16 +413,6 @@ export default function Checkout() {
                   </Button>
                 </Group>
 
-                <Group px={'md'} gap={'xs'}>
-                  <Box c={'sec'}>
-                    <IconClock size={ICON_SIZE - 2} stroke={ICON_STROKE_WIDTH} />
-                  </Box>
-
-                  <Text inherit fz={'xs'} c={'dark.1'}>
-                    Arrives in 30 - 45 minutes.
-                  </Text>
-                </Group>
-
                 <Group p={'md'} pt={0} gap={'xs'}>
                   <Card p={'xs'} bg={'transparent'} withBorder>
                     <Group gap={'xs'} wrap="nowrap" align="start">
@@ -431,8 +421,7 @@ export default function Checkout() {
                       </Box>
 
                       <Text inherit fz={'xs'} c={'dark.1'}>
-                        You&apos;ll earn 2 medium points with this order. 10 more to go for a free
-                        medium pizza.
+                        You&apos;ll earn points with this order towards a free 12-inch pizza.
                       </Text>
                     </Group>
                   </Card>

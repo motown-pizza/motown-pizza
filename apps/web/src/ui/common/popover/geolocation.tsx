@@ -25,6 +25,7 @@ import {
   ICON_STROKE_WIDTH,
   ICON_WRAPPER_SIZE,
   LOCAL_STORAGE_NAME,
+  PHONES,
   SECTION_SPACING,
   StoreGet,
   stores,
@@ -312,11 +313,11 @@ export default function PopoverGeolocation({
       {!options?.checkout && (
         <Button
           component={'a'}
-          href={`tel:${resolvedStore?.phone}`}
+          href={`tel:${resolvedStore?.phone ?? PHONES.PHONE1}`}
           leftSection={<IconPhone size={ICON_SIZE - 2} stroke={2} />}
           variant="transparent"
         >
-          {resolvedStore?.phone}
+          {resolvedStore?.phone ?? PHONES.PHONE1}
         </Button>
       )}
     </>
