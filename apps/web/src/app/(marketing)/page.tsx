@@ -27,6 +27,7 @@ import {
 } from '@repo/store';
 import { OrderFulfilmentType, OrderGet } from '@repo/types';
 import { generateUUID } from '@repo/utils';
+import SocialProof from '@web/ui/partial/page/home/social-proof';
 
 export default function Home() {
   const session = useStoreSession((s) => s.session);
@@ -324,6 +325,8 @@ export default function Home() {
           mode="grid"
         />
       </Group>
+
+      <SocialProof />
     </div>
   );
 }

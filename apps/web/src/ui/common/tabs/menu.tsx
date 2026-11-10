@@ -34,8 +34,10 @@ export default function Menu({
         tabLabel: { fontWeight: 'bold' },
         panel: { padding: 'var(--mantine-spacing-sm) 0' },
         tab: {
-          color: 'white',
-          border: '2px solid var(--mantine-color-dark-6)',
+          borderRadius: '100px',
+          fontWeight: 500,
+          border: '1px solid var(--mantine-color-dark-6)',
+          color: 'var(--mantine-color-dark-1)',
         },
         root: { minHeight: 500 },
       }}
@@ -64,23 +66,30 @@ export default function Menu({
 
             {/* Pizza Sub-Tabs */}
             <TabsTab
-              value="pizzas-beef"
-              style={{ border: '2px solid var(--mantine-color-sec-6)' }}
+              value="pizzas"
+              bg={tab === 'pizzas' ? 'pri' : undefined}
               display={tab.includes('pizzas') ? undefined : 'none'}
-              ml={{ xs: 'auto' }} // Pushes to the right only on larger screens
+              ml={{ xs: 'auto' }}
             >
-              Classic
+              All
+            </TabsTab>
+            <TabsTab
+              value="pizzas-beef"
+              bg={tab === 'pizzas-beef' ? 'pri' : undefined}
+              display={tab.includes('pizzas') ? undefined : 'none'}
+            >
+              Beef
             </TabsTab>
             <TabsTab
               value="pizzas-chicken"
-              style={{ border: '2px solid var(--mantine-color-sec-6)' }}
+              bg={tab === 'pizzas-chicken' ? 'pri' : undefined}
               display={tab.includes('pizzas') ? undefined : 'none'}
             >
               Chicken
             </TabsTab>
             <TabsTab
               value="pizzas-veggie"
-              style={{ border: '2px solid var(--mantine-color-sec-6)' }}
+              bg={tab === 'pizzas-veggie' ? 'pri' : undefined}
               display={tab.includes('pizzas') ? undefined : 'none'}
             >
               Veggie
@@ -89,7 +98,7 @@ export default function Menu({
             {/* Sides Sub-Tabs */}
             <TabsTab
               value="sides-addons"
-              style={{ border: '2px solid var(--mantine-color-sec-6)' }}
+              bg={tab === 'sides-addons' ? 'pri' : undefined}
               display={tab.includes('sides') ? undefined : 'none'}
               ml={{ xs: 'auto' }}
             >
@@ -97,7 +106,7 @@ export default function Menu({
             </TabsTab>
             <TabsTab
               value="sides-sauces"
-              style={{ border: '2px solid var(--mantine-color-sec-6)' }}
+              bg={tab === 'sides-sauces' ? 'pri' : undefined}
               display={tab.includes('sides') ? undefined : 'none'}
             >
               Sauces

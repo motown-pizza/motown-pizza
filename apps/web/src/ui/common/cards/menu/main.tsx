@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { ProductDietaryType, ProductGet } from '@repo/types';
+import { ProductDietaryType, ProductGet, Variant } from '@repo/types';
+import { useNotification } from '@repo/notifications';
 import {
   ActionIcon,
   Badge,
@@ -7,6 +8,7 @@ import {
   Button,
   Card,
   CardSection,
+  Collapse,
   Divider,
   Flex,
   Group,
@@ -16,12 +18,19 @@ import {
   Text,
   Title,
   Tooltip,
+  UnstyledButton,
 } from '@mantine/core';
 import { ImageDefault } from '@repo/ui';
 import { TagBadge } from '@web/ui/common/badges/tag';
 import { getManualTags } from '@web/data/menu-tags';
 import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE } from '@repo/constants';
-import { IconCheck, IconPlus, IconShoppingCart } from '@tabler/icons-react';
+import {
+  IconCheck,
+  IconChevronDown,
+  IconChevronUp,
+  IconPlus,
+  IconShoppingCart,
+} from '@tabler/icons-react';
 import { usePathname } from 'next/navigation';
 import { useStoreProductVariant } from '@repo/store';
 import { useStoreCartItem } from '@repo/store';
@@ -30,6 +39,7 @@ import { capitalizeWords, sortArray } from '@repo/utils';
 import { Order } from '@repo/types';
 import { useStoreRecipieItem } from '@repo/store';
 import { useStoreIngredient } from '@repo/store';
+import CustomisePizza from '@web/ui/common/modals/customise-pizza';
 
 export default function Main({
   props,
@@ -40,8 +50,12 @@ export default function Main({
 }) {
   const [variantId, setSelectedVariantId] = useState('');
   const [price, setPrice] = useState(0);
+  const [showFullIngredients, setShowFullIngredients] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
+  const [customiseOpened, setCustomiseOpened] = useState(false);
 
   const pathname = usePathname();
+  const { showNotification } = useNotification();
   const { cartItems } = useStoreCartItem();
   const { cartItemCreate, cartItemUpdate } = useCartItemActions();
 
@@ -81,6 +95,13 @@ export default function Main({
         productVariantId: variantId,
       });
     }
+    showNotification({
+      title: 'Added to cart',
+      desc: `${props.title} added to your cart`,
+      variant: Variant.SUCCESS, // Use the success variant
+    });
+    setIsAdded(true);
+    setTimeout(() => setIsAdded(false), 2000);
   };
 
   // const external = props.image.includes('https');
@@ -138,17 +159,33 @@ export default function Main({
 
             {!options?.small && (
               <>
-                {props.description ? (
-                  <Text fz={'sm'} mih={90} c={'dark.1'}>
-                    {props.description}
-                  </Text>
-                ) : (
-                  content && (
-                    <Text fz={'sm'} mih={90} c={'dark.1'}>
-                      {content}
-                    </Text>
-                  )
-                )}
+                <Text
+                  fz="sm"
+                  c="dark.1"
+                  lineClamp={!showFullIngredients ? 2 : undefined}
+                >
+                  {props.description || content}
+                </Text>
+                <UnstyledButton
+                  c="sec"
+                  fz="xs"
+                  fw={500}
+                  onClick={() => setShowFullIngredients((current) => !current)}
+                >
+                  <Group gap={4}>
+                    {showFullIngredients ? (
+                      <>
+                        Hide ingredients
+                        <IconChevronUp size={14} />
+                      </>
+                    ) : (
+                      <>
+                        Full ingredients
+                        <IconChevronDown size={14} />
+                      </>
+                    )}
+                  </Group>
+                </UnstyledButton>
               </>
             )}
           </Stack>
@@ -247,28 +284,48 @@ export default function Main({
                       )}
                     </ActionIcon>
                   ) : (
-                    <Group>
-                      <Button
-                        fullWidth
-                        size="sm"
-                        onClick={handleAddCart}
-                        rightSection={
-                          (cartItems?.find((ci) => ci.productVariantId == variantId)?.quantity ??
-                            0) > 0 && (
-                            <Badge size="sm" variant="white" color="dark" circle>
-                              <NumberFormatter
-                                value={
-                                  cartItems?.find((ci) => ci.productVariantId == variantId)
-                                    ?.quantity || 0
-                                }
-                              />
-                            </Badge>
-                          )
-                        }
+                    <>
+                      <UnstyledButton
+                        fz="xs"
+                        c="dimmed"
+                        td="underline"
+                        onClick={() => setCustomiseOpened(true)}
                       >
-                        {'Add'}
-                      </Button>
-                    </Group>
+                        Customise
+                      </UnstyledButton>
+                      <Group>
+                        <Button
+                          fullWidth
+                          size="sm"
+                          onClick={handleAddCart}
+                          color={isAdded ? 'ter' : 'pri'}
+                          rightSection={
+                            isAdded ? (
+                              <Group gap={4}>
+                                <Text inherit fw={500} fz="sm">
+                                  Added
+                                </Text>
+                                <IconCheck size={16} />
+                              </Group>
+                            ) : (
+                              (cartItems?.find((ci) => ci.productVariantId == variantId)?.quantity ??
+                                0) > 0 && (
+                                <Badge size="sm" variant="white" color="dark" circle>
+                                  <NumberFormatter
+                                    value={
+                                      cartItems?.find((ci) => ci.productVariantId == variantId)
+                                        ?.quantity || 0
+                                    }
+                                  />
+                                </Badge>
+                              )
+                            )
+                          }
+                        >
+                          {'Add'}
+                        </Button>
+                      </Group>
+                    </>
                   )}
                 </Group>
               </Tooltip>
@@ -276,6 +333,13 @@ export default function Main({
           </Stack>
         </Flex>
       </Flex>
+
+      <CustomisePizza
+        opened={customiseOpened}
+        onClose={() => setCustomiseOpened(false)}
+        productTitle={props.title}
+        price={price}
+      />
     </Card>
   );
 }

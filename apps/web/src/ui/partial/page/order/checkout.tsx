@@ -19,6 +19,7 @@ import {
   RadioGroup,
   ScrollArea,
   ScrollAreaAutosize,
+  Select,
   Stack,
   Text,
   Textarea,
@@ -62,7 +63,8 @@ import { handleOrderNotification } from '@repo/handlers';
 import PopoverGeolocation from '@web/ui/common/popover/geolocation';
 import IndicatorFulfilment from '@web/ui/indicators/fulfilment';
 import InputPayment from '@web/ui/inputs/payment';
-import { IconStar } from '@tabler/icons-react';
+import { IconBottle, IconCheck, IconSoup, IconStar } from '@tabler/icons-react';
+import { mealDeal } from '@web/data/meal-deal';
 import CardMenuMain from '@web/ui/common/cards/menu/main';
 import { Router } from 'next/router';
 import { useRouter } from 'next/navigation';
@@ -83,11 +85,10 @@ export default function Checkout() {
 
   const isReadyForConfirmation =
     !!cartItems?.length &&
-    (!orderDetails
-      ? false
-      : !orderDetails.customerPhone
-        ? false
-        : validators.phone(orderDetails.customerPhone) == false);
+    !!orderDetails?.customerPhone &&
+    !validators.phone(orderDetails.customerPhone) &&
+    !!orderDetails?.customerName &&
+    (orderDetails?.fulfillmentType === 'COLLECTION' || !!orderDetails?.customerAddress);
 
   const sideProducts = products?.filter((pi) => pi.type == ProductType.SIDE);
 
@@ -141,6 +142,72 @@ export default function Checkout() {
                   ))
                 )}
               </ScrollArea>
+            </Card>
+
+            <Card
+              bg="var(--mantine-color-dark-9)"
+              withBorder
+              style={{ borderColor: 'var(--mantine-color-sec-6)', borderWidth: 2, position: 'relative' }}
+              p="md"
+            >
+              <Badge
+                color="sec"
+                c="black"
+                radius="sm"
+                style={{ position: 'absolute', top: -12, left: 16, zIndex: 1 }}
+              >
+                <Group gap={4}>
+                  <IconSoup size={14} /> Meal Deal
+                </Group>
+              </Badge>
+
+              <Group mt="sm" align="center" wrap="nowrap">
+                <Group gap={4}>
+                  <IconSoup size={32} color="var(--mantine-color-sec-6)" />
+                  <IconBottle size={32} color="var(--mantine-color-sec-6)" />
+                </Group>
+
+                <Stack gap={0} style={{ flex: 1 }}>
+                  <Text fw={600} c="white" fz="md">
+                    {mealDeal.title}
+                  </Text>
+                  <Group gap="xs" align="baseline">
+                    <Text fw={700} c="white" fz="lg">
+                      Kshs. {mealDeal.price}
+                    </Text>
+                    <Text td="line-through" c="dimmed" fz="xs">
+                      Kshs. {mealDeal.originalPrice}
+                    </Text>
+                    <Text c="green" fz="xs" fw={500}>
+                      You save Kshs. {mealDeal.saving}
+                    </Text>
+                  </Group>
+                </Stack>
+              </Group>
+
+              <Group mt="md" grow>
+                <Select
+                  data={mealDeal.drinkOptions}
+                  defaultValue={mealDeal.drinkOptions[0]}
+                  size="sm"
+                  variant="filled"
+                  comboboxProps={{ withinPortal: true }}
+                />
+                <Button
+                  color="pri"
+                  variant="light"
+                  size="sm"
+                  onClick={() => {
+                    showNotification({
+                      title: 'Coming soon',
+                      desc: 'Meal deal ordering will be available soon.',
+                      variant: Variant.WARNING,
+                    });
+                  }}
+                >
+                  Select
+                </Button>
+              </Group>
             </Card>
 
             <Card bg={'transparent'} withBorder p={0}>

@@ -34,9 +34,11 @@ import { capitalizeWord, capitalizeWords, validators } from '@repo/utils';
 import { useStoreOrder, useStoreOrderItem, useStoreProductVariant } from '@repo/store';
 import { OrderGet, OrderStatus, Size, Variant } from '@repo/types';
 import { useNotification } from '@repo/notifications';
+import Confetti from '@web/ui/common/effects/confetti';
 
 export default function PartialLoyalty() {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [showConfetti, setShowConfetti] = useState(false);
   const phoneIsValid = !validators.phone(phoneNumber);
   const { showNotification } = useNotification();
 
@@ -168,6 +170,7 @@ export default function PartialLoyalty() {
 
   return (
     <Box>
+      <Confetti fire={showConfetti} />
       <LayoutSection id="page-loyalty-program-intro" margined={SECTION_SPACING}>
         <Stack gap={SECTION_SPACING / 2}>
           <Grid
@@ -215,7 +218,11 @@ export default function PartialLoyalty() {
                   <Button
                     w={{ md: '40%' }}
                     size="md"
-                    onClick={handleFilterOrders}
+                    onClick={() => {
+                      handleFilterOrders();
+                      setShowConfetti(true);
+                      setTimeout(() => setShowConfetti(false), 4000);
+                    }}
                     disabled={
                       !!(filteredOrders && filteredOrders[0].customerPhone == phoneNumber.trim())
                     }

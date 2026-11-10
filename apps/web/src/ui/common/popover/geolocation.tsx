@@ -2,10 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Popover,
   Text,
-  PopoverTarget,
-  PopoverDropdown,
   Button,
   Box,
   Group,
@@ -18,6 +15,7 @@ import {
   Divider,
   ScrollAreaAutosize,
   Card,
+  Modal,
 } from '@mantine/core';
 import { IconChevronDown, IconCurrentLocation, IconMapPin, IconPhone } from '@tabler/icons-react';
 import {
@@ -105,7 +103,7 @@ export default function PopoverGeolocation({
     if (!location) return;
     if (!opened) return;
 
-    close();
+    setOpened(false);
   }, [loadingLocation]);
 
   const getButton = (
@@ -122,61 +120,59 @@ export default function PopoverGeolocation({
 
   return (
     <>
-      <Popover
+      <span onClick={() => setOpened(true)}>
+        {children ||
+          (options?.checkout ? (
+            <Card bg={'dark.9'} withBorder>
+              <Group justify="space-between">
+                <Group>
+                  <IconMapPin size={ICON_SIZE - 2} stroke={2} />
+
+                  <Stack gap={0}>
+                    <Title order={3} fz={'sm'} c={'white'}>
+                      {resolvedStore?.locationShort} Store
+                    </Title>
+                    <Text fz={'xs'} c={'dimmed'}>
+                      {resolvedStore?.phone}
+                    </Text>
+                  </Stack>
+                </Group>
+
+                <Group justify="end">
+                  <Button color="dark" c={'sec'}>
+                    Change Store
+                  </Button>
+                </Group>
+              </Group>
+            </Card>
+          ) : (
+            <Button
+              variant={options?.checkout ? undefined : 'transparent'}
+              className={options?.checkout ? undefined : 'bg-[var(--mantine-color-dark-light)]/30!'}
+              leftSection={<IconMapPin size={ICON_SIZE - 2} stroke={2} />}
+              rightSection={<IconChevronDown size={ICON_SIZE - 4} stroke={2} />}
+              loading={resolvedStore == null}
+              fullWidth={options?.checkout}
+            >
+              {resolvedStore?.locationShort}
+            </Button>
+          ))}
+      </span>
+
+      <Modal
         opened={opened}
-        onChange={setOpened}
-        closeOnClickOutside
-        width={400}
-        position="bottom"
-        withArrow
-        shadow="md"
+        onClose={() => setOpened(false)}
+        title={
+          <Title order={2} fz="h3">
+            Choose your branch
+          </Title>
+        }
+        centered
+        size="lg"
+        radius="md"
       >
-        <PopoverTarget>
-          <span onClick={() => setOpened((o) => !o)}>
-            {children ||
-              (options?.checkout ? (
-                <Card bg={'dark.9'} withBorder>
-                  <Group justify="space-between">
-                    <Group>
-                      <IconMapPin size={ICON_SIZE - 2} stroke={2} />
-
-                      <Stack gap={0}>
-                        <Title order={3} fz={'sm'} c={'white'}>
-                          {resolvedStore?.locationShort} Store
-                        </Title>
-                        <Text fz={'xs'} c={'dimmed'}>
-                          {resolvedStore?.phone}
-                        </Text>
-                      </Stack>
-                    </Group>
-
-                    <Group justify="end">
-                      <Button color="dark" c={'sec'}>
-                        Change Store
-                      </Button>
-                    </Group>
-                  </Group>
-                </Card>
-              ) : (
-                <Button
-                  variant={options?.checkout ? undefined : 'transparent'}
-                  className={
-                    options?.checkout ? undefined : 'bg-[var(--mantine-color-dark-light)]/30!'
-                  }
-                  leftSection={<IconMapPin size={ICON_SIZE - 2} stroke={2} />}
-                  rightSection={<IconChevronDown size={ICON_SIZE - 4} stroke={2} />}
-                  loading={resolvedStore == null}
-                  fullWidth={options?.checkout}
-                >
-                  {resolvedStore?.locationShort}
-                </Button>
-              ))}
-          </span>
-        </PopoverTarget>
-
-        <PopoverDropdown p={0}>
-          <ScrollAreaAutosize mah={320}>
-            <Stack mih={240} p={'md'}>
+        <ScrollAreaAutosize mah={320}>
+          <Stack mih={240} p={'md'}>
               <div>
                 <Box mih={26.6}>
                   {!location ? (
@@ -304,11 +300,22 @@ export default function PopoverGeolocation({
                     ))}
                   </>
                 )}
+                <Group grow mt="md">
+                  <Button onClick={() => setOpened(false)} color="pri">
+                    Continue with {resolvedStore?.locationShort || 'Store'}
+                  </Button>
+                  <Button
+                    component="a"
+                    href={`tel:${resolvedStore?.phone ?? PHONES.PHONE1}`}
+                    variant="default"
+                  >
+                    Call branch
+                  </Button>
+                </Group>
               </Stack>
-            </Stack>
-          </ScrollAreaAutosize>
-        </PopoverDropdown>
-      </Popover>
+          </Stack>
+        </ScrollAreaAutosize>
+      </Modal>
 
       {!options?.checkout && (
         <Button
