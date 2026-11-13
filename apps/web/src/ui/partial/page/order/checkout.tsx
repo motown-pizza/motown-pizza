@@ -136,7 +136,7 @@ export default function Checkout() {
 
                       <CardMenuCart
                         props={ci}
-                        // options={{ checkout: true }}
+                        options={{ checkout: true }}
                       />
                     </Stack>
                   ))
@@ -157,7 +157,7 @@ export default function Checkout() {
                 style={{ position: 'absolute', top: -12, left: 16, zIndex: 1 }}
               >
                 <Group gap={4}>
-                  <IconSoup size={14} /> Meal Deal
+                  <IconSoup size={14} /> Add a side
                 </Group>
               </Badge>
 
@@ -174,12 +174,6 @@ export default function Checkout() {
                   <Group gap="xs" align="baseline">
                     <Text fw={700} c="white" fz="lg">
                       Kshs. {mealDeal.price}
-                    </Text>
-                    <Text td="line-through" c="dimmed" fz="xs">
-                      Kshs. {mealDeal.originalPrice}
-                    </Text>
-                    <Text c="green" fz="xs" fw={500}>
-                      You save Kshs. {mealDeal.saving}
                     </Text>
                   </Group>
                 </Stack>
@@ -274,7 +268,7 @@ export default function Checkout() {
 
                 <PopoverGeolocation options={{ checkout: true }} />
 
-                <Box display={orderDetails?.fulfillmentType == 'DELIVERY' ? undefined : 'none'}>
+                <Box display={orderDetails?.fulfillmentType === 'COLLECTION' ? 'none' : 'block'}>
                   <Textarea
                     withAsterisk
                     label="Delivery address"
@@ -414,13 +408,23 @@ export default function Checkout() {
                   </Box>
                 </div>
 
-                <Group justify="space-between" px={'md'} c={'white'} fw={'bold'}>
-                  <Text inherit>Total:</Text>
-
-                  <Text component="span" inherit ta={'end'}>
-                    Kshs. <NumberFormatter value={getSum()} />
-                  </Text>
-                </Group>
+                <Stack gap="xs" px={'md'}>
+  <Group justify="space-between" fz="sm">
+    <Text c="dimmed">Subtotal</Text>
+    <Text>Kshs. <NumberFormatter value={getSum()} /></Text>
+  </Group>
+  <Group justify="space-between" fz="sm">
+    <Text c="dimmed">Delivery Fee</Text>
+    <Text>Kshs. 150</Text>
+  </Group>
+  <Divider />
+  <Group justify="space-between" fw={'bold'} c={'white'}>
+    <Text inherit>Total:</Text>
+    <Text component="span" inherit ta={'end'}>
+      Kshs. <NumberFormatter value={getSum() + 150} />
+    </Text>
+  </Group>
+</Stack>
 
                 <Group grow px={'md'}>
                   <Button
@@ -501,3 +505,5 @@ export default function Checkout() {
     </LayoutSection>
   );
 }
+
+

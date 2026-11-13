@@ -4,7 +4,6 @@ import { LayoutMain } from '@repo/ui';
 import { AffixNavbar } from '@repo/ui';
 import AffixMenu from '@web/ui/common/affixi/menu';
 import AffixCheckout from '@web/ui/common/affixi/checkout';
-import AffixWhatsApp from '@web/ui/common/affix/whatsapp';
 import { APP_NAME } from '@repo/constants';
 // import HeaderMain from '@web/ui/layout/header/main';
 import NavbarMain from '@web/ui/layout/navbar/main';
@@ -33,7 +32,6 @@ export default async function LayoutMarketing({
 
       <AffixMenu />
       <AffixCheckout />
-      <AffixWhatsApp />
     </LayoutMain>
   );
 }
