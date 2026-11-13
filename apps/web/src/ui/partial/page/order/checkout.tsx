@@ -19,6 +19,7 @@ import {
   RadioGroup,
   ScrollArea,
   ScrollAreaAutosize,
+  Select,
   Stack,
   Text,
   Textarea,
@@ -62,7 +63,8 @@ import { handleOrderNotification } from '@repo/handlers';
 import PopoverGeolocation from '@web/ui/common/popover/geolocation';
 import IndicatorFulfilment from '@web/ui/indicators/fulfilment';
 import InputPayment from '@web/ui/inputs/payment';
-import { IconClock, IconStar } from '@tabler/icons-react';
+import { IconBottle, IconCheck, IconSoup, IconStar } from '@tabler/icons-react';
+import { mealDeal } from '@web/data/meal-deal';
 import CardMenuMain from '@web/ui/common/cards/menu/main';
 import { Router } from 'next/router';
 import { useRouter } from 'next/navigation';
@@ -83,11 +85,10 @@ export default function Checkout() {
 
   const isReadyForConfirmation =
     !!cartItems?.length &&
-    (!orderDetails
-      ? false
-      : !orderDetails.customerPhone
-        ? false
-        : validators.phone(orderDetails.customerPhone) == false);
+    !!orderDetails?.customerPhone &&
+    !validators.phone(orderDetails.customerPhone) &&
+    !!orderDetails?.customerName &&
+    (orderDetails?.fulfillmentType === 'COLLECTION' || !!orderDetails?.customerAddress);
 
   const sideProducts = products?.filter((pi) => pi.type == ProductType.SIDE);
 
@@ -98,7 +99,7 @@ export default function Checkout() {
       </Title>
 
       <Grid mt={SECTION_SPACING}>
-        <GridCol span={{ base: 12, md: 4.5 }}>
+        <GridCol span={{ base: 12, md: 5 }}>
           <Stack>
             <Card bg={'transparent'} p={0} withBorder>
               <Box p={'md'} bg={'var(--mantine-color-dark-9)'}>
@@ -135,12 +136,72 @@ export default function Checkout() {
 
                       <CardMenuCart
                         props={ci}
-                        // options={{ checkout: true }}
+                        options={{ checkout: true }}
                       />
                     </Stack>
                   ))
                 )}
               </ScrollArea>
+            </Card>
+
+            <Card
+              bg="var(--mantine-color-dark-9)"
+              withBorder
+              style={{ borderColor: 'var(--mantine-color-sec-6)', borderWidth: 2, position: 'relative' }}
+              p="md"
+            >
+              <Badge
+                color="sec"
+                c="black"
+                radius="sm"
+                style={{ position: 'absolute', top: -12, left: 16, zIndex: 1 }}
+              >
+                <Group gap={4}>
+                  <IconSoup size={14} /> Add a side
+                </Group>
+              </Badge>
+
+              <Group mt="sm" align="center" wrap="nowrap">
+                <Group gap={4}>
+                  <IconSoup size={32} color="var(--mantine-color-sec-6)" />
+                  <IconBottle size={32} color="var(--mantine-color-sec-6)" />
+                </Group>
+
+                <Stack gap={0} style={{ flex: 1 }}>
+                  <Text fw={600} c="white" fz="md">
+                    {mealDeal.title}
+                  </Text>
+                  <Group gap="xs" align="baseline">
+                    <Text fw={700} c="white" fz="lg">
+                      Kshs. {mealDeal.price}
+                    </Text>
+                  </Group>
+                </Stack>
+              </Group>
+
+              <Group mt="md" grow>
+                <Select
+                  data={mealDeal.drinkOptions}
+                  defaultValue={mealDeal.drinkOptions[0]}
+                  size="sm"
+                  variant="filled"
+                  comboboxProps={{ withinPortal: true }}
+                />
+                <Button
+                  color="pri"
+                  variant="light"
+                  size="sm"
+                  onClick={() => {
+                    showNotification({
+                      title: 'Coming soon',
+                      desc: 'Meal deal ordering will be available soon.',
+                      variant: Variant.WARNING,
+                    });
+                  }}
+                >
+                  Select
+                </Button>
+              </Group>
             </Card>
 
             <Card bg={'transparent'} withBorder p={0}>
@@ -207,7 +268,7 @@ export default function Checkout() {
 
                 <PopoverGeolocation options={{ checkout: true }} />
 
-                <Box display={orderDetails?.fulfillmentType == 'DELIVERY' ? undefined : 'none'}>
+                <Box display={orderDetails?.fulfillmentType === 'COLLECTION' ? 'none' : 'block'}>
                   <Textarea
                     withAsterisk
                     label="Delivery address"
@@ -291,7 +352,7 @@ export default function Checkout() {
           </Stack>
         </GridCol>
 
-        <GridCol span={{ base: 12, md: 3.5 }}>
+        <GridCol span={{ base: 12, md: 3 }}>
           <Stack>
             <Card bg={'transparent'} withBorder p={0}>
               <Box p={'md'} bg={'var(--mantine-color-dark-9)'}>
@@ -347,13 +408,23 @@ export default function Checkout() {
                   </Box>
                 </div>
 
-                <Group justify="space-between" px={'md'} c={'white'} fw={'bold'}>
-                  <Text inherit>Total:</Text>
-
-                  <Text component="span" inherit ta={'end'}>
-                    Kshs. <NumberFormatter value={getSum()} />
-                  </Text>
-                </Group>
+                <Stack gap="xs" px={'md'}>
+  <Group justify="space-between" fz="sm">
+    <Text c="dimmed">Subtotal</Text>
+    <Text>Kshs. <NumberFormatter value={getSum()} /></Text>
+  </Group>
+  <Group justify="space-between" fz="sm">
+    <Text c="dimmed">Delivery Fee</Text>
+    <Text>Kshs. 150</Text>
+  </Group>
+  <Divider />
+  <Group justify="space-between" fw={'bold'} c={'white'}>
+    <Text inherit>Total:</Text>
+    <Text component="span" inherit ta={'end'}>
+      Kshs. <NumberFormatter value={getSum() + 150} />
+    </Text>
+  </Group>
+</Stack>
 
                 <Group grow px={'md'}>
                   <Button
@@ -413,16 +484,6 @@ export default function Checkout() {
                   </Button>
                 </Group>
 
-                <Group px={'md'} gap={'xs'}>
-                  <Box c={'sec'}>
-                    <IconClock size={ICON_SIZE - 2} stroke={ICON_STROKE_WIDTH} />
-                  </Box>
-
-                  <Text inherit fz={'xs'} c={'dark.1'}>
-                    Arrives in 30 - 45 minutes.
-                  </Text>
-                </Group>
-
                 <Group p={'md'} pt={0} gap={'xs'}>
                   <Card p={'xs'} bg={'transparent'} withBorder>
                     <Group gap={'xs'} wrap="nowrap" align="start">
@@ -431,8 +492,7 @@ export default function Checkout() {
                       </Box>
 
                       <Text inherit fz={'xs'} c={'dark.1'}>
-                        You&apos;ll earn 2 medium points with this order. 10 more to go for a free
-                        medium pizza.
+                        You&apos;ll earn points with this order towards a free 12-inch pizza.
                       </Text>
                     </Group>
                   </Card>
@@ -445,3 +505,5 @@ export default function Checkout() {
     </LayoutSection>
   );
 }
+
+

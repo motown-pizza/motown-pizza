@@ -1,5 +1,5 @@
 import React from 'react';
-import { Center, Divider, Grid, GridCol, Loader, Text } from '@mantine/core';
+import { Box, Center, Divider, Grid, GridCol, Group, Loader, Text, Title } from '@mantine/core';
 import CardMenuMain from '@web/ui/common/cards/menu/main';
 import { ProductDietarySubType, ProductDietaryType, ProductType } from '@repo/types';
 import { useStoreProduct } from '@repo/store';
@@ -54,6 +54,38 @@ export default function Pizzas({
       ))}
     </Grid> */}
 
+      {!options?.filterBy && (
+        <Box mb="xl">
+          <Group gap="xs" align="center" mb="xs">
+            <Title order={2} c="sec" fz="h2">
+              Popular right now
+            </Title>
+            <Text c="dimmed" size="sm">
+              Our top three. Start here if you are not sure.
+            </Text>
+          </Group>
+          <Grid>
+            {pizzas.slice(0, 3).map((p, i) => (
+              <GridCol
+                key={`popular-${p.id || i}`}
+                span={{
+                  base: 12,
+                  xs: 6,
+                  sm: 4,
+                  md: options?.withAside ? 6 : 4,
+                  lg: options?.withAside ? 4 : 3,
+                }}
+              >
+                <CardMenuMain props={p} />
+              </GridCol>
+            ))}
+          </Grid>
+        </Box>
+      )}
+
+      <Title order={2} c="sec" fz="h2" mt="xl" mb="md">
+        All pizzas
+      </Title>
       <Grid>
         {pizzas.map((p, i) => (
           <GridCol

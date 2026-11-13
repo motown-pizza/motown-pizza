@@ -40,23 +40,14 @@ export default function CardStore({
           <Stack gap={'xs'}>
             <Divider />
 
-            <Box c={'dimmed'} fz={'xs'}>
-              <Text inherit>
-                Distance:{' '}
-                <strong>
-                  {!props.distanceKm
-                    ? 'Failed to get your location'
-                    : `${Math.round(props.distanceKm * 10) / 10} Km`}
-                </strong>
-                .
+            <Group justify="space-between" mt="xs" wrap="nowrap">
+              <Text c="green" fz="xs" fw={500}>
+                Open now
               </Text>
-              <Text inherit>
-                Avg. delivery time: <strong>17 - 21 min</strong>.
+              <Text c="dimmed" fz="xs">
+                Delivery in 30 to 45 min
               </Text>
-              <Text inherit>
-                Delivery radius: <strong>3 - 5 Km</strong>.
-              </Text>
-            </Box>
+            </Group>
 
             <Group mt={'xs'}>
               <Button
@@ -83,11 +74,14 @@ export default function CardStore({
           <Stack gap={'xs'}>
             <Divider />
 
-            <Box c={'dimmed'} fz={'xs'}>
-              <Text inherit>
-                Avg. waiting time at store: <strong>17 - 21 min</strong>.
+            <Group justify="space-between" mt="xs" wrap="nowrap">
+              <Text c="green" fz="xs" fw={500}>
+                Open now
               </Text>
-            </Box>
+              <Text c="dimmed" fz="xs">
+                Collection in 15 min
+              </Text>
+            </Group>
 
             <Group mt={'xs'}>
               <Button

@@ -324,6 +324,7 @@ export default function Home() {
           mode="grid"
         />
       </Group>
+
     </div>
   );
 }

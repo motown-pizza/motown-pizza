@@ -1,100 +1,54 @@
 'use client';
 
 import React from 'react';
-import { useState } from 'react';
-import {
-  Stepper,
-  Group,
-  StepperStep,
-  StepperCompleted,
-  Text,
-  Stack,
-  Progress,
-  ThemeIcon,
-} from '@mantine/core';
-import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE, SECTION_SPACING } from '@repo/constants';
-import { useCountdown } from '@repo/hooks';
-import { IconCheck } from '@tabler/icons-react';
-import { LayoutIntroSection } from '@repo/ui';
+import { Badge, Box, Card, Flex, Stack, Text, ThemeIcon, Title } from '@mantine/core';
+import { IconCheck, IconFlame } from '@tabler/icons-react';
+import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE } from '@repo/constants';
+
+const steps = [
+  { label: 'Order received', desc: 'We have your order and payment', time: '7:42 pm', status: 'done' },
+  { label: 'Being made', desc: 'Your pizza is being topped', time: '7:46 pm', status: 'done' },
+  { label: 'In the oven', desc: 'Baking now. Almost ready!', time: '7:54 pm', status: 'active' },
+  { label: 'On the way', desc: 'Your rider heads out as soon as it is boxed', time: 'Next', status: 'pending' },
+  { label: 'Delivered', desc: 'Enjoy your meal', time: '', status: 'pending' },
+];
 
 export default function OrderTracker() {
-  const [active, setActive] = useState(1);
-  const nextStep = () => setActive((current) => (current < 4 ? current + 1 : current));
-
-  const [targetDate, setTargetDate] = useState<Date>(() => new Date(Date.now() + 1000 * 60 * 2));
-
-  // Pass the transition logic directly into the hook
-  const { percentElapsed } = useCountdown(targetDate, 2, () => {
-    if (active < 4) {
-      nextStep();
-      setTargetDate(new Date(Date.now() + 1000 * 60 * 2));
-    }
-  });
-
   return (
-    <>
-      <Stepper
-        active={active}
-        // onStepClick={setActive}
-        styles={{
-          stepDescription: {
-            textTransform: 'uppercase',
-            fontWeight: 500,
-          },
-        }}
-      >
-        <StepperStep label="Phase I" description="Order">
-          <Stack align="center" justify="center" py={SECTION_SPACING}>
-            <Text ta={'center'}>You&apos;ve placed your order.</Text>
-          </Stack>
-        </StepperStep>
+    <Card bg="var(--mantine-color-dark-8)" withBorder p="xl" radius="lg">
+      <Flex justify="space-between" mb="xl">
+        <Stack gap={0}>
+          <Text c="dimmed" fz="sm">Estimated arrival</Text>
+          <Title order={2} c="white" fz="2rem">About 25 minutes</Title>
+        </Stack>
+        <Badge color="green" variant="light" size="lg" radius="sm">On schedule</Badge>
+      </Flex>
 
-        <StepperStep label="Phase II" description="Prep">
-          <Stack gap={'xl'} align="center" justify="center" py={SECTION_SPACING * 2}>
-            <Progress value={percentElapsed} striped animated color="blue" w={'66%'} />
+      <Stack gap={0}>
+        {steps.map((step, index) => {
+          const isLast = index === steps.length - 1;
+          const color = step.status === 'done' ? 'green' : step.status === 'active' ? 'red' : 'dark.4';
+          const Icon = step.status === 'done' ? IconCheck : step.status === 'active' ? IconFlame : null;
 
-            <Text ta={'center'}>
-              Our chefs are carefully selecting and preparing the freshest ingredients for your
-              pizza.
-            </Text>
-          </Stack>
-        </StepperStep>
-
-        <StepperStep label="Phase III" description="Baking">
-          <Stack gap={'xl'} align="center" justify="center" py={SECTION_SPACING * 2}>
-            <Progress value={percentElapsed} striped animated color="blue" w={'66%'} />
-
-            <Text ta={'center'}>Your pizza is now in the oven, baking to golden perfection.</Text>
-          </Stack>
-        </StepperStep>
-
-        <StepperStep label="Phase III" description="Quality Check">
-          <Stack gap={'xl'} align="center" justify="center" py={SECTION_SPACING * 2}>
-            <Progress value={percentElapsed || 0} striped animated color="blue" w={'66%'} />
-
-            <Text ta={'center'}>
-              We’re giving your pizza a final quality check to ensure it’s perfect before delivery.
-            </Text>
-          </Stack>
-        </StepperStep>
-
-        <StepperCompleted>
-          <Stack gap={'xl'} align="center" justify="center" py={SECTION_SPACING}>
-            <Group justify="center">
-              <ThemeIcon size={ICON_WRAPPER_SIZE * 2} color="ter" radius={999}>
-                <IconCheck size={ICON_SIZE * 2} stroke={ICON_STROKE_WIDTH} />
-              </ThemeIcon>
-            </Group>
-
-            <LayoutIntroSection
-              props={{
-                title: 'Order Complete',
-                desc: 'Your pizza is ready. You should be receiving it any time now.',
-              }}
-            />
-          </Stack>
-        </StepperCompleted>
-      </Stepper>
-    </>
+          return (
+            <Flex key={step.label} align="flex-start" wrap="nowrap">
+              <Stack align="center" gap={0}>
+                <ThemeIcon color={color} size={ICON_WRAPPER_SIZE} radius="xl">
+                  {Icon ? <Icon size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} /> : null}
+                </ThemeIcon>
+                {!isLast && (
+                  <Box w={2} h={50} bg={step.status === 'done' ? 'green' : 'var(--mantine-color-dark-6)'} my={4} />
+                )}
+              </Stack>
+              <Stack gap={0} ml="md">
+                <Text fw={600} c="white">{step.label}</Text>
+                <Text fz="sm" c="dimmed">{step.desc}</Text>
+                <Text fz="xs" c="dimmed" mt={4}>{step.time}</Text>
+              </Stack>
+            </Flex>
+          );
+        })}
+      </Stack>
+    </Card>
   );
 }

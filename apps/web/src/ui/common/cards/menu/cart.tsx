@@ -49,8 +49,8 @@ export default function Cart({
       <Group gap={'xs'}>
         <Tooltip label={props.quantity <= 1 ? 'Currently at minimum' : 'Remove -1'}>
           <ActionIcon
-            color="dark"
-            size={ICON_WRAPPER_SIZE - 6}
+            variant="default"
+            size="md"
             disabled={props.quantity <= 1}
             onClick={() => {
               cartItemUpdate({
@@ -71,8 +71,8 @@ export default function Cart({
 
         <Tooltip label={props.quantity >= 10 ? 'Currently at maximum' : 'Add +1'}>
           <ActionIcon
-            color="dark"
-            size={ICON_WRAPPER_SIZE - 6}
+            variant="default"
+            size="md"
             disabled={props.quantity >= 10}
             onClick={() => {
               cartItemUpdate({
@@ -140,7 +140,7 @@ export default function Cart({
             <Tooltip label={`Remove item (${product?.title}) from cart`} multiline w={240}>
               <ActionIcon
                 size={ICON_WRAPPER_SIZE}
-                color="dark"
+                variant="default"
                 c="red.6"
                 onClick={() => {
                   cartItemDelete(props);
@@ -160,3 +160,4 @@ export default function Cart({
     </Card>
   );
 }
+
